@@ -13,7 +13,9 @@
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.2",
         "laravel/tinker": "^2.10.1",
-        "mongodb/mongodb-extension": "^1.2"
+        "mongodb/laravel-mongodb": "^5.5",
+        "mongodb/mongodb-extension": "^1.2",
+        "tymon/jwt-auth": "^2.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
