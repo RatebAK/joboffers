@@ -4,12 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Events\Verified;
+// use Illuminate\Auth\Events\Registered;
+// use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\URL;
+// use Illuminate\Support\Facades\Auth;
+// use Illuminate\Support\Facades\URL;
 
 class AuthController extends Controller
 {
@@ -21,11 +21,29 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|confirmed|min:6',
-        ]);
+        $rules = [
+            'name' => 'required|string|min:2|max:100',
+            'email' => [
+                'required',
+                'string',
+                'email:rfc,dns', // Improved email validation to check for a valid format and DNS record
+                'max:100',
+                'unique:users,email' // Explicitly specify the column name
+            ],
+            'password' => [
+                'required',
+                'string',
+                'min:8', // Increase minimum password length for better security
+                'confirmed',
+                'regex:/[a-z]/', // Require at least one lowercase letter
+                'regex:/[A-Z]/', // Require at least one uppercase letter
+                'regex:/[0-9]/', // Require at least one digit
+                'regex:/[@$!%*#?&]/' // Require at least one special character
+            ],
+        ];
+        
+        $validator = Validator::make($request->all(), $rules);
+        
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
