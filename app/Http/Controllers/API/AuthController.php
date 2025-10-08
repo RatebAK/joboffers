@@ -49,10 +49,17 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $user = User::create(array_merge(
-            $validator->validated(),
-            ['password' => bcrypt($request->password)]
-        ));
+        // Prepare data for creation
+        $data = $validator->validated();
+
+        // --- NEW: Set default role to 'job_seeker' ---
+        $data['roles'] = ['job_seeker'];
+        // --- END NEW ---
+
+        // Hash password
+        $data['password'] = bcrypt($request->password);
+        
+        $user = User::create($data);
 
         // Trigger email verification event (commented out)
         // event(new Registered($user));
