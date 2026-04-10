@@ -23,7 +23,7 @@ WORKDIR /var/www
 COPY . /var/www
 
 # Install dependencies
-RUN composer install --optimize-autoloader --no-dev
+RUN composer install --no-dev --no-scripts --optimize-autoloader
 
 # Expose port 80
 EXPOSE 80
