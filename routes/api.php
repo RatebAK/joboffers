@@ -9,20 +9,15 @@ Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
 
-    Route::middleware('auth:api')->group(function () {
+    Route::middleware('jwt.auth')->group(function () {
         Route::get('profile', [AuthController::class, 'profile']);
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
     });
 });
 
-Route::middleware('auth:api')->group(function () {
-    Route::post('employer/apply', [EmployerController::class, 'apply']);
-    Route::get('employer/status', [EmployerController::class, 'status']);
-});
-
 // Job Seeker Routes
-Route::middleware('auth:api')->prefix('job-seeker')->group(function () {
+Route::middleware(['jwt.auth', 'role:employee'])->prefix('job-seeker')->group(function () {
     Route::get('profile', [JobSeekerController::class, 'show']);
     Route::put('profile', [JobSeekerController::class, 'update']);
     Route::post('resume/upload', [JobSeekerController::class, 'uploadResume']);
@@ -32,16 +27,14 @@ Route::middleware('auth:api')->prefix('job-seeker')->group(function () {
     Route::get('jobs/search', [JobSeekerController::class, 'searchJobs']);
 });
 
-
 // Employer Routes 
-Route::middleware('auth:api')->group(function () {
-    Route::post('employer/apply', [EmployerController::class, 'apply']);
-    Route::get('employer/status', [EmployerController::class, 'status']);
+Route::middleware(['jwt.auth', 'role:employer'])->prefix('employer')->group(function () {
+    Route::post('apply', [EmployerController::class, 'apply']);
+    Route::get('status', [EmployerController::class, 'status']);
 });
 
-// Admin Routes (existing)
-//TODO make this a guard
-Route::middleware('auth:api')->prefix('admin')->group(function () {
+// Admin Routes
+Route::middleware(['jwt.auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('employers', [EmployerController::class, 'index']);
     Route::post('{id}/approve', [EmployerController::class, 'approve']);
     Route::post('{id}/reject', [EmployerController::class, 'reject']);

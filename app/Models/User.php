@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use MongoDB\Laravel\Auth\User as Authenticatable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
+    use HasFactory;
     /**
      * The attributes that are mass assignable.
      * Replaced 'is_employer' with 'roles'.
@@ -17,7 +19,7 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
-        'roles', // New: stores an array of roles (e.g., ['job_seeker', 'employer'])
+        'roles', // New: stores an array of roles (e.g., ['employee', 'employer'])
     ];
 
     /**
@@ -95,16 +97,38 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Check if user is a job seeker.
-     * We assume a user is a job seeker if they don't have the employer role.
-     * You might adjust this logic depending on your default user creation process.
+     * Check if user is a job seeker (employee).
      *
      * @return bool
      */
     public function isJobSeeker(): bool
     {
-        // Check explicitly for the 'job_seeker' role, or if no roles are defined
-        // For simplicity, let's just check for the explicit role
-        return $this->hasRole('job_seeker');
+        // Check explicitly for the 'employee' role
+        return $this->hasRole('employee');
+    }
+
+    /**
+     * Check if user is an admin.
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
+
+    /**
+     * Check if user has any of the specified roles.
+     *
+     * @param array $roles
+     * @return bool
+     */
+    public function hasAnyRole(array $roles): bool
+    {
+        // Ensure roles is treated as an array
+        $userRoles = $this->roles ?? [];
+        
+        // Check if any of the specified roles exist in the user's roles
+        return !empty(array_intersect($roles, $userRoles));
     }
 }
