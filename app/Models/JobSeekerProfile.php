@@ -23,6 +23,19 @@ class JobSeekerProfile extends Model
         'is_actively_seeking',
         'education_history',
         'work_experience',
+        'cv_file_path',
+        'ai_full_name',
+        'ai_email',
+        'ai_phone',
+        'ai_location',
+        'ai_summary',
+        'ai_skills',
+        'ai_work_history',
+        'ai_projects',
+        'ai_overall_evaluation',
+        'ats_score',
+        'ai_detected_language',
+        'ai_analyzed_at',
     ];
 
     protected $casts = [
@@ -31,6 +44,11 @@ class JobSeekerProfile extends Model
         'skills' => 'array',
         'education_history' => 'array',
         'work_experience' => 'array',
+        'ai_skills' => 'array',
+        'ai_work_history' => 'array',
+        'ai_projects' => 'array',
+        'ats_score' => 'integer',
+        'ai_analyzed_at' => 'datetime',
     ];
 
     // Relationship with user

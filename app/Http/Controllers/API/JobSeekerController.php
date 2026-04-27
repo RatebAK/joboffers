@@ -4,8 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\JobSeekerProfile;
-use App\Models\Application;
 use App\Models\JobPost;
+use App\Services\CvAnalysisService;
+use App\Exceptions\CvAnalysisException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
@@ -95,42 +96,13 @@ class JobSeekerController extends Controller
         ]);
     }
 
-    // Get job seeker's applications
-    public function applications(Request $request)
+    // Upload CV and trigger AI analysis
+    public function uploadAndAnalyze(Request $request, CvAnalysisService $cvAnalysisService)
     {
         $user = $request->user();
-
-        if ($user->is_employer) {
-            return response()->json([
-                'message' => 'Employers cannot access job seeker applications'
-            ], 403);
-        }
-
-        $applications = Application::with('jobPost')
-            ->where('user_id', $user->_id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-
-        return response()->json([
-            'applications' => $applications
-        ]);
-    }
-
-    // Apply to a job
-    public function apply(Request $request)
-    {
-        $user = $request->user();
-
-        if ($user->is_employer) {
-            return response()->json([
-                'message' => 'Employers cannot apply to jobs'
-            ], 403);
-        }
 
         $validator = Validator::make($request->all(), [
-            'job_post_id' => 'required|string',
-            'cover_letter' => 'nullable|string|max:1000',
-            'resume' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'cv' => 'required|file|mimes:pdf,doc,docx|max:10240', // 10 MB max
         ]);
 
         if ($validator->fails()) {
@@ -139,86 +111,57 @@ class JobSeekerController extends Controller
             ], 422);
         }
 
-        $data = $validator->validated();
+        $profile = $user->jobSeekerProfile()->firstOrCreate(['user_id' => $user->_id]);
 
-        // Check if job post exists
+        // Delete previous CV file if it exists
+        if ($profile->cv_file_path) {
+            Storage::delete($profile->cv_file_path);
+        }
+
+        // Store new file
+        $storedPath = $request->file('cv')->store('resumes', 'public');
+        $cvFilePath = 'public/resumes/' . basename($storedPath);
+
         try {
-            $jobPost = JobPost::findOrFail($data['job_post_id']);
-        } catch (\Exception $e) {
+            $analysis = $cvAnalysisService->analyze($cvFilePath);
+        } catch (CvAnalysisException $e) {
+            // Remove the just-uploaded file since analysis failed
+            Storage::delete($cvFilePath);
+
+            $statusCode = $e->getHttpStatusCode();
+
+            if ($statusCode === 422) {
+                return response()->json([
+                    'message' => 'CV analysis failed',
+                    'reason'  => $e->getMessage(),
+                ], 422);
+            }
+
             return response()->json([
-                'message' => 'Job post not found'
-            ], 404);
+                'message' => 'CV analysis service unavailable',
+            ], 502);
         }
 
-        // Check if user already applied to this job
-        $existingApplication = Application::where('user_id', $user->_id)
-            ->where('job_post_id', $data['job_post_id'])
-            ->first();
-
-        if ($existingApplication) {
-            return response()->json([
-                'message' => 'You have already applied to this job'
-            ], 409);
-        }
-
-        // Handle resume file upload for this specific application
-        if ($request->hasFile('resume')) {
-            $resumePath = $request->file('resume')->store('application_resumes', 'public');
-            $data['resume'] = $resumePath;
-        } else {
-            // Use profile resume if no new resume provided
-            $data['resume'] = $user->jobSeekerProfile->resume ?? null;
-        }
-
-        // Create application
-        $application = Application::create([
-            'user_id' => $user->_id,
-            'job_post_id' => $data['job_post_id'],
-            'cover_letter' => $data['cover_letter'] ?? null,
-            'resume' => $data['resume'],
-            'status' => 'pending',
-            'applied_at' => now(),
+        // Persist all AI fields and cv_file_path
+        $profile->update([
+            'cv_file_path'          => $cvFilePath,
+            'ai_full_name'          => $analysis['full_name'] ?? null,
+            'ai_email'              => $analysis['email'] ?? null,
+            'ai_phone'              => $analysis['phone'] ?? null,
+            'ai_location'           => $analysis['location'] ?? null,
+            'ai_summary'            => $analysis['summary'] ?? null,
+            'ai_skills'             => $analysis['skills'] ?? null,
+            'ai_work_history'       => $analysis['work_history'] ?? null,
+            'ai_projects'           => $analysis['projects'] ?? null,
+            'ai_overall_evaluation' => $analysis['ai_overall_evaluation'] ?? null,
+            'ats_score'             => $analysis['ats_score'] ?? null,
+            'ai_detected_language'  => $analysis['detected_language'] ?? null,
+            'ai_analyzed_at'        => now(),
         ]);
 
         return response()->json([
-            'message' => 'Application submitted successfully',
-            'application' => $application->load('jobPost')
-        ], 201);
-    }
-
-    // Withdraw application
-    public function withdrawApplication(Request $request, $applicationId)
-    {
-        $user = $request->user();
-
-        if ($user->is_employer) {
-            return response()->json([
-                'message' => 'Employers cannot withdraw applications'
-            ], 403);
-        }
-
-        try {
-            $application = Application::where('user_id', $user->_id)
-                ->where('_id', $applicationId)
-                ->firstOrFail();
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Application not found'
-            ], 404);
-        }
-
-        // Don't allow withdrawal if already accepted
-        if ($application->status === 'accepted') {
-            return response()->json([
-                'message' => 'Cannot withdraw an accepted application'
-            ], 403);
-        }
-
-        $application->delete();
-
-        return response()->json([
-            'message' => 'Application withdrawn successfully'
-        ]);
+            'profile' => $profile->fresh(),
+        ], 200);
     }
 
     // Upload resume separately
@@ -265,10 +208,11 @@ class JobSeekerController extends Controller
     public function searchJobs(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'keyword' => 'nullable|string|max:100',
-            'location' => 'nullable|string|max:100',
-            'job_type' => 'nullable|string|in:full_time,part_time,contract,freelance',
-            'category' => 'nullable|string|max:100',
+            'keyword'    => 'nullable|string|max:100',
+            'location'   => 'nullable|string|max:100',
+            'job_type'   => 'nullable|string|in:full_time,part_time,contract,freelance',
+            'category'   => 'nullable|string|max:100',
+            'min_salary' => 'nullable|numeric|min:0',
         ]);
 
         if ($validator->fails()) {
@@ -297,6 +241,10 @@ class JobSeekerController extends Controller
 
         if ($request->category) {
             $query->where('category', $request->category);
+        }
+
+        if ($request->min_salary !== null) {
+            $query->where('salary_range.min', '>=', (int) $request->min_salary);
         }
 
         $jobs = $query->orderBy('created_at', 'desc')

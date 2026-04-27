@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'cv_analysis' => [
+        'url' => env('CV_ANALYSIS_API_URL'),
+    ],
+
 ];
