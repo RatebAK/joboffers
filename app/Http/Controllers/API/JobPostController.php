@@ -12,6 +12,7 @@ class JobPostController extends Controller
 {
     /**
      * Public: paginated list of active job posts with optional filters.
+     * @unauthenticated
      */
     public function index(Request $request)
     {
@@ -49,6 +50,8 @@ class JobPostController extends Controller
 
     /**
      * Public: single job post by ID.
+     * @unauthenticated
+     * @urlParam id string required The job post ID. Example: 6a04ca4809826695330cc475
      */
     public function show(string $id)
     {
@@ -93,6 +96,7 @@ class JobPostController extends Controller
 
     /**
      * Employer: update own job post.
+     * @urlParam id string required The job post ID. Example: 6a04ca4809826695330cc475
      */
     public function update(Request $request, string $id)
     {
@@ -131,6 +135,7 @@ class JobPostController extends Controller
 
     /**
      * Employer: delete own job post.
+     * @urlParam id string required The job post ID. Example: 6a04ca4809826695330cc475
      */
     public function destroy(string $id)
     {
@@ -171,6 +176,7 @@ class JobPostController extends Controller
 
     /**
      * Employer: deactivate a job post.
+     * @urlParam id string required The job post ID. Example: 6a04ca4809826695330cc475
      */
     public function deactivate(string $id)
     {

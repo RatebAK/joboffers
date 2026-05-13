@@ -62,6 +62,7 @@ class EmployerSearchController extends Controller
      * GET /api/employer/seekers/{userId}
      *
      * Excludes sensitive fields: password, email, phone.
+     * @urlParam userId string required The job seeker's user ID. Example: 6a04ca4809826695330cc473
      */
     public function show($userId)
     {

@@ -91,6 +91,7 @@ class ApplicationController extends Controller
 
     /**
      * Job seeker: withdraw a pending application.
+     * @urlParam id string required The application ID. Example: 6a04ca4809826695330cc476
      */
     public function withdraw(Request $request, $id)
     {
@@ -116,6 +117,7 @@ class ApplicationController extends Controller
     /**
      * Employer: list applications for a job post they own.
      * Includes applicant name and ats_score.
+     * @urlParam jobId string required The job post ID. Example: 6a04ca4809826695330cc475
      */
     public function indexForEmployer(Request $request, $jobId)
     {
@@ -149,6 +151,7 @@ class ApplicationController extends Controller
 
     /**
      * Employer: update application status and optional feedback.
+     * @urlParam id string required The application ID. Example: 6a04ca4809826695330cc476
      */
     public function updateStatus(Request $request, $id)
     {

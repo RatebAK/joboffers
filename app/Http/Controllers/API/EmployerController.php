@@ -36,10 +36,15 @@ class EmployerController extends Controller
     // User gets current status / latest
     public function status(Request $request)
     {
-        $latest = $request->user()->employers()->latest()->first();
+        $user = $request->user();
+        
+        // Find the latest employer application for this user
+        $latest = Employer::where('user_id', $user->_id)
+            ->latest()
+            ->first();
 
         return response()->json([
-            'is_employer' => $request->user()->is_employer,
+            'is_employer' => $user->hasRole('employer'),
             'latest' => $latest,
         ]);
     }

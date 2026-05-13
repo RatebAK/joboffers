@@ -121,6 +121,7 @@ class DirectOfferController extends Controller
 
     /**
      * Job seeker: accept a direct offer and create an application.
+     * @urlParam id string required The direct offer ID. Example: 6a04ca4809826695330cc475
      */
     public function accept(Request $request, $id)
     {
@@ -153,6 +154,7 @@ class DirectOfferController extends Controller
 
     /**
      * Job seeker: decline a direct offer.
+     * @urlParam id string required The direct offer ID. Example: 6a04ca4809826695330cc475
      */
     public function decline(Request $request, $id)
     {

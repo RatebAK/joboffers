@@ -1,0 +1,2365 @@
+openapi: 3.0.3
+info:
+  title: 'Laravel API Documentation'
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost:8000'
+tags:
+  -
+    name: Endpoints
+    description: ''
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.'
+security:
+  -
+    default: []
+paths:
+  /api/auth/register:
+    post:
+      summary: ''
+      operationId: postApiAuthRegister
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must be at least 2 characters. Must not be greater than 100 characters.'
+                  example: b
+                email:
+                  type: string
+                  description: 'Must be a valid email address. Must not be greater than 100 characters.'
+                  example: zbailey@example.net
+                password:
+                  type: string
+                  description: 'Must match the regex /[a-z]/. Must match the regex /[A-Z]/. Must match the regex /[0-9]/. Must match the regex /[@$!%*#?&]/. Must be at least 8 characters.'
+                  example: '-0pBNvYgxw'
+                role:
+                  type: string
+                  description: ''
+                  example: employer
+                  enum:
+                    - admin
+                    - employer
+                    - employee
+                  nullable: true
+              required:
+                - name
+                - email
+                - password
+      security: []
+  /api/auth/login:
+    post:
+      summary: ''
+      operationId: postApiAuthLogin
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: gbailey@example.net
+                password:
+                  type: string
+                  description: 'Must be at least 6 characters.'
+                  example: '+-0pBNvYgxwmi/#iw'
+              required:
+                - email
+                - password
+      security: []
+  /api/auth/profile:
+    get:
+      summary: ''
+      operationId: getApiAuthProfile
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  name: 'Scribe Docs User'
+                  email: scribe@docs.local
+                  roles:
+                    - employee
+                    - employer
+                    - admin
+                  updated_at: '2026-05-13T19:07:15.073000Z'
+                  created_at: '2026-05-13T19:07:15.073000Z'
+                  id: 6a04cbe3275c7e4e74063b22
+                properties:
+                  name:
+                    type: string
+                    example: 'Scribe Docs User'
+                  email:
+                    type: string
+                    example: scribe@docs.local
+                  roles:
+                    type: array
+                    example:
+                      - employee
+                      - employer
+                      - admin
+                    items:
+                      type: string
+                  updated_at:
+                    type: string
+                    example: '2026-05-13T19:07:15.073000Z'
+                  created_at:
+                    type: string
+                    example: '2026-05-13T19:07:15.073000Z'
+                  id:
+                    type: string
+                    example: 6a04cbe3275c7e4e74063b22
+      tags:
+        - Endpoints
+  /api/auth/logout:
+    post:
+      summary: ''
+      operationId: postApiAuthLogout
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+  /api/auth/refresh:
+    post:
+      summary: ''
+      operationId: postApiAuthRefresh
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+  /api/jobs:
+    get:
+      summary: 'Public: paginated list of active job posts with optional filters.'
+      operationId: publicPaginatedListOfActiveJobPostsWithOptionalFilters
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  current_page: 1
+                  data:
+                    -
+                      title: 'Senior Laravel Developer'
+                      description: 'We are looking for a senior Laravel developer to join our team.'
+                      requirements: 'Minimum 3 years of Laravel experience.'
+                      company_name: 'Acme Corp'
+                      job_type: full_time
+                      location: 'Beirut, Lebanon'
+                      category: Engineering
+                      salary_range:
+                        min: 2000
+                        max: 4000
+                        currency: USD
+                      employer_id: 6a04cbe3275c7e4e74063b22
+                      is_active: true
+                      updated_at: '2026-05-13T19:07:59.039000Z'
+                      created_at: '2026-05-13T19:00:24.649000Z'
+                      id: 6a04ca4809826695330cc475
+                  first_page_url: 'http://localhost:8000/api/jobs?page=1'
+                  from: 1
+                  last_page: 1
+                  last_page_url: 'http://localhost:8000/api/jobs?page=1'
+                  links:
+                    -
+                      url: null
+                      label: '&laquo; Previous'
+                      page: null
+                      active: false
+                    -
+                      url: 'http://localhost:8000/api/jobs?page=1'
+                      label: '1'
+                      page: 1
+                      active: true
+                    -
+                      url: null
+                      label: 'Next &raquo;'
+                      page: null
+                      active: false
+                  next_page_url: null
+                  path: 'http://localhost:8000/api/jobs'
+                  per_page: 15
+                  prev_page_url: null
+                  to: 1
+                  total: 1
+                properties:
+                  current_page:
+                    type: integer
+                    example: 1
+                  data:
+                    type: array
+                    example:
+                      -
+                        title: 'Senior Laravel Developer'
+                        description: 'We are looking for a senior Laravel developer to join our team.'
+                        requirements: 'Minimum 3 years of Laravel experience.'
+                        company_name: 'Acme Corp'
+                        job_type: full_time
+                        location: 'Beirut, Lebanon'
+                        category: Engineering
+                        salary_range:
+                          min: 2000
+                          max: 4000
+                          currency: USD
+                        employer_id: 6a04cbe3275c7e4e74063b22
+                        is_active: true
+                        updated_at: '2026-05-13T19:07:59.039000Z'
+                        created_at: '2026-05-13T19:00:24.649000Z'
+                        id: 6a04ca4809826695330cc475
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                          example: 'Senior Laravel Developer'
+                        description:
+                          type: string
+                          example: 'We are looking for a senior Laravel developer to join our team.'
+                        requirements:
+                          type: string
+                          example: 'Minimum 3 years of Laravel experience.'
+                        company_name:
+                          type: string
+                          example: 'Acme Corp'
+                        job_type:
+                          type: string
+                          example: full_time
+                        location:
+                          type: string
+                          example: 'Beirut, Lebanon'
+                        category:
+                          type: string
+                          example: Engineering
+                        salary_range:
+                          type: object
+                          properties:
+                            min:
+                              type: integer
+                              example: 2000
+                            max:
+                              type: integer
+                              example: 4000
+                            currency:
+                              type: string
+                              example: USD
+                        employer_id:
+                          type: string
+                          example: 6a04cbe3275c7e4e74063b22
+                        is_active:
+                          type: boolean
+                          example: true
+                        updated_at:
+                          type: string
+                          example: '2026-05-13T19:07:59.039000Z'
+                        created_at:
+                          type: string
+                          example: '2026-05-13T19:00:24.649000Z'
+                        id:
+                          type: string
+                          example: 6a04ca4809826695330cc475
+                  first_page_url:
+                    type: string
+                    example: 'http://localhost:8000/api/jobs?page=1'
+                  from:
+                    type: integer
+                    example: 1
+                  last_page:
+                    type: integer
+                    example: 1
+                  last_page_url:
+                    type: string
+                    example: 'http://localhost:8000/api/jobs?page=1'
+                  links:
+                    type: array
+                    example:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        page: null
+                        active: false
+                      -
+                        url: 'http://localhost:8000/api/jobs?page=1'
+                        label: '1'
+                        page: 1
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        page: null
+                        active: false
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                          example: null
+                          nullable: true
+                        label:
+                          type: string
+                          example: '&laquo; Previous'
+                        page:
+                          type: string
+                          example: null
+                          nullable: true
+                        active:
+                          type: boolean
+                          example: false
+                  next_page_url:
+                    type: string
+                    example: null
+                    nullable: true
+                  path:
+                    type: string
+                    example: 'http://localhost:8000/api/jobs'
+                  per_page:
+                    type: integer
+                    example: 15
+                  prev_page_url:
+                    type: string
+                    example: null
+                    nullable: true
+                  to:
+                    type: integer
+                    example: 1
+                  total:
+                    type: integer
+                    example: 1
+      tags:
+        - Endpoints
+      security: []
+  '/api/jobs/{id}':
+    get:
+      summary: 'Public: single job post by ID.'
+      operationId: publicSingleJobPostByID
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  title: 'Senior Laravel Developer'
+                  description: 'We are looking for a senior Laravel developer to join our team.'
+                  requirements: 'Minimum 3 years of Laravel experience.'
+                  company_name: 'Acme Corp'
+                  job_type: full_time
+                  location: 'Beirut, Lebanon'
+                  category: Engineering
+                  salary_range:
+                    min: 2000
+                    max: 4000
+                    currency: USD
+                  employer_id: 6a04cbe3275c7e4e74063b22
+                  is_active: true
+                  updated_at: '2026-05-13T19:07:59.039000Z'
+                  created_at: '2026-05-13T19:00:24.649000Z'
+                  id: 6a04ca4809826695330cc475
+                properties:
+                  title:
+                    type: string
+                    example: 'Senior Laravel Developer'
+                  description:
+                    type: string
+                    example: 'We are looking for a senior Laravel developer to join our team.'
+                  requirements:
+                    type: string
+                    example: 'Minimum 3 years of Laravel experience.'
+                  company_name:
+                    type: string
+                    example: 'Acme Corp'
+                  job_type:
+                    type: string
+                    example: full_time
+                  location:
+                    type: string
+                    example: 'Beirut, Lebanon'
+                  category:
+                    type: string
+                    example: Engineering
+                  salary_range:
+                    type: object
+                    properties:
+                      min:
+                        type: integer
+                        example: 2000
+                      max:
+                        type: integer
+                        example: 4000
+                      currency:
+                        type: string
+                        example: USD
+                  employer_id:
+                    type: string
+                    example: 6a04cbe3275c7e4e74063b22
+                  is_active:
+                    type: boolean
+                    example: true
+                  updated_at:
+                    type: string
+                    example: '2026-05-13T19:07:59.039000Z'
+                  created_at:
+                    type: string
+                    example: '2026-05-13T19:00:24.649000Z'
+                  id:
+                    type: string
+                    example: 6a04ca4809826695330cc475
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The job post ID.'
+        example: 6a04ca4809826695330cc475
+        required: true
+        schema:
+          type: string
+  /api/job-seeker/profile:
+    get:
+      summary: ''
+      operationId: getApiJobSeekerProfile
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  profile:
+                    user_id: 6a04cbe3275c7e4e74063b22
+                    is_actively_seeking: true
+                    current_job_title: Developer
+                    updated_at: '2026-05-13T19:07:15.077000Z'
+                    created_at: '2026-05-13T19:07:15.077000Z'
+                    id: 6a04cbe3275c7e4e74063b23
+                properties:
+                  profile:
+                    type: object
+                    properties:
+                      user_id:
+                        type: string
+                        example: 6a04cbe3275c7e4e74063b22
+                      is_actively_seeking:
+                        type: boolean
+                        example: true
+                      current_job_title:
+                        type: string
+                        example: Developer
+                      updated_at:
+                        type: string
+                        example: '2026-05-13T19:07:15.077000Z'
+                      created_at:
+                        type: string
+                        example: '2026-05-13T19:07:15.077000Z'
+                      id:
+                        type: string
+                        example: 6a04cbe3275c7e4e74063b23
+      tags:
+        - Endpoints
+    put:
+      summary: ''
+      operationId: putApiJobSeekerProfile
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: bngzmiyvdljnikhw
+                  nullable: true
+                address:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: a
+                  nullable: true
+                resume:
+                  type: string
+                  format: binary
+                  description: 'Must be a file. Must not be greater than 5120 kilobytes.'
+                  nullable: true
+                skills:
+                  type: array
+                  description: 'Must not be greater than 50 characters.'
+                  example:
+                    - 'y'
+                  items:
+                    type: string
+                education_level:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: k
+                  nullable: true
+                experience_summary:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                current_job_title:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: 'n'
+                  nullable: true
+                expected_salary:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 84
+                  nullable: true
+                linkedin_url:
+                  type: string
+                  description: 'Must be a valid URL. Must not be greater than 255 characters.'
+                  example: 'http://www.okuneva.com/fugiat-sunt-nihil-accusantium-harum-mollitia.html'
+                  nullable: true
+                portfolio_url:
+                  type: string
+                  description: 'Must be a valid URL. Must not be greater than 255 characters.'
+                  example: 'http://www.considine.com/provident-perspiciatis-quo-omnis-nostrum-aut-adipisci-quidem'
+                  nullable: true
+                is_actively_seeking:
+                  type: boolean
+                  description: ''
+                  example: true
+                education_history:
+                  type: object
+                  description: ''
+                  example: null
+                  properties: {  }
+                  nullable: true
+                work_experience:
+                  type: object
+                  description: ''
+                  example: null
+                  properties: {  }
+                  nullable: true
+  /api/job-seeker/resume/upload:
+    post:
+      summary: ''
+      operationId: postApiJobSeekerResumeUpload
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                resume:
+                  type: string
+                  format: binary
+                  description: 'Must be a file. Must not be greater than 5120 kilobytes.'
+              required:
+                - resume
+  /api/job-seeker/resume/upload-and-analyze:
+    post:
+      summary: ''
+      operationId: postApiJobSeekerResumeUploadAndAnalyze
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                cv:
+                  type: string
+                  format: binary
+                  description: 'Must be a file. Must not be greater than 10240 kilobytes.'
+              required:
+                - cv
+  /api/job-seeker/applications:
+    get:
+      summary: 'Job seeker: paginated list of their applications with job post title and company name.'
+      operationId: jobSeekerPaginatedListOfTheirApplicationsWithJobPostTitleAndCompanyName
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  applications:
+                    current_page: 1
+                    data:
+                      -
+                        user_id: 6a04cbe3275c7e4e74063b22
+                        job_post_id: 6a04ca4809826695330cc475
+                        cover_letter: 'I am very interested in this position.'
+                        status: pending
+                        applied_at: '2026-05-13T19:00:24.661000Z'
+                        updated_at: '2026-05-13T19:07:59.046000Z'
+                        created_at: '2026-05-13T19:00:24.662000Z'
+                        id: 6a04ca4809826695330cc476
+                        job_post:
+                          title: 'Senior Laravel Developer'
+                          description: 'We are looking for a senior Laravel developer to join our team.'
+                          requirements: 'Minimum 3 years of Laravel experience.'
+                          company_name: 'Acme Corp'
+                          job_type: full_time
+                          location: 'Beirut, Lebanon'
+                          category: Engineering
+                          salary_range:
+                            min: 2000
+                            max: 4000
+                            currency: USD
+                          employer_id: 6a04cbe3275c7e4e74063b22
+                          is_active: true
+                          updated_at: '2026-05-13T19:07:59.039000Z'
+                          created_at: '2026-05-13T19:00:24.649000Z'
+                          id: 6a04ca4809826695330cc475
+                    first_page_url: 'http://localhost:8000/api/job-seeker/applications?page=1'
+                    from: 1
+                    last_page: 1
+                    last_page_url: 'http://localhost:8000/api/job-seeker/applications?page=1'
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        page: null
+                        active: false
+                      -
+                        url: 'http://localhost:8000/api/job-seeker/applications?page=1'
+                        label: '1'
+                        page: 1
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        page: null
+                        active: false
+                    next_page_url: null
+                    path: 'http://localhost:8000/api/job-seeker/applications'
+                    per_page: 10
+                    prev_page_url: null
+                    to: 1
+                    total: 1
+                properties:
+                  applications:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example:
+                          -
+                            user_id: 6a04cbe3275c7e4e74063b22
+                            job_post_id: 6a04ca4809826695330cc475
+                            cover_letter: 'I am very interested in this position.'
+                            status: pending
+                            applied_at: '2026-05-13T19:00:24.661000Z'
+                            updated_at: '2026-05-13T19:07:59.046000Z'
+                            created_at: '2026-05-13T19:00:24.662000Z'
+                            id: 6a04ca4809826695330cc476
+                            job_post:
+                              title: 'Senior Laravel Developer'
+                              description: 'We are looking for a senior Laravel developer to join our team.'
+                              requirements: 'Minimum 3 years of Laravel experience.'
+                              company_name: 'Acme Corp'
+                              job_type: full_time
+                              location: 'Beirut, Lebanon'
+                              category: Engineering
+                              salary_range:
+                                min: 2000
+                                max: 4000
+                                currency: USD
+                              employer_id: 6a04cbe3275c7e4e74063b22
+                              is_active: true
+                              updated_at: '2026-05-13T19:07:59.039000Z'
+                              created_at: '2026-05-13T19:00:24.649000Z'
+                              id: 6a04ca4809826695330cc475
+                        items:
+                          type: object
+                          properties:
+                            user_id:
+                              type: string
+                              example: 6a04cbe3275c7e4e74063b22
+                            job_post_id:
+                              type: string
+                              example: 6a04ca4809826695330cc475
+                            cover_letter:
+                              type: string
+                              example: 'I am very interested in this position.'
+                            status:
+                              type: string
+                              example: pending
+                            applied_at:
+                              type: string
+                              example: '2026-05-13T19:00:24.661000Z'
+                            updated_at:
+                              type: string
+                              example: '2026-05-13T19:07:59.046000Z'
+                            created_at:
+                              type: string
+                              example: '2026-05-13T19:00:24.662000Z'
+                            id:
+                              type: string
+                              example: 6a04ca4809826695330cc476
+                            job_post:
+                              type: object
+                              properties:
+                                title:
+                                  type: string
+                                  example: 'Senior Laravel Developer'
+                                description:
+                                  type: string
+                                  example: 'We are looking for a senior Laravel developer to join our team.'
+                                requirements:
+                                  type: string
+                                  example: 'Minimum 3 years of Laravel experience.'
+                                company_name:
+                                  type: string
+                                  example: 'Acme Corp'
+                                job_type:
+                                  type: string
+                                  example: full_time
+                                location:
+                                  type: string
+                                  example: 'Beirut, Lebanon'
+                                category:
+                                  type: string
+                                  example: Engineering
+                                salary_range:
+                                  type: object
+                                  properties:
+                                    min:
+                                      type: integer
+                                      example: 2000
+                                    max:
+                                      type: integer
+                                      example: 4000
+                                    currency:
+                                      type: string
+                                      example: USD
+                                employer_id:
+                                  type: string
+                                  example: 6a04cbe3275c7e4e74063b22
+                                is_active:
+                                  type: boolean
+                                  example: true
+                                updated_at:
+                                  type: string
+                                  example: '2026-05-13T19:07:59.039000Z'
+                                created_at:
+                                  type: string
+                                  example: '2026-05-13T19:00:24.649000Z'
+                                id:
+                                  type: string
+                                  example: 6a04ca4809826695330cc475
+                      first_page_url:
+                        type: string
+                        example: 'http://localhost:8000/api/job-seeker/applications?page=1'
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      last_page_url:
+                        type: string
+                        example: 'http://localhost:8000/api/job-seeker/applications?page=1'
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            page: null
+                            active: false
+                          -
+                            url: 'http://localhost:8000/api/job-seeker/applications?page=1'
+                            label: '1'
+                            page: 1
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            page: null
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                              nullable: true
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            page:
+                              type: string
+                              example: null
+                              nullable: true
+                            active:
+                              type: boolean
+                              example: false
+                      next_page_url:
+                        type: string
+                        example: null
+                        nullable: true
+                      path:
+                        type: string
+                        example: 'http://localhost:8000/api/job-seeker/applications'
+                      per_page:
+                        type: integer
+                        example: 10
+                      prev_page_url:
+                        type: string
+                        example: null
+                        nullable: true
+                      to:
+                        type: integer
+                        example: 1
+                      total:
+                        type: integer
+                        example: 1
+      tags:
+        - Endpoints
+  /api/job-seeker/apply:
+    post:
+      summary: 'Job seeker: apply to a job post.'
+      operationId: jobSeekerApplyToAJobPost
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                job_post_id:
+                  type: string
+                  description: ''
+                  example: architecto
+                cover_letter:
+                  type: string
+                  description: 'Must not be greater than 1000 characters.'
+                  example: 'n'
+                  nullable: true
+                resume:
+                  type: string
+                  format: binary
+                  description: 'Must be a file. Must not be greater than 5120 kilobytes.'
+                  nullable: true
+              required:
+                - job_post_id
+  '/api/job-seeker/applications/{id}/withdraw':
+    delete:
+      summary: 'Job seeker: withdraw a pending application.'
+      operationId: jobSeekerWithdrawAPendingApplication
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The application ID.'
+        example: 6a04ca4809826695330cc476
+        required: true
+        schema:
+          type: string
+  /api/job-seeker/jobs/search:
+    get:
+      summary: ''
+      operationId: getApiJobSeekerJobsSearch
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  jobs:
+                    current_page: 1
+                    data: []
+                    first_page_url: 'http://localhost:8000/api/job-seeker/jobs/search?page=1'
+                    from: null
+                    last_page: 1
+                    last_page_url: 'http://localhost:8000/api/job-seeker/jobs/search?page=1'
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        page: null
+                        active: false
+                      -
+                        url: 'http://localhost:8000/api/job-seeker/jobs/search?page=1'
+                        label: '1'
+                        page: 1
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        page: null
+                        active: false
+                    next_page_url: null
+                    path: 'http://localhost:8000/api/job-seeker/jobs/search'
+                    per_page: 15
+                    prev_page_url: null
+                    to: null
+                    total: 0
+                properties:
+                  jobs:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example: []
+                      first_page_url:
+                        type: string
+                        example: 'http://localhost:8000/api/job-seeker/jobs/search?page=1'
+                      from:
+                        type: string
+                        example: null
+                        nullable: true
+                      last_page:
+                        type: integer
+                        example: 1
+                      last_page_url:
+                        type: string
+                        example: 'http://localhost:8000/api/job-seeker/jobs/search?page=1'
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            page: null
+                            active: false
+                          -
+                            url: 'http://localhost:8000/api/job-seeker/jobs/search?page=1'
+                            label: '1'
+                            page: 1
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            page: null
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                              nullable: true
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            page:
+                              type: string
+                              example: null
+                              nullable: true
+                            active:
+                              type: boolean
+                              example: false
+                      next_page_url:
+                        type: string
+                        example: null
+                        nullable: true
+                      path:
+                        type: string
+                        example: 'http://localhost:8000/api/job-seeker/jobs/search'
+                      per_page:
+                        type: integer
+                        example: 15
+                      prev_page_url:
+                        type: string
+                        example: null
+                        nullable: true
+                      to:
+                        type: string
+                        example: null
+                        nullable: true
+                      total:
+                        type: integer
+                        example: 0
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                keyword:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: b
+                  nullable: true
+                location:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: 'n'
+                  nullable: true
+                job_type:
+                  type: string
+                  description: ''
+                  example: contract
+                  enum:
+                    - full_time
+                    - part_time
+                    - contract
+                    - freelance
+                  nullable: true
+                category:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: g
+                  nullable: true
+                min_salary:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 12
+                  nullable: true
+  /api/job-seeker/offers:
+    get:
+      summary: 'Job seeker: paginated list of received offers with job post title and employer company name.'
+      operationId: jobSeekerPaginatedListOfReceivedOffersWithJobPostTitleAndEmployerCompanyName
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  offers:
+                    current_page: 1
+                    data: []
+                    first_page_url: 'http://localhost:8000/api/job-seeker/offers?page=1'
+                    from: null
+                    last_page: 1
+                    last_page_url: 'http://localhost:8000/api/job-seeker/offers?page=1'
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        page: null
+                        active: false
+                      -
+                        url: 'http://localhost:8000/api/job-seeker/offers?page=1'
+                        label: '1'
+                        page: 1
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        page: null
+                        active: false
+                    next_page_url: null
+                    path: 'http://localhost:8000/api/job-seeker/offers'
+                    per_page: 15
+                    prev_page_url: null
+                    to: null
+                    total: 0
+                properties:
+                  offers:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example: []
+                      first_page_url:
+                        type: string
+                        example: 'http://localhost:8000/api/job-seeker/offers?page=1'
+                      from:
+                        type: string
+                        example: null
+                        nullable: true
+                      last_page:
+                        type: integer
+                        example: 1
+                      last_page_url:
+                        type: string
+                        example: 'http://localhost:8000/api/job-seeker/offers?page=1'
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            page: null
+                            active: false
+                          -
+                            url: 'http://localhost:8000/api/job-seeker/offers?page=1'
+                            label: '1'
+                            page: 1
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            page: null
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                              nullable: true
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            page:
+                              type: string
+                              example: null
+                              nullable: true
+                            active:
+                              type: boolean
+                              example: false
+                      next_page_url:
+                        type: string
+                        example: null
+                        nullable: true
+                      path:
+                        type: string
+                        example: 'http://localhost:8000/api/job-seeker/offers'
+                      per_page:
+                        type: integer
+                        example: 15
+                      prev_page_url:
+                        type: string
+                        example: null
+                        nullable: true
+                      to:
+                        type: string
+                        example: null
+                        nullable: true
+                      total:
+                        type: integer
+                        example: 0
+      tags:
+        - Endpoints
+  '/api/job-seeker/offers/{id}/accept':
+    post:
+      summary: 'Job seeker: accept a direct offer and create an application.'
+      operationId: jobSeekerAcceptADirectOfferAndCreateAnApplication
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The direct offer ID.'
+        example: 6a04ca4809826695330cc475
+        required: true
+        schema:
+          type: string
+  '/api/job-seeker/offers/{id}/decline':
+    post:
+      summary: 'Job seeker: decline a direct offer.'
+      operationId: jobSeekerDeclineADirectOffer
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The direct offer ID.'
+        example: 6a04ca4809826695330cc475
+        required: true
+        schema:
+          type: string
+  /api/employer/apply:
+    post:
+      summary: ''
+      operationId: postApiEmployerApply
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                document:
+                  type: string
+                  format: binary
+                  description: 'Must be a file. Must not be greater than 5120 kilobytes.'
+              required:
+                - document
+  /api/employer/status:
+    get:
+      summary: ''
+      operationId: getApiEmployerStatus
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  is_employer: true
+                  latest: null
+                properties:
+                  is_employer:
+                    type: boolean
+                    example: true
+                  latest:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Endpoints
+  /api/employer/jobs:
+    get:
+      summary: 'Employer: list own job posts with application counts.'
+      operationId: employerListOwnJobPostsWithApplicationCounts
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      example: 'Senior Laravel Developer'
+                    description:
+                      type: string
+                      example: 'We are looking for a senior Laravel developer to join our team.'
+                    requirements:
+                      type: string
+                      example: 'Minimum 3 years of Laravel experience.'
+                    company_name:
+                      type: string
+                      example: 'Acme Corp'
+                    job_type:
+                      type: string
+                      example: full_time
+                    location:
+                      type: string
+                      example: 'Beirut, Lebanon'
+                    category:
+                      type: string
+                      example: Engineering
+                    salary_range:
+                      type: object
+                      properties:
+                        min:
+                          type: integer
+                          example: 2000
+                        max:
+                          type: integer
+                          example: 4000
+                        currency:
+                          type: string
+                          example: USD
+                    employer_id:
+                      type: string
+                      example: 6a04cbe3275c7e4e74063b22
+                    is_active:
+                      type: boolean
+                      example: true
+                    updated_at:
+                      type: string
+                      example: '2026-05-13T19:07:59.039000Z'
+                    created_at:
+                      type: string
+                      example: '2026-05-13T19:00:24.649000Z'
+                    id:
+                      type: string
+                      example: 6a04ca4809826695330cc475
+                    application_count:
+                      type: integer
+                      example: 1
+                example:
+                  -
+                    title: 'Senior Laravel Developer'
+                    description: 'We are looking for a senior Laravel developer to join our team.'
+                    requirements: 'Minimum 3 years of Laravel experience.'
+                    company_name: 'Acme Corp'
+                    job_type: full_time
+                    location: 'Beirut, Lebanon'
+                    category: Engineering
+                    salary_range:
+                      min: 2000
+                      max: 4000
+                      currency: USD
+                    employer_id: 6a04cbe3275c7e4e74063b22
+                    is_active: true
+                    updated_at: '2026-05-13T19:07:59.039000Z'
+                    created_at: '2026-05-13T19:00:24.649000Z'
+                    id: 6a04ca4809826695330cc475
+                    application_count: 1
+      tags:
+        - Endpoints
+    post:
+      summary: 'Employer: create a new job post.'
+      operationId: employerCreateANewJobPost
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'Must not be greater than 150 characters.'
+                  example: b
+                description:
+                  type: string
+                  description: ''
+                  example: 'Eius et animi quos velit et.'
+                requirements:
+                  type: string
+                  description: ''
+                  example: architecto
+                company_name:
+                  type: string
+                  description: 'Must not be greater than 150 characters.'
+                  example: 'n'
+                job_type:
+                  type: string
+                  description: ''
+                  example: part_time
+                  enum:
+                    - full_time
+                    - part_time
+                    - contract
+                    - freelance
+                location:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                category:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                salary_range:
+                  type: object
+                  description: ''
+                  example: null
+                  properties:
+                    min:
+                      type: integer
+                      description: 'Must be at least 0.'
+                      example: 39
+                      nullable: true
+                    max:
+                      type: integer
+                      description: 'Must be at least 0.'
+                      example: 84
+                      nullable: true
+                    currency:
+                      type: string
+                      description: ''
+                      example: architecto
+                      nullable: true
+                  nullable: true
+                tags:
+                  type: object
+                  description: ''
+                  example: null
+                  properties: {  }
+                  nullable: true
+              required:
+                - title
+                - description
+                - requirements
+                - company_name
+                - job_type
+  '/api/employer/jobs/{id}':
+    put:
+      summary: 'Employer: update own job post.'
+      operationId: employerUpdateOwnJobPost
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'Must not be greater than 150 characters.'
+                  example: b
+                description:
+                  type: string
+                  description: ''
+                  example: 'Eius et animi quos velit et.'
+                requirements:
+                  type: string
+                  description: ''
+                  example: architecto
+                company_name:
+                  type: string
+                  description: 'Must not be greater than 150 characters.'
+                  example: 'n'
+                job_type:
+                  type: string
+                  description: ''
+                  example: part_time
+                  enum:
+                    - full_time
+                    - part_time
+                    - contract
+                    - freelance
+                location:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                category:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                salary_range:
+                  type: object
+                  description: ''
+                  example: null
+                  properties:
+                    min:
+                      type: integer
+                      description: 'Must be at least 0.'
+                      example: 39
+                      nullable: true
+                    max:
+                      type: integer
+                      description: 'Must be at least 0.'
+                      example: 84
+                      nullable: true
+                    currency:
+                      type: string
+                      description: ''
+                      example: architecto
+                      nullable: true
+                  nullable: true
+                tags:
+                  type: object
+                  description: ''
+                  example: null
+                  properties: {  }
+                  nullable: true
+                is_active:
+                  type: boolean
+                  description: ''
+                  example: true
+    delete:
+      summary: 'Employer: delete own job post.'
+      operationId: employerDeleteOwnJobPost
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The job post ID.'
+        example: 6a04ca4809826695330cc475
+        required: true
+        schema:
+          type: string
+  '/api/employer/jobs/{id}/deactivate':
+    post:
+      summary: 'Employer: deactivate a job post.'
+      operationId: employerDeactivateAJobPost
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The job post ID.'
+        example: 6a04ca4809826695330cc475
+        required: true
+        schema:
+          type: string
+  '/api/employer/jobs/{jobId}/applications':
+    get:
+      summary: 'Employer: list applications for a job post they own.'
+      operationId: employerListApplicationsForAJobPostTheyOwn
+      description: 'Includes applicant name and ats_score.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  applications:
+                    current_page: 1
+                    data:
+                      -
+                        user_id: 6a04cbe3275c7e4e74063b22
+                        job_post_id: 6a04ca4809826695330cc475
+                        cover_letter: 'I am very interested in this position.'
+                        status: pending
+                        applied_at: '2026-05-13T19:00:24.661000Z'
+                        updated_at: '2026-05-13T19:07:59.046000Z'
+                        created_at: '2026-05-13T19:00:24.662000Z'
+                        id: 6a04ca4809826695330cc476
+                        user:
+                          name: 'Scribe Docs User'
+                          email: scribe@docs.local
+                          roles:
+                            - employee
+                            - employer
+                            - admin
+                          updated_at: '2026-05-13T19:07:15.073000Z'
+                          created_at: '2026-05-13T19:07:15.073000Z'
+                          id: 6a04cbe3275c7e4e74063b22
+                        applicant_name: 'Scribe Docs User'
+                        ats_score: null
+                    first_page_url: 'http://localhost:8000/api/employer/jobs/6a04ca4809826695330cc475/applications?page=1'
+                    from: 1
+                    last_page: 1
+                    last_page_url: 'http://localhost:8000/api/employer/jobs/6a04ca4809826695330cc475/applications?page=1'
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        page: null
+                        active: false
+                      -
+                        url: 'http://localhost:8000/api/employer/jobs/6a04ca4809826695330cc475/applications?page=1'
+                        label: '1'
+                        page: 1
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        page: null
+                        active: false
+                    next_page_url: null
+                    path: 'http://localhost:8000/api/employer/jobs/6a04ca4809826695330cc475/applications'
+                    per_page: 15
+                    prev_page_url: null
+                    to: 1
+                    total: 1
+                properties:
+                  applications:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example:
+                          -
+                            user_id: 6a04cbe3275c7e4e74063b22
+                            job_post_id: 6a04ca4809826695330cc475
+                            cover_letter: 'I am very interested in this position.'
+                            status: pending
+                            applied_at: '2026-05-13T19:00:24.661000Z'
+                            updated_at: '2026-05-13T19:07:59.046000Z'
+                            created_at: '2026-05-13T19:00:24.662000Z'
+                            id: 6a04ca4809826695330cc476
+                            user:
+                              name: 'Scribe Docs User'
+                              email: scribe@docs.local
+                              roles:
+                                - employee
+                                - employer
+                                - admin
+                              updated_at: '2026-05-13T19:07:15.073000Z'
+                              created_at: '2026-05-13T19:07:15.073000Z'
+                              id: 6a04cbe3275c7e4e74063b22
+                            applicant_name: 'Scribe Docs User'
+                            ats_score: null
+                        items:
+                          type: object
+                          properties:
+                            user_id:
+                              type: string
+                              example: 6a04cbe3275c7e4e74063b22
+                            job_post_id:
+                              type: string
+                              example: 6a04ca4809826695330cc475
+                            cover_letter:
+                              type: string
+                              example: 'I am very interested in this position.'
+                            status:
+                              type: string
+                              example: pending
+                            applied_at:
+                              type: string
+                              example: '2026-05-13T19:00:24.661000Z'
+                            updated_at:
+                              type: string
+                              example: '2026-05-13T19:07:59.046000Z'
+                            created_at:
+                              type: string
+                              example: '2026-05-13T19:00:24.662000Z'
+                            id:
+                              type: string
+                              example: 6a04ca4809826695330cc476
+                            user:
+                              type: object
+                              properties:
+                                name:
+                                  type: string
+                                  example: 'Scribe Docs User'
+                                email:
+                                  type: string
+                                  example: scribe@docs.local
+                                roles:
+                                  type: array
+                                  example:
+                                    - employee
+                                    - employer
+                                    - admin
+                                  items:
+                                    type: string
+                                updated_at:
+                                  type: string
+                                  example: '2026-05-13T19:07:15.073000Z'
+                                created_at:
+                                  type: string
+                                  example: '2026-05-13T19:07:15.073000Z'
+                                id:
+                                  type: string
+                                  example: 6a04cbe3275c7e4e74063b22
+                            applicant_name:
+                              type: string
+                              example: 'Scribe Docs User'
+                            ats_score:
+                              type: string
+                              example: null
+                              nullable: true
+                      first_page_url:
+                        type: string
+                        example: 'http://localhost:8000/api/employer/jobs/6a04ca4809826695330cc475/applications?page=1'
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      last_page_url:
+                        type: string
+                        example: 'http://localhost:8000/api/employer/jobs/6a04ca4809826695330cc475/applications?page=1'
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            page: null
+                            active: false
+                          -
+                            url: 'http://localhost:8000/api/employer/jobs/6a04ca4809826695330cc475/applications?page=1'
+                            label: '1'
+                            page: 1
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            page: null
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                              nullable: true
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            page:
+                              type: string
+                              example: null
+                              nullable: true
+                            active:
+                              type: boolean
+                              example: false
+                      next_page_url:
+                        type: string
+                        example: null
+                        nullable: true
+                      path:
+                        type: string
+                        example: 'http://localhost:8000/api/employer/jobs/6a04ca4809826695330cc475/applications'
+                      per_page:
+                        type: integer
+                        example: 15
+                      prev_page_url:
+                        type: string
+                        example: null
+                        nullable: true
+                      to:
+                        type: integer
+                        example: 1
+                      total:
+                        type: integer
+                        example: 1
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: jobId
+        description: 'The job post ID.'
+        example: 6a04ca4809826695330cc475
+        required: true
+        schema:
+          type: string
+  '/api/employer/applications/{id}/status':
+    put:
+      summary: 'Employer: update application status and optional feedback.'
+      operationId: employerUpdateApplicationStatusAndOptionalFeedback
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: ''
+                  example: reviewed
+                  enum:
+                    - pending
+                    - reviewed
+                    - accepted
+                    - rejected
+                feedback:
+                  type: string
+                  description: 'Must not be greater than 2000 characters.'
+                  example: b
+                  nullable: true
+              required:
+                - status
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The application ID.'
+        example: 6a04ca4809826695330cc476
+        required: true
+        schema:
+          type: string
+  /api/employer/seekers:
+    get:
+      summary: 'Paginated list of actively seeking job seekers with optional filters.'
+      operationId: paginatedListOfActivelySeekingJobSeekersWithOptionalFilters
+      description: 'GET /api/employer/seekers'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  seekers:
+                    current_page: 1
+                    data:
+                      -
+                        user_id: 6a04ca4809826695330cc473
+                        current_job_title: 'Backend Developer'
+                        ai_skills:
+                          - PHP
+                          - Laravel
+                          - MongoDB
+                          - 'REST APIs'
+                        ats_score: 82
+                        ai_summary: 'Experienced backend developer with 4 years in Laravel and MongoDB.'
+                        ai_location: 'Beirut, Lebanon'
+                        is_actively_seeking: true
+                        updated_at: '2026-05-13T19:00:24.647000Z'
+                        created_at: '2026-05-13T19:00:24.647000Z'
+                        id: 6a04ca4809826695330cc474
+                      -
+                        user_id: 6a04cbe3275c7e4e74063b22
+                        is_actively_seeking: true
+                        current_job_title: Developer
+                        updated_at: '2026-05-13T19:07:15.077000Z'
+                        created_at: '2026-05-13T19:07:15.077000Z'
+                        id: 6a04cbe3275c7e4e74063b23
+                    first_page_url: 'http://localhost:8000/api/employer/seekers?page=1'
+                    from: 1
+                    last_page: 1
+                    last_page_url: 'http://localhost:8000/api/employer/seekers?page=1'
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        page: null
+                        active: false
+                      -
+                        url: 'http://localhost:8000/api/employer/seekers?page=1'
+                        label: '1'
+                        page: 1
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        page: null
+                        active: false
+                    next_page_url: null
+                    path: 'http://localhost:8000/api/employer/seekers'
+                    per_page: 10
+                    prev_page_url: null
+                    to: 2
+                    total: 2
+                properties:
+                  seekers:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example:
+                          -
+                            user_id: 6a04ca4809826695330cc473
+                            current_job_title: 'Backend Developer'
+                            ai_skills:
+                              - PHP
+                              - Laravel
+                              - MongoDB
+                              - 'REST APIs'
+                            ats_score: 82
+                            ai_summary: 'Experienced backend developer with 4 years in Laravel and MongoDB.'
+                            ai_location: 'Beirut, Lebanon'
+                            is_actively_seeking: true
+                            updated_at: '2026-05-13T19:00:24.647000Z'
+                            created_at: '2026-05-13T19:00:24.647000Z'
+                            id: 6a04ca4809826695330cc474
+                          -
+                            user_id: 6a04cbe3275c7e4e74063b22
+                            is_actively_seeking: true
+                            current_job_title: Developer
+                            updated_at: '2026-05-13T19:07:15.077000Z'
+                            created_at: '2026-05-13T19:07:15.077000Z'
+                            id: 6a04cbe3275c7e4e74063b23
+                        items:
+                          type: object
+                          properties:
+                            user_id:
+                              type: string
+                              example: 6a04ca4809826695330cc473
+                            current_job_title:
+                              type: string
+                              example: 'Backend Developer'
+                            ai_skills:
+                              type: array
+                              example:
+                                - PHP
+                                - Laravel
+                                - MongoDB
+                                - 'REST APIs'
+                              items:
+                                type: string
+                            ats_score:
+                              type: integer
+                              example: 82
+                            ai_summary:
+                              type: string
+                              example: 'Experienced backend developer with 4 years in Laravel and MongoDB.'
+                            ai_location:
+                              type: string
+                              example: 'Beirut, Lebanon'
+                            is_actively_seeking:
+                              type: boolean
+                              example: true
+                            updated_at:
+                              type: string
+                              example: '2026-05-13T19:00:24.647000Z'
+                            created_at:
+                              type: string
+                              example: '2026-05-13T19:00:24.647000Z'
+                            id:
+                              type: string
+                              example: 6a04ca4809826695330cc474
+                      first_page_url:
+                        type: string
+                        example: 'http://localhost:8000/api/employer/seekers?page=1'
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      last_page_url:
+                        type: string
+                        example: 'http://localhost:8000/api/employer/seekers?page=1'
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            page: null
+                            active: false
+                          -
+                            url: 'http://localhost:8000/api/employer/seekers?page=1'
+                            label: '1'
+                            page: 1
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            page: null
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                              nullable: true
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            page:
+                              type: string
+                              example: null
+                              nullable: true
+                            active:
+                              type: boolean
+                              example: false
+                      next_page_url:
+                        type: string
+                        example: null
+                        nullable: true
+                      path:
+                        type: string
+                        example: 'http://localhost:8000/api/employer/seekers'
+                      per_page:
+                        type: integer
+                        example: 10
+                      prev_page_url:
+                        type: string
+                        example: null
+                        nullable: true
+                      to:
+                        type: integer
+                        example: 2
+                      total:
+                        type: integer
+                        example: 2
+      tags:
+        - Endpoints
+  '/api/employer/seekers/{userId}':
+    get:
+      summary: "Return a specific job seeker's public profile by user ID."
+      operationId: returnASpecificJobSeekersPublicProfileByUserID
+      description: "GET /api/employer/seekers/{userId}\n\nExcludes sensitive fields: password, email, phone."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  seeker:
+                    user_id: 6a04ca4809826695330cc473
+                    name: 'Jane Doe'
+                    profile:
+                      user_id: 6a04ca4809826695330cc473
+                      current_job_title: 'Backend Developer'
+                      ai_skills:
+                        - PHP
+                        - Laravel
+                        - MongoDB
+                        - 'REST APIs'
+                      ats_score: 82
+                      ai_summary: 'Experienced backend developer with 4 years in Laravel and MongoDB.'
+                      ai_location: 'Beirut, Lebanon'
+                      is_actively_seeking: true
+                      updated_at: '2026-05-13T19:00:24.647000Z'
+                      created_at: '2026-05-13T19:00:24.647000Z'
+                      id: 6a04ca4809826695330cc474
+                properties:
+                  seeker:
+                    type: object
+                    properties:
+                      user_id:
+                        type: string
+                        example: 6a04ca4809826695330cc473
+                      name:
+                        type: string
+                        example: 'Jane Doe'
+                      profile:
+                        type: object
+                        properties:
+                          user_id:
+                            type: string
+                            example: 6a04ca4809826695330cc473
+                          current_job_title:
+                            type: string
+                            example: 'Backend Developer'
+                          ai_skills:
+                            type: array
+                            example:
+                              - PHP
+                              - Laravel
+                              - MongoDB
+                              - 'REST APIs'
+                            items:
+                              type: string
+                          ats_score:
+                            type: integer
+                            example: 82
+                          ai_summary:
+                            type: string
+                            example: 'Experienced backend developer with 4 years in Laravel and MongoDB.'
+                          ai_location:
+                            type: string
+                            example: 'Beirut, Lebanon'
+                          is_actively_seeking:
+                            type: boolean
+                            example: true
+                          updated_at:
+                            type: string
+                            example: '2026-05-13T19:00:24.647000Z'
+                          created_at:
+                            type: string
+                            example: '2026-05-13T19:00:24.647000Z'
+                          id:
+                            type: string
+                            example: 6a04ca4809826695330cc474
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: userId
+        description: "The job seeker's user ID."
+        example: 6a04ca4809826695330cc473
+        required: true
+        schema:
+          type: string
+  /api/employer/offers:
+    post:
+      summary: 'Employer: send a direct offer to a job seeker.'
+      operationId: employerSendADirectOfferToAJobSeeker
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                job_seeker_id:
+                  type: string
+                  description: ''
+                  example: architecto
+                job_post_id:
+                  type: string
+                  description: ''
+                  example: architecto
+                message:
+                  type: string
+                  description: 'Must not be greater than 1000 characters.'
+                  example: 'n'
+              required:
+                - job_seeker_id
+                - job_post_id
+                - message
+    get:
+      summary: 'Employer: paginated list of sent offers with job seeker name and status.'
+      operationId: employerPaginatedListOfSentOffersWithJobSeekerNameAndStatus
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  offers:
+                    current_page: 1
+                    data: []
+                    first_page_url: 'http://localhost:8000/api/employer/offers?page=1'
+                    from: null
+                    last_page: 1
+                    last_page_url: 'http://localhost:8000/api/employer/offers?page=1'
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        page: null
+                        active: false
+                      -
+                        url: 'http://localhost:8000/api/employer/offers?page=1'
+                        label: '1'
+                        page: 1
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        page: null
+                        active: false
+                    next_page_url: null
+                    path: 'http://localhost:8000/api/employer/offers'
+                    per_page: 15
+                    prev_page_url: null
+                    to: null
+                    total: 0
+                properties:
+                  offers:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example: []
+                      first_page_url:
+                        type: string
+                        example: 'http://localhost:8000/api/employer/offers?page=1'
+                      from:
+                        type: string
+                        example: null
+                        nullable: true
+                      last_page:
+                        type: integer
+                        example: 1
+                      last_page_url:
+                        type: string
+                        example: 'http://localhost:8000/api/employer/offers?page=1'
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            page: null
+                            active: false
+                          -
+                            url: 'http://localhost:8000/api/employer/offers?page=1'
+                            label: '1'
+                            page: 1
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            page: null
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                              nullable: true
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            page:
+                              type: string
+                              example: null
+                              nullable: true
+                            active:
+                              type: boolean
+                              example: false
+                      next_page_url:
+                        type: string
+                        example: null
+                        nullable: true
+                      path:
+                        type: string
+                        example: 'http://localhost:8000/api/employer/offers'
+                      per_page:
+                        type: integer
+                        example: 15
+                      prev_page_url:
+                        type: string
+                        example: null
+                        nullable: true
+                      to:
+                        type: string
+                        example: null
+                        nullable: true
+                      total:
+                        type: integer
+                        example: 0
+      tags:
+        - Endpoints
+  /api/admin/employers:
+    get:
+      summary: ''
+      operationId: getApiAdminEmployers
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                example: []
+      tags:
+        - Endpoints
+  '/api/admin/{id}/approve':
+    post:
+      summary: ''
+      operationId: postApiAdminIdApprove
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the admin.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  '/api/admin/{id}/reject':
+    post:
+      summary: ''
+      operationId: postApiAdminIdReject
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the admin.'
+        example: architecto
+        required: true
+        schema:
+          type: string

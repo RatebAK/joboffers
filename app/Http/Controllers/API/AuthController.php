@@ -19,6 +19,9 @@ class AuthController extends Controller
     //     $this->middleware('auth:api', ['except' => ['login', 'register'/*, 'verifyEmail', 'resendVerificationEmail'*/]]);
     // }
 
+    /**
+     * @unauthenticated
+     */
     public function register(Request $request)
     {
         $rules = [
@@ -85,6 +88,9 @@ class AuthController extends Controller
         ], 201);
     }
 
+    /**
+     * @unauthenticated
+     */
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [

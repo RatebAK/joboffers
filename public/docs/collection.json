@@ -1,0 +1,1415 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "http:\/\/localhost:8000"
+        }
+    ],
+    "info": {
+        "name": "Laravel API Documentation",
+        "_postman_id": "7358838f-69a4-4caf-ba4a-02c616b51aa3",
+        "description": "",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Endpoints",
+            "description": "",
+            "item": [
+                {
+                    "name": "POST api\/auth\/register",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/register",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/register"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"email\":\"zbailey@example.net\",\"password\":\"-0pBNvYgxw\",\"role\":\"employer\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST api\/auth\/login",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/login",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/login"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"gbailey@example.net\",\"password\":\"+-0pBNvYgxwmi\\\/#iw\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "GET api\/auth\/profile",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/profile",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/profile"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"name\":\"Scribe Docs User\",\"email\":\"scribe@docs.local\",\"roles\":[\"employee\",\"employer\",\"admin\"],\"updated_at\":\"2026-05-13T19:07:15.073000Z\",\"created_at\":\"2026-05-13T19:07:15.073000Z\",\"id\":\"6a04cbe3275c7e4e74063b22\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST api\/auth\/logout",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/logout",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/logout"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST api\/auth\/refresh",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/refresh",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/refresh"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Public: paginated list of active job posts with optional filters.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/jobs",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/jobs"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"current_page\":1,\"data\":[{\"title\":\"Senior Laravel Developer\",\"description\":\"We are looking for a senior Laravel developer to join our team.\",\"requirements\":\"Minimum 3 years of Laravel experience.\",\"company_name\":\"Acme Corp\",\"job_type\":\"full_time\",\"location\":\"Beirut, Lebanon\",\"category\":\"Engineering\",\"salary_range\":{\"min\":2000,\"max\":4000,\"currency\":\"USD\"},\"employer_id\":\"6a04cbe3275c7e4e74063b22\",\"is_active\":true,\"updated_at\":\"2026-05-13T19:07:59.039000Z\",\"created_at\":\"2026-05-13T19:00:24.649000Z\",\"id\":\"6a04ca4809826695330cc475\"}],\"first_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/jobs?page=1\",\"from\":1,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/jobs?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/jobs?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost:8000\\\/api\\\/jobs\",\"per_page\":15,\"prev_page_url\":null,\"to\":1,\"total\":1}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Public: single job post by ID.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/jobs\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/jobs\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "6a04ca4809826695330cc475",
+                                    "description": "The job post ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"title\":\"Senior Laravel Developer\",\"description\":\"We are looking for a senior Laravel developer to join our team.\",\"requirements\":\"Minimum 3 years of Laravel experience.\",\"company_name\":\"Acme Corp\",\"job_type\":\"full_time\",\"location\":\"Beirut, Lebanon\",\"category\":\"Engineering\",\"salary_range\":{\"min\":2000,\"max\":4000,\"currency\":\"USD\"},\"employer_id\":\"6a04cbe3275c7e4e74063b22\",\"is_active\":true,\"updated_at\":\"2026-05-13T19:07:59.039000Z\",\"created_at\":\"2026-05-13T19:00:24.649000Z\",\"id\":\"6a04ca4809826695330cc475\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET api\/job-seeker\/profile",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/profile",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/profile"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"profile\":{\"user_id\":\"6a04cbe3275c7e4e74063b22\",\"is_actively_seeking\":true,\"current_job_title\":\"Developer\",\"updated_at\":\"2026-05-13T19:07:15.077000Z\",\"created_at\":\"2026-05-13T19:07:15.077000Z\",\"id\":\"6a04cbe3275c7e4e74063b23\"}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "PUT api\/job-seeker\/profile",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/profile",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/profile"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "phone",
+                                    "value": "bngzmiyvdljnikhw",
+                                    "type": "text",
+                                    "description": "Must not be greater than 20 characters."
+                                },
+                                {
+                                    "key": "address",
+                                    "value": "a",
+                                    "type": "text",
+                                    "description": "Must not be greater than 255 characters."
+                                },
+                                {
+                                    "key": "skills[0]",
+                                    "value": "y",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "education_level",
+                                    "value": "k",
+                                    "type": "text",
+                                    "description": "Must not be greater than 100 characters."
+                                },
+                                {
+                                    "key": "experience_summary",
+                                    "value": "architecto",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "current_job_title",
+                                    "value": "n",
+                                    "type": "text",
+                                    "description": "Must not be greater than 100 characters."
+                                },
+                                {
+                                    "key": "expected_salary",
+                                    "value": "84",
+                                    "type": "text",
+                                    "description": "Must be at least 0."
+                                },
+                                {
+                                    "key": "linkedin_url",
+                                    "value": "http:\/\/www.okuneva.com\/fugiat-sunt-nihil-accusantium-harum-mollitia.html",
+                                    "type": "text",
+                                    "description": "Must be a valid URL. Must not be greater than 255 characters."
+                                },
+                                {
+                                    "key": "portfolio_url",
+                                    "value": "http:\/\/www.considine.com\/provident-perspiciatis-quo-omnis-nostrum-aut-adipisci-quidem",
+                                    "type": "text",
+                                    "description": "Must be a valid URL. Must not be greater than 255 characters."
+                                },
+                                {
+                                    "key": "is_actively_seeking",
+                                    "value": "1",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "resume",
+                                    "src": [],
+                                    "type": "file"
+                                },
+                                {
+                                    "key": "_method",
+                                    "value": "PUT",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST api\/job-seeker\/resume\/upload",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/resume\/upload",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/resume\/upload"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "resume",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST api\/job-seeker\/resume\/upload-and-analyze",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/resume\/upload-and-analyze",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/resume\/upload-and-analyze"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "cv",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Job seeker: paginated list of their applications with job post title and company name.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/applications",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/applications"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"applications\":{\"current_page\":1,\"data\":[{\"user_id\":\"6a04cbe3275c7e4e74063b22\",\"job_post_id\":\"6a04ca4809826695330cc475\",\"cover_letter\":\"I am very interested in this position.\",\"status\":\"pending\",\"applied_at\":\"2026-05-13T19:00:24.661000Z\",\"updated_at\":\"2026-05-13T19:07:59.046000Z\",\"created_at\":\"2026-05-13T19:00:24.662000Z\",\"id\":\"6a04ca4809826695330cc476\",\"job_post\":{\"title\":\"Senior Laravel Developer\",\"description\":\"We are looking for a senior Laravel developer to join our team.\",\"requirements\":\"Minimum 3 years of Laravel experience.\",\"company_name\":\"Acme Corp\",\"job_type\":\"full_time\",\"location\":\"Beirut, Lebanon\",\"category\":\"Engineering\",\"salary_range\":{\"min\":2000,\"max\":4000,\"currency\":\"USD\"},\"employer_id\":\"6a04cbe3275c7e4e74063b22\",\"is_active\":true,\"updated_at\":\"2026-05-13T19:07:59.039000Z\",\"created_at\":\"2026-05-13T19:00:24.649000Z\",\"id\":\"6a04ca4809826695330cc475\"}}],\"first_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/applications?page=1\",\"from\":1,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/applications?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/applications?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/applications\",\"per_page\":10,\"prev_page_url\":null,\"to\":1,\"total\":1}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Job seeker: apply to a job post.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/apply",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/apply"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "job_post_id",
+                                    "value": "architecto",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "cover_letter",
+                                    "value": "n",
+                                    "type": "text",
+                                    "description": "Must not be greater than 1000 characters."
+                                },
+                                {
+                                    "key": "resume",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Job seeker: withdraw a pending application.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/applications\/:id\/withdraw",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/applications\/:id\/withdraw",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "6a04ca4809826695330cc476",
+                                    "description": "The application ID."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "GET api\/job-seeker\/jobs\/search",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/jobs\/search",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/jobs\/search"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"contract\",\"category\":\"g\",\"min_salary\":12}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"jobs\":{\"current_page\":1,\"data\":[],\"first_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/jobs\\\/search?page=1\",\"from\":null,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/jobs\\\/search?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/jobs\\\/search?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/jobs\\\/search\",\"per_page\":15,\"prev_page_url\":null,\"to\":null,\"total\":0}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Job seeker: paginated list of received offers with job post title and employer company name.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/offers",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/offers"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"offers\":{\"current_page\":1,\"data\":[],\"first_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/offers?page=1\",\"from\":null,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/offers?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/offers?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/offers\",\"per_page\":15,\"prev_page_url\":null,\"to\":null,\"total\":0}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Job seeker: accept a direct offer and create an application.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/offers\/:id\/accept",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/offers\/:id\/accept",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "6a04ca4809826695330cc475",
+                                    "description": "The direct offer ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Job seeker: decline a direct offer.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/offers\/:id\/decline",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/offers\/:id\/decline",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "6a04ca4809826695330cc475",
+                                    "description": "The direct offer ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST api\/employer\/apply",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/apply",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/apply"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "document",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "GET api\/employer\/status",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/status",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/status"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"is_employer\":true,\"latest\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Employer: list own job posts with application counts.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/jobs",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/jobs"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "[{\"title\":\"Senior Laravel Developer\",\"description\":\"We are looking for a senior Laravel developer to join our team.\",\"requirements\":\"Minimum 3 years of Laravel experience.\",\"company_name\":\"Acme Corp\",\"job_type\":\"full_time\",\"location\":\"Beirut, Lebanon\",\"category\":\"Engineering\",\"salary_range\":{\"min\":2000,\"max\":4000,\"currency\":\"USD\"},\"employer_id\":\"6a04cbe3275c7e4e74063b22\",\"is_active\":true,\"updated_at\":\"2026-05-13T19:07:59.039000Z\",\"created_at\":\"2026-05-13T19:00:24.649000Z\",\"id\":\"6a04ca4809826695330cc475\",\"application_count\":1}]",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Employer: create a new job post.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/jobs",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/jobs"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"title\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"requirements\":\"architecto\",\"company_name\":\"n\",\"job_type\":\"part_time\",\"location\":\"architecto\",\"category\":\"architecto\",\"salary_range\":{\"min\":39,\"max\":84,\"currency\":\"architecto\"}}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Employer: update own job post.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/jobs\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/jobs\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "6a04ca4809826695330cc475",
+                                    "description": "The job post ID."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"title\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"requirements\":\"architecto\",\"company_name\":\"n\",\"job_type\":\"part_time\",\"location\":\"architecto\",\"category\":\"architecto\",\"salary_range\":{\"min\":39,\"max\":84,\"currency\":\"architecto\"},\"is_active\":true}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Employer: delete own job post.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/jobs\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/jobs\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "6a04ca4809826695330cc475",
+                                    "description": "The job post ID."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Employer: deactivate a job post.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/jobs\/:id\/deactivate",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/jobs\/:id\/deactivate",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "6a04ca4809826695330cc475",
+                                    "description": "The job post ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Employer: list applications for a job post they own.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/jobs\/:jobId\/applications",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/jobs\/:jobId\/applications",
+                            "variable": [
+                                {
+                                    "id": "jobId",
+                                    "key": "jobId",
+                                    "value": "6a04ca4809826695330cc475",
+                                    "description": "The job post ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Includes applicant name and ats_score."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"applications\":{\"current_page\":1,\"data\":[{\"user_id\":\"6a04cbe3275c7e4e74063b22\",\"job_post_id\":\"6a04ca4809826695330cc475\",\"cover_letter\":\"I am very interested in this position.\",\"status\":\"pending\",\"applied_at\":\"2026-05-13T19:00:24.661000Z\",\"updated_at\":\"2026-05-13T19:07:59.046000Z\",\"created_at\":\"2026-05-13T19:00:24.662000Z\",\"id\":\"6a04ca4809826695330cc476\",\"user\":{\"name\":\"Scribe Docs User\",\"email\":\"scribe@docs.local\",\"roles\":[\"employee\",\"employer\",\"admin\"],\"updated_at\":\"2026-05-13T19:07:15.073000Z\",\"created_at\":\"2026-05-13T19:07:15.073000Z\",\"id\":\"6a04cbe3275c7e4e74063b22\"},\"applicant_name\":\"Scribe Docs User\",\"ats_score\":null}],\"first_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/jobs\\\/6a04ca4809826695330cc475\\\/applications?page=1\",\"from\":1,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/jobs\\\/6a04ca4809826695330cc475\\\/applications?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/jobs\\\/6a04ca4809826695330cc475\\\/applications?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/jobs\\\/6a04ca4809826695330cc475\\\/applications\",\"per_page\":15,\"prev_page_url\":null,\"to\":1,\"total\":1}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Employer: update application status and optional feedback.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/applications\/:id\/status",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/applications\/:id\/status",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "6a04ca4809826695330cc476",
+                                    "description": "The application ID."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"status\":\"reviewed\",\"feedback\":\"b\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Paginated list of actively seeking job seekers with optional filters.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/seekers",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/seekers"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "GET \/api\/employer\/seekers"
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"seekers\":{\"current_page\":1,\"data\":[{\"user_id\":\"6a04ca4809826695330cc473\",\"current_job_title\":\"Backend Developer\",\"ai_skills\":[\"PHP\",\"Laravel\",\"MongoDB\",\"REST APIs\"],\"ats_score\":82,\"ai_summary\":\"Experienced backend developer with 4 years in Laravel and MongoDB.\",\"ai_location\":\"Beirut, Lebanon\",\"is_actively_seeking\":true,\"updated_at\":\"2026-05-13T19:00:24.647000Z\",\"created_at\":\"2026-05-13T19:00:24.647000Z\",\"id\":\"6a04ca4809826695330cc474\"},{\"user_id\":\"6a04cbe3275c7e4e74063b22\",\"is_actively_seeking\":true,\"current_job_title\":\"Developer\",\"updated_at\":\"2026-05-13T19:07:15.077000Z\",\"created_at\":\"2026-05-13T19:07:15.077000Z\",\"id\":\"6a04cbe3275c7e4e74063b23\"}],\"first_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/seekers?page=1\",\"from\":1,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/seekers?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/seekers?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/seekers\",\"per_page\":10,\"prev_page_url\":null,\"to\":2,\"total\":2}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Return a specific job seeker's public profile by user ID.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/seekers\/:userId",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/seekers\/:userId",
+                            "variable": [
+                                {
+                                    "id": "userId",
+                                    "key": "userId",
+                                    "value": "6a04ca4809826695330cc473",
+                                    "description": "The job seeker's user ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "GET \/api\/employer\/seekers\/{userId}\n\nExcludes sensitive fields: password, email, phone."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"seeker\":{\"user_id\":\"6a04ca4809826695330cc473\",\"name\":\"Jane Doe\",\"profile\":{\"user_id\":\"6a04ca4809826695330cc473\",\"current_job_title\":\"Backend Developer\",\"ai_skills\":[\"PHP\",\"Laravel\",\"MongoDB\",\"REST APIs\"],\"ats_score\":82,\"ai_summary\":\"Experienced backend developer with 4 years in Laravel and MongoDB.\",\"ai_location\":\"Beirut, Lebanon\",\"is_actively_seeking\":true,\"updated_at\":\"2026-05-13T19:00:24.647000Z\",\"created_at\":\"2026-05-13T19:00:24.647000Z\",\"id\":\"6a04ca4809826695330cc474\"}}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Employer: send a direct offer to a job seeker.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/offers",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/offers"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"job_seeker_id\":\"architecto\",\"job_post_id\":\"architecto\",\"message\":\"n\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Employer: paginated list of sent offers with job seeker name and status.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/offers",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/offers"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"offers\":{\"current_page\":1,\"data\":[],\"first_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/offers?page=1\",\"from\":null,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/offers?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/offers?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/offers\",\"per_page\":15,\"prev_page_url\":null,\"to\":null,\"total\":0}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET api\/admin\/employers",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/employers",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/employers"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "[]",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST api\/admin\/{id}\/approve",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/:id\/approve",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/:id\/approve",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "architecto",
+                                    "description": "The ID of the admin."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST api\/admin\/{id}\/reject",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/:id\/reject",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/:id\/reject",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "architecto",
+                                    "description": "The ID of the admin."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "Authorization",
+                "type": "string"
+            }
+        ]
+    }
+}
