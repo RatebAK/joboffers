@@ -29,7 +29,8 @@ class AuthController extends Controller
             'email' => [
                 'required',
                 'string',
-                'email:rfc,dns', // Improved email validation to check for a valid format and DNS record
+                'email:rfc', // Improved email validation to check for a valid format and DNS record
+                //'email:rfc,dns', that is the original line, dns got deleted because it might be breaking Laravel Cloud Free Plan
                 'max:100',
                 'unique:users,email' // Explicitly specify the column name
             ],
