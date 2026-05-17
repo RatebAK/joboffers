@@ -30,7 +30,7 @@ class AuthController extends Controller
                 'required',
                 'string',
                 'email:rfc', // Improved email validation to check for a valid format and DNS record
-                //'email:rfc,dns', that is the original line, dns got deleted because it might be breaking Laravel Cloud Free Plan
+                //'email:rfc,dns', THIS IS THE ORIGINAL LINE OF CODE, dns got deleted because it might be breaking Laravel Cloud Free Plan EDITED BY RATEB
                 'max:100',
                 'unique:users,email' // Explicitly specify the column name
             ],
@@ -78,14 +78,16 @@ class AuthController extends Controller
         // event(new Registered($user));
 
         // Generate token for the registered user
-        $token = auth()->login($user);
+        $token = auth('api')->login($user);
+        // $token = auth()->login($user); THIS IS THE ORIGINAL LINE OF CODE BEFORE ADDING 'api' EDITED BY RATEB 
 
+        // 'expires_in' => auth()->factory()->getTTL() * 60 SAME HERE WITH THIS ONE EDITED BY RATEB
         return response()->json([
             'message' => 'User successfully registered',
             'user' => $user,
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth('api')->factory()->getTTL() * 60
         ], 201);
     }
 
