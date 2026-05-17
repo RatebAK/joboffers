@@ -32,8 +32,8 @@ return [
     'connections' => [
         'mongodb' => [
             'driver' => 'mongodb',
-            'dsn' => env('MONGODB_URI', 'mongodb://localhost:27017'),
-            'database' => env('MONGODB_DATABASE', 'laravel_app'),
+            'dsn' => env('DB_URI'),
+            'database' => env('DB_DATABASE'),
         ],
         'sqlite' => [
             'driver' => 'sqlite',
