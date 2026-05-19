@@ -119,8 +119,10 @@ class AuthController extends Controller
         
         // Try standard bcrypt authentication first
         try {
-            if (auth('api')->attempt($credentials)) { //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api'
-                return $this->createNewToken(auth('api')->getToken()); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api'
+            if (auth('api')->attempt($credentials)) { //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api' EDITED BY RATEB 
+                // return $this->createNewToken(auth('api')->getToken()); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api' EDITED BY RATEB 
+                // THE TOKEN ISN'T STORED IN THE DATABASE SO WE GENERATE A NEW TOKEN PER LOGIN EDITED BY RATEB 
+                return $this->createNewToken($token);
             }
         } catch (\Exception $e) {
             // If bcrypt fails, try fallback authentication
@@ -129,7 +131,7 @@ class AuthController extends Controller
         // Fallback authentication for testing environments
         $fallbackHash = hash('sha256', $credentials['password'] . 'salt');
         if ($user->password === $fallbackHash) {
-            $token = auth('api')->login($user); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api'
+            $token = auth('api')->login($user); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api' EDITED BY RATEB 
             return $this->createNewToken($token);
         }
 
@@ -141,7 +143,7 @@ class AuthController extends Controller
 
     public function profile()
     {
-        return response()->json(auth('api')->user()); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api'
+        return response()->json(auth('api')->user()); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api' EDITED BY RATEB 
     }
 
     public function logout()
@@ -154,7 +156,7 @@ class AuthController extends Controller
 
     public function refresh()
     {
-        return $this->createNewToken(auth('api')->refresh()); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api'
+        return $this->createNewToken(auth('api')->refresh()); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api' EDITED BY RATEB 
     }
 
     // Email verification method (commented out)
