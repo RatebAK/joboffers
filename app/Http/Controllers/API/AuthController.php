@@ -120,7 +120,7 @@ class AuthController extends Controller
         // Try standard bcrypt authentication first
         try {
             if (auth()->attempt($credentials)) {
-                return $this->createNewToken(auth()->getToken());
+                return $this->createNewToken(auth('api')->getToken()); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api'
             }
         } catch (\Exception $e) {
             // If bcrypt fails, try fallback authentication
@@ -129,7 +129,7 @@ class AuthController extends Controller
         // Fallback authentication for testing environments
         $fallbackHash = hash('sha256', $credentials['password'] . 'salt');
         if ($user->password === $fallbackHash) {
-            $token = auth()->login($user);
+            $token = auth('api')->login($user); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api'
             return $this->createNewToken($token);
         }
 
@@ -141,12 +141,12 @@ class AuthController extends Controller
 
     public function profile()
     {
-        return response()->json(auth()->user());
+        return response()->json(auth('api')->user()); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api'
     }
 
     public function logout()
     {
-        auth()->logout();
+        auth('api')->logout();
         return response()->json([
             'message' => 'User successfully signed out'
         ]);
@@ -154,7 +154,7 @@ class AuthController extends Controller
 
     public function refresh()
     {
-        return $this->createNewToken(auth()->refresh());
+        return $this->createNewToken(auth('api')->refresh()); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api'
     }
 
     // Email verification method (commented out)
@@ -200,8 +200,8 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
+            'expires_in' => auth('api')->factory()->getTTL() * 60, //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api'
+            'user' => auth('api')->user() //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api'
         ]);
     }
 }
