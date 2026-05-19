@@ -119,7 +119,7 @@ class AuthController extends Controller
         
         // Try standard bcrypt authentication first
         try {
-            if (auth()->attempt($credentials)) {
+            if (auth('api')->attempt($credentials)) { //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api'
                 return $this->createNewToken(auth('api')->getToken()); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api'
             }
         } catch (\Exception $e) {
