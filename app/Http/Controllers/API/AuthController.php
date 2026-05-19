@@ -119,7 +119,7 @@ class AuthController extends Controller
         
         // Try standard bcrypt authentication first
         try {
-            if (auth('api')->attempt($credentials)) { //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api' EDITED BY RATEB 
+            if ($token = auth('api')->attempt($credentials)) { //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api' EDITED BY RATEB 
                 // return $this->createNewToken(auth('api')->getToken()); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api' EDITED BY RATEB 
                 // THE TOKEN ISN'T STORED IN THE DATABASE SO WE GENERATE A NEW TOKEN PER LOGIN EDITED BY RATEB 
                 return $this->createNewToken($token);
