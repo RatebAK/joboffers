@@ -47,7 +47,8 @@ class AuthController extends Controller
             'role' => 'nullable|string|in:admin,employer,employee', // Role validation
         ];
         
-        $validator = Validator::make($request->all(), $rules);
+        //$validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->post(), $rules); //THIS WAS CHANGED TO POST TO PREVENT 'PARAM' SENDING DATA VIA URL FOR LOGIN OR REGISTER EDITED BY RATEB
         
 
         if ($validator->fails()) {
@@ -96,10 +97,14 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->post(), [
             'email' => 'required|email',
             'password' => 'required|string|min:6',
-        ]);
+        ]); //THIS WAS CHANGED TO POST TO PREVENT 'PARAM' SENDING DATA VIA URL FOR LOGIN OR REGISTER EDITED BY RATEB
+        //$validator = Validator::make($request->all(), [
+        //    'email' => 'required|email',
+        //    'password' => 'required|string|min:6',
+        //]); 
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
