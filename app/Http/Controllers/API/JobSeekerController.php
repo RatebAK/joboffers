@@ -49,20 +49,52 @@ class JobSeekerController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255',
-            'resume' => 'nullable|file|mimes:pdf,doc,docx|max:5120', // 5MB max
-            'skills' => 'nullable|array',
-            'skills.*' => 'string|max:50',
-            'education_level' => 'nullable|string|max:100',
-            'experience_summary' => 'nullable|string',
-            'current_job_title' => 'nullable|string|max:100',
-            'expected_salary' => 'nullable|numeric|min:0',
-            'linkedin_url' => 'nullable|url|max:255',
-            'portfolio_url' => 'nullable|url|max:255',
-            'is_actively_seeking' => 'boolean',
-            'education_history' => 'nullable|array',
-            'work_experience' => 'nullable|array',
+            // Personal Information
+            'full_name'                     => 'nullable|string|max:100',
+            'location'                      => 'nullable|string|max:255',
+            'age'                           => 'nullable|integer|min:16|max:100',
+            'nationality'                   => 'nullable|string|max:100',
+            'gender'                        => 'nullable|string|in:male,female,other,prefer_not_to_say',
+            'marital_status'                => 'nullable|string|in:single,married,divorced,widowed,prefer_not_to_say',
+            // Contact
+            'phone'                         => 'nullable|string|max:20',
+            'address'                       => 'nullable|string|max:255',
+            // Career Information
+            'years_of_experience'           => 'nullable|integer|min:0|max:60',
+            'job_level'                     => 'nullable|string|in:entry,junior,mid,senior,lead,manager,director,executive',
+            'education_level'               => 'nullable|string|max:100',
+            'current_job_status'            => 'nullable|string|in:employed,unemployed,freelancing,student,open_to_work',
+            'current_job_title'             => 'nullable|string|max:100',
+            'experience_summary'            => 'nullable|string',
+            'expected_salary'               => 'nullable|numeric|min:0',
+            'is_actively_seeking'           => 'boolean',
+            // Social & Portfolio
+            'linkedin_url'                  => 'nullable|url|max:255',
+            'github_url'                    => 'nullable|url|max:255',
+            'portfolio_url'                 => 'nullable|url|max:255',
+            'twitter_url'                   => 'nullable|url|max:255',
+            // Structured data
+            'skills'                        => 'nullable|array',
+            'skills.*.name'                 => 'required_with:skills|string|max:50',
+            'skills.*.level'                => 'nullable|string|in:beginner,intermediate,advanced,expert',
+            'education_history'             => 'nullable|array',
+            'education_history.*.degree'    => 'nullable|string|max:100',
+            'education_history.*.field'     => 'nullable|string|max:100',
+            'education_history.*.school'    => 'nullable|string|max:100',
+            'education_history.*.grade'     => 'nullable|string|max:50',
+            'education_history.*.start_date'=> 'nullable|string|max:20',
+            'education_history.*.end_date'  => 'nullable|string|max:20',
+            'work_experience'               => 'nullable|array',
+            'work_experience.*.title'       => 'nullable|string|max:100',
+            'work_experience.*.company'     => 'nullable|string|max:100',
+            'work_experience.*.start_date'  => 'nullable|string|max:20',
+            'work_experience.*.end_date'    => 'nullable|string|max:20',
+            'work_experience.*.is_current'  => 'nullable|boolean',
+            'work_experience.*.tags'        => 'nullable|array',
+            'work_experience.*.tags.*'      => 'string|max:50',
+            'work_experience.*.description' => 'nullable|string',
+            // Resume file
+            'resume'                        => 'nullable|file|mimes:pdf,doc,docx|max:5120',
         ]);
 
         if ($validator->fails()) {

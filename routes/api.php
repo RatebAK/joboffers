@@ -7,6 +7,7 @@ use App\Http\Controllers\API\DirectOfferController;
 use App\Http\Controllers\API\EmployerController;
 use App\Http\Controllers\API\EmployerSearchController;
 use App\Http\Controllers\API\JobPostController;
+use App\Http\Controllers\API\CompanyProfileController;
 use App\Http\Controllers\API\JobSeekerController;
 
 Route::prefix('auth')->group(function () {
@@ -23,6 +24,10 @@ Route::prefix('auth')->group(function () {
 // Public Job Post Routes
 Route::get('jobs', [JobPostController::class, 'index']);
 Route::get('jobs/{id}', [JobPostController::class, 'show']);
+
+// Public Company Routes
+Route::get('companies', [CompanyProfileController::class, 'index']);
+Route::get('companies/{id}', [CompanyProfileController::class, 'show']);
 
 // Job Seeker Routes
 Route::middleware(['jwt.auth', 'role:employee'])->prefix('job-seeker')->group(function () {
@@ -52,6 +57,10 @@ Route::middleware(['jwt.auth', 'role:employer'])->prefix('employer')->group(func
     Route::put('jobs/{id}', [JobPostController::class, 'update']);
     Route::delete('jobs/{id}', [JobPostController::class, 'destroy']);
     Route::post('jobs/{id}/deactivate', [JobPostController::class, 'deactivate']);
+
+    // Company Profile
+    Route::post('company', [CompanyProfileController::class, 'upsert']);
+    Route::put('company', [CompanyProfileController::class, 'upsert']);
 
     // Application Management
     Route::get('jobs/{jobId}/applications', [ApplicationController::class, 'indexForEmployer']);

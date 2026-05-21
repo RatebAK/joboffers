@@ -35,6 +35,14 @@ class JobPostController extends Controller
             $query->where('job_type', $jobType);
         }
 
+        if ($workMode = $request->query('work_mode')) {
+            $query->where('work_mode', $workMode);
+        }
+
+        if ($experienceLevel = $request->query('experience_level')) {
+            $query->where('experience_level', $experienceLevel);
+        }
+
         if ($category = $request->query('category')) {
             $query->where('category', $category);
         }
@@ -43,9 +51,28 @@ class JobPostController extends Controller
             $query->where('salary_range.min', '>=', (int) $minSalary);
         }
 
-        $posts = $query->paginate(15);
+        if ($maxSalary = $request->query('max_salary')) {
+            $query->where('salary_range.max', '<=', (int) $maxSalary);
+        }
 
-        return response()->json($posts);
+        if ($tag = $request->query('tag')) {
+            $query->where('tags', $tag);
+        }
+
+        $perPage = min((int) ($request->query('per_page', 15)), 100);
+        $paginator = $query->orderBy('created_at', 'desc')->paginate($perPage);
+
+        return response()->json([
+            'data'         => $paginator->items(),
+            'current_page' => $paginator->currentPage(),
+            'per_page'     => $paginator->perPage(),
+            'total'        => $paginator->total(),
+            'total_pages'  => $paginator->lastPage(),
+            'next_page'    => $paginator->hasMorePages() ? $paginator->currentPage() + 1 : null,
+            'prev_page'    => $paginator->currentPage() > 1 ? $paginator->currentPage() - 1 : null,
+            'next_page_url'=> $paginator->nextPageUrl(),
+            'prev_page_url'=> $paginator->previousPageUrl(),
+        ]);
     }
 
     /**
@@ -70,23 +97,32 @@ class JobPostController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title'        => 'required|string|max:150',
-            'description'  => 'required|string',
-            'requirements' => 'required|string',
-            'company_name' => 'required|string|max:150',
-            'job_type'     => 'required|in:full_time,part_time,contract,freelance',
-            'location'     => 'nullable|string',
-            'category'     => 'nullable|string',
-            'salary_range' => 'nullable|array',
-            'salary_range.min' => 'nullable|integer|min:0',
-            'salary_range.max' => 'nullable|integer|min:0',
+            'title'               => 'required|string|max:150',
+            'description'         => 'required|string',
+            'requirements'        => 'required|string',
+            'company_name'        => 'required|string|max:150',
+            'company_logo'        => 'nullable|url',
+            'job_type'            => 'required|in:full_time,part_time,contract,freelance',
+            'work_mode'           => 'nullable|in:remote,hybrid,on_site',
+            'experience_level'    => 'nullable|in:junior,mid,senior',
+            'experience_required' => 'nullable|string|max:50',
+            'location'            => 'nullable|string',
+            'category'            => 'nullable|string',
+            'salary_range'        => 'nullable|array',
+            'salary_range.min'    => 'nullable|integer|min:0',
+            'salary_range.max'    => 'nullable|integer|min:0',
             'salary_range.currency' => 'nullable|string',
-            'tags'         => 'nullable|array',
+            'tags'                => 'nullable|array',
         ]);
 
         $user = Auth::user();
 
+        // Generate a human-readable job ID
+        $count = JobPost::count() + 1;
+        $jobId = 'JOB-' . str_pad($count, 3, '0', STR_PAD_LEFT);
+
         $post = JobPost::create(array_merge($validated, [
+            'job_id'      => $jobId,
             'employer_id' => (string) $user->_id,
             'is_active'   => true,
         ]));
@@ -113,19 +149,23 @@ class JobPostController extends Controller
         }
 
         $validated = $request->validate([
-            'title'        => 'sometimes|string|max:150',
-            'description'  => 'sometimes|string',
-            'requirements' => 'sometimes|string',
-            'company_name' => 'sometimes|string|max:150',
-            'job_type'     => 'sometimes|in:full_time,part_time,contract,freelance',
-            'location'     => 'nullable|string',
-            'category'     => 'nullable|string',
-            'salary_range' => 'nullable|array',
-            'salary_range.min' => 'nullable|integer|min:0',
-            'salary_range.max' => 'nullable|integer|min:0',
+            'title'               => 'sometimes|string|max:150',
+            'description'         => 'sometimes|string',
+            'requirements'        => 'sometimes|string',
+            'company_name'        => 'sometimes|string|max:150',
+            'company_logo'        => 'nullable|url',
+            'job_type'            => 'sometimes|in:full_time,part_time,contract,freelance',
+            'work_mode'           => 'nullable|in:remote,hybrid,on_site',
+            'experience_level'    => 'nullable|in:junior,mid,senior',
+            'experience_required' => 'nullable|string|max:50',
+            'location'            => 'nullable|string',
+            'category'            => 'nullable|string',
+            'salary_range'        => 'nullable|array',
+            'salary_range.min'    => 'nullable|integer|min:0',
+            'salary_range.max'    => 'nullable|integer|min:0',
             'salary_range.currency' => 'nullable|string',
-            'tags'         => 'nullable|array',
-            'is_active'    => 'sometimes|boolean',
+            'tags'                => 'nullable|array',
+            'is_active'           => 'sometimes|boolean',
         ]);
 
         $post->update($validated);
