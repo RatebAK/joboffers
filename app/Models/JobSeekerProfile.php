@@ -11,36 +11,42 @@ class JobSeekerProfile extends Model
     protected $fillable = [
         'user_id',
         // Personal Information
+        'first_name',
+        'last_name',
         'full_name',
-        'location',
-        'age',
-        'nationality',
+        'image',
         'gender',
-        'marital_status',
-        // Contact
-        'phone',
+        'nationality',
+        'city',
+        'location',
         'address',
+        'phone',
+        'date_of_birth',
+        'marital_status',
         // Career Information
-        'years_of_experience',
-        'job_level',
-        'education_level',
+        'salary_range_from',
+        'salary_range_to',
         'current_job_status',
+        'years_of_experience',
+        'education_level',
+        'job_level',
+        'job_types',       // array e.g. ['full-time', 'remote']
+        'job_roles',       // array e.g. ['frontend', 'fullstack']
+        'work_cities',     // array e.g. ['new-york', 'remote']
         'current_job_title',
         'experience_summary',
         'expected_salary',
         'is_actively_seeking',
-        // Social & Portfolio
-        'linkedin_url',
-        'github_url',
-        'portfolio_url',
-        'twitter_url',
+        // Social Links
+        'social_links',    // { linkedin, github, portfolio, twitter }
         // Structured data
-        'skills',
-        'education_history',
-        'work_experience',
+        'skills',          // [{ id, name, level }]
+        'education_history', // [{ id, certificate_type, university, faculty, major, major_name, grade, from_date, awarded_date }]
+        'work_experience', // [{ id, job_title, company_name, job_roles, from_date, to_date, is_currently_working, description }]
         // Resume / CV
         'resume',
         'cv_file_path',
+        // AI-derived fields
         'ai_full_name',
         'ai_email',
         'ai_phone',
@@ -56,21 +62,25 @@ class JobSeekerProfile extends Model
     ];
 
     protected $casts = [
-        'expected_salary' => 'float',
+        'expected_salary'    => 'float',
+        'salary_range_from'  => 'float',
+        'salary_range_to'    => 'float',
         'is_actively_seeking' => 'boolean',
-        'age' => 'integer',
         'years_of_experience' => 'integer',
-        'skills' => 'array',
-        'education_history' => 'array',
-        'work_experience' => 'array',
-        'ai_skills' => 'array',
-        'ai_work_history' => 'array',
-        'ai_projects' => 'array',
-        'ats_score' => 'integer',
-        'ai_analyzed_at' => 'datetime',
+        'job_types'          => 'array',
+        'job_roles'          => 'array',
+        'work_cities'        => 'array',
+        'social_links'       => 'array',
+        'skills'             => 'array',
+        'education_history'  => 'array',
+        'work_experience'    => 'array',
+        'ai_skills'          => 'array',
+        'ai_work_history'    => 'array',
+        'ai_projects'        => 'array',
+        'ats_score'          => 'integer',
+        'ai_analyzed_at'     => 'datetime',
     ];
 
-    // Relationship with user
     public function user()
     {
         return $this->belongsTo(User::class);

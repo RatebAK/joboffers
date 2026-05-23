@@ -7,6 +7,7 @@ use App\Models\CompanyProfile;
 use App\Models\JobPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class CompanyProfileController extends Controller
 {
@@ -75,18 +76,36 @@ class CompanyProfileController extends Controller
 
     /**
      * Employer: create or update own company profile.
+     * company_size accepts either a string ("100-500" / "500+") or an object { min, max?, isPlus }.
      */
     public function upsert(Request $request)
     {
-        $validated = $request->validate([
-            'name'         => 'required|string|max:150',
-            'logo'         => 'nullable|url',
-            'description'  => 'nullable|string',
-            'location'     => 'nullable|string|max:150',
-            'company_size' => 'nullable|string|max:100',
-            'industry'     => 'nullable|string|max:100',
-            'website'      => 'nullable|url',
+        $validator = Validator::make($request->all(), [
+            'name'                  => 'required|string|max:150',
+            'logo'                  => 'nullable|url',
+            'description'           => 'nullable|string',
+            'location'              => 'nullable|string|max:150',
+            'company_size'          => 'nullable',
+            'company_size.min'      => 'required_with:company_size|integer|min:0',
+            'company_size.max'      => 'nullable|integer',
+            'company_size.isPlus'   => 'required_with:company_size|boolean',
+            'industry'              => 'nullable|string|max:100',
+            'website'               => 'nullable|url',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $validated = $validator->validated();
+
+        // Normalize company_size to a canonical string for storage
+        if (isset($validated['company_size']) && is_array($validated['company_size'])) {
+            $cs = $validated['company_size'];
+            $validated['company_size'] = $cs['isPlus']
+                ? "{$cs['min']}+"
+                : "{$cs['min']}-{$cs['max']}";
+        }
 
         $employerId = (string) Auth::user()->_id;
 
@@ -107,6 +126,28 @@ class CompanyProfileController extends Controller
         $data['open_positions'] = JobPost::where('employer_id', $profile->employer_id)
             ->where('is_active', true)
             ->count();
+        $data['company_size_range'] = $this->parseCompanySize($profile->company_size);
         return $data;
+    }
+
+    /**
+     * Parse a company_size string like "100-500 employees" or "500+ employees"
+     * into a structured { min, max?, isPlus } object for frontend consumption.
+     */
+    private function parseCompanySize(?string $size): ?array
+    {
+        if (!$size) return null;
+
+        // Match "500+" or "500+ employees"
+        if (preg_match('/^(\d+)\+/', $size, $m)) {
+            return ['min' => (int) $m[1], 'isPlus' => true];
+        }
+
+        // Match "100-500" or "100-500 employees"
+        if (preg_match('/^(\d+)-(\d+)/', $size, $m)) {
+            return ['min' => (int) $m[1], 'max' => (int) $m[2], 'isPlus' => false];
+        }
+
+        return null;
     }
 }
