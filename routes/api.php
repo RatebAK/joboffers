@@ -46,10 +46,15 @@ Route::middleware(['jwt.auth', 'role:employee'])->prefix('job-seeker')->group(fu
     Route::post('offers/{id}/decline', [DirectOfferController::class, 'decline']);
 });
 
-// Employer Routes 
-Route::middleware(['jwt.auth', 'role:employer'])->prefix('employer')->group(function () {
+// Employer application — any authenticated user can apply to become an employer
+// or check their application status (no role requirement)
+Route::middleware('jwt.auth')->prefix('employer')->group(function () {
     Route::post('apply', [EmployerController::class, 'apply']);
     Route::get('status', [EmployerController::class, 'status']);
+});
+
+// Employer Routes — requires employer role + admin approval (is_employer = true)
+Route::middleware(['jwt.auth', 'role:employer'])->prefix('employer')->group(function () {
 
     // Job Post Management
     Route::get('jobs', [JobPostController::class, 'myPosts']);

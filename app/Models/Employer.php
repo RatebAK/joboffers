@@ -10,6 +10,7 @@ class Employer extends Model
             
     protected $fillable = [
         '_id',
+        'user_id',
         'document_path',
         'document_name',
         'status',

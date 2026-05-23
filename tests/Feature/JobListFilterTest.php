@@ -13,12 +13,7 @@ use App\Models\User;
 
 function makeFilterEmployer(): User
 {
-    return User::create([
-        'name'     => 'Filter Employer',
-        'email'    => 'filter_emp_' . uniqid() . '@test.com',
-        'password' => \Illuminate\Support\Facades\Hash::make('Password1!'),
-        'roles'    => ['employer'],
-    ]);
+    return User::factory()->employer()->create();
 }
 
 function makeJob(string $employerId, array $overrides = []): JobPost

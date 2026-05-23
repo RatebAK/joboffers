@@ -18,13 +18,6 @@ class JobSeekerController extends Controller
     public function show(Request $request)
     {
         $user = $request->user();
-        
-        if ($user->is_employer) {
-            return response()->json([
-                'message' => 'Employers cannot access job seeker profiles'
-            ], 403);
-        }
-
         $profile = $user->jobSeekerProfile;
         
         if (!$profile) {
@@ -41,13 +34,6 @@ class JobSeekerController extends Controller
     public function update(Request $request)
     {
         $user = $request->user();
-
-        if ($user->is_employer) {
-            return response()->json([
-                'message' => 'Employers cannot update job seeker profiles'
-            ], 403);
-        }
-
         $validator = Validator::make($request->all(), [
             // Personal Information
             'full_name'                     => 'nullable|string|max:100',
@@ -200,13 +186,6 @@ class JobSeekerController extends Controller
     public function uploadResume(Request $request)
     {
         $user = $request->user();
-
-        if ($user->is_employer) {
-            return response()->json([
-                'message' => 'Employers cannot upload resumes'
-            ], 403);
-        }
-
         $validator = Validator::make($request->all(), [
             'resume' => 'required|file|mimes:pdf,doc,docx|max:5120',
         ]);

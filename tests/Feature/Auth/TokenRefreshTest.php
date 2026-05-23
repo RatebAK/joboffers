@@ -1,5 +1,11 @@
 <?php
 
+// ============================================================
+// DO NOT DELETE — Integration tests for JWT token refresh.
+// Covers: new token generation, old token blacklisting,
+// user identity preservation, expiration, and error cases.
+// ============================================================
+
 use App\Models\User;
 
 beforeEach(function () {

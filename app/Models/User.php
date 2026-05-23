@@ -19,7 +19,8 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
-        'roles', // New: stores an array of roles (e.g., ['employee', 'employer'])
+        'roles',
+        'is_employer', // set to true when admin approves employer application
     ];
 
     /**
@@ -30,7 +31,8 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'roles' => 'array', // New: Casts the roles field to a PHP array
+        'roles'             => 'array',
+        'is_employer'       => 'boolean',
     ];
     
     /**

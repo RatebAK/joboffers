@@ -125,7 +125,7 @@ test('403 for insufficient permissions - employee accessing employer route', fun
 
     $response = $this->withHeaders([
         'Authorization' => 'Bearer ' . $token
-    ])->getJson('/api/employer/status');
+    ])->getJson('/api/employer/jobs');
 
     $response->assertStatus(403)
         ->assertJson([

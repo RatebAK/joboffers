@@ -8,7 +8,7 @@ use App\Models\Employer;
 
 class EmployerController extends Controller
 {
-    // User applies to become employer
+    // Any authenticated user can apply to become an employer
     public function apply(Request $request)
     {
         $request->validate([
@@ -21,14 +21,14 @@ class EmployerController extends Controller
         $path = $file->store('employer_docs', 'public');
 
         $employer = Employer::create([
-            '_id' => $user->id,
+            'user_id'       => $user->_id,
             'document_path' => $path,
             'document_name' => $file->getClientOriginalName(),
-            'status' => Employer::STATUS_PENDING,
+            'status'        => Employer::STATUS_PENDING,
         ]);
 
         return response()->json([
-            'message' => 'Employer application submitted.',
+            'message'  => 'Employer application submitted.',
             'employer' => $employer,
         ], 201);
     }
@@ -44,7 +44,7 @@ class EmployerController extends Controller
             ->first();
 
         return response()->json([
-            'is_employer' => $user->hasRole('employer'),
+            'is_employer' => (bool) $user->is_employer,
             'latest' => $latest,
         ]);
     }
@@ -63,23 +63,24 @@ class EmployerController extends Controller
 
     public function approve(Request $request, $id)
     {
-        // $this->authorize('approve-employers');
-    
         $employer = Employer::findOrFail($id);
         $user = $employer->user;
-    
-        // 1. Update the Employer application status (Document 1)
+
         $employer->update([
-            'status' => Employer::STATUS_APPROVED,
+            'status'      => Employer::STATUS_APPROVED,
             'reviewed_by' => $request->user()->id,
             'reviewed_at' => now(),
         ]);
-    
-        // 2. Update the User flag (Document 2)
-        $user->update(['is_employer' => true]);
-    
+
+        // Add employer role if not already present, and mark as approved
+        $roles = $user->roles ?? [];
+        if (!in_array('employer', $roles)) {
+            $roles[] = 'employer';
+        }
+        $user->update(['roles' => $roles, 'is_employer' => true]);
+
         return response()->json([
-            'message' => 'Approved employer request.',
+            'message'  => 'Approved employer request.',
             'employer' => $employer,
         ]);
     }
@@ -87,8 +88,6 @@ class EmployerController extends Controller
     // Admin: reject a request
     public function reject(Request $request, $id)
     {
-        $this->authorize('approve-employers');
-
         $employer = Employer::findOrFail($id);
 
         $employer->update([

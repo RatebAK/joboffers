@@ -49,7 +49,8 @@ test('employer user can access employer routes', function () {
         'name' => 'Employer User',
         'email' => 'employer@example.com',
         'password' => hash('sha256', 'Test@123' . 'salt'),
-        'roles' => ['employer']
+        'roles' => ['employer'],
+        'is_employer' => true,
     ]);
     
     $token = auth()->login($user);
@@ -126,7 +127,8 @@ test('middleware with multiple role requirements', function () {
         'name' => 'Employer User',
         'email' => 'employer@example.com',
         'password' => hash('sha256', 'Test@123' . 'salt'),
-        'roles' => ['employer']
+        'roles' => ['employer'],
+        'is_employer' => true,
     ]);
     
     $token = auth()->login($user);
@@ -200,7 +202,8 @@ test('multi-role user can access routes for any of their roles', function () {
         'name' => 'Multi Role User',
         'email' => 'multi@example.com',
         'password' => hash('sha256', 'Test@123' . 'salt'),
-        'roles' => ['employer', 'employee']
+        'roles' => ['employer', 'employee'],
+        'is_employer' => true,
     ]);
     
     $token = auth()->login($user);

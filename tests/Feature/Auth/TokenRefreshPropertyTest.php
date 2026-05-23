@@ -1,5 +1,12 @@
 <?php
 
+// ============================================================
+// DO NOT DELETE — Property-based tests for JWT token refresh.
+// Runs 20 iterations each to verify refresh properties hold
+// across random users and roles: new token differs from old,
+// old token is blacklisted, user identity is preserved.
+// ============================================================
+
 use App\Models\User;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 

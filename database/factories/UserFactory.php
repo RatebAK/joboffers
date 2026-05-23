@@ -67,12 +67,13 @@ class UserFactory extends Factory
     }
 
     /**
-     * Create a user with employer role.
+     * Create a user with employer role (pre-approved).
      */
     public function employer(): static
     {
         return $this->state(fn (array $attributes) => [
-            'roles' => ['employer'],
+            'roles'       => ['employer'],
+            'is_employer' => true, // pre-approved for testing
         ]);
     }
 

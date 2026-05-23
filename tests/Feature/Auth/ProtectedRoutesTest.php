@@ -53,14 +53,15 @@ test('employer routes with employer user should succeed', function () {
         'name' => 'Employer User',
         'email' => 'employer@example.com',
         'password' => hash('sha256', 'Test@123' . 'salt'),
-        'roles' => ['employer']
+        'roles' => ['employer'],
+        'is_employer' => true,
     ]);
     
     $token = auth()->login($user);
     
     $response = $this->withHeaders([
         'Authorization' => 'Bearer ' . $token
-    ])->getJson('/api/employer/status');
+    ])->getJson('/api/employer/jobs');
     
     // Should succeed (200) or return method not allowed (405) if controller method doesn't exist
     expect(in_array($response->status(), [200, 405, 500]))->toBeTrue();
@@ -78,7 +79,7 @@ test('employer routes with non-employer user should fail with 403', function () 
     
     $response = $this->withHeaders([
         'Authorization' => 'Bearer ' . $token
-    ])->getJson('/api/employer/status');
+    ])->getJson('/api/employer/jobs');
     
     $response->assertStatus(403);
     expect($response->json('error'))->toBe('Forbidden');
@@ -133,7 +134,7 @@ test('admin user can access employer and employee routes', function () {
     // Admin should access employer routes
     $response = $this->withHeaders([
         'Authorization' => 'Bearer ' . $token
-    ])->getJson('/api/employer/status');
+    ])->getJson('/api/employer/jobs');
     
     expect(in_array($response->status(), [200, 405, 500]))->toBeTrue();
     
@@ -151,7 +152,7 @@ test('unauthenticated requests to protected routes fail with 401', function () {
     $response->assertStatus(401);
     
     // Test employer routes
-    $response = $this->getJson('/api/employer/status');
+    $response = $this->getJson('/api/employer/jobs');
     $response->assertStatus(401);
     
     // Test employee routes
@@ -164,7 +165,8 @@ test('multi-role user can access routes for all their roles', function () {
         'name' => 'Multi Role User',
         'email' => 'multi@example.com',
         'password' => hash('sha256', 'Test@123' . 'salt'),
-        'roles' => ['employer', 'employee']
+        'roles' => ['employer', 'employee'],
+        'is_employer' => true,
     ]);
     
     $token = auth()->login($user);
@@ -172,7 +174,7 @@ test('multi-role user can access routes for all their roles', function () {
     // Should access employer routes
     $response = $this->withHeaders([
         'Authorization' => 'Bearer ' . $token
-    ])->getJson('/api/employer/status');
+    ])->getJson('/api/employer/jobs');
     
     expect(in_array($response->status(), [200, 405, 500]))->toBeTrue();
     

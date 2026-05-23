@@ -31,7 +31,9 @@ test('Property 19: Role-based access control', function () {
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'password' => hash('sha256', 'Test@123' . 'salt'),
-            'roles' => $userRoles
+            'roles' => $userRoles,
+            // Set is_employer=true if user has employer role so approval check passes
+            'is_employer' => in_array('employer', $userRoles) ? true : false,
         ]);
         
         // Test with random required roles (1-2 roles)

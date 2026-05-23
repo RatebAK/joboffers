@@ -32,6 +32,18 @@ class CheckRole
 
         // Check if user has any of the required roles
         if ($user->hasAnyRole($roles)) {
+            // Employers additionally require admin approval, except for
+            // the apply/status routes which are accessible pre-approval.
+            if (in_array('employer', $roles) && $user->hasRole('employer') && !$user->isAdmin()) {
+                $path = $request->path();
+                $preApprovalRoutes = ['api/employer/apply', 'api/employer/status'];
+                if (!in_array($path, $preApprovalRoutes) && !$user->is_employer) {
+                    return response()->json([
+                        'error'   => 'Forbidden',
+                        'message' => 'Your employer account is pending admin approval.',
+                    ], 403);
+                }
+            }
             return $next($request);
         }
 
