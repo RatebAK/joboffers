@@ -104,10 +104,6 @@ class AuthController extends Controller
             ]);
         }
         // ---------------------------
-
-        // Generate token for the registered user
-        $token = auth('api')->login($user);
-
         
         // Trigger email verification event (commented out)
         // event(new Registered($user));
