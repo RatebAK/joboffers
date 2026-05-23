@@ -93,6 +93,22 @@ class AuthController extends Controller
         
         $user = User::create($data);
 
+
+        // TEST BY RATEB
+        // Automatically create a pending Employer record if the registered role is employer
+        if ($role === 'employer') {
+            \App\Models\Employer::create([
+                '_id'     => (string) $user->_id, // Keeps _id and user_id identical for easier matching
+                'user_id' => (string) $user->_id,
+                'status'  => \App\Models\Employer::STATUS_PENDING,
+            ]);
+        }
+        // ---------------------------
+
+        // Generate token for the registered user
+        $token = auth('api')->login($user);
+
+        
         // Trigger email verification event (commented out)
         // event(new Registered($user));
 
