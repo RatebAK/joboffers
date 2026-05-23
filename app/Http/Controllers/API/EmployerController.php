@@ -8,7 +8,24 @@ use App\Models\Employer;
 
 class EmployerController extends Controller
 {
-    // Any authenticated user can apply to become an employer
+    /**
+     * Apply to become employer
+     *
+     * Any authenticated user can submit an employer application by uploading a supporting document. The application starts in `pending` status and must be approved by an admin.
+     *
+     * @bodyParam document file required PDF, DOC, DOCX, JPG, or PNG. Max 5 MB.
+     *
+     * @response 201 {
+     *   "message": "Employer application submitted.",
+     *   "employer": {
+     *     "id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *     "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *     "status": "pending",
+     *     "document_name": "business_license.pdf"
+     *   }
+     * }
+     * @response 422 { "errors": { "document": ["The document field is required."] } }
+     */
     public function apply(Request $request)
     {
         $request->validate([
@@ -33,7 +50,21 @@ class EmployerController extends Controller
         ], 201);
     }
 
-    // User gets current status / latest
+    /**
+     * Employer application status
+     *
+     * Returns the authenticated user's employer approval status and their latest application record.
+     *
+     * @response 200 {
+     *   "is_employer": false,
+     *   "latest": {
+     *     "id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *     "status": "pending",
+     *     "document_name": "business_license.pdf",
+     *     "created_at": "2024-01-15T00:00:00Z"
+     *   }
+     * }
+     */
     public function status(Request $request)
     {
         $user = $request->user();
@@ -49,7 +80,21 @@ class EmployerController extends Controller
         ]);
     }
 
-    // Admin: list all pending
+    /**
+     * List pending employer applications
+     *
+     * Returns all employer applications with `pending` status. Admin only.
+     *
+     * @response 200 [
+     *   {
+     *     "id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *     "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *     "status": "pending",
+     *     "document_name": "business_license.pdf",
+     *     "user": { "id": "664f1a2b3c4d5e6f7a8b9c0e", "name": "John Employer", "email": "john@corp.com" }
+     *   }
+     * ]
+     */
     public function index()
     {
         // $this->authorize('approve-employers');
@@ -61,6 +106,19 @@ class EmployerController extends Controller
         return response()->json($pending);
     }
 
+    /**
+     * Approve employer
+     *
+     * Approves an employer application. Grants the `employer` role to the user and sets `is_employer = true`. Admin only.
+     *
+     * @urlParam id string required The employer application ID. Example: 664f1a2b3c4d5e6f7a8b9c0d
+     *
+     * @response 200 {
+     *   "message": "Approved employer request.",
+     *   "employer": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "status": "approved" }
+     * }
+     * @response 404 { "message": "No query results for model" }
+     */
     public function approve(Request $request, $id)
     {
         $employer = Employer::findOrFail($id);
@@ -85,6 +143,20 @@ class EmployerController extends Controller
         ]);
     }
 
+    /**
+     * Reject employer
+     *
+     * Rejects an employer application. Admin only.
+     *
+     * @urlParam id string required The employer application ID. Example: 664f1a2b3c4d5e6f7a8b9c0d
+     * @bodyParam review_notes string Optional rejection reason. Example: Insufficient documentation provided.
+     *
+     * @response 200 {
+     *   "message": "Rejected employer request.",
+     *   "employer": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "status": "rejected", "review_notes": "Insufficient documentation." }
+     * }
+     * @response 404 { "message": "No query results for model" }
+     */
     // Admin: reject a request
     public function reject(Request $request, $id)
     {

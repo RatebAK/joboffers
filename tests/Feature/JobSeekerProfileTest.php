@@ -14,14 +14,14 @@ use App\Models\User;
 
 // ── Helpers ───────────────────────────────────────────────────
 
-function makeSeeker(): array
+function makeProfileSeeker(): array
 {
     $seeker = User::factory()->employee()->create();
     $token  = auth('api')->login($seeker);
     return [$seeker, $token];
 }
 
-function makeEmployerWithToken(): array
+function makeProfileEmployer(): array
 {
     $employer = User::factory()->employer()->create();
     $token    = auth('api')->login($employer);
@@ -100,7 +100,7 @@ function fullProfilePayload(): array
 // ── Job Seeker Profile — GET ──────────────────────────────────
 
 test('job seeker can fetch their profile (auto-created if missing)', function () {
-    [$seeker, $token] = makeSeeker();
+    [$seeker, $token] = makeProfileSeeker();
 
     $response = $this->withToken($token)->getJson('/api/job-seeker/profile');
 
@@ -113,7 +113,7 @@ test('job seeker can fetch their profile (auto-created if missing)', function ()
 // ── Job Seeker Profile — PUT (full payload) ───────────────────
 
 test('job seeker can update profile with all fields', function () {
-    [$seeker, $token] = makeSeeker();
+    [$seeker, $token] = makeProfileSeeker();
 
     $response = $this->withToken($token)->putJson('/api/job-seeker/profile', fullProfilePayload());
 
@@ -138,7 +138,7 @@ test('job seeker can update profile with all fields', function () {
 });
 
 test('job seeker profile stores job_types, job_roles, work_cities arrays', function () {
-    [$seeker, $token] = makeSeeker();
+    [$seeker, $token] = makeProfileSeeker();
 
     $this->withToken($token)->putJson('/api/job-seeker/profile', fullProfilePayload());
 
@@ -152,7 +152,7 @@ test('job seeker profile stores job_types, job_roles, work_cities arrays', funct
 });
 
 test('job seeker profile stores social_links as nested object', function () {
-    [$seeker, $token] = makeSeeker();
+    [$seeker, $token] = makeProfileSeeker();
 
     $this->withToken($token)->putJson('/api/job-seeker/profile', fullProfilePayload());
 
@@ -167,7 +167,7 @@ test('job seeker profile stores social_links as nested object', function () {
 });
 
 test('job seeker profile stores skills with name and level', function () {
-    [$seeker, $token] = makeSeeker();
+    [$seeker, $token] = makeProfileSeeker();
 
     $this->withToken($token)->putJson('/api/job-seeker/profile', fullProfilePayload());
 
@@ -181,7 +181,7 @@ test('job seeker profile stores skills with name and level', function () {
 });
 
 test('job seeker profile stores education_history with all fields', function () {
-    [$seeker, $token] = makeSeeker();
+    [$seeker, $token] = makeProfileSeeker();
 
     $this->withToken($token)->putJson('/api/job-seeker/profile', fullProfilePayload());
 
@@ -199,7 +199,7 @@ test('job seeker profile stores education_history with all fields', function () 
 });
 
 test('job seeker profile stores work_experience with all fields', function () {
-    [$seeker, $token] = makeSeeker();
+    [$seeker, $token] = makeProfileSeeker();
 
     $this->withToken($token)->putJson('/api/job-seeker/profile', fullProfilePayload());
 
@@ -215,7 +215,7 @@ test('job seeker profile stores work_experience with all fields', function () {
 });
 
 test('job seeker profile update rejects invalid gender', function () {
-    [$seeker, $token] = makeSeeker();
+    [$seeker, $token] = makeProfileSeeker();
 
     $this->withToken($token)->putJson('/api/job-seeker/profile', ['gender' => 'robot'])
          ->assertStatus(422)->assertJsonStructure(['errors' => ['gender']]);
@@ -225,7 +225,7 @@ test('job seeker profile update rejects invalid gender', function () {
 });
 
 test('job seeker profile update rejects invalid job_level', function () {
-    [$seeker, $token] = makeSeeker();
+    [$seeker, $token] = makeProfileSeeker();
 
     $this->withToken($token)->putJson('/api/job-seeker/profile', ['job_level' => 'god'])
          ->assertStatus(422)->assertJsonStructure(['errors' => ['job_level']]);
@@ -235,7 +235,7 @@ test('job seeker profile update rejects invalid job_level', function () {
 });
 
 test('job seeker profile update rejects invalid skill level', function () {
-    [$seeker, $token] = makeSeeker();
+    [$seeker, $token] = makeProfileSeeker();
 
     $this->withToken($token)->putJson('/api/job-seeker/profile', [
         'skills' => [['name' => 'PHP', 'level' => 'godlike']],
@@ -252,7 +252,7 @@ test('unauthenticated user cannot access job seeker profile', function () {
 // ── Company Profile — Full CRUD ───────────────────────────────
 
 test('employer can create a company profile', function () {
-    [$employer, $token] = makeEmployerWithToken();
+    [$employer, $token] = makeProfileEmployer();
 
     $response = $this->withToken($token)->postJson('/api/employer/company', [
         'name'         => 'Acme Inc',
@@ -276,7 +276,7 @@ test('employer can create a company profile', function () {
 });
 
 test('employer can read their company profile via public endpoint', function () {
-    [$employer, $token] = makeEmployerWithToken();
+    [$employer, $token] = makeProfileEmployer();
 
     $profile = CompanyProfile::create([
         'employer_id'  => (string) $employer->_id,
@@ -300,7 +300,7 @@ test('employer can read their company profile via public endpoint', function () 
 });
 
 test('employer can update their company profile', function () {
-    [$employer, $token] = makeEmployerWithToken();
+    [$employer, $token] = makeProfileEmployer();
 
     CompanyProfile::create([
         'employer_id' => (string) $employer->_id,
@@ -325,7 +325,7 @@ test('employer can update their company profile', function () {
 });
 
 test('company profile upsert requires name', function () {
-    [$employer, $token] = makeEmployerWithToken();
+    [$employer, $token] = makeProfileEmployer();
 
     $this->withToken($token)->postJson('/api/employer/company', [
         'industry' => 'Tech',
@@ -340,7 +340,7 @@ test('company profile show returns 404 for unknown id', function () {
 });
 
 test('company profile includes open_positions count', function () {
-    [$employer, $token] = makeEmployerWithToken();
+    [$employer, $token] = makeProfileEmployer();
 
     $profile = CompanyProfile::create([
         'employer_id' => (string) $employer->_id,
@@ -370,7 +370,7 @@ test('company profile includes open_positions count', function () {
 });
 
 test('non-employer cannot create company profile', function () {
-    [$seeker, $token] = makeSeeker();
+    [$seeker, $token] = makeProfileSeeker();
 
     $this->withToken($token)->postJson('/api/employer/company', [
         'name' => 'Sneaky Corp',

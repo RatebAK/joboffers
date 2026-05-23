@@ -13,7 +13,28 @@ use Illuminate\Support\Facades\Validator;
 class DirectOfferController extends Controller
 {
     /**
-     * Employer: send a direct offer to a job seeker.
+     * Send direct offer
+     *
+     * Sends a direct job offer to a specific job seeker for one of the employer's active job posts. Duplicate offers to the same seeker for the same post are rejected.
+     *
+     * @bodyParam job_seeker_id string required The target job seeker's user ID. Example: 664f1a2b3c4d5e6f7a8b9c0e
+     * @bodyParam job_post_id string required The job post ID (must belong to the authenticated employer). Example: 664f1a2b3c4d5e6f7a8b9c0d
+     * @bodyParam message string required Personalised offer message. Max 1000 chars. Example: We think you'd be a great fit for this role.
+     *
+     * @response 201 {
+     *   "message": "Direct offer sent successfully",
+     *   "offer": {
+     *     "id": "664f1a2b3c4d5e6f7a8b9c0f",
+     *     "employer_id": "664f1a2b3c4d5e6f7a8b9c0a",
+     *     "job_seeker_id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *     "job_post_id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *     "message": "We think you'd be a great fit.",
+     *     "status": "pending"
+     *   }
+     * }
+     * @response 403 { "message": "Forbidden" }
+     * @response 404 { "message": "Job post not found" }
+     * @response 409 { "message": "A direct offer has already been sent to this job seeker for this job post" }
      */
     public function store(Request $request)
     {
@@ -78,7 +99,24 @@ class DirectOfferController extends Controller
     }
 
     /**
-     * Employer: paginated list of sent offers with job seeker name and status.
+     * Sent offers
+     *
+     * Paginated list of direct offers sent by the authenticated employer, including job seeker name and job post title.
+     *
+     * @response 200 {
+     *   "offers": {
+     *     "data": [
+     *       {
+     *         "id": "664f1a2b3c4d5e6f7a8b9c0f",
+     *         "status": "pending",
+     *         "message": "We think you'd be a great fit.",
+     *         "job_seeker_name": "Jane Smith",
+     *         "job_post_title": "Senior Laravel Developer"
+     *       }
+     *     ],
+     *     "current_page": 1, "per_page": 15, "total": 1, "total_pages": 1, "next_page": null, "prev_page": null
+     *   }
+     * }
      */
     public function indexSent(Request $request)
     {
@@ -99,7 +137,24 @@ class DirectOfferController extends Controller
     }
 
     /**
-     * Job seeker: paginated list of received offers with job post title and employer company name.
+     * Received offers
+     *
+     * Paginated list of direct offers received by the authenticated job seeker, including job post title and employer company name.
+     *
+     * @response 200 {
+     *   "offers": {
+     *     "data": [
+     *       {
+     *         "id": "664f1a2b3c4d5e6f7a8b9c0f",
+     *         "status": "pending",
+     *         "message": "We think you'd be a great fit.",
+     *         "job_post_title": "Senior Laravel Developer",
+     *         "employer_company_name": "Acme Corp"
+     *       }
+     *     ],
+     *     "current_page": 1, "per_page": 15, "total": 1, "total_pages": 1, "next_page": null, "prev_page": null
+     *   }
+     * }
      */
     public function indexReceived(Request $request)
     {
@@ -120,8 +175,18 @@ class DirectOfferController extends Controller
     }
 
     /**
-     * Job seeker: accept a direct offer and create an application.
-     * @urlParam id string required The direct offer ID. Example: 6a04ca4809826695330cc475
+     * Accept offer
+     *
+     * Accepts a direct offer and automatically creates a pending application for the related job post.
+     *
+     * @urlParam id string required The direct offer ID. Example: 664f1a2b3c4d5e6f7a8b9c0f
+     *
+     * @response 200 {
+     *   "message": "Offer accepted successfully",
+     *   "offer": { "id": "664f1a2b3c4d5e6f7a8b9c0f", "status": "accepted" }
+     * }
+     * @response 403 { "message": "Forbidden" }
+     * @response 404 { "message": "Offer not found" }
      */
     public function accept(Request $request, $id)
     {
@@ -153,8 +218,18 @@ class DirectOfferController extends Controller
     }
 
     /**
-     * Job seeker: decline a direct offer.
-     * @urlParam id string required The direct offer ID. Example: 6a04ca4809826695330cc475
+     * Decline offer
+     *
+     * Declines a direct offer. The offer status is set to `declined`.
+     *
+     * @urlParam id string required The direct offer ID. Example: 664f1a2b3c4d5e6f7a8b9c0f
+     *
+     * @response 200 {
+     *   "message": "Offer declined successfully",
+     *   "offer": { "id": "664f1a2b3c4d5e6f7a8b9c0f", "status": "declined" }
+     * }
+     * @response 403 { "message": "Forbidden" }
+     * @response 404 { "message": "Offer not found" }
      */
     public function decline(Request $request, $id)
     {

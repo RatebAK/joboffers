@@ -14,8 +14,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: Register
+      description: 'Create a new user account. Returns a JWT token on success.'
       authenticated: false
       deprecated: false
     headers:
@@ -29,57 +29,85 @@ endpoints:
       name:
         custom: []
         name: name
-        description: 'Must be at least 2 characters. Must not be greater than 100 characters.'
+        description: 'Display name. Min 2, max 100 chars.'
         required: true
-        example: b
+        example: 'Jane Smith'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
       email:
         custom: []
         name: email
-        description: 'Must be a valid email address. Must not be greater than 100 characters.'
+        description: 'Valid email address.'
         required: true
-        example: zbailey@example.net
+        example: jane@example.com
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
       password:
         custom: []
         name: password
-        description: 'Must match the regex /[a-z]/. Must match the regex /[A-Z]/. Must match the regex /[0-9]/. Must match the regex /[@$!%*#?&]/. Must be at least 8 characters.'
+        description: 'Min 8 chars, must include uppercase, lowercase, digit, and special character.'
         required: true
-        example: '-0pBNvYgxw'
+        example: Secret@123
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
       role:
         custom: []
         name: role
-        description: ''
+        description: 'Role to assign. Defaults to `employee`.'
         required: false
-        example: employer
+        example: employee
         type: string
-        enumValues:
-          - admin
-          - employer
-          - employee
-        exampleWasSpecified: false
+        enumValues: []
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
+      password_confirmation:
+        custom: []
+        name: password_confirmation
+        description: 'Must match password.'
+        required: true
+        example: Secret@123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
     cleanBodyParameters:
-      name: b
-      email: zbailey@example.net
-      password: '-0pBNvYgxw'
-      role: employer
+      name: 'Jane Smith'
+      email: jane@example.com
+      password: Secret@123
+      role: employee
+      password_confirmation: Secret@123
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "message": "User successfully registered",
+            "user": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Jane Smith", "email": "jane@example.com", "roles": ["employee"] },
+            "access_token": "eyJ...",
+            "token_type": "bearer",
+            "expires_in": 3600
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{ "email": ["The email has already been taken."] }'
+        headers: []
+        description: ''
     responseFields: []
     auth: []
     controller: null
@@ -96,8 +124,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: Login
+      description: 'Authenticate with email and password. Returns a JWT bearer token.'
       authenticated: false
       deprecated: false
     headers:
@@ -111,30 +139,48 @@ endpoints:
       email:
         custom: []
         name: email
-        description: 'Must be a valid email address.'
+        description: ''
         required: true
-        example: gbailey@example.net
+        example: jane@example.com
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
       password:
         custom: []
         name: password
-        description: 'Must be at least 6 characters.'
+        description: ''
         required: true
-        example: '+-0pBNvYgxwmi/#iw'
+        example: Secret@123
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      email: gbailey@example.net
-      password: '+-0pBNvYgxwmi/#iw'
+      email: jane@example.com
+      password: Secret@123
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "access_token": "eyJ...",
+            "token_type": "bearer",
+            "expires_in": 3600,
+            "user": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Jane Smith", "email": "jane@example.com", "roles": ["employee"] }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: '{ "error": "Unauthorized", "message": "Invalid credentials" }'
+        headers: []
+        description: ''
     responseFields: []
     auth: []
     controller: null
@@ -151,8 +197,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'Get profile'
+      description: "Returns the authenticated user's account details."
       authenticated: true
       deprecated: false
     headers:
@@ -170,12 +216,16 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"name":"Scribe Docs User","email":"scribe@docs.local","roles":["employee","employer","admin"],"updated_at":"2026-05-13T19:07:15.073000Z","created_at":"2026-05-13T19:07:15.073000Z","id":"6a04cbe3275c7e4e74063b22"}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "name": "Jane Smith",
+            "email": "jane@example.com",
+            "roles": ["employee"],
+            "is_employer": false
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -195,8 +245,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: Logout
+      description: 'Invalidates the current JWT token.'
       authenticated: true
       deprecated: false
     headers:
@@ -210,7 +260,13 @@ endpoints:
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{ "message": "User successfully signed out" }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -230,8 +286,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'Refresh token'
+      description: 'Issues a new JWT token using the current (still-valid) token.'
       authenticated: true
       deprecated: false
     headers:
@@ -245,7 +301,19 @@ endpoints:
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "access_token": "eyJ...",
+            "token_type": "bearer",
+            "expires_in": 3600,
+            "user": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Jane Smith", "email": "jane@example.com" }
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -265,8 +333,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Public: paginated list of active job posts with optional filters.'
-      description: ''
+      title: 'List jobs'
+      description: 'Paginated list of active job posts with optional filters.'
       authenticated: false
       deprecated: false
     headers:
@@ -274,8 +342,140 @@ endpoints:
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
+    queryParameters:
+      keyword:
+        custom: []
+        name: keyword
+        description: 'Search in title, description, company name.'
+        required: false
+        example: Laravel
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      location:
+        custom: []
+        name: location
+        description: 'Filter by location (partial match).'
+        required: false
+        example: Beirut
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      job_type:
+        custom: []
+        name: job_type
+        description: 'Filter by type.'
+        required: false
+        example: full_time
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      work_mode:
+        custom: []
+        name: work_mode
+        description: 'Filter by work mode.'
+        required: false
+        example: remote
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      experience_level:
+        custom: []
+        name: experience_level
+        description: 'Filter by level.'
+        required: false
+        example: senior
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      category:
+        custom: []
+        name: category
+        description: 'Filter by category.'
+        required: false
+        example: Engineering
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      min_salary:
+        custom: []
+        name: min_salary
+        description: 'Minimum salary range.'
+        required: false
+        example: 2000
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      max_salary:
+        custom: []
+        name: max_salary
+        description: 'Maximum salary range.'
+        required: false
+        example: 8000
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      tag:
+        custom: []
+        name: tag
+        description: 'Filter by tag.'
+        required: false
+        example: React
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      per_page:
+        custom: []
+        name: per_page
+        description: 'Results per page (max 100). Defaults to 15.'
+        required: false
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      page:
+        custom: []
+        name: page
+        description: 'Page number.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      keyword: Laravel
+      location: Beirut
+      job_type: full_time
+      work_mode: remote
+      experience_level: senior
+      category: Engineering
+      min_salary: 2000
+      max_salary: 8000
+      tag: React
+      per_page: 10
+      page: 1
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
@@ -283,12 +483,39 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"current_page":1,"data":[{"title":"Senior Laravel Developer","description":"We are looking for a senior Laravel developer to join our team.","requirements":"Minimum 3 years of Laravel experience.","company_name":"Acme Corp","job_type":"full_time","location":"Beirut, Lebanon","category":"Engineering","salary_range":{"min":2000,"max":4000,"currency":"USD"},"employer_id":"6a04cbe3275c7e4e74063b22","is_active":true,"updated_at":"2026-05-13T19:07:59.039000Z","created_at":"2026-05-13T19:00:24.649000Z","id":"6a04ca4809826695330cc475"}],"first_page_url":"http:\/\/localhost:8000\/api\/jobs?page=1","from":1,"last_page":1,"last_page_url":"http:\/\/localhost:8000\/api\/jobs?page=1","links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost:8000\/api\/jobs?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"next_page_url":null,"path":"http:\/\/localhost:8000\/api\/jobs","per_page":15,"prev_page_url":null,"to":1,"total":1}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "data": [
+              {
+                "id": "664f1a2b3c4d5e6f7a8b9c0d",
+                "job_id": "JOB-001",
+                "title": "Senior Laravel Developer",
+                "description": "We are looking for...",
+                "requirements": "Minimum 3 years...",
+                "company_name": "Acme Corp",
+                "company_logo": "https://logo.clearbit.com/acme.com",
+                "job_type": "full_time",
+                "work_mode": "remote",
+                "experience_level": "senior",
+                "experience_required": "5+ years",
+                "location": "Beirut, Lebanon",
+                "category": "Engineering",
+                "salary_range": { "min": 2000, "max": 4000, "currency": "USD" },
+                "tags": ["Laravel", "PHP"],
+                "is_active": true,
+                "employer_id": "664f1a2b3c4d5e6f7a8b9c0e",
+                "created_at": "2024-01-15T00:00:00Z"
+              }
+            ],
+            "current_page": 1,
+            "per_page": 15,
+            "total": 1,
+            "total_pages": 1,
+            "next_page": null,
+            "prev_page": null
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth: []
     controller: null
@@ -305,8 +532,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Public: single job post by ID.'
-      description: ''
+      title: 'Get job'
+      description: 'Returns a single active job post by ID.'
       authenticated: false
       deprecated: false
     headers:
@@ -318,14 +545,14 @@ endpoints:
         name: id
         description: 'The job post ID.'
         required: true
-        example: 6a04ca4809826695330cc475
+        example: 664f1a2b3c4d5e6f7a8b9c0d
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 6a04ca4809826695330cc475
+      id: 664f1a2b3c4d5e6f7a8b9c0d
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -335,12 +562,280 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"title":"Senior Laravel Developer","description":"We are looking for a senior Laravel developer to join our team.","requirements":"Minimum 3 years of Laravel experience.","company_name":"Acme Corp","job_type":"full_time","location":"Beirut, Lebanon","category":"Engineering","salary_range":{"min":2000,"max":4000,"currency":"USD"},"employer_id":"6a04cbe3275c7e4e74063b22","is_active":true,"updated_at":"2026-05-13T19:07:59.039000Z","created_at":"2026-05-13T19:00:24.649000Z","id":"6a04ca4809826695330cc475"}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "job_id": "JOB-001",
+            "title": "Senior Laravel Developer",
+            "company_name": "Acme Corp",
+            "job_type": "full_time",
+            "work_mode": "remote",
+            "experience_level": "senior",
+            "location": "Beirut, Lebanon",
+            "is_active": true
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Job post not found" }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/companies
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List companies'
+      description: 'Paginated list of company profiles. Supports filtering by search term, industry, minimum rating, and company size.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      search:
+        custom: []
+        name: search
+        description: 'Filter by company name or location.'
+        required: false
+        example: Google
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      industry:
+        custom: []
+        name: industry
+        description: 'Filter by industry (partial match).'
+        required: false
+        example: Technology
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      min_rating:
+        custom: []
+        name: min_rating
+        description: 'Filter by minimum rating (0–5).'
+        required: false
+        example: 4.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      company_size:
+        custom: []
+        name: company_size
+        description: 'Filter by company size string (partial match).'
+        required: false
+        example: 100-500
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      per_page:
+        custom: []
+        name: per_page
+        description: 'Number of results per page (max 100). Defaults to 15.'
+        required: false
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      page:
+        custom: []
+        name: page
+        description: 'Page number.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      search: Google
+      industry: Technology
+      min_rating: 4.0
+      company_size: 100-500
+      per_page: 10
+      page: 1
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "data": [
+              {
+                "id": "664f1a2b3c4d5e6f7a8b9c0d",
+                "name": "Google",
+                "logo": "https://logo.clearbit.com/google.com",
+                "cover_image": "https://images.unsplash.com/photo.jpg",
+                "description": "A multinational technology company.",
+                "location": "Mountain View, CA",
+                "industry": "Technology",
+                "website": "https://www.google.com",
+                "founded": "1998",
+                "employee_count": "100,000+ employees",
+                "company_size": "100000+",
+                "rating": 4.5,
+                "review_count": 1250,
+                "would_recommend": 85,
+                "ceo_performance": 92,
+                "open_positions": 3,
+                "company_size_range": { "min": 100000, "isPlus": true }
+              }
+            ],
+            "current_page": 1,
+            "per_page": 15,
+            "total": 1,
+            "total_pages": 1,
+            "next_page": null,
+            "prev_page": null
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/companies/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get company'
+      description: 'Returns a single company profile including embedded reviews, active job posts, rating breakdowns, and social media links.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The company profile ID.'
+        required: true
+        example: 664f1a2b3c4d5e6f7a8b9c0d
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 664f1a2b3c4d5e6f7a8b9c0d
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "name": "Google",
+            "logo": "https://logo.clearbit.com/google.com",
+            "cover_image": "https://images.unsplash.com/photo.jpg",
+            "description": "A multinational technology company.",
+            "founded": "1998",
+            "employee_count": "100,000+ employees",
+            "location": "Mountain View, CA",
+            "website": "https://www.google.com",
+            "industry": "Technology",
+            "company_size": "100000+",
+            "rating": 4.5,
+            "review_count": 1250,
+            "would_recommend": 85,
+            "ceo_performance": 92,
+            "social_media": {
+              "linkedin": "https://www.linkedin.com/company/google",
+              "twitter": "https://twitter.com/Google",
+              "facebook": "https://www.facebook.com/Google",
+              "instagram": "https://www.instagram.com/google"
+            },
+            "category_ratings": {
+              "compensation": 4.2,
+              "culture": 4.6,
+              "work_life": 4.1,
+              "diversity": 4.4,
+              "management": 4.3
+            },
+            "reviews": [
+              {
+                "id": "1",
+                "rating": 4,
+                "user_name": "John Doe",
+                "date": "27/01/2026",
+                "position": "Former employee, last year at 2022",
+                "recommend": false,
+                "ceo_approval": true,
+                "subratings": { "compensation": 4, "culture": 4, "work_life": 3, "diversity": 5, "management": 3 },
+                "agrees": 5,
+                "disagrees": 2
+              }
+            ],
+            "jobs": [
+              {
+                "id": "664f1a2b3c4d5e6f7a8b9c0e",
+                "display_id": "JOB-001",
+                "company_name": "Google",
+                "company_logo": "https://logo.clearbit.com/google.com",
+                "title": "Senior Frontend Developer",
+                "created_at": "2024-01-15",
+                "roles": ["Frontend", "React"],
+                "types": ["full_time", "remote"],
+                "levels": ["senior"],
+                "experience": "5+ years",
+                "location": "San Francisco, CA"
+              }
+            ],
+            "open_positions": 3,
+            "company_size_range": { "min": 100000, "isPlus": true }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Company profile not found" }'
+        headers: []
+        description: ''
     responseFields: []
     auth: []
     controller: null
@@ -357,8 +852,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'Get job seeker profile'
+      description: "Returns the authenticated job seeker's profile. Creates an empty profile if one doesn't exist yet."
       authenticated: true
       deprecated: false
     headers:
@@ -376,12 +871,21 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"profile":{"user_id":"6a04cbe3275c7e4e74063b22","is_actively_seeking":true,"current_job_title":"Developer","updated_at":"2026-05-13T19:07:15.077000Z","created_at":"2026-05-13T19:07:15.077000Z","id":"6a04cbe3275c7e4e74063b23"}}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "profile": {
+              "id": "664f1a2b3c4d5e6f7a8b9c0d",
+              "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+              "full_name": "Jane Smith",
+              "current_job_title": "Frontend Developer",
+              "is_actively_seeking": true,
+              "skills": [{ "name": "React", "level": "advanced" }],
+              "ats_score": 82,
+              "ai_skills": ["React", "TypeScript"]
+            }
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -401,8 +905,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'Update job seeker profile'
+      description: "Creates or updates the authenticated job seeker's profile fields. All fields are optional — only provided fields are updated."
       authenticated: true
       deprecated: false
     headers:
@@ -414,15 +918,92 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      phone:
+      first_name:
         custom: []
-        name: phone
-        description: 'Must not be greater than 20 characters.'
+        name: first_name
+        description: ''
         required: false
-        example: bngzmiyvdljnikhw
+        example: Jane
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      last_name:
+        custom: []
+        name: last_name
+        description: ''
+        required: false
+        example: Smith
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      full_name:
+        custom: []
+        name: full_name
+        description: ''
+        required: false
+        example: 'Jane Smith'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      image:
+        custom: []
+        name: image
+        description: 'URL to profile photo.'
+        required: false
+        example: 'https://example.com/photo.jpg'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      gender:
+        custom: []
+        name: gender
+        description: 'One of: male, female, other, prefer_not_to_say.'
+        required: false
+        example: female
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      nationality:
+        custom: []
+        name: nationality
+        description: ''
+        required: false
+        example: Lebanese
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      city:
+        custom: []
+        name: city
+        description: ''
+        required: false
+        example: Beirut
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      location:
+        custom: []
+        name: location
+        description: ''
+        required: false
+        example: 'Beirut, Lebanon'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
       address:
@@ -430,44 +1011,159 @@ endpoints:
         name: address
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: a
+        example: v
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: true
         deprecated: false
-      resume:
+      phone:
         custom: []
-        name: resume
-        description: 'Must be a file. Must not be greater than 5120 kilobytes.'
+        name: phone
+        description: 'Max 20 chars.'
         required: false
-        example: null
-        type: file
+        example: '+961 70 123456'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      date_of_birth:
+        custom: []
+        name: date_of_birth
+        description: ''
+        required: false
+        example: '1995-06-15'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      marital_status:
+        custom: []
+        name: marital_status
+        description: 'One of: single, married, divorced, widowed, prefer_not_to_say.'
+        required: false
+        example: architecto
+        type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: true
         deprecated: false
-      skills:
+      salary_range_from:
         custom: []
-        name: skills
-        description: 'Must not be greater than 50 characters.'
+        name: salary_range_from
+        description: ''
         required: false
-        example:
-          - 'y'
-        type: 'string[]'
+        example: 2000.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      salary_range_to:
+        custom: []
+        name: salary_range_to
+        description: ''
+        required: false
+        example: 5000.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      current_job_status:
+        custom: []
+        name: current_job_status
+        description: 'One of: employed, unemployed, freelancing, student, open_to_work.'
+        required: false
+        example: architecto
+        type: string
         enumValues: []
         exampleWasSpecified: false
-        nullable: false
+        nullable: true
+        deprecated: false
+      years_of_experience:
+        custom: []
+        name: years_of_experience
+        description: ''
+        required: false
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
         deprecated: false
       education_level:
         custom: []
         name: education_level
-        description: 'Must not be greater than 100 characters.'
+        description: ''
         required: false
-        example: k
+        example: "Bachelor's Degree"
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      job_level:
+        custom: []
+        name: job_level
+        description: 'One of: entry, junior, mid, senior, lead, manager, director, executive.'
+        required: false
+        example: architecto
         type: string
         enumValues: []
         exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      job_types:
+        custom: []
+        name: job_types
+        description: ''
+        required: false
+        example:
+          - full_time
+          - remote
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      job_roles:
+        custom: []
+        name: job_roles
+        description: ''
+        required: false
+        example:
+          - Frontend
+          - React
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      work_cities:
+        custom: []
+        name: work_cities
+        description: ''
+        required: false
+        example:
+          - Beirut
+          - Dubai
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      current_job_title:
+        custom: []
+        name: current_job_title
+        description: 'Max 100 chars.'
+        required: false
+        example: 'Frontend Developer'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
       experience_summary:
@@ -481,48 +1177,15 @@ endpoints:
         exampleWasSpecified: false
         nullable: true
         deprecated: false
-      current_job_title:
-        custom: []
-        name: current_job_title
-        description: 'Must not be greater than 100 characters.'
-        required: false
-        example: 'n'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
       expected_salary:
         custom: []
         name: expected_salary
-        description: 'Must be at least 0.'
+        description: ''
         required: false
-        example: 84
+        example: 3500.0
         type: number
         enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-      linkedin_url:
-        custom: []
-        name: linkedin_url
-        description: 'Must be a valid URL. Must not be greater than 255 characters.'
-        required: false
-        example: 'http://www.okuneva.com/fugiat-sunt-nihil-accusantium-harum-mollitia.html'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-      portfolio_url:
-        custom: []
-        name: portfolio_url
-        description: 'Must be a valid URL. Must not be greater than 255 characters.'
-        required: false
-        example: 'http://www.considine.com/provident-perspiciatis-quo-omnis-nostrum-aut-adipisci-quidem'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
       is_actively_seeking:
@@ -533,16 +1196,84 @@ endpoints:
         example: true
         type: boolean
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
+        deprecated: false
+      social_links:
+        custom: []
+        name: social_links
+        description: 'Social media URLs.'
+        required: false
+        example: []
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      social_links.linkedin:
+        custom: []
+        name: social_links.linkedin
+        description: ''
+        required: false
+        example: 'https://linkedin.com/in/janesmith'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      social_links.github:
+        custom: []
+        name: social_links.github
+        description: ''
+        required: false
+        example: 'https://github.com/janesmith'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      social_links.portfolio:
+        custom: []
+        name: social_links.portfolio
+        description: ''
+        required: false
+        example: 'https://janesmith.dev'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      social_links.twitter:
+        custom: []
+        name: social_links.twitter
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      skills:
+        custom: []
+        name: skills
+        description: 'Array of skill objects.'
+        required: false
+        example:
+          - []
+        type: 'object[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
         deprecated: false
       education_history:
         custom: []
         name: education_history
-        description: ''
+        description: 'Array of education entries.'
         required: false
-        example: null
-        type: object
+        example:
+          - []
+        type: 'object[]'
         enumValues: []
         exampleWasSpecified: false
         nullable: true
@@ -550,29 +1281,294 @@ endpoints:
       work_experience:
         custom: []
         name: work_experience
-        description: ''
+        description: 'Array of work experience entries.'
+        required: false
+        example:
+          - []
+        type: 'object[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      resume:
+        custom: []
+        name: resume
+        description: 'PDF/DOC resume file (max 5 MB).'
         required: false
         example: null
-        type: object
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'skills[].name':
+        custom: []
+        name: 'skills[].name'
+        description: ''
+        required: true
+        example: React
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'skills[].level':
+        custom: []
+        name: 'skills[].level'
+        description: 'One of: beginner, intermediate, advanced, expert.'
+        required: false
+        example: advanced
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      'education_history[].certificate_type':
+        custom: []
+        name: 'education_history[].certificate_type'
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: v
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'education_history[].university':
+        custom: []
+        name: 'education_history[].university'
+        description: 'Must not be greater than 150 characters.'
+        required: false
+        example: d
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'education_history[].faculty':
+        custom: []
+        name: 'education_history[].faculty'
+        description: 'Must not be greater than 150 characters.'
+        required: false
+        example: l
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'education_history[].major':
+        custom: []
+        name: 'education_history[].major'
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: j
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'education_history[].major_name':
+        custom: []
+        name: 'education_history[].major_name'
+        description: 'Must not be greater than 150 characters.'
+        required: false
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'education_history[].grade':
+        custom: []
+        name: 'education_history[].grade'
+        description: 'Must not be greater than 50 characters.'
+        required: false
+        example: i
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'education_history[].from_date':
+        custom: []
+        name: 'education_history[].from_date'
+        description: 'Must not be greater than 20 characters.'
+        required: false
+        example: khwaykcmyuwpwlvq
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'education_history[].awarded_date':
+        custom: []
+        name: 'education_history[].awarded_date'
+        description: 'Must not be greater than 20 characters.'
+        required: false
+        example: wrsitcpscqldzsnr
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'work_experience[].job_title':
+        custom: []
+        name: 'work_experience[].job_title'
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: w
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'work_experience[].company_name':
+        custom: []
+        name: 'work_experience[].company_name'
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: t
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'work_experience[].job_roles':
+        custom: []
+        name: 'work_experience[].job_roles'
+        description: 'Must not be greater than 50 characters.'
+        required: false
+        example:
+          - u
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'work_experience[].from_date':
+        custom: []
+        name: 'work_experience[].from_date'
+        description: 'Must not be greater than 20 characters.'
+        required: false
+        example: jwvlxjklqppwqbew
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'work_experience[].to_date':
+        custom: []
+        name: 'work_experience[].to_date'
+        description: 'Must not be greater than 20 characters.'
+        required: false
+        example: tnnoqitpxntltcvi
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'work_experience[].is_currently_working':
+        custom: []
+        name: 'work_experience[].is_currently_working'
+        description: ''
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'work_experience[].description':
+        custom: []
+        name: 'work_experience[].description'
+        description: ''
+        required: false
+        example: 'Eius et animi quos velit et.'
+        type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: true
         deprecated: false
     cleanBodyParameters:
-      phone: bngzmiyvdljnikhw
-      address: a
-      skills:
-        - 'y'
-      education_level: k
+      first_name: Jane
+      last_name: Smith
+      full_name: 'Jane Smith'
+      image: 'https://example.com/photo.jpg'
+      gender: female
+      nationality: Lebanese
+      city: Beirut
+      location: 'Beirut, Lebanon'
+      address: v
+      phone: '+961 70 123456'
+      date_of_birth: '1995-06-15'
+      marital_status: architecto
+      salary_range_from: 2000.0
+      salary_range_to: 5000.0
+      current_job_status: architecto
+      years_of_experience: 5
+      education_level: "Bachelor's Degree"
+      job_level: architecto
+      job_types:
+        - full_time
+        - remote
+      job_roles:
+        - Frontend
+        - React
+      work_cities:
+        - Beirut
+        - Dubai
+      current_job_title: 'Frontend Developer'
       experience_summary: architecto
-      current_job_title: 'n'
-      expected_salary: 84
-      linkedin_url: 'http://www.okuneva.com/fugiat-sunt-nihil-accusantium-harum-mollitia.html'
-      portfolio_url: 'http://www.considine.com/provident-perspiciatis-quo-omnis-nostrum-aut-adipisci-quidem'
+      expected_salary: 3500.0
       is_actively_seeking: true
+      social_links:
+        linkedin: 'https://linkedin.com/in/janesmith'
+        github: 'https://github.com/janesmith'
+        portfolio: 'https://janesmith.dev'
+        twitter: architecto
+      skills:
+        -
+          name: React
+          level: advanced
+      education_history:
+        -
+          certificate_type: v
+          university: d
+          faculty: l
+          major: j
+          major_name: 'n'
+          grade: i
+          from_date: khwaykcmyuwpwlvq
+          awarded_date: wrsitcpscqldzsnr
+      work_experience:
+        -
+          job_title: w
+          company_name: t
+          job_roles:
+            - u
+          from_date: jwvlxjklqppwqbew
+          to_date: tnnoqitpxntltcvi
+          is_currently_working: false
+          description: 'Eius et animi quos velit et.'
     fileParameters:
       resume: null
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Profile updated successfully",
+            "profile": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "full_name": "Jane Smith", "is_actively_seeking": true }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{ "errors": { "phone": ["Must not be greater than 20 characters."] } }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -592,8 +1588,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'Upload resume'
+      description: "Uploads a resume file to the job seeker's profile without triggering AI analysis."
       authenticated: true
       deprecated: false
     headers:
@@ -608,7 +1604,7 @@ endpoints:
       resume:
         custom: []
         name: resume
-        description: 'Must be a file. Must not be greater than 5120 kilobytes.'
+        description: 'PDF/DOC/DOCX file, max 5 MB.'
         required: true
         example: null
         type: file
@@ -619,7 +1615,23 @@ endpoints:
     cleanBodyParameters: []
     fileParameters:
       resume: null
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Resume uploaded successfully",
+            "resume_url": "https://example.com/storage/resumes/cv.pdf"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{ "errors": { "resume": ["The resume field is required."] } }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -639,8 +1651,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'Upload and analyze CV'
+      description: 'Uploads a CV file and sends it to the AI analysis service. On success, populates all `ai_*` profile fields and `ats_score`.'
       authenticated: true
       deprecated: false
     headers:
@@ -655,7 +1667,7 @@ endpoints:
       cv:
         custom: []
         name: cv
-        description: 'Must be a file. Must not be greater than 10240 kilobytes.'
+        description: 'PDF/DOC/DOCX file, max 10 MB.'
         required: true
         example: null
         type: file
@@ -666,7 +1678,35 @@ endpoints:
     cleanBodyParameters: []
     fileParameters:
       cv: null
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "profile": {
+              "id": "664f1a2b3c4d5e6f7a8b9c0d",
+              "ats_score": 82,
+              "ai_skills": ["React", "TypeScript", "Node.js"],
+              "ai_summary": "Experienced frontend developer...",
+              "ai_work_history": [],
+              "ai_analyzed_at": "2024-01-15T00:00:00Z"
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{ "message": "CV analysis failed", "reason": "CV content could not be parsed." }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 502
+        content: '{ "message": "CV analysis service unavailable" }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -686,8 +1726,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Job seeker: paginated list of their applications with job post title and company name.'
-      description: ''
+      title: 'My applications'
+      description: "Paginated list of the authenticated job seeker's applications, each including the related job post."
       authenticated: true
       deprecated: false
     headers:
@@ -705,12 +1745,24 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"applications":{"current_page":1,"data":[{"user_id":"6a04cbe3275c7e4e74063b22","job_post_id":"6a04ca4809826695330cc475","cover_letter":"I am very interested in this position.","status":"pending","applied_at":"2026-05-13T19:00:24.661000Z","updated_at":"2026-05-13T19:07:59.046000Z","created_at":"2026-05-13T19:00:24.662000Z","id":"6a04ca4809826695330cc476","job_post":{"title":"Senior Laravel Developer","description":"We are looking for a senior Laravel developer to join our team.","requirements":"Minimum 3 years of Laravel experience.","company_name":"Acme Corp","job_type":"full_time","location":"Beirut, Lebanon","category":"Engineering","salary_range":{"min":2000,"max":4000,"currency":"USD"},"employer_id":"6a04cbe3275c7e4e74063b22","is_active":true,"updated_at":"2026-05-13T19:07:59.039000Z","created_at":"2026-05-13T19:00:24.649000Z","id":"6a04ca4809826695330cc475"}}],"first_page_url":"http:\/\/localhost:8000\/api\/job-seeker\/applications?page=1","from":1,"last_page":1,"last_page_url":"http:\/\/localhost:8000\/api\/job-seeker\/applications?page=1","links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost:8000\/api\/job-seeker\/applications?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"next_page_url":null,"path":"http:\/\/localhost:8000\/api\/job-seeker\/applications","per_page":10,"prev_page_url":null,"to":1,"total":1}}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "applications": {
+              "data": [
+                {
+                  "id": "664f1a2b3c4d5e6f7a8b9c0d",
+                  "job_post_id": "664f1a2b3c4d5e6f7a8b9c0e",
+                  "status": "pending",
+                  "cover_letter": "I am very interested...",
+                  "applied_at": "2024-01-15T00:00:00Z",
+                  "job_post": { "title": "Senior Laravel Developer", "company_name": "Acme Corp" }
+                }
+              ],
+              "current_page": 1, "per_page": 10, "total": 1, "total_pages": 1, "next_page": null, "prev_page": null
+            }
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -730,8 +1782,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Job seeker: apply to a job post.'
-      description: ''
+      title: 'Apply to job'
+      description: "Submit an application for an active job post. If no resume file is uploaded, the profile's stored CV is used automatically."
       authenticated: true
       deprecated: false
     headers:
@@ -746,29 +1798,29 @@ endpoints:
       job_post_id:
         custom: []
         name: job_post_id
-        description: ''
+        description: 'The ID of the job post to apply to.'
         required: true
-        example: architecto
+        example: 664f1a2b3c4d5e6f7a8b9c0d
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
       cover_letter:
         custom: []
         name: cover_letter
-        description: 'Must not be greater than 1000 characters.'
+        description: 'Optional cover letter. Max 1000 chars.'
         required: false
-        example: 'n'
+        example: 'I am very interested in this position.'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
       resume:
         custom: []
         name: resume
-        description: 'Must be a file. Must not be greater than 5120 kilobytes.'
+        description: 'Optional PDF/DOC resume file (max 5 MB). Overrides profile CV.'
         required: false
         example: null
         type: file
@@ -777,11 +1829,38 @@ endpoints:
         nullable: true
         deprecated: false
     cleanBodyParameters:
-      job_post_id: architecto
-      cover_letter: 'n'
+      job_post_id: 664f1a2b3c4d5e6f7a8b9c0d
+      cover_letter: 'I am very interested in this position.'
     fileParameters:
       resume: null
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "message": "Application submitted successfully",
+            "application": {
+              "id": "664f1a2b3c4d5e6f7a8b9c0f",
+              "job_post_id": "664f1a2b3c4d5e6f7a8b9c0d",
+              "status": "pending",
+              "applied_at": "2024-01-15T00:00:00Z"
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Job post not found or is not active" }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 409
+        content: '{ "message": "You have already applied to this job" }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -801,8 +1880,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Job seeker: withdraw a pending application.'
-      description: ''
+      title: 'Withdraw application'
+      description: 'Withdraws (deletes) a pending application. Accepted applications cannot be withdrawn.'
       authenticated: true
       deprecated: false
     headers:
@@ -815,20 +1894,38 @@ endpoints:
         name: id
         description: 'The application ID.'
         required: true
-        example: 6a04ca4809826695330cc476
+        example: 664f1a2b3c4d5e6f7a8b9c0f
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 6a04ca4809826695330cc476
+      id: 664f1a2b3c4d5e6f7a8b9c0f
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{ "message": "Application withdrawn successfully" }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: '{ "message": "Cannot withdraw an accepted application" }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Application not found" }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -848,8 +1945,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'Search jobs'
+      description: 'Paginated search of active job posts for the authenticated job seeker.'
       authenticated: true
       deprecated: false
     headers:
@@ -864,79 +1961,78 @@ endpoints:
       keyword:
         custom: []
         name: keyword
-        description: 'Must not be greater than 100 characters.'
+        description: 'Search in title, description, company name. Max 100 chars.'
         required: false
-        example: b
+        example: React
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
       location:
         custom: []
         name: location
-        description: 'Must not be greater than 100 characters.'
+        description: 'Partial location match. Max 100 chars.'
         required: false
-        example: 'n'
+        example: Beirut
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
       job_type:
         custom: []
         name: job_type
-        description: ''
+        description: 'One of: full_time, part_time, contract, freelance.'
         required: false
-        example: contract
+        example: full_time
         type: string
-        enumValues:
-          - full_time
-          - part_time
-          - contract
-          - freelance
-        exampleWasSpecified: false
+        enumValues: []
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
       category:
         custom: []
         name: category
-        description: 'Must not be greater than 100 characters.'
+        description: ''
         required: false
-        example: g
+        example: Engineering
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
       min_salary:
         custom: []
         name: min_salary
-        description: 'Must be at least 0.'
+        description: 'Minimum salary.'
         required: false
-        example: 12
+        example: 2000.0
         type: number
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
     cleanBodyParameters:
-      keyword: b
-      location: 'n'
-      job_type: contract
-      category: g
-      min_salary: 12
+      keyword: React
+      location: Beirut
+      job_type: full_time
+      category: Engineering
+      min_salary: 2000.0
     fileParameters: []
     responses:
       -
         custom: []
         status: 200
-        content: '{"jobs":{"current_page":1,"data":[],"first_page_url":"http:\/\/localhost:8000\/api\/job-seeker\/jobs\/search?page=1","from":null,"last_page":1,"last_page_url":"http:\/\/localhost:8000\/api\/job-seeker\/jobs\/search?page=1","links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost:8000\/api\/job-seeker\/jobs\/search?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"next_page_url":null,"path":"http:\/\/localhost:8000\/api\/job-seeker\/jobs\/search","per_page":15,"prev_page_url":null,"to":null,"total":0}}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "jobs": {
+              "data": [{ "id": "664f1a2b3c4d5e6f7a8b9c0d", "title": "Senior React Developer", "company_name": "Acme Corp" }],
+              "current_page": 1, "per_page": 15, "total": 1, "total_pages": 1, "next_page": null, "prev_page": null
+            }
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -956,8 +2052,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Job seeker: paginated list of received offers with job post title and employer company name.'
-      description: ''
+      title: 'Received offers'
+      description: 'Paginated list of direct offers received by the authenticated job seeker, including job post title and employer company name.'
       authenticated: true
       deprecated: false
     headers:
@@ -975,12 +2071,23 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"offers":{"current_page":1,"data":[],"first_page_url":"http:\/\/localhost:8000\/api\/job-seeker\/offers?page=1","from":null,"last_page":1,"last_page_url":"http:\/\/localhost:8000\/api\/job-seeker\/offers?page=1","links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost:8000\/api\/job-seeker\/offers?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"next_page_url":null,"path":"http:\/\/localhost:8000\/api\/job-seeker\/offers","per_page":15,"prev_page_url":null,"to":null,"total":0}}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "offers": {
+              "data": [
+                {
+                  "id": "664f1a2b3c4d5e6f7a8b9c0f",
+                  "status": "pending",
+                  "message": "We think you'd be a great fit.",
+                  "job_post_title": "Senior Laravel Developer",
+                  "employer_company_name": "Acme Corp"
+                }
+              ],
+              "current_page": 1, "per_page": 15, "total": 1, "total_pages": 1, "next_page": null, "prev_page": null
+            }
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -1000,8 +2107,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Job seeker: accept a direct offer and create an application.'
-      description: ''
+      title: 'Accept offer'
+      description: 'Accepts a direct offer and automatically creates a pending application for the related job post.'
       authenticated: true
       deprecated: false
     headers:
@@ -1014,20 +2121,42 @@ endpoints:
         name: id
         description: 'The direct offer ID.'
         required: true
-        example: 6a04ca4809826695330cc475
+        example: 664f1a2b3c4d5e6f7a8b9c0f
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 6a04ca4809826695330cc475
+      id: 664f1a2b3c4d5e6f7a8b9c0f
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Offer accepted successfully",
+            "offer": { "id": "664f1a2b3c4d5e6f7a8b9c0f", "status": "accepted" }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: '{ "message": "Forbidden" }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Offer not found" }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -1047,8 +2176,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Job seeker: decline a direct offer.'
-      description: ''
+      title: 'Decline offer'
+      description: 'Declines a direct offer. The offer status is set to `declined`.'
       authenticated: true
       deprecated: false
     headers:
@@ -1061,20 +2190,42 @@ endpoints:
         name: id
         description: 'The direct offer ID.'
         required: true
-        example: 6a04ca4809826695330cc475
+        example: 664f1a2b3c4d5e6f7a8b9c0f
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 6a04ca4809826695330cc475
+      id: 664f1a2b3c4d5e6f7a8b9c0f
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Offer declined successfully",
+            "offer": { "id": "664f1a2b3c4d5e6f7a8b9c0f", "status": "declined" }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: '{ "message": "Forbidden" }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Offer not found" }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -1094,8 +2245,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'Apply to become employer'
+      description: 'Any authenticated user can submit an employer application by uploading a supporting document. The application starts in `pending` status and must be approved by an admin.'
       authenticated: true
       deprecated: false
     headers:
@@ -1110,7 +2261,7 @@ endpoints:
       document:
         custom: []
         name: document
-        description: 'Must be a file. Must not be greater than 5120 kilobytes.'
+        description: 'PDF, DOC, DOCX, JPG, or PNG. Max 5 MB.'
         required: true
         example: null
         type: file
@@ -1121,7 +2272,28 @@ endpoints:
     cleanBodyParameters: []
     fileParameters:
       document: null
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "message": "Employer application submitted.",
+            "employer": {
+              "id": "664f1a2b3c4d5e6f7a8b9c0d",
+              "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+              "status": "pending",
+              "document_name": "business_license.pdf"
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{ "errors": { "document": ["The document field is required."] } }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -1141,8 +2313,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'Employer application status'
+      description: "Returns the authenticated user's employer approval status and their latest application record."
       authenticated: true
       deprecated: false
     headers:
@@ -1160,12 +2332,18 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"is_employer":true,"latest":null}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "is_employer": false,
+            "latest": {
+              "id": "664f1a2b3c4d5e6f7a8b9c0d",
+              "status": "pending",
+              "document_name": "business_license.pdf",
+              "created_at": "2024-01-15T00:00:00Z"
+            }
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -1185,8 +2363,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Employer: list own job posts with application counts.'
-      description: ''
+      title: 'My job posts'
+      description: 'Returns all job posts created by the authenticated employer, each with an application count.'
       authenticated: true
       deprecated: false
     headers:
@@ -1204,12 +2382,18 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '[{"title":"Senior Laravel Developer","description":"We are looking for a senior Laravel developer to join our team.","requirements":"Minimum 3 years of Laravel experience.","company_name":"Acme Corp","job_type":"full_time","location":"Beirut, Lebanon","category":"Engineering","salary_range":{"min":2000,"max":4000,"currency":"USD"},"employer_id":"6a04cbe3275c7e4e74063b22","is_active":true,"updated_at":"2026-05-13T19:07:59.039000Z","created_at":"2026-05-13T19:00:24.649000Z","id":"6a04ca4809826695330cc475","application_count":1}]'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          [
+            {
+              "id": "664f1a2b3c4d5e6f7a8b9c0d",
+              "job_id": "JOB-001",
+              "title": "Senior Laravel Developer",
+              "is_active": true,
+              "application_count": 5
+            }
+          ]
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -1229,8 +2413,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Employer: create a new job post.'
-      description: ''
+      title: 'Create job post'
+      description: 'Creates a new job post owned by the authenticated employer.'
       authenticated: true
       deprecated: false
     headers:
@@ -1245,71 +2429,111 @@ endpoints:
       title:
         custom: []
         name: title
-        description: 'Must not be greater than 150 characters.'
+        description: 'Job title. Max 150 chars.'
         required: true
-        example: b
+        example: 'Senior Laravel Developer'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
       description:
         custom: []
         name: description
-        description: ''
+        description: 'Full job description.'
         required: true
-        example: 'Eius et animi quos velit et.'
+        example: 'We are looking for...'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
       requirements:
         custom: []
         name: requirements
-        description: ''
+        description: 'Job requirements.'
         required: true
-        example: architecto
+        example: 'Minimum 3 years of Laravel experience.'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
       company_name:
         custom: []
         name: company_name
-        description: 'Must not be greater than 150 characters.'
+        description: 'Company name. Max 150 chars.'
         required: true
-        example: 'n'
+        example: 'Acme Corp'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
+        deprecated: false
+      company_logo:
+        custom: []
+        name: company_logo
+        description: 'URL to company logo.'
+        required: false
+        example: 'https://logo.clearbit.com/acme.com'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
         deprecated: false
       job_type:
         custom: []
         name: job_type
-        description: ''
+        description: 'One of: full_time, part_time, contract, freelance.'
         required: true
-        example: part_time
+        example: full_time
         type: string
-        enumValues:
-          - full_time
-          - part_time
-          - contract
-          - freelance
-        exampleWasSpecified: false
+        enumValues: []
+        exampleWasSpecified: true
         nullable: false
+        deprecated: false
+      work_mode:
+        custom: []
+        name: work_mode
+        description: 'One of: remote, hybrid, on_site.'
+        required: false
+        example: remote
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      experience_level:
+        custom: []
+        name: experience_level
+        description: 'One of: junior, mid, senior.'
+        required: false
+        example: senior
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      experience_required:
+        custom: []
+        name: experience_required
+        description: 'Display string for required experience.'
+        required: false
+        example: '5+ years'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
         deprecated: false
       location:
         custom: []
         name: location
         description: ''
         required: false
-        example: architecto
+        example: 'Beirut, Lebanon'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
       category:
@@ -1317,18 +2541,18 @@ endpoints:
         name: category
         description: ''
         required: false
-        example: architecto
+        example: Engineering
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
       salary_range:
         custom: []
         name: salary_range
-        description: ''
+        description: 'Salary range object.'
         required: false
-        example: null
+        example: []
         type: object
         enumValues: []
         exampleWasSpecified: false
@@ -1337,23 +2561,23 @@ endpoints:
       salary_range.min:
         custom: []
         name: salary_range.min
-        description: 'Must be at least 0.'
+        description: ''
         required: false
-        example: 39
+        example: 2000
         type: integer
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
       salary_range.max:
         custom: []
         name: salary_range.max
-        description: 'Must be at least 0.'
+        description: ''
         required: false
-        example: 84
+        example: 4000
         type: integer
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
       salary_range.currency:
@@ -1361,37 +2585,65 @@ endpoints:
         name: salary_range.currency
         description: ''
         required: false
-        example: architecto
+        example: USD
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
       tags:
         custom: []
         name: tags
-        description: ''
+        description: 'Array of tags.'
         required: false
-        example: null
-        type: object
+        example:
+          - Laravel
+          - PHP
+        type: 'string[]'
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
     cleanBodyParameters:
-      title: b
-      description: 'Eius et animi quos velit et.'
-      requirements: architecto
-      company_name: 'n'
-      job_type: part_time
-      location: architecto
-      category: architecto
+      title: 'Senior Laravel Developer'
+      description: 'We are looking for...'
+      requirements: 'Minimum 3 years of Laravel experience.'
+      company_name: 'Acme Corp'
+      company_logo: 'https://logo.clearbit.com/acme.com'
+      job_type: full_time
+      work_mode: remote
+      experience_level: senior
+      experience_required: '5+ years'
+      location: 'Beirut, Lebanon'
+      category: Engineering
       salary_range:
-        min: 39
-        max: 84
-        currency: architecto
+        min: 2000
+        max: 4000
+        currency: USD
+      tags:
+        - Laravel
+        - PHP
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "job_id": "JOB-001",
+            "title": "Senior Laravel Developer",
+            "is_active": true,
+            "employer_id": "664f1a2b3c4d5e6f7a8b9c0e"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{ "errors": { "title": ["The title field is required."] } }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -1411,8 +2663,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Employer: update own job post.'
-      description: ''
+      title: 'Update job post'
+      description: 'Updates an existing job post. Only the owning employer can update it.'
       authenticated: true
       deprecated: false
     headers:
@@ -1425,26 +2677,26 @@ endpoints:
         name: id
         description: 'The job post ID.'
         required: true
-        example: 6a04ca4809826695330cc475
+        example: 664f1a2b3c4d5e6f7a8b9c0d
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 6a04ca4809826695330cc475
+      id: 664f1a2b3c4d5e6f7a8b9c0d
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
       title:
         custom: []
         name: title
-        description: 'Must not be greater than 150 characters.'
+        description: ''
         required: false
-        example: b
+        example: 'Updated Title'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
       description:
@@ -1472,28 +2724,68 @@ endpoints:
       company_name:
         custom: []
         name: company_name
-        description: 'Must not be greater than 150 characters.'
+        description: ''
         required: false
-        example: 'n'
+        example: architecto
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
+      company_logo:
+        custom: []
+        name: company_logo
+        description: URL
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
       job_type:
         custom: []
         name: job_type
-        description: ''
+        description: 'One of: full_time, part_time, contract, freelance.'
         required: false
-        example: part_time
+        example: architecto
         type: string
-        enumValues:
-          - full_time
-          - part_time
-          - contract
-          - freelance
+        enumValues: []
         exampleWasSpecified: false
         nullable: false
+        deprecated: false
+      work_mode:
+        custom: []
+        name: work_mode
+        description: 'One of: remote, hybrid, on_site.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      experience_level:
+        custom: []
+        name: experience_level
+        description: 'One of: junior, mid, senior.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      experience_required:
+        custom: []
+        name: experience_required
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
         deprecated: false
       location:
         custom: []
@@ -1522,7 +2814,7 @@ endpoints:
         name: salary_range
         description: ''
         required: false
-        example: null
+        example: []
         type: object
         enumValues: []
         exampleWasSpecified: false
@@ -1566,8 +2858,9 @@ endpoints:
         name: tags
         description: ''
         required: false
-        example: null
-        type: object
+        example:
+          - architecto
+        type: 'string[]'
         enumValues: []
         exampleWasSpecified: false
         nullable: true
@@ -1577,27 +2870,51 @@ endpoints:
         name: is_active
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      title: b
+      title: 'Updated Title'
       description: 'Eius et animi quos velit et.'
       requirements: architecto
-      company_name: 'n'
-      job_type: part_time
+      company_name: architecto
+      company_logo: architecto
+      job_type: architecto
+      work_mode: architecto
+      experience_level: architecto
+      experience_required: architecto
       location: architecto
       category: architecto
       salary_range:
         min: 39
         max: 84
         currency: architecto
-      is_active: true
+      tags:
+        - architecto
+      is_active: false
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{ "id": "664f1a2b3c4d5e6f7a8b9c0d", "title": "Updated Title" }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: '{ "message": "Forbidden" }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Job post not found" }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -1617,8 +2934,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Employer: delete own job post.'
-      description: ''
+      title: 'Delete job post'
+      description: 'Permanently deletes a job post. Only the owning employer can delete it.'
       authenticated: true
       deprecated: false
     headers:
@@ -1631,20 +2948,38 @@ endpoints:
         name: id
         description: 'The job post ID.'
         required: true
-        example: 6a04ca4809826695330cc475
+        example: 664f1a2b3c4d5e6f7a8b9c0d
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 6a04ca4809826695330cc475
+      id: 664f1a2b3c4d5e6f7a8b9c0d
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{ "message": "Job post deleted successfully" }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: '{ "message": "Forbidden" }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Job post not found" }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -1664,8 +2999,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Employer: deactivate a job post.'
-      description: ''
+      title: 'Deactivate job post'
+      description: 'Sets `is_active` to false, hiding the post from public listings. Only the owning employer can deactivate it.'
       authenticated: true
       deprecated: false
     headers:
@@ -1678,20 +3013,1030 @@ endpoints:
         name: id
         description: 'The job post ID.'
         required: true
-        example: 6a04ca4809826695330cc475
+        example: 664f1a2b3c4d5e6f7a8b9c0d
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 6a04ca4809826695330cc475
+      id: 664f1a2b3c4d5e6f7a8b9c0d
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{ "id": "664f1a2b3c4d5e6f7a8b9c0d", "is_active": false }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: '{ "message": "Forbidden" }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Job post not found" }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/employer/company
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Upsert company profile'
+      description: |-
+        Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).
+        `company_size` accepts either a plain string (`"100-500"`, `"500+"`) or a structured object `{ min, max?, isPlus }` — both are normalised to a canonical string before storage.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Company name. Max 150 chars.'
+        required: true
+        example: Google
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      logo:
+        custom: []
+        name: logo
+        description: 'URL to company logo.'
+        required: false
+        example: 'https://logo.clearbit.com/google.com'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      cover_image:
+        custom: []
+        name: cover_image
+        description: 'URL to cover/banner image.'
+        required: false
+        example: 'https://images.unsplash.com/photo.jpg'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      description:
+        custom: []
+        name: description
+        description: 'Company description.'
+        required: false
+        example: 'Eius et animi quos velit et.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      location:
+        custom: []
+        name: location
+        description: 'Headquarters location.'
+        required: false
+        example: 'Mountain View, CA'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      company_size:
+        custom: []
+        name: company_size
+        description: 'Size string ("100-500", "500+") or object {min, max?, isPlus}.'
+        required: false
+        example: 100-500
+        type: string|object
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      employee_count:
+        custom: []
+        name: employee_count
+        description: 'Display string for employee count.'
+        required: false
+        example: '100,000+ employees'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      industry:
+        custom: []
+        name: industry
+        description: 'Industry name.'
+        required: false
+        example: Technology
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      website:
+        custom: []
+        name: website
+        description: 'Company website URL.'
+        required: false
+        example: 'https://www.google.com'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      founded:
+        custom: []
+        name: founded
+        description: 'Year founded.'
+        required: false
+        example: '1998'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      social_media:
+        custom: []
+        name: social_media
+        description: 'Social media links.'
+        required: false
+        example: []
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      social_media.linkedin:
+        custom: []
+        name: social_media.linkedin
+        description: 'LinkedIn URL.'
+        required: false
+        example: 'https://www.linkedin.com/company/google'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      social_media.twitter:
+        custom: []
+        name: social_media.twitter
+        description: 'Twitter URL.'
+        required: false
+        example: 'https://twitter.com/Google'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      social_media.facebook:
+        custom: []
+        name: social_media.facebook
+        description: 'Facebook URL.'
+        required: false
+        example: 'https://www.facebook.com/Google'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      social_media.instagram:
+        custom: []
+        name: social_media.instagram
+        description: 'Instagram URL.'
+        required: false
+        example: 'https://www.instagram.com/google'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      rating:
+        custom: []
+        name: rating
+        description: 'Overall rating (0–5).'
+        required: false
+        example: 4.5
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      review_count:
+        custom: []
+        name: review_count
+        description: 'Total number of reviews.'
+        required: false
+        example: 1250
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      would_recommend:
+        custom: []
+        name: would_recommend
+        description: 'Percentage of employees who would recommend (0–100).'
+        required: false
+        example: 85
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      ceo_performance:
+        custom: []
+        name: ceo_performance
+        description: 'CEO approval percentage (0–100).'
+        required: false
+        example: 92
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      category_ratings:
+        custom: []
+        name: category_ratings
+        description: 'Per-category rating breakdown.'
+        required: false
+        example: []
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      category_ratings.compensation:
+        custom: []
+        name: category_ratings.compensation
+        description: ''
+        required: false
+        example: 4.2
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      category_ratings.culture:
+        custom: []
+        name: category_ratings.culture
+        description: ''
+        required: false
+        example: 4.6
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      category_ratings.work_life:
+        custom: []
+        name: category_ratings.work_life
+        description: ''
+        required: false
+        example: 4.1
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      category_ratings.diversity:
+        custom: []
+        name: category_ratings.diversity
+        description: ''
+        required: false
+        example: 4.4
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      category_ratings.management:
+        custom: []
+        name: category_ratings.management
+        description: ''
+        required: false
+        example: 4.3
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      reviews:
+        custom: []
+        name: reviews
+        description: 'Array of embedded review objects.'
+        required: false
+        example:
+          - []
+        type: 'object[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'reviews[].id':
+        custom: []
+        name: 'reviews[].id'
+        description: 'Unique review ID.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'reviews[].rating':
+        custom: []
+        name: 'reviews[].rating'
+        description: 'Rating 1–5.'
+        required: true
+        example: 4
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'reviews[].user_name':
+        custom: []
+        name: 'reviews[].user_name'
+        description: 'Reviewer display name.'
+        required: true
+        example: 'John Doe'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'reviews[].date':
+        custom: []
+        name: 'reviews[].date'
+        description: 'Display date.'
+        required: true
+        example: 27/01/2026
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'reviews[].position':
+        custom: []
+        name: 'reviews[].position'
+        description: "Reviewer's position/tenure."
+        required: false
+        example: 'Former employee, last year at 2022'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      'reviews[].recommend':
+        custom: []
+        name: 'reviews[].recommend'
+        description: 'Whether reviewer recommends the company.'
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      'reviews[].ceo_approval':
+        custom: []
+        name: 'reviews[].ceo_approval'
+        description: 'Whether reviewer approves of CEO.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      'reviews[].subratings':
+        custom: []
+        name: 'reviews[].subratings'
+        description: 'Per-category sub-ratings for this review.'
+        required: false
+        example: []
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'reviews[].agrees':
+        custom: []
+        name: 'reviews[].agrees'
+        description: 'Agree votes on this review.'
+        required: false
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      'reviews[].disagrees':
+        custom: []
+        name: 'reviews[].disagrees'
+        description: 'Disagree votes on this review.'
+        required: false
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name: Google
+      logo: 'https://logo.clearbit.com/google.com'
+      cover_image: 'https://images.unsplash.com/photo.jpg'
+      description: 'Eius et animi quos velit et.'
+      location: 'Mountain View, CA'
+      company_size: 100-500
+      employee_count: '100,000+ employees'
+      industry: Technology
+      website: 'https://www.google.com'
+      founded: '1998'
+      social_media:
+        linkedin: 'https://www.linkedin.com/company/google'
+        twitter: 'https://twitter.com/Google'
+        facebook: 'https://www.facebook.com/Google'
+        instagram: 'https://www.instagram.com/google'
+      rating: 4.5
+      review_count: 1250
+      would_recommend: 85
+      ceo_performance: 92
+      category_ratings:
+        compensation: 4.2
+        culture: 4.6
+        work_life: 4.1
+        diversity: 4.4
+        management: 4.3
+      reviews:
+        -
+          id: '1'
+          rating: 4
+          user_name: 'John Doe'
+          date: 27/01/2026
+          position: 'Former employee, last year at 2022'
+          recommend: false
+          ceo_approval: true
+          subratings: []
+          agrees: 5
+          disagrees: 2
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "name": "Google",
+            "logo": "https://logo.clearbit.com/google.com",
+            "cover_image": "https://images.unsplash.com/photo.jpg",
+            "founded": "1998",
+            "employee_count": "100,000+ employees",
+            "location": "Mountain View, CA",
+            "website": "https://www.google.com",
+            "company_size": "100000+",
+            "open_positions": 0,
+            "company_size_range": { "min": 100000, "isPlus": true }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{ "errors": { "name": ["The name field is required."] } }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+    uri: api/employer/company
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Upsert company profile'
+      description: |-
+        Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).
+        `company_size` accepts either a plain string (`"100-500"`, `"500+"`) or a structured object `{ min, max?, isPlus }` — both are normalised to a canonical string before storage.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Company name. Max 150 chars.'
+        required: true
+        example: Google
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      logo:
+        custom: []
+        name: logo
+        description: 'URL to company logo.'
+        required: false
+        example: 'https://logo.clearbit.com/google.com'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      cover_image:
+        custom: []
+        name: cover_image
+        description: 'URL to cover/banner image.'
+        required: false
+        example: 'https://images.unsplash.com/photo.jpg'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      description:
+        custom: []
+        name: description
+        description: 'Company description.'
+        required: false
+        example: 'Eius et animi quos velit et.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      location:
+        custom: []
+        name: location
+        description: 'Headquarters location.'
+        required: false
+        example: 'Mountain View, CA'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      company_size:
+        custom: []
+        name: company_size
+        description: 'Size string ("100-500", "500+") or object {min, max?, isPlus}.'
+        required: false
+        example: 100-500
+        type: string|object
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      employee_count:
+        custom: []
+        name: employee_count
+        description: 'Display string for employee count.'
+        required: false
+        example: '100,000+ employees'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      industry:
+        custom: []
+        name: industry
+        description: 'Industry name.'
+        required: false
+        example: Technology
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      website:
+        custom: []
+        name: website
+        description: 'Company website URL.'
+        required: false
+        example: 'https://www.google.com'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      founded:
+        custom: []
+        name: founded
+        description: 'Year founded.'
+        required: false
+        example: '1998'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      social_media:
+        custom: []
+        name: social_media
+        description: 'Social media links.'
+        required: false
+        example: []
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      social_media.linkedin:
+        custom: []
+        name: social_media.linkedin
+        description: 'LinkedIn URL.'
+        required: false
+        example: 'https://www.linkedin.com/company/google'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      social_media.twitter:
+        custom: []
+        name: social_media.twitter
+        description: 'Twitter URL.'
+        required: false
+        example: 'https://twitter.com/Google'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      social_media.facebook:
+        custom: []
+        name: social_media.facebook
+        description: 'Facebook URL.'
+        required: false
+        example: 'https://www.facebook.com/Google'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      social_media.instagram:
+        custom: []
+        name: social_media.instagram
+        description: 'Instagram URL.'
+        required: false
+        example: 'https://www.instagram.com/google'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      rating:
+        custom: []
+        name: rating
+        description: 'Overall rating (0–5).'
+        required: false
+        example: 4.5
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      review_count:
+        custom: []
+        name: review_count
+        description: 'Total number of reviews.'
+        required: false
+        example: 1250
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      would_recommend:
+        custom: []
+        name: would_recommend
+        description: 'Percentage of employees who would recommend (0–100).'
+        required: false
+        example: 85
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      ceo_performance:
+        custom: []
+        name: ceo_performance
+        description: 'CEO approval percentage (0–100).'
+        required: false
+        example: 92
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      category_ratings:
+        custom: []
+        name: category_ratings
+        description: 'Per-category rating breakdown.'
+        required: false
+        example: []
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      category_ratings.compensation:
+        custom: []
+        name: category_ratings.compensation
+        description: ''
+        required: false
+        example: 4.2
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      category_ratings.culture:
+        custom: []
+        name: category_ratings.culture
+        description: ''
+        required: false
+        example: 4.6
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      category_ratings.work_life:
+        custom: []
+        name: category_ratings.work_life
+        description: ''
+        required: false
+        example: 4.1
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      category_ratings.diversity:
+        custom: []
+        name: category_ratings.diversity
+        description: ''
+        required: false
+        example: 4.4
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      category_ratings.management:
+        custom: []
+        name: category_ratings.management
+        description: ''
+        required: false
+        example: 4.3
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      reviews:
+        custom: []
+        name: reviews
+        description: 'Array of embedded review objects.'
+        required: false
+        example:
+          - []
+        type: 'object[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'reviews[].id':
+        custom: []
+        name: 'reviews[].id'
+        description: 'Unique review ID.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'reviews[].rating':
+        custom: []
+        name: 'reviews[].rating'
+        description: 'Rating 1–5.'
+        required: true
+        example: 4
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'reviews[].user_name':
+        custom: []
+        name: 'reviews[].user_name'
+        description: 'Reviewer display name.'
+        required: true
+        example: 'John Doe'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'reviews[].date':
+        custom: []
+        name: 'reviews[].date'
+        description: 'Display date.'
+        required: true
+        example: 27/01/2026
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'reviews[].position':
+        custom: []
+        name: 'reviews[].position'
+        description: "Reviewer's position/tenure."
+        required: false
+        example: 'Former employee, last year at 2022'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      'reviews[].recommend':
+        custom: []
+        name: 'reviews[].recommend'
+        description: 'Whether reviewer recommends the company.'
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      'reviews[].ceo_approval':
+        custom: []
+        name: 'reviews[].ceo_approval'
+        description: 'Whether reviewer approves of CEO.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      'reviews[].subratings':
+        custom: []
+        name: 'reviews[].subratings'
+        description: 'Per-category sub-ratings for this review.'
+        required: false
+        example: []
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'reviews[].agrees':
+        custom: []
+        name: 'reviews[].agrees'
+        description: 'Agree votes on this review.'
+        required: false
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      'reviews[].disagrees':
+        custom: []
+        name: 'reviews[].disagrees'
+        description: 'Disagree votes on this review.'
+        required: false
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name: Google
+      logo: 'https://logo.clearbit.com/google.com'
+      cover_image: 'https://images.unsplash.com/photo.jpg'
+      description: 'Eius et animi quos velit et.'
+      location: 'Mountain View, CA'
+      company_size: 100-500
+      employee_count: '100,000+ employees'
+      industry: Technology
+      website: 'https://www.google.com'
+      founded: '1998'
+      social_media:
+        linkedin: 'https://www.linkedin.com/company/google'
+        twitter: 'https://twitter.com/Google'
+        facebook: 'https://www.facebook.com/Google'
+        instagram: 'https://www.instagram.com/google'
+      rating: 4.5
+      review_count: 1250
+      would_recommend: 85
+      ceo_performance: 92
+      category_ratings:
+        compensation: 4.2
+        culture: 4.6
+        work_life: 4.1
+        diversity: 4.4
+        management: 4.3
+      reviews:
+        -
+          id: '1'
+          rating: 4
+          user_name: 'John Doe'
+          date: 27/01/2026
+          position: 'Former employee, last year at 2022'
+          recommend: false
+          ceo_approval: true
+          subratings: []
+          agrees: 5
+          disagrees: 2
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "name": "Google",
+            "logo": "https://logo.clearbit.com/google.com",
+            "cover_image": "https://images.unsplash.com/photo.jpg",
+            "founded": "1998",
+            "employee_count": "100,000+ employees",
+            "location": "Mountain View, CA",
+            "website": "https://www.google.com",
+            "company_size": "100000+",
+            "open_positions": 0,
+            "company_size_range": { "min": 100000, "isPlus": true }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{ "errors": { "name": ["The name field is required."] } }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -1711,8 +4056,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Employer: list applications for a job post they own.'
-      description: 'Includes applicant name and ats_score.'
+      title: 'Job applications (employer)'
+      description: 'Paginated list of applications for a specific job post owned by the authenticated employer. Includes applicant name and ATS score.'
       authenticated: true
       deprecated: false
     headers:
@@ -1725,14 +4070,14 @@ endpoints:
         name: jobId
         description: 'The job post ID.'
         required: true
-        example: 6a04ca4809826695330cc475
+        example: 664f1a2b3c4d5e6f7a8b9c0d
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      jobId: 6a04ca4809826695330cc475
+      jobId: 664f1a2b3c4d5e6f7a8b9c0d
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -1742,12 +4087,37 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"applications":{"current_page":1,"data":[{"user_id":"6a04cbe3275c7e4e74063b22","job_post_id":"6a04ca4809826695330cc475","cover_letter":"I am very interested in this position.","status":"pending","applied_at":"2026-05-13T19:00:24.661000Z","updated_at":"2026-05-13T19:07:59.046000Z","created_at":"2026-05-13T19:00:24.662000Z","id":"6a04ca4809826695330cc476","user":{"name":"Scribe Docs User","email":"scribe@docs.local","roles":["employee","employer","admin"],"updated_at":"2026-05-13T19:07:15.073000Z","created_at":"2026-05-13T19:07:15.073000Z","id":"6a04cbe3275c7e4e74063b22"},"applicant_name":"Scribe Docs User","ats_score":null}],"first_page_url":"http:\/\/localhost:8000\/api\/employer\/jobs\/6a04ca4809826695330cc475\/applications?page=1","from":1,"last_page":1,"last_page_url":"http:\/\/localhost:8000\/api\/employer\/jobs\/6a04ca4809826695330cc475\/applications?page=1","links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost:8000\/api\/employer\/jobs\/6a04ca4809826695330cc475\/applications?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"next_page_url":null,"path":"http:\/\/localhost:8000\/api\/employer\/jobs\/6a04ca4809826695330cc475\/applications","per_page":15,"prev_page_url":null,"to":1,"total":1}}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "applications": {
+              "data": [
+                {
+                  "id": "664f1a2b3c4d5e6f7a8b9c0f",
+                  "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+                  "status": "pending",
+                  "cover_letter": "I am very interested...",
+                  "applied_at": "2024-01-15T00:00:00Z",
+                  "applicant_name": "Jane Smith",
+                  "ats_score": 82
+                }
+              ],
+              "current_page": 1, "per_page": 15, "total": 1, "total_pages": 1, "next_page": null, "prev_page": null
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: '{ "message": "Forbidden" }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Job post not found" }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -1767,8 +4137,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Employer: update application status and optional feedback.'
-      description: ''
+      title: 'Update application status'
+      description: 'Updates the status and optional feedback on an application. Only the employer who owns the related job post can do this.'
       authenticated: true
       deprecated: false
     headers:
@@ -1781,48 +4151,66 @@ endpoints:
         name: id
         description: 'The application ID.'
         required: true
-        example: 6a04ca4809826695330cc476
+        example: 664f1a2b3c4d5e6f7a8b9c0f
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 6a04ca4809826695330cc476
+      id: 664f1a2b3c4d5e6f7a8b9c0f
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
       status:
         custom: []
         name: status
-        description: ''
+        description: 'One of: pending, reviewed, accepted, rejected.'
         required: true
-        example: reviewed
+        example: accepted
         type: string
-        enumValues:
-          - pending
-          - reviewed
-          - accepted
-          - rejected
-        exampleWasSpecified: false
+        enumValues: []
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
       feedback:
         custom: []
         name: feedback
-        description: 'Must not be greater than 2000 characters.'
+        description: 'Optional feedback message. Max 2000 chars.'
         required: false
-        example: b
+        example: 'Great profile, moving forward.'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
     cleanBodyParameters:
-      status: reviewed
-      feedback: b
+      status: accepted
+      feedback: 'Great profile, moving forward.'
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Application status updated successfully",
+            "application": { "id": "664f1a2b3c4d5e6f7a8b9c0f", "status": "accepted", "feedback": "Great profile." }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: '{ "message": "Forbidden" }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Application not found" }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -1842,8 +4230,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Paginated list of actively seeking job seekers with optional filters.'
-      description: 'GET /api/employer/seekers'
+      title: 'Search job seekers'
+      description: 'Paginated list of actively-seeking job seekers with optional filters. Only returns profiles where `is_actively_seeking = true`.'
       authenticated: true
       deprecated: false
     headers:
@@ -1852,8 +4240,80 @@ endpoints:
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
+    queryParameters:
+      skills:
+        custom: []
+        name: skills
+        description: 'Comma-separated list of required skills (all must match, case-insensitive).'
+        required: false
+        example: 'React,TypeScript'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      min_ats_score:
+        custom: []
+        name: min_ats_score
+        description: 'Minimum ATS score.'
+        required: false
+        example: 70
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      max_ats_score:
+        custom: []
+        name: max_ats_score
+        description: 'Maximum ATS score.'
+        required: false
+        example: 95
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      location:
+        custom: []
+        name: location
+        description: 'Partial match on AI-detected location.'
+        required: false
+        example: Beirut
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      keyword:
+        custom: []
+        name: keyword
+        description: 'Partial match on AI summary or current job title.'
+        required: false
+        example: frontend
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      page:
+        custom: []
+        name: page
+        description: 'Page number.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      skills: 'React,TypeScript'
+      min_ats_score: 70
+      max_ats_score: 95
+      location: Beirut
+      keyword: frontend
+      page: 1
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
@@ -1861,12 +4321,25 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"seekers":{"current_page":1,"data":[{"user_id":"6a04ca4809826695330cc473","current_job_title":"Backend Developer","ai_skills":["PHP","Laravel","MongoDB","REST APIs"],"ats_score":82,"ai_summary":"Experienced backend developer with 4 years in Laravel and MongoDB.","ai_location":"Beirut, Lebanon","is_actively_seeking":true,"updated_at":"2026-05-13T19:00:24.647000Z","created_at":"2026-05-13T19:00:24.647000Z","id":"6a04ca4809826695330cc474"},{"user_id":"6a04cbe3275c7e4e74063b22","is_actively_seeking":true,"current_job_title":"Developer","updated_at":"2026-05-13T19:07:15.077000Z","created_at":"2026-05-13T19:07:15.077000Z","id":"6a04cbe3275c7e4e74063b23"}],"first_page_url":"http:\/\/localhost:8000\/api\/employer\/seekers?page=1","from":1,"last_page":1,"last_page_url":"http:\/\/localhost:8000\/api\/employer\/seekers?page=1","links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost:8000\/api\/employer\/seekers?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"next_page_url":null,"path":"http:\/\/localhost:8000\/api\/employer\/seekers","per_page":10,"prev_page_url":null,"to":2,"total":2}}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "seekers": {
+              "data": [
+                {
+                  "id": "664f1a2b3c4d5e6f7a8b9c0d",
+                  "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+                  "current_job_title": "Frontend Developer",
+                  "ats_score": 82,
+                  "ai_skills": ["React", "TypeScript"],
+                  "ai_location": "Beirut, Lebanon",
+                  "is_actively_seeking": true
+                }
+              ],
+              "current_page": 1, "per_page": 10, "total": 1, "total_pages": 1, "next_page": null, "prev_page": null
+            }
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -1886,11 +4359,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: "Return a specific job seeker's public profile by user ID."
-      description: |-
-        GET /api/employer/seekers/{userId}
-
-        Excludes sensitive fields: password, email, phone.
+      title: 'Get job seeker profile (employer view)'
+      description: "Returns a specific job seeker's public profile by their user ID. Sensitive fields (`ai_email`, `ai_phone`) are excluded."
       authenticated: true
       deprecated: false
     headers:
@@ -1903,14 +4373,14 @@ endpoints:
         name: userId
         description: "The job seeker's user ID."
         required: true
-        example: 6a04ca4809826695330cc473
+        example: 664f1a2b3c4d5e6f7a8b9c0e
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      userId: 6a04ca4809826695330cc473
+      userId: 664f1a2b3c4d5e6f7a8b9c0e
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -1920,12 +4390,28 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"seeker":{"user_id":"6a04ca4809826695330cc473","name":"Jane Doe","profile":{"user_id":"6a04ca4809826695330cc473","current_job_title":"Backend Developer","ai_skills":["PHP","Laravel","MongoDB","REST APIs"],"ats_score":82,"ai_summary":"Experienced backend developer with 4 years in Laravel and MongoDB.","ai_location":"Beirut, Lebanon","is_actively_seeking":true,"updated_at":"2026-05-13T19:00:24.647000Z","created_at":"2026-05-13T19:00:24.647000Z","id":"6a04ca4809826695330cc474"}}}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "seeker": {
+              "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+              "name": "Jane Smith",
+              "profile": {
+                "current_job_title": "Frontend Developer",
+                "ats_score": 82,
+                "ai_skills": ["React", "TypeScript"],
+                "ai_summary": "Experienced frontend developer...",
+                "is_actively_seeking": true
+              }
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Job seeker not found" }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -1945,8 +4431,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Employer: send a direct offer to a job seeker.'
-      description: ''
+      title: 'Send direct offer'
+      description: "Sends a direct job offer to a specific job seeker for one of the employer's active job posts. Duplicate offers to the same seeker for the same post are rejected."
       authenticated: true
       deprecated: false
     headers:
@@ -1961,42 +4447,77 @@ endpoints:
       job_seeker_id:
         custom: []
         name: job_seeker_id
-        description: ''
+        description: "The target job seeker's user ID."
         required: true
-        example: architecto
+        example: 664f1a2b3c4d5e6f7a8b9c0e
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
       job_post_id:
         custom: []
         name: job_post_id
-        description: ''
+        description: 'The job post ID (must belong to the authenticated employer).'
         required: true
-        example: architecto
+        example: 664f1a2b3c4d5e6f7a8b9c0d
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
       message:
         custom: []
         name: message
-        description: 'Must not be greater than 1000 characters.'
+        description: 'Personalised offer message. Max 1000 chars.'
         required: true
-        example: 'n'
+        example: "We think you'd be a great fit for this role."
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      job_seeker_id: architecto
-      job_post_id: architecto
-      message: 'n'
+      job_seeker_id: 664f1a2b3c4d5e6f7a8b9c0e
+      job_post_id: 664f1a2b3c4d5e6f7a8b9c0d
+      message: "We think you'd be a great fit for this role."
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "message": "Direct offer sent successfully",
+            "offer": {
+              "id": "664f1a2b3c4d5e6f7a8b9c0f",
+              "employer_id": "664f1a2b3c4d5e6f7a8b9c0a",
+              "job_seeker_id": "664f1a2b3c4d5e6f7a8b9c0e",
+              "job_post_id": "664f1a2b3c4d5e6f7a8b9c0d",
+              "message": "We think you'd be a great fit.",
+              "status": "pending"
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: '{ "message": "Forbidden" }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Job post not found" }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 409
+        content: '{ "message": "A direct offer has already been sent to this job seeker for this job post" }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -2016,8 +4537,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Employer: paginated list of sent offers with job seeker name and status.'
-      description: ''
+      title: 'Sent offers'
+      description: 'Paginated list of direct offers sent by the authenticated employer, including job seeker name and job post title.'
       authenticated: true
       deprecated: false
     headers:
@@ -2035,12 +4556,23 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"offers":{"current_page":1,"data":[],"first_page_url":"http:\/\/localhost:8000\/api\/employer\/offers?page=1","from":null,"last_page":1,"last_page_url":"http:\/\/localhost:8000\/api\/employer\/offers?page=1","links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost:8000\/api\/employer\/offers?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"next_page_url":null,"path":"http:\/\/localhost:8000\/api\/employer\/offers","per_page":15,"prev_page_url":null,"to":null,"total":0}}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "offers": {
+              "data": [
+                {
+                  "id": "664f1a2b3c4d5e6f7a8b9c0f",
+                  "status": "pending",
+                  "message": "We think you'd be a great fit.",
+                  "job_seeker_name": "Jane Smith",
+                  "job_post_title": "Senior Laravel Developer"
+                }
+              ],
+              "current_page": 1, "per_page": 15, "total": 1, "total_pages": 1, "next_page": null, "prev_page": null
+            }
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -2060,8 +4592,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'List pending employer applications'
+      description: 'Returns all employer applications with `pending` status. Admin only.'
       authenticated: true
       deprecated: false
     headers:
@@ -2079,12 +4611,18 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '[]'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          [
+            {
+              "id": "664f1a2b3c4d5e6f7a8b9c0d",
+              "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+              "status": "pending",
+              "document_name": "business_license.pdf",
+              "user": { "id": "664f1a2b3c4d5e6f7a8b9c0e", "name": "John Employer", "email": "john@corp.com" }
+            }
+          ]
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -2104,8 +4642,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'Approve employer'
+      description: 'Approves an employer application. Grants the `employer` role to the user and sets `is_employer = true`. Admin only.'
       authenticated: true
       deprecated: false
     headers:
@@ -2116,22 +4654,38 @@ endpoints:
       id:
         custom: []
         name: id
-        description: 'The ID of the admin.'
+        description: 'The employer application ID.'
         required: true
-        example: architecto
+        example: 664f1a2b3c4d5e6f7a8b9c0d
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: architecto
+      id: 664f1a2b3c4d5e6f7a8b9c0d
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Approved employer request.",
+            "employer": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "status": "approved" }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "No query results for model" }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -2151,8 +4705,8 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'Reject employer'
+      description: 'Rejects an employer application. Admin only.'
       authenticated: true
       deprecated: false
     headers:
@@ -2163,22 +4717,50 @@ endpoints:
       id:
         custom: []
         name: id
-        description: 'The ID of the admin.'
+        description: 'The employer application ID.'
         required: true
-        example: architecto
+        example: 664f1a2b3c4d5e6f7a8b9c0d
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: architecto
+      id: 664f1a2b3c4d5e6f7a8b9c0d
     queryParameters: []
     cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
+    bodyParameters:
+      review_notes:
+        custom: []
+        name: review_notes
+        description: 'Optional rejection reason.'
+        required: false
+        example: 'Insufficient documentation provided.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      review_notes: 'Insufficient documentation provided.'
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Rejected employer request.",
+            "employer": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "status": "rejected", "review_notes": "Insufficient documentation." }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "No query results for model" }'
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers

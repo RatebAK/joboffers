@@ -13,7 +13,25 @@ use Illuminate\Support\Facades\Validator;
 class ApplicationController extends Controller
 {
     /**
-     * Job seeker: paginated list of their applications with job post title and company name.
+     * My applications
+     *
+     * Paginated list of the authenticated job seeker's applications, each including the related job post.
+     *
+     * @response 200 {
+     *   "applications": {
+     *     "data": [
+     *       {
+     *         "id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *         "job_post_id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *         "status": "pending",
+     *         "cover_letter": "I am very interested...",
+     *         "applied_at": "2024-01-15T00:00:00Z",
+     *         "job_post": { "title": "Senior Laravel Developer", "company_name": "Acme Corp" }
+     *       }
+     *     ],
+     *     "current_page": 1, "per_page": 10, "total": 1, "total_pages": 1, "next_page": null, "prev_page": null
+     *   }
+     * }
      */
     public function index(Request $request)
     {
@@ -30,7 +48,25 @@ class ApplicationController extends Controller
     }
 
     /**
-     * Job seeker: apply to a job post.
+     * Apply to job
+     *
+     * Submit an application for an active job post. If no resume file is uploaded, the profile's stored CV is used automatically.
+     *
+     * @bodyParam job_post_id string required The ID of the job post to apply to. Example: 664f1a2b3c4d5e6f7a8b9c0d
+     * @bodyParam cover_letter string Optional cover letter. Max 1000 chars. Example: I am very interested in this position.
+     * @bodyParam resume file Optional PDF/DOC resume file (max 5 MB). Overrides profile CV.
+     *
+     * @response 201 {
+     *   "message": "Application submitted successfully",
+     *   "application": {
+     *     "id": "664f1a2b3c4d5e6f7a8b9c0f",
+     *     "job_post_id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *     "status": "pending",
+     *     "applied_at": "2024-01-15T00:00:00Z"
+     *   }
+     * }
+     * @response 404 { "message": "Job post not found or is not active" }
+     * @response 409 { "message": "You have already applied to this job" }
      */
     public function store(Request $request)
     {
@@ -90,8 +126,15 @@ class ApplicationController extends Controller
     }
 
     /**
-     * Job seeker: withdraw a pending application.
-     * @urlParam id string required The application ID. Example: 6a04ca4809826695330cc476
+     * Withdraw application
+     *
+     * Withdraws (deletes) a pending application. Accepted applications cannot be withdrawn.
+     *
+     * @urlParam id string required The application ID. Example: 664f1a2b3c4d5e6f7a8b9c0f
+     *
+     * @response 200 { "message": "Application withdrawn successfully" }
+     * @response 403 { "message": "Cannot withdraw an accepted application" }
+     * @response 404 { "message": "Application not found" }
      */
     public function withdraw(Request $request, $id)
     {
@@ -115,9 +158,30 @@ class ApplicationController extends Controller
     }
 
     /**
-     * Employer: list applications for a job post they own.
-     * Includes applicant name and ats_score.
-     * @urlParam jobId string required The job post ID. Example: 6a04ca4809826695330cc475
+     * Job applications (employer)
+     *
+     * Paginated list of applications for a specific job post owned by the authenticated employer. Includes applicant name and ATS score.
+     *
+     * @urlParam jobId string required The job post ID. Example: 664f1a2b3c4d5e6f7a8b9c0d
+     *
+     * @response 200 {
+     *   "applications": {
+     *     "data": [
+     *       {
+     *         "id": "664f1a2b3c4d5e6f7a8b9c0f",
+     *         "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *         "status": "pending",
+     *         "cover_letter": "I am very interested...",
+     *         "applied_at": "2024-01-15T00:00:00Z",
+     *         "applicant_name": "Jane Smith",
+     *         "ats_score": 82
+     *       }
+     *     ],
+     *     "current_page": 1, "per_page": 15, "total": 1, "total_pages": 1, "next_page": null, "prev_page": null
+     *   }
+     * }
+     * @response 403 { "message": "Forbidden" }
+     * @response 404 { "message": "Job post not found" }
      */
     public function indexForEmployer(Request $request, $jobId)
     {
@@ -150,8 +214,20 @@ class ApplicationController extends Controller
     }
 
     /**
-     * Employer: update application status and optional feedback.
-     * @urlParam id string required The application ID. Example: 6a04ca4809826695330cc476
+     * Update application status
+     *
+     * Updates the status and optional feedback on an application. Only the employer who owns the related job post can do this.
+     *
+     * @urlParam id string required The application ID. Example: 664f1a2b3c4d5e6f7a8b9c0f
+     * @bodyParam status string required One of: pending, reviewed, accepted, rejected. Example: accepted
+     * @bodyParam feedback string Optional feedback message. Max 2000 chars. Example: Great profile, moving forward.
+     *
+     * @response 200 {
+     *   "message": "Application status updated successfully",
+     *   "application": { "id": "664f1a2b3c4d5e6f7a8b9c0f", "status": "accepted", "feedback": "Great profile." }
+     * }
+     * @response 403 { "message": "Forbidden" }
+     * @response 404 { "message": "Application not found" }
      */
     public function updateStatus(Request $request, $id)
     {

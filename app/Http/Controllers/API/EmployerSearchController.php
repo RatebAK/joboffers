@@ -10,8 +10,33 @@ use Illuminate\Http\Request;
 class EmployerSearchController extends Controller
 {
     /**
-     * Paginated list of actively seeking job seekers with optional filters.
-     * GET /api/employer/seekers
+     * Search job seekers
+     *
+     * Paginated list of actively-seeking job seekers with optional filters. Only returns profiles where `is_actively_seeking = true`.
+     *
+     * @queryParam skills string Comma-separated list of required skills (all must match, case-insensitive). Example: React,TypeScript
+     * @queryParam min_ats_score integer Minimum ATS score. Example: 70
+     * @queryParam max_ats_score integer Maximum ATS score. Example: 95
+     * @queryParam location string Partial match on AI-detected location. Example: Beirut
+     * @queryParam keyword string Partial match on AI summary or current job title. Example: frontend
+     * @queryParam page integer Page number. Example: 1
+     *
+     * @response 200 {
+     *   "seekers": {
+     *     "data": [
+     *       {
+     *         "id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *         "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *         "current_job_title": "Frontend Developer",
+     *         "ats_score": 82,
+     *         "ai_skills": ["React", "TypeScript"],
+     *         "ai_location": "Beirut, Lebanon",
+     *         "is_actively_seeking": true
+     *       }
+     *     ],
+     *     "current_page": 1, "per_page": 10, "total": 1, "total_pages": 1, "next_page": null, "prev_page": null
+     *   }
+     * }
      */
     public function index(Request $request)
     {
@@ -58,11 +83,26 @@ class EmployerSearchController extends Controller
     }
 
     /**
-     * Return a specific job seeker's public profile by user ID.
-     * GET /api/employer/seekers/{userId}
+     * Get job seeker profile (employer view)
      *
-     * Excludes sensitive fields: password, email, phone.
-     * @urlParam userId string required The job seeker's user ID. Example: 6a04ca4809826695330cc473
+     * Returns a specific job seeker's public profile by their user ID. Sensitive fields (`ai_email`, `ai_phone`) are excluded.
+     *
+     * @urlParam userId string required The job seeker's user ID. Example: 664f1a2b3c4d5e6f7a8b9c0e
+     *
+     * @response 200 {
+     *   "seeker": {
+     *     "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *     "name": "Jane Smith",
+     *     "profile": {
+     *       "current_job_title": "Frontend Developer",
+     *       "ats_score": 82,
+     *       "ai_skills": ["React", "TypeScript"],
+     *       "ai_summary": "Experienced frontend developer...",
+     *       "is_actively_seeking": true
+     *     }
+     *   }
+     * }
+     * @response 404 { "message": "Job seeker not found" }
      */
     public function show($userId)
     {

@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "7358838f-69a4-4caf-ba4a-02c616b51aa3",
+        "_postman_id": "f71dc622-c08e-4cb9-8f83-76d7c5e8e445",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -20,7 +20,7 @@
             "description": "",
             "item": [
                 {
-                    "name": "POST api\/auth\/register",
+                    "name": "Register",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -41,17 +41,30 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"email\":\"zbailey@example.net\",\"password\":\"-0pBNvYgxw\",\"role\":\"employer\"}"
+                            "raw": "{\"name\":\"Jane Smith\",\"email\":\"jane@example.com\",\"password\":\"Secret@123\",\"role\":\"employee\",\"password_confirmation\":\"Secret@123\"}"
                         },
-                        "description": "",
+                        "description": "Create a new user account. Returns a JWT token on success.",
                         "auth": {
                             "type": "noauth"
                         }
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"User successfully registered\",\n  \"user\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Jane Smith\", \"email\": \"jane@example.com\", \"roles\": [\"employee\"] },\n  \"access_token\": \"eyJ...\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 3600\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"email\": [\"The email has already been taken.\"] }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "POST api\/auth\/login",
+                    "name": "Login",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -72,17 +85,30 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"email\":\"gbailey@example.net\",\"password\":\"+-0pBNvYgxwmi\\\/#iw\"}"
+                            "raw": "{\"email\":\"jane@example.com\",\"password\":\"Secret@123\"}"
                         },
-                        "description": "",
+                        "description": "Authenticate with email and password. Returns a JWT bearer token.",
                         "auth": {
                             "type": "noauth"
                         }
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"access_token\": \"eyJ...\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 3600,\n  \"user\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Jane Smith\", \"email\": \"jane@example.com\", \"roles\": [\"employee\"] }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{ \"error\": \"Unauthorized\", \"message\": \"Invalid credentials\" }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "GET api\/auth\/profile",
+                    "name": "Get profile",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -102,32 +128,19 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Returns the authenticated user's account details."
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
+                            "header": [],
                             "code": 200,
-                            "body": "{\"name\":\"Scribe Docs User\",\"email\":\"scribe@docs.local\",\"roles\":[\"employee\",\"employer\",\"admin\"],\"updated_at\":\"2026-05-13T19:07:15.073000Z\",\"created_at\":\"2026-05-13T19:07:15.073000Z\",\"id\":\"6a04cbe3275c7e4e74063b22\"}",
+                            "body": "{\n  \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"name\": \"Jane Smith\",\n  \"email\": \"jane@example.com\",\n  \"roles\": [\"employee\"],\n  \"is_employer\": false\n}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "POST api\/auth\/logout",
+                    "name": "Logout",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -147,12 +160,19 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Invalidates the current JWT token."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"User successfully signed out\" }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "POST api\/auth\/refresh",
+                    "name": "Refresh token",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -172,18 +192,92 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Issues a new JWT token using the current (still-valid) token."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"access_token\": \"eyJ...\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 3600,\n  \"user\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Jane Smith\", \"email\": \"jane@example.com\" }\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "Public: paginated list of active job posts with optional filters.",
+                    "name": "List jobs",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
                             "path": "api\/jobs",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/jobs"
+                            "query": [
+                                {
+                                    "key": "keyword",
+                                    "value": "Laravel",
+                                    "description": "Search in title, description, company name.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "location",
+                                    "value": "Beirut",
+                                    "description": "Filter by location (partial match).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "job_type",
+                                    "value": "full_time",
+                                    "description": "Filter by type.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "work_mode",
+                                    "value": "remote",
+                                    "description": "Filter by work mode.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "experience_level",
+                                    "value": "senior",
+                                    "description": "Filter by level.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "category",
+                                    "value": "Engineering",
+                                    "description": "Filter by category.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "min_salary",
+                                    "value": "2000",
+                                    "description": "Minimum salary range.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "max_salary",
+                                    "value": "8000",
+                                    "description": "Maximum salary range.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "tag",
+                                    "value": "React",
+                                    "description": "Filter by tag.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "10",
+                                    "description": "Results per page (max 100). Defaults to 15.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/jobs?keyword=Laravel&location=Beirut&job_type=full_time&work_mode=remote&experience_level=senior&category=Engineering&min_salary=2000&max_salary=8000&tag=React&per_page=10&page=1"
                         },
                         "method": "GET",
                         "header": [
@@ -197,35 +291,22 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
+                        "description": "Paginated list of active job posts with optional filters.",
                         "auth": {
                             "type": "noauth"
                         }
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
+                            "header": [],
                             "code": 200,
-                            "body": "{\"current_page\":1,\"data\":[{\"title\":\"Senior Laravel Developer\",\"description\":\"We are looking for a senior Laravel developer to join our team.\",\"requirements\":\"Minimum 3 years of Laravel experience.\",\"company_name\":\"Acme Corp\",\"job_type\":\"full_time\",\"location\":\"Beirut, Lebanon\",\"category\":\"Engineering\",\"salary_range\":{\"min\":2000,\"max\":4000,\"currency\":\"USD\"},\"employer_id\":\"6a04cbe3275c7e4e74063b22\",\"is_active\":true,\"updated_at\":\"2026-05-13T19:07:59.039000Z\",\"created_at\":\"2026-05-13T19:00:24.649000Z\",\"id\":\"6a04ca4809826695330cc475\"}],\"first_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/jobs?page=1\",\"from\":1,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/jobs?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/jobs?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost:8000\\\/api\\\/jobs\",\"per_page\":15,\"prev_page_url\":null,\"to\":1,\"total\":1}",
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n      \"job_id\": \"JOB-001\",\n      \"title\": \"Senior Laravel Developer\",\n      \"description\": \"We are looking for...\",\n      \"requirements\": \"Minimum 3 years...\",\n      \"company_name\": \"Acme Corp\",\n      \"company_logo\": \"https:\/\/logo.clearbit.com\/acme.com\",\n      \"job_type\": \"full_time\",\n      \"work_mode\": \"remote\",\n      \"experience_level\": \"senior\",\n      \"experience_required\": \"5+ years\",\n      \"location\": \"Beirut, Lebanon\",\n      \"category\": \"Engineering\",\n      \"salary_range\": { \"min\": 2000, \"max\": 4000, \"currency\": \"USD\" },\n      \"tags\": [\"Laravel\", \"PHP\"],\n      \"is_active\": true,\n      \"employer_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n      \"created_at\": \"2024-01-15T00:00:00Z\"\n    }\n  ],\n  \"current_page\": 1,\n  \"per_page\": 15,\n  \"total\": 1,\n  \"total_pages\": 1,\n  \"next_page\": null,\n  \"prev_page\": null\n}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Public: single job post by ID.",
+                    "name": "Get job",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -236,7 +317,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "6a04ca4809826695330cc475",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
                                     "description": "The job post ID."
                                 }
                             ]
@@ -253,35 +334,149 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
+                        "description": "Returns a single active job post by ID.",
                         "auth": {
                             "type": "noauth"
                         }
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
+                            "header": [],
                             "code": 200,
-                            "body": "{\"title\":\"Senior Laravel Developer\",\"description\":\"We are looking for a senior Laravel developer to join our team.\",\"requirements\":\"Minimum 3 years of Laravel experience.\",\"company_name\":\"Acme Corp\",\"job_type\":\"full_time\",\"location\":\"Beirut, Lebanon\",\"category\":\"Engineering\",\"salary_range\":{\"min\":2000,\"max\":4000,\"currency\":\"USD\"},\"employer_id\":\"6a04cbe3275c7e4e74063b22\",\"is_active\":true,\"updated_at\":\"2026-05-13T19:07:59.039000Z\",\"created_at\":\"2026-05-13T19:00:24.649000Z\",\"id\":\"6a04ca4809826695330cc475\"}",
+                            "body": "{\n  \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"job_id\": \"JOB-001\",\n  \"title\": \"Senior Laravel Developer\",\n  \"company_name\": \"Acme Corp\",\n  \"job_type\": \"full_time\",\n  \"work_mode\": \"remote\",\n  \"experience_level\": \"senior\",\n  \"location\": \"Beirut, Lebanon\",\n  \"is_active\": true\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Job post not found\" }",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "GET api\/job-seeker\/profile",
+                    "name": "List companies",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/companies",
+                            "query": [
+                                {
+                                    "key": "search",
+                                    "value": "Google",
+                                    "description": "Filter by company name or location.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "industry",
+                                    "value": "Technology",
+                                    "description": "Filter by industry (partial match).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "min_rating",
+                                    "value": "4",
+                                    "description": "Filter by minimum rating (0\u20135).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "company_size",
+                                    "value": "100-500",
+                                    "description": "Filter by company size string (partial match).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "10",
+                                    "description": "Number of results per page (max 100). Defaults to 15.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/companies?search=Google&industry=Technology&min_rating=4&company_size=100-500&per_page=10&page=1"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Paginated list of company profiles. Supports filtering by search term, industry, minimum rating, and company size.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n      \"name\": \"Google\",\n      \"logo\": \"https:\/\/logo.clearbit.com\/google.com\",\n      \"cover_image\": \"https:\/\/images.unsplash.com\/photo.jpg\",\n      \"description\": \"A multinational technology company.\",\n      \"location\": \"Mountain View, CA\",\n      \"industry\": \"Technology\",\n      \"website\": \"https:\/\/www.google.com\",\n      \"founded\": \"1998\",\n      \"employee_count\": \"100,000+ employees\",\n      \"company_size\": \"100000+\",\n      \"rating\": 4.5,\n      \"review_count\": 1250,\n      \"would_recommend\": 85,\n      \"ceo_performance\": 92,\n      \"open_positions\": 3,\n      \"company_size_range\": { \"min\": 100000, \"isPlus\": true }\n    }\n  ],\n  \"current_page\": 1,\n  \"per_page\": 15,\n  \"total\": 1,\n  \"total_pages\": 1,\n  \"next_page\": null,\n  \"prev_page\": null\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get company",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/companies\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/companies\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "The company profile ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns a single company profile including embedded reviews, active job posts, rating breakdowns, and social media links.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"name\": \"Google\",\n  \"logo\": \"https:\/\/logo.clearbit.com\/google.com\",\n  \"cover_image\": \"https:\/\/images.unsplash.com\/photo.jpg\",\n  \"description\": \"A multinational technology company.\",\n  \"founded\": \"1998\",\n  \"employee_count\": \"100,000+ employees\",\n  \"location\": \"Mountain View, CA\",\n  \"website\": \"https:\/\/www.google.com\",\n  \"industry\": \"Technology\",\n  \"company_size\": \"100000+\",\n  \"rating\": 4.5,\n  \"review_count\": 1250,\n  \"would_recommend\": 85,\n  \"ceo_performance\": 92,\n  \"social_media\": {\n    \"linkedin\": \"https:\/\/www.linkedin.com\/company\/google\",\n    \"twitter\": \"https:\/\/twitter.com\/Google\",\n    \"facebook\": \"https:\/\/www.facebook.com\/Google\",\n    \"instagram\": \"https:\/\/www.instagram.com\/google\"\n  },\n  \"category_ratings\": {\n    \"compensation\": 4.2,\n    \"culture\": 4.6,\n    \"work_life\": 4.1,\n    \"diversity\": 4.4,\n    \"management\": 4.3\n  },\n  \"reviews\": [\n    {\n      \"id\": \"1\",\n      \"rating\": 4,\n      \"user_name\": \"John Doe\",\n      \"date\": \"27\/01\/2026\",\n      \"position\": \"Former employee, last year at 2022\",\n      \"recommend\": false,\n      \"ceo_approval\": true,\n      \"subratings\": { \"compensation\": 4, \"culture\": 4, \"work_life\": 3, \"diversity\": 5, \"management\": 3 },\n      \"agrees\": 5,\n      \"disagrees\": 2\n    }\n  ],\n  \"jobs\": [\n    {\n      \"id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n      \"display_id\": \"JOB-001\",\n      \"company_name\": \"Google\",\n      \"company_logo\": \"https:\/\/logo.clearbit.com\/google.com\",\n      \"title\": \"Senior Frontend Developer\",\n      \"created_at\": \"2024-01-15\",\n      \"roles\": [\"Frontend\", \"React\"],\n      \"types\": [\"full_time\", \"remote\"],\n      \"levels\": [\"senior\"],\n      \"experience\": \"5+ years\",\n      \"location\": \"San Francisco, CA\"\n    }\n  ],\n  \"open_positions\": 3,\n  \"company_size_range\": { \"min\": 100000, \"isPlus\": true }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Company profile not found\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get job seeker profile",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -301,32 +496,19 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Returns the authenticated job seeker's profile. Creates an empty profile if one doesn't exist yet."
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
+                            "header": [],
                             "code": 200,
-                            "body": "{\"profile\":{\"user_id\":\"6a04cbe3275c7e4e74063b22\",\"is_actively_seeking\":true,\"current_job_title\":\"Developer\",\"updated_at\":\"2026-05-13T19:07:15.077000Z\",\"created_at\":\"2026-05-13T19:07:15.077000Z\",\"id\":\"6a04cbe3275c7e4e74063b23\"}}",
+                            "body": "{\n  \"profile\": {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"user_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n    \"full_name\": \"Jane Smith\",\n    \"current_job_title\": \"Frontend Developer\",\n    \"is_actively_seeking\": true,\n    \"skills\": [{ \"name\": \"React\", \"level\": \"advanced\" }],\n    \"ats_score\": 82,\n    \"ai_skills\": [\"React\", \"TypeScript\"]\n  }\n}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "PUT api\/job-seeker\/profile",
+                    "name": "Update job seeker profile",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -349,28 +531,154 @@
                             "mode": "formdata",
                             "formdata": [
                                 {
-                                    "key": "phone",
-                                    "value": "bngzmiyvdljnikhw",
+                                    "key": "first_name",
+                                    "value": "Jane",
                                     "type": "text",
-                                    "description": "Must not be greater than 20 characters."
+                                    "description": ""
+                                },
+                                {
+                                    "key": "last_name",
+                                    "value": "Smith",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "full_name",
+                                    "value": "Jane Smith",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "image",
+                                    "value": "https:\/\/example.com\/photo.jpg",
+                                    "type": "text",
+                                    "description": "URL to profile photo."
+                                },
+                                {
+                                    "key": "gender",
+                                    "value": "female",
+                                    "type": "text",
+                                    "description": "One of: male, female, other, prefer_not_to_say."
+                                },
+                                {
+                                    "key": "nationality",
+                                    "value": "Lebanese",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "city",
+                                    "value": "Beirut",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "location",
+                                    "value": "Beirut, Lebanon",
+                                    "type": "text",
+                                    "description": ""
                                 },
                                 {
                                     "key": "address",
-                                    "value": "a",
+                                    "value": "v",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
-                                    "key": "skills[0]",
-                                    "value": "y",
+                                    "key": "phone",
+                                    "value": "+961 70 123456",
+                                    "type": "text",
+                                    "description": "Max 20 chars."
+                                },
+                                {
+                                    "key": "date_of_birth",
+                                    "value": "1995-06-15",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "marital_status",
+                                    "value": "architecto",
+                                    "type": "text",
+                                    "description": "One of: single, married, divorced, widowed, prefer_not_to_say."
+                                },
+                                {
+                                    "key": "salary_range_from",
+                                    "value": "2000",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "salary_range_to",
+                                    "value": "5000",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "current_job_status",
+                                    "value": "architecto",
+                                    "type": "text",
+                                    "description": "One of: employed, unemployed, freelancing, student, open_to_work."
+                                },
+                                {
+                                    "key": "years_of_experience",
+                                    "value": "5",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "education_level",
-                                    "value": "k",
+                                    "value": "Bachelor's Degree",
                                     "type": "text",
-                                    "description": "Must not be greater than 100 characters."
+                                    "description": ""
+                                },
+                                {
+                                    "key": "job_level",
+                                    "value": "architecto",
+                                    "type": "text",
+                                    "description": "One of: entry, junior, mid, senior, lead, manager, director, executive."
+                                },
+                                {
+                                    "key": "job_types[0]",
+                                    "value": "full_time",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "job_types[1]",
+                                    "value": "remote",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "job_roles[0]",
+                                    "value": "Frontend",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "job_roles[1]",
+                                    "value": "React",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "work_cities[0]",
+                                    "value": "Beirut",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "work_cities[1]",
+                                    "value": "Dubai",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "current_job_title",
+                                    "value": "Frontend Developer",
+                                    "type": "text",
+                                    "description": "Max 100 chars."
                                 },
                                 {
                                     "key": "experience_summary",
@@ -379,32 +687,140 @@
                                     "description": ""
                                 },
                                 {
-                                    "key": "current_job_title",
-                                    "value": "n",
-                                    "type": "text",
-                                    "description": "Must not be greater than 100 characters."
-                                },
-                                {
                                     "key": "expected_salary",
-                                    "value": "84",
+                                    "value": "3500",
                                     "type": "text",
-                                    "description": "Must be at least 0."
-                                },
-                                {
-                                    "key": "linkedin_url",
-                                    "value": "http:\/\/www.okuneva.com\/fugiat-sunt-nihil-accusantium-harum-mollitia.html",
-                                    "type": "text",
-                                    "description": "Must be a valid URL. Must not be greater than 255 characters."
-                                },
-                                {
-                                    "key": "portfolio_url",
-                                    "value": "http:\/\/www.considine.com\/provident-perspiciatis-quo-omnis-nostrum-aut-adipisci-quidem",
-                                    "type": "text",
-                                    "description": "Must be a valid URL. Must not be greater than 255 characters."
+                                    "description": ""
                                 },
                                 {
                                     "key": "is_actively_seeking",
                                     "value": "1",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "social_links[linkedin]",
+                                    "value": "https:\/\/linkedin.com\/in\/janesmith",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "social_links[github]",
+                                    "value": "https:\/\/github.com\/janesmith",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "social_links[portfolio]",
+                                    "value": "https:\/\/janesmith.dev",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "social_links[twitter]",
+                                    "value": "architecto",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "skills[0][name]",
+                                    "value": "React",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "skills[0][level]",
+                                    "value": "advanced",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "education_history[0][certificate_type]",
+                                    "value": "v",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "education_history[0][university]",
+                                    "value": "d",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "education_history[0][faculty]",
+                                    "value": "l",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "education_history[0][major]",
+                                    "value": "j",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "education_history[0][major_name]",
+                                    "value": "n",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "education_history[0][grade]",
+                                    "value": "i",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "education_history[0][from_date]",
+                                    "value": "khwaykcmyuwpwlvq",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "education_history[0][awarded_date]",
+                                    "value": "wrsitcpscqldzsnr",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "work_experience[0][job_title]",
+                                    "value": "w",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "work_experience[0][company_name]",
+                                    "value": "t",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "work_experience[0][job_roles][0]",
+                                    "value": "u",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "work_experience[0][from_date]",
+                                    "value": "jwvlxjklqppwqbew",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "work_experience[0][to_date]",
+                                    "value": "tnnoqitpxntltcvi",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "work_experience[0][is_currently_working]",
+                                    "value": "",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "work_experience[0][description]",
+                                    "value": "Eius et animi quos velit et.",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -420,12 +836,25 @@
                                 }
                             ]
                         },
-                        "description": ""
+                        "description": "Creates or updates the authenticated job seeker's profile fields. All fields are optional \u2014 only provided fields are updated."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Profile updated successfully\",\n  \"profile\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"full_name\": \"Jane Smith\", \"is_actively_seeking\": true }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"phone\": [\"Must not be greater than 20 characters.\"] } }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "POST api\/job-seeker\/resume\/upload",
+                    "name": "Upload resume",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -454,12 +883,25 @@
                                 }
                             ]
                         },
-                        "description": ""
+                        "description": "Uploads a resume file to the job seeker's profile without triggering AI analysis."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Resume uploaded successfully\",\n  \"resume_url\": \"https:\/\/example.com\/storage\/resumes\/cv.pdf\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"resume\": [\"The resume field is required.\"] } }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "POST api\/job-seeker\/resume\/upload-and-analyze",
+                    "name": "Upload and analyze CV",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -488,12 +930,31 @@
                                 }
                             ]
                         },
-                        "description": ""
+                        "description": "Uploads a CV file and sends it to the AI analysis service. On success, populates all `ai_*` profile fields and `ats_score`."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"profile\": {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"ats_score\": 82,\n    \"ai_skills\": [\"React\", \"TypeScript\", \"Node.js\"],\n    \"ai_summary\": \"Experienced frontend developer...\",\n    \"ai_work_history\": [],\n    \"ai_analyzed_at\": \"2024-01-15T00:00:00Z\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"message\": \"CV analysis failed\", \"reason\": \"CV content could not be parsed.\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 502,
+                            "body": "{ \"message\": \"CV analysis service unavailable\" }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "Job seeker: paginated list of their applications with job post title and company name.",
+                    "name": "My applications",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -513,32 +974,19 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Paginated list of the authenticated job seeker's applications, each including the related job post."
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
+                            "header": [],
                             "code": 200,
-                            "body": "{\"applications\":{\"current_page\":1,\"data\":[{\"user_id\":\"6a04cbe3275c7e4e74063b22\",\"job_post_id\":\"6a04ca4809826695330cc475\",\"cover_letter\":\"I am very interested in this position.\",\"status\":\"pending\",\"applied_at\":\"2026-05-13T19:00:24.661000Z\",\"updated_at\":\"2026-05-13T19:07:59.046000Z\",\"created_at\":\"2026-05-13T19:00:24.662000Z\",\"id\":\"6a04ca4809826695330cc476\",\"job_post\":{\"title\":\"Senior Laravel Developer\",\"description\":\"We are looking for a senior Laravel developer to join our team.\",\"requirements\":\"Minimum 3 years of Laravel experience.\",\"company_name\":\"Acme Corp\",\"job_type\":\"full_time\",\"location\":\"Beirut, Lebanon\",\"category\":\"Engineering\",\"salary_range\":{\"min\":2000,\"max\":4000,\"currency\":\"USD\"},\"employer_id\":\"6a04cbe3275c7e4e74063b22\",\"is_active\":true,\"updated_at\":\"2026-05-13T19:07:59.039000Z\",\"created_at\":\"2026-05-13T19:00:24.649000Z\",\"id\":\"6a04ca4809826695330cc475\"}}],\"first_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/applications?page=1\",\"from\":1,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/applications?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/applications?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/applications\",\"per_page\":10,\"prev_page_url\":null,\"to\":1,\"total\":1}}",
+                            "body": "{\n  \"applications\": {\n    \"data\": [\n      {\n        \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n        \"job_post_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n        \"status\": \"pending\",\n        \"cover_letter\": \"I am very interested...\",\n        \"applied_at\": \"2024-01-15T00:00:00Z\",\n        \"job_post\": { \"title\": \"Senior Laravel Developer\", \"company_name\": \"Acme Corp\" }\n      }\n    ],\n    \"current_page\": 1, \"per_page\": 10, \"total\": 1, \"total_pages\": 1, \"next_page\": null, \"prev_page\": null\n  }\n}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Job seeker: apply to a job post.",
+                    "name": "Apply to job",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -562,15 +1010,15 @@
                             "formdata": [
                                 {
                                     "key": "job_post_id",
-                                    "value": "architecto",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
                                     "type": "text",
-                                    "description": ""
+                                    "description": "The ID of the job post to apply to."
                                 },
                                 {
                                     "key": "cover_letter",
-                                    "value": "n",
+                                    "value": "I am very interested in this position.",
                                     "type": "text",
-                                    "description": "Must not be greater than 1000 characters."
+                                    "description": "Optional cover letter. Max 1000 chars."
                                 },
                                 {
                                     "key": "resume",
@@ -579,12 +1027,31 @@
                                 }
                             ]
                         },
-                        "description": ""
+                        "description": "Submit an application for an active job post. If no resume file is uploaded, the profile's stored CV is used automatically."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"Application submitted successfully\",\n  \"application\": {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n    \"job_post_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"status\": \"pending\",\n    \"applied_at\": \"2024-01-15T00:00:00Z\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Job post not found or is not active\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{ \"message\": \"You have already applied to this job\" }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "Job seeker: withdraw a pending application.",
+                    "name": "Withdraw application",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -595,7 +1062,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "6a04ca4809826695330cc476",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0f",
                                     "description": "The application ID."
                                 }
                             ]
@@ -612,12 +1079,31 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Withdraws (deletes) a pending application. Accepted applications cannot be withdrawn."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"Application withdrawn successfully\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Cannot withdraw an accepted application\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Application not found\" }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "GET api\/job-seeker\/jobs\/search",
+                    "name": "Search jobs",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -638,34 +1124,21 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"contract\",\"category\":\"g\",\"min_salary\":12}"
+                            "raw": "{\"keyword\":\"React\",\"location\":\"Beirut\",\"job_type\":\"full_time\",\"category\":\"Engineering\",\"min_salary\":2000}"
                         },
-                        "description": ""
+                        "description": "Paginated search of active job posts for the authenticated job seeker."
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
+                            "header": [],
                             "code": 200,
-                            "body": "{\"jobs\":{\"current_page\":1,\"data\":[],\"first_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/jobs\\\/search?page=1\",\"from\":null,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/jobs\\\/search?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/jobs\\\/search?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/jobs\\\/search\",\"per_page\":15,\"prev_page_url\":null,\"to\":null,\"total\":0}}",
+                            "body": "{\n  \"jobs\": {\n    \"data\": [{ \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"title\": \"Senior React Developer\", \"company_name\": \"Acme Corp\" }],\n    \"current_page\": 1, \"per_page\": 15, \"total\": 1, \"total_pages\": 1, \"next_page\": null, \"prev_page\": null\n  }\n}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Job seeker: paginated list of received offers with job post title and employer company name.",
+                    "name": "Received offers",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -685,32 +1158,19 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Paginated list of direct offers received by the authenticated job seeker, including job post title and employer company name."
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
+                            "header": [],
                             "code": 200,
-                            "body": "{\"offers\":{\"current_page\":1,\"data\":[],\"first_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/offers?page=1\",\"from\":null,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/offers?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/offers?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost:8000\\\/api\\\/job-seeker\\\/offers\",\"per_page\":15,\"prev_page_url\":null,\"to\":null,\"total\":0}}",
+                            "body": "{\n  \"offers\": {\n    \"data\": [\n      {\n        \"id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n        \"status\": \"pending\",\n        \"message\": \"We think you'd be a great fit.\",\n        \"job_post_title\": \"Senior Laravel Developer\",\n        \"employer_company_name\": \"Acme Corp\"\n      }\n    ],\n    \"current_page\": 1, \"per_page\": 15, \"total\": 1, \"total_pages\": 1, \"next_page\": null, \"prev_page\": null\n  }\n}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Job seeker: accept a direct offer and create an application.",
+                    "name": "Accept offer",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -721,7 +1181,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "6a04ca4809826695330cc475",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0f",
                                     "description": "The direct offer ID."
                                 }
                             ]
@@ -738,12 +1198,31 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Accepts a direct offer and automatically creates a pending application for the related job post."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Offer accepted successfully\",\n  \"offer\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0f\", \"status\": \"accepted\" }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Forbidden\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Offer not found\" }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "Job seeker: decline a direct offer.",
+                    "name": "Decline offer",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -754,7 +1233,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "6a04ca4809826695330cc475",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0f",
                                     "description": "The direct offer ID."
                                 }
                             ]
@@ -771,12 +1250,31 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Declines a direct offer. The offer status is set to `declined`."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Offer declined successfully\",\n  \"offer\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0f\", \"status\": \"declined\" }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Forbidden\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Offer not found\" }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "POST api\/employer\/apply",
+                    "name": "Apply to become employer",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -805,12 +1303,25 @@
                                 }
                             ]
                         },
-                        "description": ""
+                        "description": "Any authenticated user can submit an employer application by uploading a supporting document. The application starts in `pending` status and must be approved by an admin."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"Employer application submitted.\",\n  \"employer\": {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"user_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n    \"status\": \"pending\",\n    \"document_name\": \"business_license.pdf\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"document\": [\"The document field is required.\"] } }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "GET api\/employer\/status",
+                    "name": "Employer application status",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -830,32 +1341,19 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Returns the authenticated user's employer approval status and their latest application record."
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
+                            "header": [],
                             "code": 200,
-                            "body": "{\"is_employer\":true,\"latest\":null}",
+                            "body": "{\n  \"is_employer\": false,\n  \"latest\": {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"status\": \"pending\",\n    \"document_name\": \"business_license.pdf\",\n    \"created_at\": \"2024-01-15T00:00:00Z\"\n  }\n}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Employer: list own job posts with application counts.",
+                    "name": "My job posts",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -875,32 +1373,19 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Returns all job posts created by the authenticated employer, each with an application count."
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
+                            "header": [],
                             "code": 200,
-                            "body": "[{\"title\":\"Senior Laravel Developer\",\"description\":\"We are looking for a senior Laravel developer to join our team.\",\"requirements\":\"Minimum 3 years of Laravel experience.\",\"company_name\":\"Acme Corp\",\"job_type\":\"full_time\",\"location\":\"Beirut, Lebanon\",\"category\":\"Engineering\",\"salary_range\":{\"min\":2000,\"max\":4000,\"currency\":\"USD\"},\"employer_id\":\"6a04cbe3275c7e4e74063b22\",\"is_active\":true,\"updated_at\":\"2026-05-13T19:07:59.039000Z\",\"created_at\":\"2026-05-13T19:00:24.649000Z\",\"id\":\"6a04ca4809826695330cc475\",\"application_count\":1}]",
+                            "body": "[\n  {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"job_id\": \"JOB-001\",\n    \"title\": \"Senior Laravel Developer\",\n    \"is_active\": true,\n    \"application_count\": 5\n  }\n]",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Employer: create a new job post.",
+                    "name": "Create job post",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -921,14 +1406,27 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"title\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"requirements\":\"architecto\",\"company_name\":\"n\",\"job_type\":\"part_time\",\"location\":\"architecto\",\"category\":\"architecto\",\"salary_range\":{\"min\":39,\"max\":84,\"currency\":\"architecto\"}}"
+                            "raw": "{\"title\":\"Senior Laravel Developer\",\"description\":\"We are looking for...\",\"requirements\":\"Minimum 3 years of Laravel experience.\",\"company_name\":\"Acme Corp\",\"company_logo\":\"https:\\\/\\\/logo.clearbit.com\\\/acme.com\",\"job_type\":\"full_time\",\"work_mode\":\"remote\",\"experience_level\":\"senior\",\"experience_required\":\"5+ years\",\"location\":\"Beirut, Lebanon\",\"category\":\"Engineering\",\"salary_range\":{\"min\":2000,\"max\":4000,\"currency\":\"USD\"},\"tags\":[\"Laravel\",\"PHP\"]}"
                         },
-                        "description": ""
+                        "description": "Creates a new job post owned by the authenticated employer."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"job_id\": \"JOB-001\",\n  \"title\": \"Senior Laravel Developer\",\n  \"is_active\": true,\n  \"employer_id\": \"664f1a2b3c4d5e6f7a8b9c0e\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"title\": [\"The title field is required.\"] } }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "Employer: update own job post.",
+                    "name": "Update job post",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -939,7 +1437,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "6a04ca4809826695330cc475",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
                                     "description": "The job post ID."
                                 }
                             ]
@@ -957,14 +1455,33 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"title\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"requirements\":\"architecto\",\"company_name\":\"n\",\"job_type\":\"part_time\",\"location\":\"architecto\",\"category\":\"architecto\",\"salary_range\":{\"min\":39,\"max\":84,\"currency\":\"architecto\"},\"is_active\":true}"
+                            "raw": "{\"title\":\"Updated Title\",\"description\":\"Eius et animi quos velit et.\",\"requirements\":\"architecto\",\"company_name\":\"architecto\",\"company_logo\":\"architecto\",\"job_type\":\"architecto\",\"work_mode\":\"architecto\",\"experience_level\":\"architecto\",\"experience_required\":\"architecto\",\"location\":\"architecto\",\"category\":\"architecto\",\"salary_range\":{\"min\":39,\"max\":84,\"currency\":\"architecto\"},\"tags\":[\"architecto\"],\"is_active\":false}"
                         },
-                        "description": ""
+                        "description": "Updates an existing job post. Only the owning employer can update it."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"title\": \"Updated Title\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Forbidden\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Job post not found\" }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "Employer: delete own job post.",
+                    "name": "Delete job post",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -975,7 +1492,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "6a04ca4809826695330cc475",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
                                     "description": "The job post ID."
                                 }
                             ]
@@ -992,12 +1509,31 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Permanently deletes a job post. Only the owning employer can delete it."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"Job post deleted successfully\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Forbidden\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Job post not found\" }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "Employer: deactivate a job post.",
+                    "name": "Deactivate job post",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1008,7 +1544,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "6a04ca4809826695330cc475",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
                                     "description": "The job post ID."
                                 }
                             ]
@@ -1025,12 +1561,113 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Sets `is_active` to false, hiding the post from public listings. Only the owning employer can deactivate it."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"is_active\": false }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Forbidden\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Job post not found\" }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "Employer: list applications for a job post they own.",
+                    "name": "Upsert company profile",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/company",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/company"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Google\",\"logo\":\"https:\\\/\\\/logo.clearbit.com\\\/google.com\",\"cover_image\":\"https:\\\/\\\/images.unsplash.com\\\/photo.jpg\",\"description\":\"Eius et animi quos velit et.\",\"location\":\"Mountain View, CA\",\"company_size\":\"100-500\",\"employee_count\":\"100,000+ employees\",\"industry\":\"Technology\",\"website\":\"https:\\\/\\\/www.google.com\",\"founded\":\"1998\",\"social_media\":{\"linkedin\":\"https:\\\/\\\/www.linkedin.com\\\/company\\\/google\",\"twitter\":\"https:\\\/\\\/twitter.com\\\/Google\",\"facebook\":\"https:\\\/\\\/www.facebook.com\\\/Google\",\"instagram\":\"https:\\\/\\\/www.instagram.com\\\/google\"},\"rating\":4.5,\"review_count\":1250,\"would_recommend\":85,\"ceo_performance\":92,\"category_ratings\":{\"compensation\":4.2,\"culture\":4.6,\"work_life\":4.1,\"diversity\":4.4,\"management\":4.3},\"reviews\":[{\"id\":\"1\",\"rating\":4,\"user_name\":\"John Doe\",\"date\":\"27\\\/01\\\/2026\",\"position\":\"Former employee, last year at 2022\",\"recommend\":false,\"ceo_approval\":true,\"subratings\":[],\"agrees\":5,\"disagrees\":2}]}"
+                        },
+                        "description": "Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).\n`company_size` accepts either a plain string (`\"100-500\"`, `\"500+\"`) or a structured object `{ min, max?, isPlus }` \u2014 both are normalised to a canonical string before storage."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"name\": \"Google\",\n  \"logo\": \"https:\/\/logo.clearbit.com\/google.com\",\n  \"cover_image\": \"https:\/\/images.unsplash.com\/photo.jpg\",\n  \"founded\": \"1998\",\n  \"employee_count\": \"100,000+ employees\",\n  \"location\": \"Mountain View, CA\",\n  \"website\": \"https:\/\/www.google.com\",\n  \"company_size\": \"100000+\",\n  \"open_positions\": 0,\n  \"company_size_range\": { \"min\": 100000, \"isPlus\": true }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"name\": [\"The name field is required.\"] } }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Upsert company profile",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/company",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/company"
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Google\",\"logo\":\"https:\\\/\\\/logo.clearbit.com\\\/google.com\",\"cover_image\":\"https:\\\/\\\/images.unsplash.com\\\/photo.jpg\",\"description\":\"Eius et animi quos velit et.\",\"location\":\"Mountain View, CA\",\"company_size\":\"100-500\",\"employee_count\":\"100,000+ employees\",\"industry\":\"Technology\",\"website\":\"https:\\\/\\\/www.google.com\",\"founded\":\"1998\",\"social_media\":{\"linkedin\":\"https:\\\/\\\/www.linkedin.com\\\/company\\\/google\",\"twitter\":\"https:\\\/\\\/twitter.com\\\/Google\",\"facebook\":\"https:\\\/\\\/www.facebook.com\\\/Google\",\"instagram\":\"https:\\\/\\\/www.instagram.com\\\/google\"},\"rating\":4.5,\"review_count\":1250,\"would_recommend\":85,\"ceo_performance\":92,\"category_ratings\":{\"compensation\":4.2,\"culture\":4.6,\"work_life\":4.1,\"diversity\":4.4,\"management\":4.3},\"reviews\":[{\"id\":\"1\",\"rating\":4,\"user_name\":\"John Doe\",\"date\":\"27\\\/01\\\/2026\",\"position\":\"Former employee, last year at 2022\",\"recommend\":false,\"ceo_approval\":true,\"subratings\":[],\"agrees\":5,\"disagrees\":2}]}"
+                        },
+                        "description": "Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).\n`company_size` accepts either a plain string (`\"100-500\"`, `\"500+\"`) or a structured object `{ min, max?, isPlus }` \u2014 both are normalised to a canonical string before storage."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"name\": \"Google\",\n  \"logo\": \"https:\/\/logo.clearbit.com\/google.com\",\n  \"cover_image\": \"https:\/\/images.unsplash.com\/photo.jpg\",\n  \"founded\": \"1998\",\n  \"employee_count\": \"100,000+ employees\",\n  \"location\": \"Mountain View, CA\",\n  \"website\": \"https:\/\/www.google.com\",\n  \"company_size\": \"100000+\",\n  \"open_positions\": 0,\n  \"company_size_range\": { \"min\": 100000, \"isPlus\": true }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"name\": [\"The name field is required.\"] } }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Job applications (employer)",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1041,7 +1678,7 @@
                                 {
                                     "id": "jobId",
                                     "key": "jobId",
-                                    "value": "6a04ca4809826695330cc475",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
                                     "description": "The job post ID."
                                 }
                             ]
@@ -1058,32 +1695,31 @@
                             }
                         ],
                         "body": null,
-                        "description": "Includes applicant name and ats_score."
+                        "description": "Paginated list of applications for a specific job post owned by the authenticated employer. Includes applicant name and ATS score."
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
+                            "header": [],
                             "code": 200,
-                            "body": "{\"applications\":{\"current_page\":1,\"data\":[{\"user_id\":\"6a04cbe3275c7e4e74063b22\",\"job_post_id\":\"6a04ca4809826695330cc475\",\"cover_letter\":\"I am very interested in this position.\",\"status\":\"pending\",\"applied_at\":\"2026-05-13T19:00:24.661000Z\",\"updated_at\":\"2026-05-13T19:07:59.046000Z\",\"created_at\":\"2026-05-13T19:00:24.662000Z\",\"id\":\"6a04ca4809826695330cc476\",\"user\":{\"name\":\"Scribe Docs User\",\"email\":\"scribe@docs.local\",\"roles\":[\"employee\",\"employer\",\"admin\"],\"updated_at\":\"2026-05-13T19:07:15.073000Z\",\"created_at\":\"2026-05-13T19:07:15.073000Z\",\"id\":\"6a04cbe3275c7e4e74063b22\"},\"applicant_name\":\"Scribe Docs User\",\"ats_score\":null}],\"first_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/jobs\\\/6a04ca4809826695330cc475\\\/applications?page=1\",\"from\":1,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/jobs\\\/6a04ca4809826695330cc475\\\/applications?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/jobs\\\/6a04ca4809826695330cc475\\\/applications?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/jobs\\\/6a04ca4809826695330cc475\\\/applications\",\"per_page\":15,\"prev_page_url\":null,\"to\":1,\"total\":1}}",
+                            "body": "{\n  \"applications\": {\n    \"data\": [\n      {\n        \"id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n        \"user_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n        \"status\": \"pending\",\n        \"cover_letter\": \"I am very interested...\",\n        \"applied_at\": \"2024-01-15T00:00:00Z\",\n        \"applicant_name\": \"Jane Smith\",\n        \"ats_score\": 82\n      }\n    ],\n    \"current_page\": 1, \"per_page\": 15, \"total\": 1, \"total_pages\": 1, \"next_page\": null, \"prev_page\": null\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Forbidden\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Job post not found\" }",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Employer: update application status and optional feedback.",
+                    "name": "Update application status",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1094,7 +1730,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "6a04ca4809826695330cc476",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0f",
                                     "description": "The application ID."
                                 }
                             ]
@@ -1112,20 +1748,76 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"status\":\"reviewed\",\"feedback\":\"b\"}"
+                            "raw": "{\"status\":\"accepted\",\"feedback\":\"Great profile, moving forward.\"}"
                         },
-                        "description": ""
+                        "description": "Updates the status and optional feedback on an application. Only the employer who owns the related job post can do this."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Application status updated successfully\",\n  \"application\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0f\", \"status\": \"accepted\", \"feedback\": \"Great profile.\" }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Forbidden\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Application not found\" }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "Paginated list of actively seeking job seekers with optional filters.",
+                    "name": "Search job seekers",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
                             "path": "api\/employer\/seekers",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/employer\/seekers"
+                            "query": [
+                                {
+                                    "key": "skills",
+                                    "value": "React%2CTypeScript",
+                                    "description": "Comma-separated list of required skills (all must match, case-insensitive).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "min_ats_score",
+                                    "value": "70",
+                                    "description": "Minimum ATS score.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "max_ats_score",
+                                    "value": "95",
+                                    "description": "Maximum ATS score.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "location",
+                                    "value": "Beirut",
+                                    "description": "Partial match on AI-detected location.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "keyword",
+                                    "value": "frontend",
+                                    "description": "Partial match on AI summary or current job title.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/employer\/seekers?skills=React%2CTypeScript&min_ats_score=70&max_ats_score=95&location=Beirut&keyword=frontend&page=1"
                         },
                         "method": "GET",
                         "header": [
@@ -1139,32 +1831,19 @@
                             }
                         ],
                         "body": null,
-                        "description": "GET \/api\/employer\/seekers"
+                        "description": "Paginated list of actively-seeking job seekers with optional filters. Only returns profiles where `is_actively_seeking = true`."
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
+                            "header": [],
                             "code": 200,
-                            "body": "{\"seekers\":{\"current_page\":1,\"data\":[{\"user_id\":\"6a04ca4809826695330cc473\",\"current_job_title\":\"Backend Developer\",\"ai_skills\":[\"PHP\",\"Laravel\",\"MongoDB\",\"REST APIs\"],\"ats_score\":82,\"ai_summary\":\"Experienced backend developer with 4 years in Laravel and MongoDB.\",\"ai_location\":\"Beirut, Lebanon\",\"is_actively_seeking\":true,\"updated_at\":\"2026-05-13T19:00:24.647000Z\",\"created_at\":\"2026-05-13T19:00:24.647000Z\",\"id\":\"6a04ca4809826695330cc474\"},{\"user_id\":\"6a04cbe3275c7e4e74063b22\",\"is_actively_seeking\":true,\"current_job_title\":\"Developer\",\"updated_at\":\"2026-05-13T19:07:15.077000Z\",\"created_at\":\"2026-05-13T19:07:15.077000Z\",\"id\":\"6a04cbe3275c7e4e74063b23\"}],\"first_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/seekers?page=1\",\"from\":1,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/seekers?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/seekers?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/seekers\",\"per_page\":10,\"prev_page_url\":null,\"to\":2,\"total\":2}}",
+                            "body": "{\n  \"seekers\": {\n    \"data\": [\n      {\n        \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n        \"user_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n        \"current_job_title\": \"Frontend Developer\",\n        \"ats_score\": 82,\n        \"ai_skills\": [\"React\", \"TypeScript\"],\n        \"ai_location\": \"Beirut, Lebanon\",\n        \"is_actively_seeking\": true\n      }\n    ],\n    \"current_page\": 1, \"per_page\": 10, \"total\": 1, \"total_pages\": 1, \"next_page\": null, \"prev_page\": null\n  }\n}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Return a specific job seeker's public profile by user ID.",
+                    "name": "Get job seeker profile (employer view)",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1175,7 +1854,7 @@
                                 {
                                     "id": "userId",
                                     "key": "userId",
-                                    "value": "6a04ca4809826695330cc473",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0e",
                                     "description": "The job seeker's user ID."
                                 }
                             ]
@@ -1192,32 +1871,25 @@
                             }
                         ],
                         "body": null,
-                        "description": "GET \/api\/employer\/seekers\/{userId}\n\nExcludes sensitive fields: password, email, phone."
+                        "description": "Returns a specific job seeker's public profile by their user ID. Sensitive fields (`ai_email`, `ai_phone`) are excluded."
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
+                            "header": [],
                             "code": 200,
-                            "body": "{\"seeker\":{\"user_id\":\"6a04ca4809826695330cc473\",\"name\":\"Jane Doe\",\"profile\":{\"user_id\":\"6a04ca4809826695330cc473\",\"current_job_title\":\"Backend Developer\",\"ai_skills\":[\"PHP\",\"Laravel\",\"MongoDB\",\"REST APIs\"],\"ats_score\":82,\"ai_summary\":\"Experienced backend developer with 4 years in Laravel and MongoDB.\",\"ai_location\":\"Beirut, Lebanon\",\"is_actively_seeking\":true,\"updated_at\":\"2026-05-13T19:00:24.647000Z\",\"created_at\":\"2026-05-13T19:00:24.647000Z\",\"id\":\"6a04ca4809826695330cc474\"}}}",
+                            "body": "{\n  \"seeker\": {\n    \"user_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n    \"name\": \"Jane Smith\",\n    \"profile\": {\n      \"current_job_title\": \"Frontend Developer\",\n      \"ats_score\": 82,\n      \"ai_skills\": [\"React\", \"TypeScript\"],\n      \"ai_summary\": \"Experienced frontend developer...\",\n      \"is_actively_seeking\": true\n    }\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Job seeker not found\" }",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Employer: send a direct offer to a job seeker.",
+                    "name": "Send direct offer",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1238,14 +1910,39 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"job_seeker_id\":\"architecto\",\"job_post_id\":\"architecto\",\"message\":\"n\"}"
+                            "raw": "{\"job_seeker_id\":\"664f1a2b3c4d5e6f7a8b9c0e\",\"job_post_id\":\"664f1a2b3c4d5e6f7a8b9c0d\",\"message\":\"We think you'd be a great fit for this role.\"}"
                         },
-                        "description": ""
+                        "description": "Sends a direct job offer to a specific job seeker for one of the employer's active job posts. Duplicate offers to the same seeker for the same post are rejected."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"Direct offer sent successfully\",\n  \"offer\": {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n    \"employer_id\": \"664f1a2b3c4d5e6f7a8b9c0a\",\n    \"job_seeker_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n    \"job_post_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"message\": \"We think you'd be a great fit.\",\n    \"status\": \"pending\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Forbidden\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Job post not found\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{ \"message\": \"A direct offer has already been sent to this job seeker for this job post\" }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "Employer: paginated list of sent offers with job seeker name and status.",
+                    "name": "Sent offers",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1265,32 +1962,19 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Paginated list of direct offers sent by the authenticated employer, including job seeker name and job post title."
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
+                            "header": [],
                             "code": 200,
-                            "body": "{\"offers\":{\"current_page\":1,\"data\":[],\"first_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/offers?page=1\",\"from\":null,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/offers?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/offers?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost:8000\\\/api\\\/employer\\\/offers\",\"per_page\":15,\"prev_page_url\":null,\"to\":null,\"total\":0}}",
+                            "body": "{\n  \"offers\": {\n    \"data\": [\n      {\n        \"id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n        \"status\": \"pending\",\n        \"message\": \"We think you'd be a great fit.\",\n        \"job_seeker_name\": \"Jane Smith\",\n        \"job_post_title\": \"Senior Laravel Developer\"\n      }\n    ],\n    \"current_page\": 1, \"per_page\": 15, \"total\": 1, \"total_pages\": 1, \"next_page\": null, \"prev_page\": null\n  }\n}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "GET api\/admin\/employers",
+                    "name": "List pending employer applications",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1310,32 +1994,19 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Returns all employer applications with `pending` status. Admin only."
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
+                            "header": [],
                             "code": 200,
-                            "body": "[]",
+                            "body": "[\n  {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"user_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n    \"status\": \"pending\",\n    \"document_name\": \"business_license.pdf\",\n    \"user\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0e\", \"name\": \"John Employer\", \"email\": \"john@corp.com\" }\n  }\n]",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "POST api\/admin\/{id}\/approve",
+                    "name": "Approve employer",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1346,8 +2017,8 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "architecto",
-                                    "description": "The ID of the admin."
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "The employer application ID."
                                 }
                             ]
                         },
@@ -1363,12 +2034,25 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Approves an employer application. Grants the `employer` role to the user and sets `is_employer = true`. Admin only."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Approved employer request.\",\n  \"employer\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"status\": \"approved\" }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"No query results for model\" }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "POST api\/admin\/{id}\/reject",
+                    "name": "Reject employer",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1379,8 +2063,8 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "architecto",
-                                    "description": "The ID of the admin."
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "The employer application ID."
                                 }
                             ]
                         },
@@ -1395,10 +2079,26 @@
                                 "value": "application\/json"
                             }
                         ],
-                        "body": null,
-                        "description": ""
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"review_notes\":\"Insufficient documentation provided.\"}"
+                        },
+                        "description": "Rejects an employer application. Admin only."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Rejected employer request.\",\n  \"employer\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"status\": \"rejected\", \"review_notes\": \"Insufficient documentation.\" }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"No query results for model\" }",
+                            "name": ""
+                        }
+                    ]
                 }
             ]
         }

@@ -14,7 +14,24 @@ use MongoDB\BSON\ObjectId;
 
 class JobSeekerController extends Controller
 {
-    // Get job seeker profile
+    /**
+     * Get job seeker profile
+     *
+     * Returns the authenticated job seeker's profile. Creates an empty profile if one doesn't exist yet.
+     *
+     * @response 200 {
+     *   "profile": {
+     *     "id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *     "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *     "full_name": "Jane Smith",
+     *     "current_job_title": "Frontend Developer",
+     *     "is_actively_seeking": true,
+     *     "skills": [{ "name": "React", "level": "advanced" }],
+     *     "ats_score": 82,
+     *     "ai_skills": ["React", "TypeScript"]
+     *   }
+     * }
+     */
     public function show(Request $request)
     {
         $user = $request->user();
@@ -30,6 +47,53 @@ class JobSeekerController extends Controller
         ]);
     }
 
+    /**
+     * Update job seeker profile
+     *
+     * Creates or updates the authenticated job seeker's profile fields. All fields are optional — only provided fields are updated.
+     *
+     * @bodyParam first_name string Example: Jane
+     * @bodyParam last_name string Example: Smith
+     * @bodyParam full_name string Example: Jane Smith
+     * @bodyParam image string URL to profile photo. Example: https://example.com/photo.jpg
+     * @bodyParam gender string One of: male, female, other, prefer_not_to_say. Example: female
+     * @bodyParam nationality string Example: Lebanese
+     * @bodyParam city string Example: Beirut
+     * @bodyParam location string Example: Beirut, Lebanon
+     * @bodyParam phone string Max 20 chars. Example: +961 70 123456
+     * @bodyParam date_of_birth string Example: 1995-06-15
+     * @bodyParam marital_status string One of: single, married, divorced, widowed, prefer_not_to_say.
+     * @bodyParam salary_range_from number Example: 2000
+     * @bodyParam salary_range_to number Example: 5000
+     * @bodyParam current_job_status string One of: employed, unemployed, freelancing, student, open_to_work.
+     * @bodyParam years_of_experience integer Example: 5
+     * @bodyParam education_level string Example: Bachelor's Degree
+     * @bodyParam job_level string One of: entry, junior, mid, senior, lead, manager, director, executive.
+     * @bodyParam job_types string[] Example: ["full_time","remote"]
+     * @bodyParam job_roles string[] Example: ["Frontend","React"]
+     * @bodyParam work_cities string[] Example: ["Beirut","Dubai"]
+     * @bodyParam current_job_title string Max 100 chars. Example: Frontend Developer
+     * @bodyParam experience_summary string
+     * @bodyParam expected_salary number Example: 3500
+     * @bodyParam is_actively_seeking boolean Example: true
+     * @bodyParam social_links object Social media URLs.
+     * @bodyParam social_links.linkedin string Example: https://linkedin.com/in/janesmith
+     * @bodyParam social_links.github string Example: https://github.com/janesmith
+     * @bodyParam social_links.portfolio string Example: https://janesmith.dev
+     * @bodyParam social_links.twitter string
+     * @bodyParam skills object[] Array of skill objects.
+     * @bodyParam skills[].name string required Example: React
+     * @bodyParam skills[].level string One of: beginner, intermediate, advanced, expert. Example: advanced
+     * @bodyParam education_history object[] Array of education entries.
+     * @bodyParam work_experience object[] Array of work experience entries.
+     * @bodyParam resume file PDF/DOC resume file (max 5 MB).
+     *
+     * @response 200 {
+     *   "message": "Profile updated successfully",
+     *   "profile": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "full_name": "Jane Smith", "is_actively_seeking": true }
+     * }
+     * @response 422 { "errors": { "phone": ["Must not be greater than 20 characters."] } }
+     */
     // Create or update job seeker profile
     public function update(Request $request)
     {
@@ -130,6 +194,26 @@ class JobSeekerController extends Controller
         ]);
     }
 
+    /**
+     * Upload and analyze CV
+     *
+     * Uploads a CV file and sends it to the AI analysis service. On success, populates all `ai_*` profile fields and `ats_score`.
+     *
+     * @bodyParam cv file required PDF/DOC/DOCX file, max 10 MB.
+     *
+     * @response 200 {
+     *   "profile": {
+     *     "id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *     "ats_score": 82,
+     *     "ai_skills": ["React", "TypeScript", "Node.js"],
+     *     "ai_summary": "Experienced frontend developer...",
+     *     "ai_work_history": [],
+     *     "ai_analyzed_at": "2024-01-15T00:00:00Z"
+     *   }
+     * }
+     * @response 422 { "message": "CV analysis failed", "reason": "CV content could not be parsed." }
+     * @response 502 { "message": "CV analysis service unavailable" }
+     */
     // Upload CV and trigger AI analysis
     public function uploadAndAnalyze(Request $request, CvAnalysisService $cvAnalysisService)
     {
@@ -198,6 +282,19 @@ class JobSeekerController extends Controller
         ], 200);
     }
 
+    /**
+     * Upload resume
+     *
+     * Uploads a resume file to the job seeker's profile without triggering AI analysis.
+     *
+     * @bodyParam resume file required PDF/DOC/DOCX file, max 5 MB.
+     *
+     * @response 200 {
+     *   "message": "Resume uploaded successfully",
+     *   "resume_url": "https://example.com/storage/resumes/cv.pdf"
+     * }
+     * @response 422 { "errors": { "resume": ["The resume field is required."] } }
+     */
     // Upload resume separately
     public function uploadResume(Request $request)
     {
@@ -231,6 +328,24 @@ class JobSeekerController extends Controller
         ]);
     }
 
+    /**
+     * Search jobs
+     *
+     * Paginated search of active job posts for the authenticated job seeker.
+     *
+     * @bodyParam keyword string Search in title, description, company name. Max 100 chars. Example: React
+     * @bodyParam location string Partial location match. Max 100 chars. Example: Beirut
+     * @bodyParam job_type string One of: full_time, part_time, contract, freelance. Example: full_time
+     * @bodyParam category string Example: Engineering
+     * @bodyParam min_salary number Minimum salary. Example: 2000
+     *
+     * @response 200 {
+     *   "jobs": {
+     *     "data": [{ "id": "664f1a2b3c4d5e6f7a8b9c0d", "title": "Senior React Developer", "company_name": "Acme Corp" }],
+     *     "current_page": 1, "per_page": 15, "total": 1, "total_pages": 1, "next_page": null, "prev_page": null
+     *   }
+     * }
+     */
     // Search job posts
     public function searchJobs(Request $request)
     {

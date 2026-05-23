@@ -20,7 +20,25 @@ class AuthController extends Controller
     // }
 
     /**
+     * Register
+     *
+     * Create a new user account. Returns a JWT token on success.
+     *
      * @unauthenticated
+     * @bodyParam name string required Display name. Min 2, max 100 chars. Example: Jane Smith
+     * @bodyParam email string required Valid email address. Example: jane@example.com
+     * @bodyParam password string required Min 8 chars, must include uppercase, lowercase, digit, and special character. Example: Secret@123
+     * @bodyParam password_confirmation string required Must match password. Example: Secret@123
+     * @bodyParam role string Role to assign. Defaults to `employee`. Example: employee
+     *
+     * @response 201 {
+     *   "message": "User successfully registered",
+     *   "user": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Jane Smith", "email": "jane@example.com", "roles": ["employee"] },
+     *   "access_token": "eyJ...",
+     *   "token_type": "bearer",
+     *   "expires_in": 3600
+     * }
+     * @response 422 { "email": ["The email has already been taken."] }
      */
     public function register(Request $request)
     {
@@ -93,7 +111,21 @@ class AuthController extends Controller
     }
 
     /**
+     * Login
+     *
+     * Authenticate with email and password. Returns a JWT bearer token.
+     *
      * @unauthenticated
+     * @bodyParam email string required Example: jane@example.com
+     * @bodyParam password string required Example: Secret@123
+     *
+     * @response 200 {
+     *   "access_token": "eyJ...",
+     *   "token_type": "bearer",
+     *   "expires_in": 3600,
+     *   "user": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Jane Smith", "email": "jane@example.com", "roles": ["employee"] }
+     * }
+     * @response 401 { "error": "Unauthorized", "message": "Invalid credentials" }
      */
     public function login(Request $request)
     {
@@ -146,11 +178,31 @@ class AuthController extends Controller
         ], 401);
     }
 
+    /**
+     * Get profile
+     *
+     * Returns the authenticated user's account details.
+     *
+     * @response 200 {
+     *   "id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *   "name": "Jane Smith",
+     *   "email": "jane@example.com",
+     *   "roles": ["employee"],
+     *   "is_employer": false
+     * }
+     */
     public function profile()
     {
         return response()->json(auth('api')->user()); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api' EDITED BY RATEB 
     }
 
+    /**
+     * Logout
+     *
+     * Invalidates the current JWT token.
+     *
+     * @response 200 { "message": "User successfully signed out" }
+     */
     public function logout()
     {
         auth('api')->logout();
@@ -159,6 +211,18 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Refresh token
+     *
+     * Issues a new JWT token using the current (still-valid) token.
+     *
+     * @response 200 {
+     *   "access_token": "eyJ...",
+     *   "token_type": "bearer",
+     *   "expires_in": 3600,
+     *   "user": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Jane Smith", "email": "jane@example.com" }
+     * }
+     */
     public function refresh()
     {
         return $this->createNewToken(auth('api')->refresh()); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api' EDITED BY RATEB 
