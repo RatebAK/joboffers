@@ -241,7 +241,15 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        return $this->createNewToken(auth('api')->refresh()); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api' EDITED BY RATEB 
+        //FIXING THE NULL USER WHEN REFRESHING EDITED BY RATEB
+        // Grab the user first while the current token is still valid
+        $user = auth('api')->user(); 
+        // Refresh the token
+        $newToken = auth('api')->refresh(); 
+        // Pass BOTH to your token generator
+        return $this->createNewToken($newToken, $user);
+        
+        // return $this->createNewToken(auth('api')->refresh()); //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api' EDITED BY RATEB 
     }
 
     // Email verification method (commented out)
@@ -288,7 +296,8 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth('api')->factory()->getTTL() * 60, //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api'
-            'user' => auth('api')->user() //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api'
+            // 'user' => auth('api')->user() //THE ORIGINAL PIECE OF CODE DOESN"T HAVE 'api'
+            'user' => $user ?? auth('api')->user() //FIXING THE NULL USER WHEN REFRESHING EDITED BY RATEB
         ]);
     }
 }
