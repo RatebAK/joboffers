@@ -1613,7 +1613,7 @@ paths:
                       is_currently_working:
                         type: boolean
                         description: ''
-                        example: false
+                        example: true
                         nullable: true
                       description:
                         type: string
@@ -2629,6 +2629,15 @@ paths:
                   items:
                     type: string
                     nullable: true
+                roles:
+                  type: array
+                  description: 'Array of role categories.'
+                  example:
+                    - Frontend
+                    - React
+                  items:
+                    type: string
+                    nullable: true
               required:
                 - title
                 - description
@@ -2770,6 +2779,12 @@ paths:
                   items:
                     type: string
                     nullable: true
+                roles:
+                  type: object
+                  description: ''
+                  example: null
+                  properties: {  }
+                  nullable: true
                 is_active:
                   type: boolean
                   description: ''

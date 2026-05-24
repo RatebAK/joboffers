@@ -1470,7 +1470,7 @@ endpoints:
         name: 'work_experience[].is_currently_working'
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -1546,7 +1546,7 @@ endpoints:
             - u
           from_date: jwvlxjklqppwqbew
           to_date: tnnoqitpxntltcvi
-          is_currently_working: false
+          is_currently_working: true
           description: 'Eius et animi quos velit et.'
     fileParameters:
       resume: null
@@ -2602,6 +2602,19 @@ endpoints:
         exampleWasSpecified: true
         nullable: true
         deprecated: false
+      roles:
+        custom: []
+        name: roles
+        description: 'Array of role categories.'
+        required: false
+        example:
+          - Frontend
+          - React
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
     cleanBodyParameters:
       title: 'Senior Laravel Developer'
       description: 'We are looking for...'
@@ -2621,6 +2634,9 @@ endpoints:
       tags:
         - Laravel
         - PHP
+      roles:
+        - Frontend
+        - React
     fileParameters: []
     responses:
       -
@@ -2859,6 +2875,17 @@ endpoints:
         example:
           - architecto
         type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      roles:
+        custom: []
+        name: roles
+        description: ''
+        required: false
+        example: null
+        type: object
         enumValues: []
         exampleWasSpecified: false
         nullable: true

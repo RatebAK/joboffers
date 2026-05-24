@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "f71dc622-c08e-4cb9-8f83-76d7c5e8e445",
+        "_postman_id": "ad3b048d-b4b2-4ea4-bf08-bd29871501c7",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -814,7 +814,7 @@
                                 },
                                 {
                                     "key": "work_experience[0][is_currently_working]",
-                                    "value": "",
+                                    "value": "1",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1406,7 +1406,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"title\":\"Senior Laravel Developer\",\"description\":\"We are looking for...\",\"requirements\":\"Minimum 3 years of Laravel experience.\",\"company_name\":\"Acme Corp\",\"company_logo\":\"https:\\\/\\\/logo.clearbit.com\\\/acme.com\",\"job_type\":\"full_time\",\"work_mode\":\"remote\",\"experience_level\":\"senior\",\"experience_required\":\"5+ years\",\"location\":\"Beirut, Lebanon\",\"category\":\"Engineering\",\"salary_range\":{\"min\":2000,\"max\":4000,\"currency\":\"USD\"},\"tags\":[\"Laravel\",\"PHP\"]}"
+                            "raw": "{\"title\":\"Senior Laravel Developer\",\"description\":\"We are looking for...\",\"requirements\":\"Minimum 3 years of Laravel experience.\",\"company_name\":\"Acme Corp\",\"company_logo\":\"https:\\\/\\\/logo.clearbit.com\\\/acme.com\",\"job_type\":\"full_time\",\"work_mode\":\"remote\",\"experience_level\":\"senior\",\"experience_required\":\"5+ years\",\"location\":\"Beirut, Lebanon\",\"category\":\"Engineering\",\"salary_range\":{\"min\":2000,\"max\":4000,\"currency\":\"USD\"},\"tags\":[\"Laravel\",\"PHP\"],\"roles\":[\"Frontend\",\"React\"]}"
                         },
                         "description": "Creates a new job post owned by the authenticated employer."
                     },

@@ -6,7 +6,7 @@ meta {
 
 post {
   url: {{base_url}}/api/employer/apply
-  body: json
+  body: multipart-form
   auth: bearer
 }
 
@@ -14,9 +14,6 @@ auth:bearer {
   token: {{token}}
 }
 
-body:json {
-  {
-    "company_name": "Acme Corp",
-    "reason": "We want to hire top talent for our engineering team."
-  }
+body:multipart-form {
+  document: @file(/path/to/your-document.pdf)
 }

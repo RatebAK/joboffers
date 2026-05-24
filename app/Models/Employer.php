@@ -6,7 +6,7 @@ use MongoDB\Laravel\Eloquent\Model;
 
 class Employer extends Model
 {
-    protected $primaryKey = 'user_id';
+    protected $primaryKey = '_id';
             
     protected $fillable = [
         '_id',

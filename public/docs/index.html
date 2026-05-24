@@ -196,7 +196,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: May 23, 2026</li>
+        <li>Last updated: May 24, 2026</li>
     </ul>
 </div>
 
@@ -2150,9 +2150,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "work_experience[][job_roles][]=u"\
     --form "work_experience[][from_date]=jwvlxjklqppwqbew"\
     --form "work_experience[][to_date]=tnnoqitpxntltcvi"\
-    --form "work_experience[][is_currently_working]="\
+    --form "work_experience[][is_currently_working]=1"\
     --form "work_experience[][description]=Eius et animi quos velit et."\
-    --form "resume=@/tmp/phpk4xUHo" </code></pre></div>
+    --form "resume=@/tmp/phpwl4DCG" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -2211,7 +2211,7 @@ body.append('work_experience[][company_name]', 't');
 body.append('work_experience[][job_roles][]', 'u');
 body.append('work_experience[][from_date]', 'jwvlxjklqppwqbew');
 body.append('work_experience[][to_date]', 'tnnoqitpxntltcvi');
-body.append('work_experience[][is_currently_working]', '');
+body.append('work_experience[][is_currently_working]', '1');
 body.append('work_experience[][description]', 'Eius et animi quos velit et.');
 body.append('resume', document.querySelector('input[name="resume"]').files[0]);
 
@@ -2948,7 +2948,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -2974,7 +2974,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC resume file (max 5 MB). Example: <code>/tmp/phpk4xUHo</code></p>
+<p>PDF/DOC resume file (max 5 MB). Example: <code>/tmp/phpwl4DCG</code></p>
         </div>
         </form>
 
@@ -2996,7 +2996,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@/tmp/phpVFw9L6" </code></pre></div>
+    --form "resume=@/tmp/php4WtMwm" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -3140,7 +3140,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 5 MB. Example: <code>/tmp/phpVFw9L6</code></p>
+<p>PDF/DOC/DOCX file, max 5 MB. Example: <code>/tmp/php4WtMwm</code></p>
         </div>
         </form>
 
@@ -3162,7 +3162,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cv=@/tmp/phpcEI5L4" </code></pre></div>
+    --form "cv=@/tmp/phpzIwoa7" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -3322,7 +3322,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpcEI5L4</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpzIwoa7</code></p>
         </div>
         </form>
 
@@ -3501,7 +3501,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "job_post_id=664f1a2b3c4d5e6f7a8b9c0d"\
     --form "cover_letter=I am very interested in this position."\
-    --form "resume=@/tmp/phpLd4K9c" </code></pre></div>
+    --form "resume=@/tmp/php4lOqpL" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -3681,7 +3681,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/phpLd4K9c</code></p>
+<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/php4lOqpL</code></p>
         </div>
         </form>
 
@@ -4586,7 +4586,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "document=@/tmp/php1BjitM" </code></pre></div>
+    --form "document=@/tmp/phpQk1cvO" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -4735,7 +4735,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/php1BjitM</code></p>
+<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/phpQk1cvO</code></p>
         </div>
         </form>
 
@@ -5059,6 +5059,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"tags\": [
         \"Laravel\",
         \"PHP\"
+    ],
+    \"roles\": [
+        \"Frontend\",
+        \"React\"
     ]
 }"
 </code></pre></div>
@@ -5095,6 +5099,10 @@ let body = {
     "tags": [
         "Laravel",
         "PHP"
+    ],
+    "roles": [
+        "Frontend",
+        "React"
     ]
 };
 
@@ -5411,6 +5419,20 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="body">
     <br>
 <p>Array of tags.</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>roles</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="roles[0]"                data-endpoint="POSTapi-employer-jobs"
+               data-component="body">
+        <input type="text" style="display: none"
+               name="roles[1]"                data-endpoint="POSTapi-employer-jobs"
+               data-component="body">
+    <br>
+<p>Array of role categories.</p>
         </div>
         </form>
 
@@ -5816,6 +5838,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="body">
         <input type="text" style="display: none"
                name="tags[1]"                data-endpoint="PUTapi-employer-jobs--id-"
+               data-component="body">
+    <br>
+
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>roles</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="roles"                data-endpoint="PUTapi-employer-jobs--id-"
+               value=""
                data-component="body">
     <br>
 

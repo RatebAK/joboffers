@@ -5,11 +5,17 @@ meta {
 }
 
 post {
-  url: {{base_url}}/api/admin/{{employer_user_id}}/reject
-  body: none
+  url: {{base_url}}/api/admin/{{employer_application_id}}/reject
+  body: json
   auth: bearer
 }
 
 auth:bearer {
   token: {{token}}
+}
+
+body:json {
+  {
+    "review_notes": "Insufficient documentation provided."
+  }
 }

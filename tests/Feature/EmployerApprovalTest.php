@@ -70,7 +70,6 @@ test('admin can approve an employer application and employer role is added', fun
     $admin = User::factory()->admin()->create();
     $adminToken = auth('api')->login($admin);
 
-    // Start as a plain employee (job seeker)
     $seeker = User::factory()->employee()->create();
 
     $application = Employer::create([
@@ -81,14 +80,12 @@ test('admin can approve an employer application and employer role is added', fun
     ]);
 
     $this->withToken($adminToken)
-         ->postJson("/api/admin/{$seeker->_id}/approve")
+         ->postJson("/api/admin/{$application->_id}/approve")
          ->assertStatus(200)
          ->assertJsonPath('message', 'Approved employer request.');
 
     $updated = User::find($seeker->_id);
-    // User now has is_employer=true
     expect($updated->is_employer)->toBeTrue();
-    // User now has BOTH roles — still a job seeker AND now an employer
     expect($updated->roles)->toContain('employee');
     expect($updated->roles)->toContain('employer');
 
@@ -111,13 +108,13 @@ test('admin can reject an employer application', function () {
     ]);
 
     $this->withToken($adminToken)
-         ->postJson("/api/admin/{$employer->_id}/reject", [
+         ->postJson("/api/admin/{$application->_id}/reject", [
              'review_notes' => 'Documents not valid.',
          ])
          ->assertStatus(200)
          ->assertJsonPath('message', 'Rejected employer request.');
 
-    expect(Employer::find($employer->_id)->status)->toBe(Employer::STATUS_REJECTED);
+    expect(Employer::find($application->_id)->status)->toBe(Employer::STATUS_REJECTED);
 
     $application->delete();
     $employer->delete();
