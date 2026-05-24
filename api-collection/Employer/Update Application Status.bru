@@ -1,0 +1,22 @@
+meta {
+  name: Update Application Status
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{base_url}}/api/employer/applications/{{application_id}}/status
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "status": "reviewed",
+    "feedback": "Strong candidate, moving to next round."
+  }
+}

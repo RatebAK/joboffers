@@ -1,0 +1,14 @@
+meta {
+  name: My Offers
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{base_url}}/api/job-seeker/offers
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

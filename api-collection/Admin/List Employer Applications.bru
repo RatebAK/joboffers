@@ -1,0 +1,14 @@
+meta {
+  name: List Employer Applications
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/api/admin/employers
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

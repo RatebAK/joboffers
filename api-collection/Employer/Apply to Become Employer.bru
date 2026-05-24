@@ -1,0 +1,22 @@
+meta {
+  name: Apply to Become Employer
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/api/employer/apply
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "company_name": "Acme Corp",
+    "reason": "We want to hire top talent for our engineering team."
+  }
+}

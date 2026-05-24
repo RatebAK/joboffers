@@ -1,0 +1,15 @@
+meta {
+  name: Approve Employer
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/api/admin/{{employer_user_id}}/approve
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

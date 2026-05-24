@@ -1,0 +1,14 @@
+meta {
+  name: My Sent Offers
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{base_url}}/api/employer/offers
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

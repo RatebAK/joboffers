@@ -1,0 +1,14 @@
+meta {
+  name: My Applications
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{base_url}}/api/job-seeker/applications
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

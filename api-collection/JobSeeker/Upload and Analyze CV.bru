@@ -1,0 +1,19 @@
+meta {
+  name: Upload and Analyze CV
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/api/job-seeker/resume/upload-and-analyze
+  body: multipart-form
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:multipart-form {
+  resume: @file(/path/to/your-cv.pdf)
+}

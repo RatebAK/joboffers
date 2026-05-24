@@ -1,0 +1,15 @@
+meta {
+  name: Accept Offer
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{base_url}}/api/job-seeker/offers/{{offer_id}}/accept
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

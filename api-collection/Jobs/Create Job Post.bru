@@ -1,0 +1,44 @@
+meta {
+  name: Create Job Post
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/api/employer/jobs
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "title": "Senior Frontend Developer",
+    "description": "We are looking for a skilled frontend developer to join our team.",
+    "requirements": "5+ years of React experience.",
+    "company_name": "Google",
+    "company_logo": "https://logo.clearbit.com/google.com",
+    "job_type": "full_time",
+    "work_mode": "remote",
+    "experience_level": "senior",
+    "experience_required": "5+ years",
+    "location": "San Francisco, CA",
+    "category": "Engineering",
+    "roles": ["Frontend", "React"],
+    "tags": ["React", "TypeScript", "CSS"],
+    "salary_range": {
+      "min": 8000,
+      "max": 15000,
+      "currency": "USD"
+    }
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setEnvVar("job_id", res.body.id);
+  }
+}

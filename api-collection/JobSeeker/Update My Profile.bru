@@ -1,0 +1,26 @@
+meta {
+  name: Update My Profile
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{base_url}}/api/job-seeker/profile
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "headline": "Senior Frontend Developer",
+    "location": "Beirut, Lebanon",
+    "expected_salary": 5000,
+    "is_actively_seeking": true,
+    "linkedin_url": "https://linkedin.com/in/janesmith",
+    "portfolio_url": "https://janesmith.dev"
+  }
+}
