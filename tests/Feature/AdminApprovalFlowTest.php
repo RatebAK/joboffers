@@ -320,3 +320,95 @@ test('full flow: employer registers, gets approved, posts job, seeker applies, e
     $employerUser->delete();
     $admin->delete();
 });
+
+// ── Full HTTP-only flow: no factories, pure API calls ─────────
+
+test('full http flow: register employer, register admin, get pending list, approve', function () {
+    Storage::fake('public');
+
+    $uid = uniqid();
+
+    // 1. Register as employer role
+    $employerEmail = "employer_{$uid}@test.com";
+    $registerEmployer = $this->postJson('/api/auth/register', [
+        'name'                  => 'Test Employer',
+        'email'                 => $employerEmail,
+        'password'              => 'Password1!',
+        'password_confirmation' => 'Password1!',
+        'role'                  => 'employer',
+    ])->assertStatus(201);
+
+    $employerToken = $registerEmployer->json('access_token');
+    $employerUserId = $registerEmployer->json('user.id');
+    expect($registerEmployer->json('user.roles'))->toContain('employer');
+
+    // 2. Employer submits application with document
+    $file = UploadedFile::fake()->create('business_license.pdf', 100, 'application/pdf');
+    $applyResponse = $this->withToken($employerToken)
+        ->postJson('/api/employer/apply', ['document' => $file])
+        ->assertStatus(201)
+        ->assertJsonPath('employer.status', 'pending');
+
+    $applicationId = $applyResponse->json('employer._id');
+    expect($applicationId)->not->toBeNull();
+
+    // 3. Employer cannot access employer routes yet (not approved)
+    $this->withToken($employerToken)
+        ->postJson('/api/employer/jobs', [
+            'title' => 'Too Early', 'description' => 'x',
+            'requirements' => 'x', 'company_name' => 'x', 'job_type' => 'full_time',
+        ])->assertStatus(403);
+
+    // 4. Register as admin
+    $adminEmail = "admin_{$uid}@test.com";
+    $registerAdmin = $this->postJson('/api/auth/register', [
+        'name'                  => 'Test Admin',
+        'email'                 => $adminEmail,
+        'password'              => 'Password1!',
+        'password_confirmation' => 'Password1!',
+        'role'                  => 'admin',
+    ])->assertStatus(201);
+
+    $adminToken = $registerAdmin->json('access_token');
+    expect($registerAdmin->json('user.roles'))->toContain('admin');
+
+    // 5. Admin fetches pending employer list — employer appears in it
+    $pendingList = $this->withToken($adminToken)
+        ->getJson('/api/admin/employers')
+        ->assertStatus(200);
+
+    $pendingUserIds = collect($pendingList->json())->pluck('user_id')->toArray();
+    expect($pendingUserIds)->toContain($employerUserId);
+
+    // 6. Admin approves using the application _id
+    $this->withToken($adminToken)
+        ->postJson("/api/admin/{$applicationId}/approve")
+        ->assertStatus(200)
+        ->assertJsonPath('employer.status', 'approved');
+
+    // 7. Employer logs in fresh and can now create job posts
+    $loginResponse = $this->postJson('/api/auth/login', [
+        'email'    => $employerEmail,
+        'password' => 'Password1!',
+    ])->assertStatus(200);
+
+    $freshToken = $loginResponse->json('access_token');
+    expect($loginResponse->json('user.roles'))->toContain('employer');
+
+    $this->withToken($freshToken)
+        ->postJson('/api/employer/jobs', [
+            'title'        => 'Approved Employer Job',
+            'description'  => 'Now I can post.',
+            'requirements' => 'Skills needed.',
+            'company_name' => 'My Company',
+            'job_type'     => 'full_time',
+        ])->assertStatus(201);
+
+    // Cleanup
+    $employerUser = User::find($employerUserId);
+    $adminUser    = User::where('email', $adminEmail)->first();
+    JobPost::where('employer_id', $employerUserId)->delete();
+    Employer::where('user_id', $employerUserId)->delete();
+    $employerUser?->delete();
+    $adminUser?->delete();
+});
