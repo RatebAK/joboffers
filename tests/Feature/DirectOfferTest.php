@@ -303,3 +303,59 @@ test('decline returns 404 for non-existent offer', function () {
     $this->withToken($token)->postJson('/api/job-seeker/offers/000000000000000000000000/decline')
          ->assertStatus(404);
 });
+
+// ── Already-resolved offer guards ────────────────────────────
+
+test('seeker cannot accept an already accepted offer', function () {
+    [$employer]       = offerEmployer();
+    [$seeker, $token] = offerSeeker();
+    $job = offerJob((string) $employer->_id);
+    $offer = DirectOffer::create([
+        'employer_id'   => (string) $employer->_id,
+        'job_seeker_id' => (string) $seeker->_id,
+        'job_post_id'   => (string) $job->_id,
+        'message'       => 'Already accepted.',
+        'status'        => 'accepted',
+    ]);
+
+    $this->withToken($token)->postJson("/api/job-seeker/offers/{$offer->_id}/accept")
+         ->assertStatus(409);
+
+    $offer->delete(); $job->delete(); $seeker->delete(); $employer->delete();
+});
+
+test('seeker cannot decline an already declined offer', function () {
+    [$employer]       = offerEmployer();
+    [$seeker, $token] = offerSeeker();
+    $job = offerJob((string) $employer->_id);
+    $offer = DirectOffer::create([
+        'employer_id'   => (string) $employer->_id,
+        'job_seeker_id' => (string) $seeker->_id,
+        'job_post_id'   => (string) $job->_id,
+        'message'       => 'Already declined.',
+        'status'        => 'declined',
+    ]);
+
+    $this->withToken($token)->postJson("/api/job-seeker/offers/{$offer->_id}/decline")
+         ->assertStatus(409);
+
+    $offer->delete(); $job->delete(); $seeker->delete(); $employer->delete();
+});
+
+test('seeker cannot accept a declined offer', function () {
+    [$employer]       = offerEmployer();
+    [$seeker, $token] = offerSeeker();
+    $job = offerJob((string) $employer->_id);
+    $offer = DirectOffer::create([
+        'employer_id'   => (string) $employer->_id,
+        'job_seeker_id' => (string) $seeker->_id,
+        'job_post_id'   => (string) $job->_id,
+        'message'       => 'Was declined.',
+        'status'        => 'declined',
+    ]);
+
+    $this->withToken($token)->postJson("/api/job-seeker/offers/{$offer->_id}/accept")
+         ->assertStatus(409);
+
+    $offer->delete(); $job->delete(); $seeker->delete(); $employer->delete();
+});

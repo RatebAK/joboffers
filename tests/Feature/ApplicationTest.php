@@ -196,6 +196,18 @@ test('seeker cannot withdraw an accepted application', function () {
     $app->delete(); $job->delete(); $seeker->delete(); $employer->delete();
 });
 
+test('seeker cannot withdraw a rejected application', function () {
+    [$employer] = appEmployer();
+    $job = appJob((string) $employer->_id);
+    [$seeker, $token] = appSeeker();
+    $app = Application::create(['user_id' => $seeker->_id, 'job_post_id' => $job->_id, 'status' => 'rejected', 'applied_at' => now()]);
+
+    $this->withToken($token)->deleteJson("/api/job-seeker/applications/{$app->_id}/withdraw")
+         ->assertStatus(403);
+
+    $app->delete(); $job->delete(); $seeker->delete(); $employer->delete();
+});
+
 test('withdraw returns 404 for non-existent application', function () {
     [, $token] = appSeeker();
 

@@ -202,6 +202,10 @@ class DirectOfferController extends Controller
             return response()->json(['message' => 'Forbidden'], 403);
         }
 
+        if ($offer->status !== 'pending') {
+            return response()->json(['message' => 'This offer has already been resolved'], 409);
+        }
+
         $offer->update(['status' => 'accepted']);
 
         Application::create([
@@ -243,6 +247,10 @@ class DirectOfferController extends Controller
 
         if ((string) $offer->job_seeker_id !== (string) $jobSeeker->_id) {
             return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        if ($offer->status !== 'pending') {
+            return response()->json(['message' => 'This offer has already been resolved'], 409);
         }
 
         $offer->update(['status' => 'declined']);

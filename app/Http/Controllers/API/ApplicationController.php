@@ -152,6 +152,10 @@ class ApplicationController extends Controller
             return response()->json(['message' => 'Cannot withdraw an accepted application'], 403);
         }
 
+        if ($application->status === 'rejected') {
+            return response()->json(['message' => 'Cannot withdraw a rejected application'], 403);
+        }
+
         $application->delete();
 
         return response()->json(['message' => 'Application withdrawn successfully']);
