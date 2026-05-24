@@ -173,6 +173,7 @@ class JobPostController extends Controller
      * @bodyParam salary_range.max integer Example: 4000
      * @bodyParam salary_range.currency string Example: USD
      * @bodyParam tags string[] Array of tags. Example: ["Laravel","PHP"]
+     * @bodyParam roles string[] Array of role categories. Example: ["Frontend","React"]
      *
      * @response 201 {
      *   "id": "664f1a2b3c4d5e6f7a8b9c0d",
@@ -202,6 +203,7 @@ class JobPostController extends Controller
             'salary_range.max'    => 'nullable|integer|min:0',
             'salary_range.currency' => 'nullable|string',
             'tags'                => 'nullable|array',
+            'roles'               => 'nullable|array',
         ]);
 
         $user = Auth::user();
@@ -275,6 +277,7 @@ class JobPostController extends Controller
             'salary_range.max'    => 'nullable|integer|min:0',
             'salary_range.currency' => 'nullable|string',
             'tags'                => 'nullable|array',
+            'roles'               => 'nullable|array',
             'is_active'           => 'sometimes|boolean',
         ]);
 

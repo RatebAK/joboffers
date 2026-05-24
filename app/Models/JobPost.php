@@ -25,12 +25,14 @@ class JobPost extends Model
         'is_active',
         'category',
         'tags',
+        'roles',           // e.g. ['Frontend', 'React']
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
         'salary_range' => 'array',
         'tags' => 'array',
+        'roles' => 'array',
     ];
 
     // Relationship with employer

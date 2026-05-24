@@ -346,3 +346,53 @@ test('job seeker cannot create a job post', function () {
 
     $seeker->delete();
 });
+
+// ── Roles field ───────────────────────────────────────────────
+
+test('employer job creation accepts roles array', function () {
+    [$employer, $token] = jpEmployer();
+
+    $response = $this->withToken($token)->postJson('/api/employer/jobs', [
+        'title'        => 'Frontend Role',
+        'description'  => 'Desc.',
+        'requirements' => 'Req.',
+        'company_name' => 'Co',
+        'job_type'     => 'full_time',
+        'roles'        => ['Frontend', 'React'],
+    ]);
+
+    $response->assertStatus(201);
+    expect($response->json('roles'))->toContain('Frontend');
+    expect($response->json('roles'))->toContain('React');
+
+    JobPost::where('employer_id', (string) $employer->_id)->delete();
+    $employer->delete();
+});
+
+test('employer can update roles on a job post', function () {
+    [$employer, $token] = jpEmployer();
+    $job = jpJob((string) $employer->_id, ['roles' => ['Backend']]);
+
+    $response = $this->withToken($token)->putJson("/api/employer/jobs/{$job->_id}", [
+        'roles' => ['Backend', 'Node.js'],
+    ]);
+
+    $response->assertStatus(200)
+      ->assertJsonPath('roles.0', 'Backend')
+      ->assertJsonPath('roles.1', 'Node.js');
+
+    $job->delete(); $employer->delete();
+});
+
+test('public job show returns roles field', function () {
+    [$employer] = jpEmployer();
+    $job = jpJob((string) $employer->_id, ['roles' => ['DevOps', 'AWS']]);
+
+    $response = $this->getJson("/api/jobs/{$job->_id}")->assertStatus(200);
+
+    dump('[SHOW] response:', $response->json());
+
+    expect($response->json('roles'))->toContain('DevOps');
+
+    $job->delete(); $employer->delete();
+});
