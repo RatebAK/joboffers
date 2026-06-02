@@ -1209,6 +1209,72 @@ paths:
         required: true
         schema:
           type: string
+  '/api/users/{userId}':
+    get:
+      summary: "Get any user's full profile"
+      operationId: getAnyUsersFullProfile
+      description: "Returns the full profile of any user by their ID. The profile type returned depends on the target user's role.\nAdmins receive all fields. Non-admin callers receive all fields except password."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  user:
+                    id: 664f1a2b3c4d5e6f7a8b9c0e
+                    name: 'Jane Smith'
+                    email: jane@example.com
+                    roles:
+                      - employee
+                    profile: {  }
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 664f1a2b3c4d5e6f7a8b9c0e
+                      name:
+                        type: string
+                        example: 'Jane Smith'
+                      email:
+                        type: string
+                        example: jane@example.com
+                      roles:
+                        type: array
+                        example:
+                          - employee
+                        items:
+                          type: string
+                      profile:
+                        type: object
+                        properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'User not found'
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: userId
+        description: "The target user's ID."
+        example: 664f1a2b3c4d5e6f7a8b9c0e
+        required: true
+        schema:
+          type: string
   /api/job-seeker/profile:
     get:
       summary: 'Get job seeker profile'
@@ -1613,7 +1679,7 @@ paths:
                       is_currently_working:
                         type: boolean
                         description: ''
-                        example: true
+                        example: false
                         nullable: true
                       description:
                         type: string
@@ -2118,6 +2184,133 @@ paths:
                   description: 'Minimum salary.'
                   example: 2000.0
                   nullable: true
+  /api/job-seeker/matched-jobs:
+    get:
+      summary: 'Matched jobs'
+      operationId: matchedJobs
+      description: "Returns a paginated list of active job posts ranked by match_score for the authenticated job seeker.\nMatch score is computed from skill overlap (+2 each), location match (+3), job type match (+2),\nand experience level match (+2). Posts the seeker has already applied to are excluded."
+      parameters:
+        -
+          in: query
+          name: min_score
+          description: 'Only return posts with match_score >= this value.'
+          example: 4
+          required: false
+          schema:
+            type: integer
+            description: 'Only return posts with match_score >= this value.'
+            example: 4
+        -
+          in: query
+          name: page
+          description: 'Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number.'
+            example: 1
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: ...
+                      title: 'Senior PHP Developer'
+                      company_name: Acme
+                      location: Beirut
+                      job_type: full_time
+                      match_score: 9
+                  current_page: 1
+                  per_page: 10
+                  total: 5
+                  total_pages: 1
+                  next_page: null
+                  prev_page: null
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: ...
+                        title: 'Senior PHP Developer'
+                        company_name: Acme
+                        location: Beirut
+                        job_type: full_time
+                        match_score: 9
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: ...
+                        title:
+                          type: string
+                          example: 'Senior PHP Developer'
+                        company_name:
+                          type: string
+                          example: Acme
+                        location:
+                          type: string
+                          example: Beirut
+                        job_type:
+                          type: string
+                          example: full_time
+                        match_score:
+                          type: integer
+                          example: 9
+                  current_page:
+                    type: integer
+                    example: 1
+                  per_page:
+                    type: integer
+                    example: 10
+                  total:
+                    type: integer
+                    example: 5
+                  total_pages:
+                    type: integer
+                    example: 1
+                  next_page:
+                    type: string
+                    example: null
+                    nullable: true
+                  prev_page:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Endpoints
+  /api/job-seeker/analytics:
+    get:
+      summary: 'Job seeker analytics - personal statistics'
+      operationId: jobSeekerAnalyticsPersonalStatistics
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: Unauthorized
+                  message: 'Authentication token has expired'
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+                  message:
+                    type: string
+                    example: 'Authentication token has expired'
+      tags:
+        - Endpoints
   /api/job-seeker/offers:
     get:
       summary: 'Received offers'
@@ -4108,6 +4301,31 @@ paths:
                         nullable: true
       tags:
         - Endpoints
+  /api/employer/analytics:
+    get:
+      summary: "Employer analytics - scoped to employer's jobs"
+      operationId: employerAnalyticsScopedToEmployersJobs
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: Unauthorized
+                  message: 'Authentication token has expired'
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+                  message:
+                    type: string
+                    example: 'Authentication token has expired'
+      tags:
+        - Endpoints
   /api/admin/employers:
     get:
       summary: 'List pending employer applications'
@@ -4283,3 +4501,279 @@ paths:
         required: true
         schema:
           type: string
+  /api/admin/analytics:
+    get:
+      summary: 'Admin analytics - platform-wide statistics'
+      operationId: adminAnalyticsPlatformWideStatistics
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: Unauthorized
+                  message: 'Authentication token has expired'
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+                  message:
+                    type: string
+                    example: 'Authentication token has expired'
+      tags:
+        - Endpoints
+  /api/admin/users:
+    get:
+      summary: 'List all users (admin)'
+      operationId: listAllUsersadmin
+      description: 'Paginated list of all users with their roles and basic info. Admin only.'
+      parameters:
+        -
+          in: query
+          name: per_page
+          description: 'Results per page. Default 15.'
+          example: 15
+          required: false
+          schema:
+            type: integer
+            description: 'Results per page. Default 15.'
+            example: 15
+        -
+          in: query
+          name: page
+          description: 'Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number.'
+            example: 1
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: ...
+                      name: ...
+                      email: ...
+                      roles:
+                        - employee
+                  current_page: 1
+                  per_page: 15
+                  total: 10
+                  total_pages: 1
+                  next_page: null
+                  prev_page: null
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: ...
+                        name: ...
+                        email: ...
+                        roles:
+                          - employee
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: ...
+                        name:
+                          type: string
+                          example: ...
+                        email:
+                          type: string
+                          example: ...
+                        roles:
+                          type: array
+                          example:
+                            - employee
+                          items:
+                            type: string
+                  current_page:
+                    type: integer
+                    example: 1
+                  per_page:
+                    type: integer
+                    example: 15
+                  total:
+                    type: integer
+                    example: 10
+                  total_pages:
+                    type: integer
+                    example: 1
+                  next_page:
+                    type: string
+                    example: null
+                    nullable: true
+                  prev_page:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Endpoints
+  /api/admin/users/seekers:
+    get:
+      summary: 'List all job seekers (admin)'
+      operationId: listAllJobSeekersadmin
+      description: 'Paginated list of all users with the employee role, each with their full JobSeekerProfile. Admin only.'
+      parameters:
+        -
+          in: query
+          name: per_page
+          description: 'Results per page. Default 15.'
+          example: 15
+          required: false
+          schema:
+            type: integer
+            description: 'Results per page. Default 15.'
+            example: 15
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: ...
+                      name: ...
+                      profile: {  }
+                  current_page: 1
+                  per_page: 15
+                  total: 5
+                  total_pages: 1
+                  next_page: null
+                  prev_page: null
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: ...
+                        name: ...
+                        profile: []
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: ...
+                        name:
+                          type: string
+                          example: ...
+                        profile:
+                          type: object
+                          properties: {  }
+                  current_page:
+                    type: integer
+                    example: 1
+                  per_page:
+                    type: integer
+                    example: 15
+                  total:
+                    type: integer
+                    example: 5
+                  total_pages:
+                    type: integer
+                    example: 1
+                  next_page:
+                    type: string
+                    example: null
+                    nullable: true
+                  prev_page:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Endpoints
+  /api/admin/users/employers:
+    get:
+      summary: 'List all employers (admin)'
+      operationId: listAllEmployersadmin
+      description: 'Paginated list of all users with the employer role, each with their full CompanyProfile. Admin only.'
+      parameters:
+        -
+          in: query
+          name: per_page
+          description: 'Results per page. Default 15.'
+          example: 15
+          required: false
+          schema:
+            type: integer
+            description: 'Results per page. Default 15.'
+            example: 15
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: ...
+                      name: ...
+                      profile: {  }
+                  current_page: 1
+                  per_page: 15
+                  total: 3
+                  total_pages: 1
+                  next_page: null
+                  prev_page: null
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: ...
+                        name: ...
+                        profile: []
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: ...
+                        name:
+                          type: string
+                          example: ...
+                        profile:
+                          type: object
+                          properties: {  }
+                  current_page:
+                    type: integer
+                    example: 1
+                  per_page:
+                    type: integer
+                    example: 15
+                  total:
+                    type: integer
+                    example: 3
+                  total_pages:
+                    type: integer
+                    example: 1
+                  next_page:
+                    type: string
+                    example: null
+                    nullable: true
+                  prev_page:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Endpoints

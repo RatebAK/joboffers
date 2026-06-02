@@ -213,3 +213,95 @@ Incremental implementation of the job platform features on top of the existing L
 - Tag format for each property test: `// Feature: cv-ai-job-platform, Property N: <property title>`
 - The AI CV Analysis API base URL should be stored in `.env` as `CV_ANALYSIS_API_URL`
 - All new routes follow the existing pattern: job seeker routes under `middleware(['jwt.auth', 'role:employee'])`, employer routes under `middleware(['jwt.auth', 'role:employer'])`
+
+## New Features
+
+- [x] 11. Implement UserProfileController (view any user's full profile)
+  - [x] 11.1 Create `app/Http/Controllers/API/UserProfileController.php`
+    - `show($userId)` — authenticated (any role): resolve user, load JobSeekerProfile or CompanyProfile based on role, strip `password` from User, return full data; 404 if not found
+    - `adminListAll(Request $request)` — admin only: paginated list of all users with basic info
+    - `adminListSeekers(Request $request)` — admin only: paginated list of all employees with full JobSeekerProfile
+    - `adminListEmployers(Request $request)` — admin only: paginated list of all employers with full CompanyProfile
+    - Register routes: `GET /api/users/{userId}` (jwt.auth), `GET /api/admin/users`, `GET /api/admin/users/seekers`, `GET /api/admin/users/employers` (role:admin)
+    - _Requirements: 9.1–9.9_
+
+  - [x] 11.2 Write feature test: `tests/Feature/UserProfileViewTest.php`
+    - Full flow: register job seeker → register employer → admin approves employer → each role views the other's profile
+    - Assert job seeker viewing employer gets full CompanyProfile
+    - Assert employer viewing job seeker gets full JobSeekerProfile including ai_ fields
+    - Assert admin viewing any user gets all fields
+    - Assert 404 for non-existent userId
+    - Assert admin list endpoints return correct counts and pagination
+    - _Requirements: 9.1–9.9_
+
+- [x] 12. Implement AnalyticsController
+  - [x] 12.1 Create `app/Http/Controllers/API/AnalyticsController.php`
+    - `adminAnalytics(Request $request)` — role:admin:
+      - Count users by role using MongoDB queries on `users` collection
+      - Count active/total job posts from `job_posts`
+      - Count applications by status from `applications`
+      - Count direct offers from `direct_offers`
+      - Count companies from `company_profiles`
+      - Employer approval stats from `employers` collection
+      - Top 10 skills: aggregate `roles` + `tags` arrays across all job posts
+      - Registrations by month: group `users.created_at` by month for last 12 months
+      - Top 10 employers by job post count
+      - Average `ats_score` across all `job_seeker_profiles` where `ats_score` is not null
+    - `employerAnalytics(Request $request)` — role:employer:
+      - Scoped to `employer_id = auth()->id()`
+      - Job post counts (total, active, inactive)
+      - Application counts by status across all employer's job posts
+      - Per-job application counts
+      - Top 10 skills from applicants' `ai_skills`
+      - Average applicant `ats_score`
+      - Direct offer stats (sent, accepted, declined, acceptance_rate)
+      - Last 5 applications across all posts
+    - `seekerAnalytics(Request $request)` — role:employee:
+      - Scoped to `user_id = auth()->id()`
+      - Application counts by status
+      - Direct offer counts (received, accepted, declined)
+      - Current ATS score and `ai_analyzed_at` from JobSeekerProfile
+      - Matched jobs count (reuse matching logic)
+      - Top 5 applied job categories
+      - Last 5 applications with job title and status
+    - Register routes: `GET /api/admin/analytics`, `GET /api/employer/analytics`, `GET /api/job-seeker/analytics`
+    - _Requirements: 10.1–10.20_
+
+  - [x] 12.2 Write feature test: `tests/Feature/AnalyticsTest.php`
+    - Full flow from registration to analytics for each role:
+    - **Admin flow**: register admin → create job seekers + employers + job posts + applications → call `/api/admin/analytics` → assert all counts match known state, assert `by_role` breakdown, assert `by_status` breakdown, assert `top_skills` is an array, assert `registrations_by_month` has entries
+    - **Employer flow**: register + approve employer → create job posts → job seeker applies → send direct offer → call `/api/employer/analytics` → assert job counts, application counts, offer stats are scoped to this employer only
+    - **Job seeker flow**: register job seeker → upload CV (mock AI) → apply to jobs → receive offers → call `/api/job-seeker/analytics` → assert application counts, offer counts, ats_score present, matched_jobs_count >= 0
+    - Assert cross-role isolation: employer A's analytics never include employer B's data
+    - _Requirements: 10.1–10.20_
+
+- [x] 13. Implement MatchedJobsController
+  - [x] 13.1 Create `app/Http/Controllers/API/MatchedJobsController.php`
+    - `index(Request $request)` — role:employee:
+      - Load seeker's `JobSeekerProfile`; if none exists, fall back to active jobs ordered by `created_at` desc with `match_score: 0`
+      - Collect seeker skills: merge `ai_skills` (array of strings) + `skills[].name` (from structured skills array), lowercase, deduplicate
+      - Fetch all active job posts not in the seeker's applied `job_post_id` list
+      - For each post compute `match_score`:
+        - Collect post skills: merge `roles` + `tags`, lowercase, deduplicate
+        - +2 per intersecting skill
+        - +3 if `location` partial-matches seeker `ai_location` or `location` (case-insensitive)
+        - +2 if `job_type` is in seeker `job_types`
+        - +2 if `experience_level` matches seeker `job_level` (case-insensitive)
+      - Sort by `match_score` desc, then `created_at` desc
+      - Apply `?min_score=` filter if provided
+      - Paginate 10 per page; include `match_score` on each item
+    - Register route: `GET /api/job-seeker/matched-jobs`
+    - _Requirements: 11.1–11.10_
+
+  - [x] 13.2 Write feature test: `tests/Feature/MatchedJobsTest.php`
+    - Full flow: register job seeker → register + approve employer → employer creates job posts with various skills/locations/types → job seeker uploads CV (mock AI response with known skills) → call `/api/job-seeker/matched-jobs`
+    - Assert posts with matching skills have higher `match_score` than posts with no overlap
+    - Assert location bonus is applied when location matches
+    - Assert job_type bonus is applied when type matches
+    - Assert experience_level bonus is applied when level matches
+    - Assert a post the seeker has already applied to does NOT appear in results
+    - Assert `?min_score=5` filters out low-scoring posts
+    - Assert response is paginated with correct envelope
+    - Assert seeker with no profile gets active jobs with `match_score: 0`
+    - Assert seeker with no skills still gets location/type/level bonuses
+    - _Requirements: 11.1–11.10_

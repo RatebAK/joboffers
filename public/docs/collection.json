@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "ad3b048d-b4b2-4ea4-bf08-bd29871501c7",
+        "_postman_id": "8abf96a6-774a-4c5b-ba63-bab691b79b69",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -476,6 +476,52 @@
                     ]
                 },
                 {
+                    "name": "Get any user's full profile",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users\/:userId",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users\/:userId",
+                            "variable": [
+                                {
+                                    "id": "userId",
+                                    "key": "userId",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0e",
+                                    "description": "The target user's ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns the full profile of any user by their ID. The profile type returned depends on the target user's role.\nAdmins receive all fields. Non-admin callers receive all fields except password."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"user\": {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n    \"name\": \"Jane Smith\",\n    \"email\": \"jane@example.com\",\n    \"roles\": [\"employee\"],\n    \"profile\": {}\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"User not found\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "Get job seeker profile",
                     "request": {
                         "url": {
@@ -814,7 +860,7 @@
                                 },
                                 {
                                     "key": "work_experience[0][is_currently_working]",
-                                    "value": "1",
+                                    "value": "",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1133,6 +1179,96 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n  \"jobs\": {\n    \"data\": [{ \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"title\": \"Senior React Developer\", \"company_name\": \"Acme Corp\" }],\n    \"current_page\": 1, \"per_page\": 15, \"total\": 1, \"total_pages\": 1, \"next_page\": null, \"prev_page\": null\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Matched jobs",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/matched-jobs",
+                            "query": [
+                                {
+                                    "key": "min_score",
+                                    "value": "4",
+                                    "description": "Only return posts with match_score >= this value.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/matched-jobs?min_score=4&page=1"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns a paginated list of active job posts ranked by match_score for the authenticated job seeker.\nMatch score is computed from skill overlap (+2 each), location match (+3), job type match (+2),\nand experience level match (+2). Posts the seeker has already applied to are excluded."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"...\", \"title\": \"Senior PHP Developer\", \"company_name\": \"Acme\",\n      \"location\": \"Beirut\", \"job_type\": \"full_time\", \"match_score\": 9\n    }\n  ],\n  \"current_page\": 1, \"per_page\": 10, \"total\": 5, \"total_pages\": 1, \"next_page\": null, \"prev_page\": null\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Job seeker analytics - personal statistics",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/analytics",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/analytics"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Authentication token has expired\"}",
                             "name": ""
                         }
                     ]
@@ -1974,6 +2110,51 @@
                     ]
                 },
                 {
+                    "name": "Employer analytics - scoped to employer's jobs",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/analytics",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/analytics"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Authentication token has expired\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "List pending employer applications",
                     "request": {
                         "url": {
@@ -2096,6 +2277,174 @@
                             "header": [],
                             "code": 404,
                             "body": "{ \"message\": \"No query results for model\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Admin analytics - platform-wide statistics",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/analytics",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/analytics"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Authentication token has expired\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "List all users (admin)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/users",
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "15",
+                                    "description": "Results per page. Default 15.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/users?per_page=15&page=1"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Paginated list of all users with their roles and basic info. Admin only."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [{ \"id\": \"...\", \"name\": \"...\", \"email\": \"...\", \"roles\": [\"employee\"] }],\n  \"current_page\": 1, \"per_page\": 15, \"total\": 10, \"total_pages\": 1, \"next_page\": null, \"prev_page\": null\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "List all job seekers (admin)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/users\/seekers",
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "15",
+                                    "description": "Results per page. Default 15.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/users\/seekers?per_page=15"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Paginated list of all users with the employee role, each with their full JobSeekerProfile. Admin only."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [{ \"id\": \"...\", \"name\": \"...\", \"profile\": {} }],\n  \"current_page\": 1, \"per_page\": 15, \"total\": 5, \"total_pages\": 1, \"next_page\": null, \"prev_page\": null\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "List all employers (admin)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/users\/employers",
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "15",
+                                    "description": "Results per page. Default 15.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/users\/employers?per_page=15"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Paginated list of all users with the employer role, each with their full CompanyProfile. Admin only."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [{ \"id\": \"...\", \"name\": \"...\", \"profile\": {} }],\n  \"current_page\": 1, \"per_page\": 15, \"total\": 3, \"total_pages\": 1, \"next_page\": null, \"prev_page\": null\n}",
                             "name": ""
                         }
                     ]

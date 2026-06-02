@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\AnalyticsController;
 use App\Http\Controllers\API\ApplicationController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\DirectOfferController;
@@ -9,6 +10,8 @@ use App\Http\Controllers\API\EmployerSearchController;
 use App\Http\Controllers\API\JobPostController;
 use App\Http\Controllers\API\CompanyProfileController;
 use App\Http\Controllers\API\JobSeekerController;
+use App\Http\Controllers\API\MatchedJobsController;
+use App\Http\Controllers\API\UserProfileController;
 
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
@@ -29,6 +32,9 @@ Route::get('jobs/{id}', [JobPostController::class, 'show']);
 Route::get('companies', [CompanyProfileController::class, 'index']);
 Route::get('companies/{id}', [CompanyProfileController::class, 'show']);
 
+// Any authenticated user can view any user's full profile
+Route::middleware('jwt.auth')->get('users/{userId}', [UserProfileController::class, 'show']);
+
 // Job Seeker Routes
 Route::middleware(['jwt.auth', 'role:employee'])->prefix('job-seeker')->group(function () {
     Route::get('profile', [JobSeekerController::class, 'show']);
@@ -39,6 +45,12 @@ Route::middleware(['jwt.auth', 'role:employee'])->prefix('job-seeker')->group(fu
     Route::post('apply', [ApplicationController::class, 'store']);
     Route::delete('applications/{id}/withdraw', [ApplicationController::class, 'withdraw']);
     Route::get('jobs/search', [JobSeekerController::class, 'searchJobs']);
+
+    // Matched Jobs
+    Route::get('matched-jobs', [MatchedJobsController::class, 'index']);
+
+    // Analytics
+    Route::get('analytics', [AnalyticsController::class, 'seekerAnalytics']);
 
     // Direct Offers
     Route::get('offers', [DirectOfferController::class, 'indexReceived']);
@@ -78,6 +90,9 @@ Route::middleware(['jwt.auth', 'role:employer'])->prefix('employer')->group(func
     // Direct Offers
     Route::post('offers', [DirectOfferController::class, 'store']);
     Route::get('offers', [DirectOfferController::class, 'indexSent']);
+
+    // Analytics
+    Route::get('analytics', [AnalyticsController::class, 'employerAnalytics']);
 });
 
 // Admin Routes
@@ -85,4 +100,12 @@ Route::middleware(['jwt.auth', 'role:admin'])->prefix('admin')->group(function (
     Route::get('employers', [EmployerController::class, 'index']);
     Route::post('{id}/approve', [EmployerController::class, 'approve']);
     Route::post('{id}/reject', [EmployerController::class, 'reject']);
+
+    // Analytics
+    Route::get('analytics', [AnalyticsController::class, 'adminAnalytics']);
+
+    // User management
+    Route::get('users', [UserProfileController::class, 'adminListAll']);
+    Route::get('users/seekers', [UserProfileController::class, 'adminListSeekers']);
+    Route::get('users/employers', [UserProfileController::class, 'adminListEmployers']);
 });
