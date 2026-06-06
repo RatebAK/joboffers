@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "8abf96a6-774a-4c5b-ba63-bab691b79b69",
+        "_postman_id": "a57fc937-0442-49d2-b724-072152251330",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -476,6 +476,105 @@
                     ]
                 },
                 {
+                    "name": "Search users (talents\/workers)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/search\/users",
+                            "query": [
+                                {
+                                    "key": "search",
+                                    "value": "React+Developer",
+                                    "description": "General search term matching name, current title, or summary.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "skills",
+                                    "value": "React%2CTypeScript%2CNode.js",
+                                    "description": "Comma-separated list of skills (partial match, case-insensitive).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "min_experience",
+                                    "value": "3",
+                                    "description": "Minimum years of experience.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "max_experience",
+                                    "value": "10",
+                                    "description": "Maximum years of experience.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "min_ats_score",
+                                    "value": "70",
+                                    "description": "Minimum ATS score (0-100).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "max_ats_score",
+                                    "value": "95",
+                                    "description": "Maximum ATS score (0-100).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "location",
+                                    "value": "Beirut",
+                                    "description": "Location search (partial match).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "job_level",
+                                    "value": "senior",
+                                    "description": "Job level filter (entry, junior, mid, senior, lead, executive).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "actively_seeking",
+                                    "value": "1",
+                                    "description": "Filter by active job seeking status.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "10",
+                                    "description": "Number of results per page (max 100). Defaults to 15.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/search\/users?search=React+Developer&skills=React%2CTypeScript%2CNode.js&min_experience=3&max_experience=10&min_ats_score=70&max_ats_score=95&location=Beirut&job_level=senior&actively_seeking=1&per_page=10&page=1"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "General-purpose search for job seekers with comprehensive filtering. Searches profiles and returns matching candidates."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n      \"user_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n      \"name\": \"Jane Smith\",\n      \"current_job_title\": \"Senior Frontend Developer\",\n      \"ai_summary\": \"Experienced frontend developer with 5 years...\",\n      \"ai_skills\": [\"React\", \"TypeScript\", \"Node.js\"],\n      \"ai_location\": \"Beirut, Lebanon\",\n      \"ats_score\": 85,\n      \"years_of_experience\": 5,\n      \"job_level\": \"senior\",\n      \"is_actively_seeking\": true\n    }\n  ],\n  \"current_page\": 1,\n  \"per_page\": 15,\n  \"total\": 42,\n  \"total_pages\": 3,\n  \"next_page\": 2,\n  \"prev_page\": null\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "Get any user's full profile",
                     "request": {
                         "url": {
@@ -860,7 +959,7 @@
                                 },
                                 {
                                     "key": "work_experience[0][is_currently_working]",
-                                    "value": "",
+                                    "value": "1",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1742,9 +1841,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"Google\",\"logo\":\"https:\\\/\\\/logo.clearbit.com\\\/google.com\",\"cover_image\":\"https:\\\/\\\/images.unsplash.com\\\/photo.jpg\",\"description\":\"Eius et animi quos velit et.\",\"location\":\"Mountain View, CA\",\"company_size\":\"100-500\",\"employee_count\":\"100,000+ employees\",\"industry\":\"Technology\",\"website\":\"https:\\\/\\\/www.google.com\",\"founded\":\"1998\",\"social_media\":{\"linkedin\":\"https:\\\/\\\/www.linkedin.com\\\/company\\\/google\",\"twitter\":\"https:\\\/\\\/twitter.com\\\/Google\",\"facebook\":\"https:\\\/\\\/www.facebook.com\\\/Google\",\"instagram\":\"https:\\\/\\\/www.instagram.com\\\/google\"},\"rating\":4.5,\"review_count\":1250,\"would_recommend\":85,\"ceo_performance\":92,\"category_ratings\":{\"compensation\":4.2,\"culture\":4.6,\"work_life\":4.1,\"diversity\":4.4,\"management\":4.3},\"reviews\":[{\"id\":\"1\",\"rating\":4,\"user_name\":\"John Doe\",\"date\":\"27\\\/01\\\/2026\",\"position\":\"Former employee, last year at 2022\",\"recommend\":false,\"ceo_approval\":true,\"subratings\":[],\"agrees\":5,\"disagrees\":2}]}"
+                            "raw": "{\"name\":\"Google\",\"logo\":\"https:\\\/\\\/logo.clearbit.com\\\/google.com\",\"cover_image\":\"https:\\\/\\\/images.unsplash.com\\\/photo.jpg\",\"description\":\"Eius et animi quos velit et.\",\"location\":\"Mountain View, CA\",\"company_size\":\"100-500\",\"employee_count\":\"100,000+ employees\",\"industry\":\"Technology\",\"website\":\"https:\\\/\\\/www.google.com\",\"founded\":\"1998\",\"social_media\":{\"linkedin\":\"https:\\\/\\\/www.linkedin.com\\\/company\\\/google\",\"twitter\":\"https:\\\/\\\/twitter.com\\\/Google\",\"facebook\":\"https:\\\/\\\/www.facebook.com\\\/Google\",\"instagram\":\"https:\\\/\\\/www.instagram.com\\\/google\"}}"
                         },
-                        "description": "Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).\n`company_size` accepts either a plain string (`\"100-500\"`, `\"500+\"`) or a structured object `{ min, max?, isPlus }` \u2014 both are normalised to a canonical string before storage."
+                        "description": "Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).\n`company_size` accepts either a plain string (`\"100-500\"`, `\"500+\"`) or a structured object `{ min, max?, isPlus }` \u2014 both are normalised to a canonical string before storage.\n\nNote: Rating fields (rating, review_count, reviews, etc.) are read-only and managed by the system. They cannot be set by employers."
                     },
                     "response": [
                         {
@@ -1783,9 +1882,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"Google\",\"logo\":\"https:\\\/\\\/logo.clearbit.com\\\/google.com\",\"cover_image\":\"https:\\\/\\\/images.unsplash.com\\\/photo.jpg\",\"description\":\"Eius et animi quos velit et.\",\"location\":\"Mountain View, CA\",\"company_size\":\"100-500\",\"employee_count\":\"100,000+ employees\",\"industry\":\"Technology\",\"website\":\"https:\\\/\\\/www.google.com\",\"founded\":\"1998\",\"social_media\":{\"linkedin\":\"https:\\\/\\\/www.linkedin.com\\\/company\\\/google\",\"twitter\":\"https:\\\/\\\/twitter.com\\\/Google\",\"facebook\":\"https:\\\/\\\/www.facebook.com\\\/Google\",\"instagram\":\"https:\\\/\\\/www.instagram.com\\\/google\"},\"rating\":4.5,\"review_count\":1250,\"would_recommend\":85,\"ceo_performance\":92,\"category_ratings\":{\"compensation\":4.2,\"culture\":4.6,\"work_life\":4.1,\"diversity\":4.4,\"management\":4.3},\"reviews\":[{\"id\":\"1\",\"rating\":4,\"user_name\":\"John Doe\",\"date\":\"27\\\/01\\\/2026\",\"position\":\"Former employee, last year at 2022\",\"recommend\":false,\"ceo_approval\":true,\"subratings\":[],\"agrees\":5,\"disagrees\":2}]}"
+                            "raw": "{\"name\":\"Google\",\"logo\":\"https:\\\/\\\/logo.clearbit.com\\\/google.com\",\"cover_image\":\"https:\\\/\\\/images.unsplash.com\\\/photo.jpg\",\"description\":\"Eius et animi quos velit et.\",\"location\":\"Mountain View, CA\",\"company_size\":\"100-500\",\"employee_count\":\"100,000+ employees\",\"industry\":\"Technology\",\"website\":\"https:\\\/\\\/www.google.com\",\"founded\":\"1998\",\"social_media\":{\"linkedin\":\"https:\\\/\\\/www.linkedin.com\\\/company\\\/google\",\"twitter\":\"https:\\\/\\\/twitter.com\\\/Google\",\"facebook\":\"https:\\\/\\\/www.facebook.com\\\/Google\",\"instagram\":\"https:\\\/\\\/www.instagram.com\\\/google\"}}"
                         },
-                        "description": "Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).\n`company_size` accepts either a plain string (`\"100-500\"`, `\"500+\"`) or a structured object `{ min, max?, isPlus }` \u2014 both are normalised to a canonical string before storage."
+                        "description": "Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).\n`company_size` accepts either a plain string (`\"100-500\"`, `\"500+\"`) or a structured object `{ min, max?, isPlus }` \u2014 both are normalised to a canonical string before storage.\n\nNote: Rating fields (rating, review_count, reviews, etc.) are read-only and managed by the system. They cannot be set by employers."
                     },
                     "response": [
                         {

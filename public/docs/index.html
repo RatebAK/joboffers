@@ -98,6 +98,9 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-companies--id-">
                                 <a href="#endpoints-GETapi-companies--id-">Get company</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-search-users">
+                                <a href="#endpoints-GETapi-search-users">Search users (talents/workers)</a>
+                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-users--userId-">
                                 <a href="#endpoints-GETapi-users--userId-">Get any user's full profile</a>
                             </li>
@@ -220,7 +223,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: June 2, 2026</li>
+        <li>Last updated: June 6, 2026</li>
     </ul>
 </div>
 
@@ -1960,6 +1963,324 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                     </form>
 
+                    <h2 id="endpoints-GETapi-search-users">Search users (talents/workers)</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>General-purpose search for job seekers with comprehensive filtering. Searches profiles and returns matching candidates.</p>
+
+<span id="example-requests-GETapi-search-users">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost:8000/api/search/users?search=React+Developer&amp;skills=React%2CTypeScript%2CNode.js&amp;min_experience=3&amp;max_experience=10&amp;min_ats_score=70&amp;max_ats_score=95&amp;location=Beirut&amp;job_level=senior&amp;actively_seeking=1&amp;per_page=10&amp;page=1" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/search/users"
+);
+
+const params = {
+    "search": "React Developer",
+    "skills": "React,TypeScript,Node.js",
+    "min_experience": "3",
+    "max_experience": "10",
+    "min_ats_score": "70",
+    "max_ats_score": "95",
+    "location": "Beirut",
+    "job_level": "senior",
+    "actively_seeking": "1",
+    "per_page": "10",
+    "page": "1",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-search-users">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
+            &quot;user_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0e&quot;,
+            &quot;name&quot;: &quot;Jane Smith&quot;,
+            &quot;current_job_title&quot;: &quot;Senior Frontend Developer&quot;,
+            &quot;ai_summary&quot;: &quot;Experienced frontend developer with 5 years...&quot;,
+            &quot;ai_skills&quot;: [
+                &quot;React&quot;,
+                &quot;TypeScript&quot;,
+                &quot;Node.js&quot;
+            ],
+            &quot;ai_location&quot;: &quot;Beirut, Lebanon&quot;,
+            &quot;ats_score&quot;: 85,
+            &quot;years_of_experience&quot;: 5,
+            &quot;job_level&quot;: &quot;senior&quot;,
+            &quot;is_actively_seeking&quot;: true
+        }
+    ],
+    &quot;current_page&quot;: 1,
+    &quot;per_page&quot;: 15,
+    &quot;total&quot;: 42,
+    &quot;total_pages&quot;: 3,
+    &quot;next_page&quot;: 2,
+    &quot;prev_page&quot;: null
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-search-users" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-search-users"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-search-users"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-search-users" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-search-users">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-search-users" data-method="GET"
+      data-path="api/search/users"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-search-users', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-search-users"
+                    onclick="tryItOut('GETapi-search-users');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-search-users"
+                    onclick="cancelTryOut('GETapi-search-users');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-search-users"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/search/users</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-search-users"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-search-users"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-search-users"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="search"                data-endpoint="GETapi-search-users"
+               value="React Developer"
+               data-component="query">
+    <br>
+<p>General search term matching name, current title, or summary. Example: <code>React Developer</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>skills</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="skills"                data-endpoint="GETapi-search-users"
+               value="React,TypeScript,Node.js"
+               data-component="query">
+    <br>
+<p>Comma-separated list of skills (partial match, case-insensitive). Example: <code>React,TypeScript,Node.js</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>min_experience</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="min_experience"                data-endpoint="GETapi-search-users"
+               value="3"
+               data-component="query">
+    <br>
+<p>Minimum years of experience. Example: <code>3</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>max_experience</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="max_experience"                data-endpoint="GETapi-search-users"
+               value="10"
+               data-component="query">
+    <br>
+<p>Maximum years of experience. Example: <code>10</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>min_ats_score</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="min_ats_score"                data-endpoint="GETapi-search-users"
+               value="70"
+               data-component="query">
+    <br>
+<p>Minimum ATS score (0-100). Example: <code>70</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>max_ats_score</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="max_ats_score"                data-endpoint="GETapi-search-users"
+               value="95"
+               data-component="query">
+    <br>
+<p>Maximum ATS score (0-100). Example: <code>95</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>location</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="location"                data-endpoint="GETapi-search-users"
+               value="Beirut"
+               data-component="query">
+    <br>
+<p>Location search (partial match). Example: <code>Beirut</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>job_level</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="job_level"                data-endpoint="GETapi-search-users"
+               value="senior"
+               data-component="query">
+    <br>
+<p>Job level filter (entry, junior, mid, senior, lead, executive). Example: <code>senior</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>actively_seeking</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="GETapi-search-users" style="display: none">
+            <input type="radio" name="actively_seeking"
+                   value="1"
+                   data-endpoint="GETapi-search-users"
+                   data-component="query"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-search-users" style="display: none">
+            <input type="radio" name="actively_seeking"
+                   value="0"
+                   data-endpoint="GETapi-search-users"
+                   data-component="query"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Filter by active job seeking status. Example: <code>true</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="per_page"                data-endpoint="GETapi-search-users"
+               value="10"
+               data-component="query">
+    <br>
+<p>Number of results per page (max 100). Defaults to 15. Example: <code>10</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="page"                data-endpoint="GETapi-search-users"
+               value="1"
+               data-component="query">
+    <br>
+<p>Page number. Example: <code>1</code></p>
+            </div>
+                </form>
+
                     <h2 id="endpoints-GETapi-users--userId-">Get any user&#039;s full profile</h2>
 
 <p>
@@ -2340,9 +2661,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "work_experience[][job_roles][]=u"\
     --form "work_experience[][from_date]=jwvlxjklqppwqbew"\
     --form "work_experience[][to_date]=tnnoqitpxntltcvi"\
-    --form "work_experience[][is_currently_working]="\
+    --form "work_experience[][is_currently_working]=1"\
     --form "work_experience[][description]=Eius et animi quos velit et."\
-    --form "resume=@/tmp/phpPcHe8S" </code></pre></div>
+    --form "resume=@/tmp/php0pG79J" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -2401,7 +2722,7 @@ body.append('work_experience[][company_name]', 't');
 body.append('work_experience[][job_roles][]', 'u');
 body.append('work_experience[][from_date]', 'jwvlxjklqppwqbew');
 body.append('work_experience[][to_date]', 'tnnoqitpxntltcvi');
-body.append('work_experience[][is_currently_working]', '');
+body.append('work_experience[][is_currently_working]', '1');
 body.append('work_experience[][description]', 'Eius et animi quos velit et.');
 body.append('resume', document.querySelector('input[name="resume"]').files[0]);
 
@@ -3138,7 +3459,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -3164,7 +3485,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC resume file (max 5 MB). Example: <code>/tmp/phpPcHe8S</code></p>
+<p>PDF/DOC resume file (max 5 MB). Example: <code>/tmp/php0pG79J</code></p>
         </div>
         </form>
 
@@ -3186,7 +3507,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@/tmp/phpwnNDXv" </code></pre></div>
+    --form "resume=@/tmp/phpuxcK9l" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -3330,7 +3651,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 5 MB. Example: <code>/tmp/phpwnNDXv</code></p>
+<p>PDF/DOC/DOCX file, max 5 MB. Example: <code>/tmp/phpuxcK9l</code></p>
         </div>
         </form>
 
@@ -3352,7 +3673,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cv=@/tmp/phpkifwY6" </code></pre></div>
+    --form "cv=@/tmp/phpAb4cZz" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -3512,7 +3833,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpkifwY6</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpAb4cZz</code></p>
         </div>
         </form>
 
@@ -3691,7 +4012,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "job_post_id=664f1a2b3c4d5e6f7a8b9c0d"\
     --form "cover_letter=I am very interested in this position."\
-    --form "resume=@/tmp/php84Qa8c" </code></pre></div>
+    --form "resume=@/tmp/phpgwD0iv" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -3871,7 +4192,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/php84Qa8c</code></p>
+<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/phpgwD0iv</code></p>
         </div>
         </form>
 
@@ -5103,7 +5424,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "document=@/tmp/phplctnk9" </code></pre></div>
+    --form "document=@/tmp/php1Vtk8z" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -5252,7 +5573,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/phplctnk9</code></p>
+<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/php1Vtk8z</code></p>
         </div>
         </form>
 
@@ -6736,6 +7057,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <p>Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).
 <code>company_size</code> accepts either a plain string (<code>"100-500"</code>, <code>"500+"</code>) or a structured object <code>{ min, max?, isPlus }</code> — both are normalised to a canonical string before storage.</p>
+<p>Note: Rating fields (rating, review_count, reviews, etc.) are read-only and managed by the system. They cannot be set by employers.</p>
 
 <span id="example-requests-POSTapi-employer-company">
 <blockquote>Example request:</blockquote>
@@ -6763,32 +7085,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
         \"twitter\": \"https:\\/\\/twitter.com\\/Google\",
         \"facebook\": \"https:\\/\\/www.facebook.com\\/Google\",
         \"instagram\": \"https:\\/\\/www.instagram.com\\/google\"
-    },
-    \"rating\": 4.5,
-    \"review_count\": 1250,
-    \"would_recommend\": 85,
-    \"ceo_performance\": 92,
-    \"category_ratings\": {
-        \"compensation\": 4.2,
-        \"culture\": 4.6,
-        \"work_life\": 4.1,
-        \"diversity\": 4.4,
-        \"management\": 4.3
-    },
-    \"reviews\": [
-        {
-            \"id\": \"1\",
-            \"rating\": 4,
-            \"user_name\": \"John Doe\",
-            \"date\": \"27\\/01\\/2026\",
-            \"position\": \"Former employee, last year at 2022\",
-            \"recommend\": false,
-            \"ceo_approval\": true,
-            \"subratings\": [],
-            \"agrees\": 5,
-            \"disagrees\": 2
-        }
-    ]
+    }
 }"
 </code></pre></div>
 
@@ -6820,32 +7117,7 @@ let body = {
         "twitter": "https:\/\/twitter.com\/Google",
         "facebook": "https:\/\/www.facebook.com\/Google",
         "instagram": "https:\/\/www.instagram.com\/google"
-    },
-    "rating": 4.5,
-    "review_count": 1250,
-    "would_recommend": 85,
-    "ceo_performance": 92,
-    "category_ratings": {
-        "compensation": 4.2,
-        "culture": 4.6,
-        "work_life": 4.1,
-        "diversity": 4.4,
-        "management": 4.3
-    },
-    "reviews": [
-        {
-            "id": "1",
-            "rating": 4,
-            "user_name": "John Doe",
-            "date": "27\/01\/2026",
-            "position": "Former employee, last year at 2022",
-            "recommend": false,
-            "ceo_approval": true,
-            "subratings": [],
-            "agrees": 5,
-            "disagrees": 2
-        }
-    ]
+    }
 };
 
 fetch(url, {
@@ -7157,278 +7429,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     </div>
                                     </details>
         </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>rating</code></b>&nbsp;&nbsp;
-<small>number</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="rating"                data-endpoint="POSTapi-employer-company"
-               value="4.5"
-               data-component="body">
-    <br>
-<p>Overall rating (0–5). Example: <code>4.5</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>review_count</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="review_count"                data-endpoint="POSTapi-employer-company"
-               value="1250"
-               data-component="body">
-    <br>
-<p>Total number of reviews. Example: <code>1250</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>would_recommend</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="would_recommend"                data-endpoint="POSTapi-employer-company"
-               value="85"
-               data-component="body">
-    <br>
-<p>Percentage of employees who would recommend (0–100). Example: <code>85</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>ceo_performance</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="ceo_performance"                data-endpoint="POSTapi-employer-company"
-               value="92"
-               data-component="body">
-    <br>
-<p>CEO approval percentage (0–100). Example: <code>92</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-        <details>
-            <summary style="padding-bottom: 10px;">
-                <b style="line-height: 2;"><code>category_ratings</code></b>&nbsp;&nbsp;
-<small>object</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-<br>
-<p>Per-category rating breakdown.</p>
-            </summary>
-                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>compensation</code></b>&nbsp;&nbsp;
-<small>number</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="category_ratings.compensation"                data-endpoint="POSTapi-employer-company"
-               value="4.2"
-               data-component="body">
-    <br>
-<p>Example: <code>4.2</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>culture</code></b>&nbsp;&nbsp;
-<small>number</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="category_ratings.culture"                data-endpoint="POSTapi-employer-company"
-               value="4.6"
-               data-component="body">
-    <br>
-<p>Example: <code>4.6</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>work_life</code></b>&nbsp;&nbsp;
-<small>number</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="category_ratings.work_life"                data-endpoint="POSTapi-employer-company"
-               value="4.1"
-               data-component="body">
-    <br>
-<p>Example: <code>4.1</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>diversity</code></b>&nbsp;&nbsp;
-<small>number</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="category_ratings.diversity"                data-endpoint="POSTapi-employer-company"
-               value="4.4"
-               data-component="body">
-    <br>
-<p>Example: <code>4.4</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>management</code></b>&nbsp;&nbsp;
-<small>number</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="category_ratings.management"                data-endpoint="POSTapi-employer-company"
-               value="4.3"
-               data-component="body">
-    <br>
-<p>Example: <code>4.3</code></p>
-                    </div>
-                                    </details>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-        <details>
-            <summary style="padding-bottom: 10px;">
-                <b style="line-height: 2;"><code>reviews</code></b>&nbsp;&nbsp;
-<small>object[]</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-<br>
-<p>Array of embedded review objects.</p>
-            </summary>
-                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="reviews.0.id"                data-endpoint="POSTapi-employer-company"
-               value="1"
-               data-component="body">
-    <br>
-<p>Unique review ID. Example: <code>1</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>rating</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="reviews.0.rating"                data-endpoint="POSTapi-employer-company"
-               value="4"
-               data-component="body">
-    <br>
-<p>Rating 1–5. Example: <code>4</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>user_name</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="reviews.0.user_name"                data-endpoint="POSTapi-employer-company"
-               value="John Doe"
-               data-component="body">
-    <br>
-<p>Reviewer display name. Example: <code>John Doe</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>date</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="reviews.0.date"                data-endpoint="POSTapi-employer-company"
-               value="27/01/2026"
-               data-component="body">
-    <br>
-<p>Display date. Example: <code>27/01/2026</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>position</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="reviews.0.position"                data-endpoint="POSTapi-employer-company"
-               value="Former employee, last year at 2022"
-               data-component="body">
-    <br>
-<p>Reviewer's position/tenure. Example: <code>Former employee, last year at 2022</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>recommend</code></b>&nbsp;&nbsp;
-<small>boolean</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <label data-endpoint="POSTapi-employer-company" style="display: none">
-            <input type="radio" name="reviews.0.recommend"
-                   value="true"
-                   data-endpoint="POSTapi-employer-company"
-                   data-component="body"             >
-            <code>true</code>
-        </label>
-        <label data-endpoint="POSTapi-employer-company" style="display: none">
-            <input type="radio" name="reviews.0.recommend"
-                   value="false"
-                   data-endpoint="POSTapi-employer-company"
-                   data-component="body"             >
-            <code>false</code>
-        </label>
-    <br>
-<p>Whether reviewer recommends the company. Example: <code>false</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>ceo_approval</code></b>&nbsp;&nbsp;
-<small>boolean</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <label data-endpoint="POSTapi-employer-company" style="display: none">
-            <input type="radio" name="reviews.0.ceo_approval"
-                   value="true"
-                   data-endpoint="POSTapi-employer-company"
-                   data-component="body"             >
-            <code>true</code>
-        </label>
-        <label data-endpoint="POSTapi-employer-company" style="display: none">
-            <input type="radio" name="reviews.0.ceo_approval"
-                   value="false"
-                   data-endpoint="POSTapi-employer-company"
-                   data-component="body"             >
-            <code>false</code>
-        </label>
-    <br>
-<p>Whether reviewer approves of CEO. Example: <code>true</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>subratings</code></b>&nbsp;&nbsp;
-<small>object</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="reviews.0.subratings"                data-endpoint="POSTapi-employer-company"
-               value=""
-               data-component="body">
-    <br>
-<p>Per-category sub-ratings for this review.</p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>agrees</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="reviews.0.agrees"                data-endpoint="POSTapi-employer-company"
-               value="5"
-               data-component="body">
-    <br>
-<p>Agree votes on this review. Example: <code>5</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>disagrees</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="reviews.0.disagrees"                data-endpoint="POSTapi-employer-company"
-               value="2"
-               data-component="body">
-    <br>
-<p>Disagree votes on this review. Example: <code>2</code></p>
-                    </div>
-                                    </details>
-        </div>
         </form>
 
                     <h2 id="endpoints-PUTapi-employer-company">Upsert company profile</h2>
@@ -7439,6 +7439,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <p>Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).
 <code>company_size</code> accepts either a plain string (<code>"100-500"</code>, <code>"500+"</code>) or a structured object <code>{ min, max?, isPlus }</code> — both are normalised to a canonical string before storage.</p>
+<p>Note: Rating fields (rating, review_count, reviews, etc.) are read-only and managed by the system. They cannot be set by employers.</p>
 
 <span id="example-requests-PUTapi-employer-company">
 <blockquote>Example request:</blockquote>
@@ -7466,32 +7467,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
         \"twitter\": \"https:\\/\\/twitter.com\\/Google\",
         \"facebook\": \"https:\\/\\/www.facebook.com\\/Google\",
         \"instagram\": \"https:\\/\\/www.instagram.com\\/google\"
-    },
-    \"rating\": 4.5,
-    \"review_count\": 1250,
-    \"would_recommend\": 85,
-    \"ceo_performance\": 92,
-    \"category_ratings\": {
-        \"compensation\": 4.2,
-        \"culture\": 4.6,
-        \"work_life\": 4.1,
-        \"diversity\": 4.4,
-        \"management\": 4.3
-    },
-    \"reviews\": [
-        {
-            \"id\": \"1\",
-            \"rating\": 4,
-            \"user_name\": \"John Doe\",
-            \"date\": \"27\\/01\\/2026\",
-            \"position\": \"Former employee, last year at 2022\",
-            \"recommend\": false,
-            \"ceo_approval\": true,
-            \"subratings\": [],
-            \"agrees\": 5,
-            \"disagrees\": 2
-        }
-    ]
+    }
 }"
 </code></pre></div>
 
@@ -7523,32 +7499,7 @@ let body = {
         "twitter": "https:\/\/twitter.com\/Google",
         "facebook": "https:\/\/www.facebook.com\/Google",
         "instagram": "https:\/\/www.instagram.com\/google"
-    },
-    "rating": 4.5,
-    "review_count": 1250,
-    "would_recommend": 85,
-    "ceo_performance": 92,
-    "category_ratings": {
-        "compensation": 4.2,
-        "culture": 4.6,
-        "work_life": 4.1,
-        "diversity": 4.4,
-        "management": 4.3
-    },
-    "reviews": [
-        {
-            "id": "1",
-            "rating": 4,
-            "user_name": "John Doe",
-            "date": "27\/01\/2026",
-            "position": "Former employee, last year at 2022",
-            "recommend": false,
-            "ceo_approval": true,
-            "subratings": [],
-            "agrees": 5,
-            "disagrees": 2
-        }
-    ]
+    }
 };
 
 fetch(url, {
@@ -7857,278 +7808,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="body">
     <br>
 <p>Instagram URL. Example: <code>https://www.instagram.com/google</code></p>
-                    </div>
-                                    </details>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>rating</code></b>&nbsp;&nbsp;
-<small>number</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="rating"                data-endpoint="PUTapi-employer-company"
-               value="4.5"
-               data-component="body">
-    <br>
-<p>Overall rating (0–5). Example: <code>4.5</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>review_count</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="review_count"                data-endpoint="PUTapi-employer-company"
-               value="1250"
-               data-component="body">
-    <br>
-<p>Total number of reviews. Example: <code>1250</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>would_recommend</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="would_recommend"                data-endpoint="PUTapi-employer-company"
-               value="85"
-               data-component="body">
-    <br>
-<p>Percentage of employees who would recommend (0–100). Example: <code>85</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>ceo_performance</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="ceo_performance"                data-endpoint="PUTapi-employer-company"
-               value="92"
-               data-component="body">
-    <br>
-<p>CEO approval percentage (0–100). Example: <code>92</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-        <details>
-            <summary style="padding-bottom: 10px;">
-                <b style="line-height: 2;"><code>category_ratings</code></b>&nbsp;&nbsp;
-<small>object</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-<br>
-<p>Per-category rating breakdown.</p>
-            </summary>
-                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>compensation</code></b>&nbsp;&nbsp;
-<small>number</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="category_ratings.compensation"                data-endpoint="PUTapi-employer-company"
-               value="4.2"
-               data-component="body">
-    <br>
-<p>Example: <code>4.2</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>culture</code></b>&nbsp;&nbsp;
-<small>number</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="category_ratings.culture"                data-endpoint="PUTapi-employer-company"
-               value="4.6"
-               data-component="body">
-    <br>
-<p>Example: <code>4.6</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>work_life</code></b>&nbsp;&nbsp;
-<small>number</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="category_ratings.work_life"                data-endpoint="PUTapi-employer-company"
-               value="4.1"
-               data-component="body">
-    <br>
-<p>Example: <code>4.1</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>diversity</code></b>&nbsp;&nbsp;
-<small>number</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="category_ratings.diversity"                data-endpoint="PUTapi-employer-company"
-               value="4.4"
-               data-component="body">
-    <br>
-<p>Example: <code>4.4</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>management</code></b>&nbsp;&nbsp;
-<small>number</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="category_ratings.management"                data-endpoint="PUTapi-employer-company"
-               value="4.3"
-               data-component="body">
-    <br>
-<p>Example: <code>4.3</code></p>
-                    </div>
-                                    </details>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-        <details>
-            <summary style="padding-bottom: 10px;">
-                <b style="line-height: 2;"><code>reviews</code></b>&nbsp;&nbsp;
-<small>object[]</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-<br>
-<p>Array of embedded review objects.</p>
-            </summary>
-                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="reviews.0.id"                data-endpoint="PUTapi-employer-company"
-               value="1"
-               data-component="body">
-    <br>
-<p>Unique review ID. Example: <code>1</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>rating</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="reviews.0.rating"                data-endpoint="PUTapi-employer-company"
-               value="4"
-               data-component="body">
-    <br>
-<p>Rating 1–5. Example: <code>4</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>user_name</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="reviews.0.user_name"                data-endpoint="PUTapi-employer-company"
-               value="John Doe"
-               data-component="body">
-    <br>
-<p>Reviewer display name. Example: <code>John Doe</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>date</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="reviews.0.date"                data-endpoint="PUTapi-employer-company"
-               value="27/01/2026"
-               data-component="body">
-    <br>
-<p>Display date. Example: <code>27/01/2026</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>position</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="reviews.0.position"                data-endpoint="PUTapi-employer-company"
-               value="Former employee, last year at 2022"
-               data-component="body">
-    <br>
-<p>Reviewer's position/tenure. Example: <code>Former employee, last year at 2022</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>recommend</code></b>&nbsp;&nbsp;
-<small>boolean</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <label data-endpoint="PUTapi-employer-company" style="display: none">
-            <input type="radio" name="reviews.0.recommend"
-                   value="true"
-                   data-endpoint="PUTapi-employer-company"
-                   data-component="body"             >
-            <code>true</code>
-        </label>
-        <label data-endpoint="PUTapi-employer-company" style="display: none">
-            <input type="radio" name="reviews.0.recommend"
-                   value="false"
-                   data-endpoint="PUTapi-employer-company"
-                   data-component="body"             >
-            <code>false</code>
-        </label>
-    <br>
-<p>Whether reviewer recommends the company. Example: <code>false</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>ceo_approval</code></b>&nbsp;&nbsp;
-<small>boolean</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <label data-endpoint="PUTapi-employer-company" style="display: none">
-            <input type="radio" name="reviews.0.ceo_approval"
-                   value="true"
-                   data-endpoint="PUTapi-employer-company"
-                   data-component="body"             >
-            <code>true</code>
-        </label>
-        <label data-endpoint="PUTapi-employer-company" style="display: none">
-            <input type="radio" name="reviews.0.ceo_approval"
-                   value="false"
-                   data-endpoint="PUTapi-employer-company"
-                   data-component="body"             >
-            <code>false</code>
-        </label>
-    <br>
-<p>Whether reviewer approves of CEO. Example: <code>true</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>subratings</code></b>&nbsp;&nbsp;
-<small>object</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="reviews.0.subratings"                data-endpoint="PUTapi-employer-company"
-               value=""
-               data-component="body">
-    <br>
-<p>Per-category sub-ratings for this review.</p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>agrees</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="reviews.0.agrees"                data-endpoint="PUTapi-employer-company"
-               value="5"
-               data-component="body">
-    <br>
-<p>Agree votes on this review. Example: <code>5</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>disagrees</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="reviews.0.disagrees"                data-endpoint="PUTapi-employer-company"
-               value="2"
-               data-component="body">
-    <br>
-<p>Disagree votes on this review. Example: <code>2</code></p>
                     </div>
                                     </details>
         </div>

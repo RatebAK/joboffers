@@ -845,6 +845,202 @@ endpoints:
     custom: []
     httpMethods:
       - GET
+    uri: api/search/users
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Search users (talents/workers)'
+      description: 'General-purpose search for job seekers with comprehensive filtering. Searches profiles and returns matching candidates.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      search:
+        custom: []
+        name: search
+        description: 'General search term matching name, current title, or summary.'
+        required: false
+        example: 'React Developer'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      skills:
+        custom: []
+        name: skills
+        description: 'Comma-separated list of skills (partial match, case-insensitive).'
+        required: false
+        example: 'React,TypeScript,Node.js'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      min_experience:
+        custom: []
+        name: min_experience
+        description: 'Minimum years of experience.'
+        required: false
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      max_experience:
+        custom: []
+        name: max_experience
+        description: 'Maximum years of experience.'
+        required: false
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      min_ats_score:
+        custom: []
+        name: min_ats_score
+        description: 'Minimum ATS score (0-100).'
+        required: false
+        example: 70
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      max_ats_score:
+        custom: []
+        name: max_ats_score
+        description: 'Maximum ATS score (0-100).'
+        required: false
+        example: 95
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      location:
+        custom: []
+        name: location
+        description: 'Location search (partial match).'
+        required: false
+        example: Beirut
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      job_level:
+        custom: []
+        name: job_level
+        description: 'Job level filter (entry, junior, mid, senior, lead, executive).'
+        required: false
+        example: senior
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      actively_seeking:
+        custom: []
+        name: actively_seeking
+        description: 'Filter by active job seeking status.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      per_page:
+        custom: []
+        name: per_page
+        description: 'Number of results per page (max 100). Defaults to 15.'
+        required: false
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      page:
+        custom: []
+        name: page
+        description: 'Page number.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      search: 'React Developer'
+      skills: 'React,TypeScript,Node.js'
+      min_experience: 3
+      max_experience: 10
+      min_ats_score: 70
+      max_ats_score: 95
+      location: Beirut
+      job_level: senior
+      actively_seeking: true
+      per_page: 10
+      page: 1
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "data": [
+              {
+                "id": "664f1a2b3c4d5e6f7a8b9c0d",
+                "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+                "name": "Jane Smith",
+                "current_job_title": "Senior Frontend Developer",
+                "ai_summary": "Experienced frontend developer with 5 years...",
+                "ai_skills": ["React", "TypeScript", "Node.js"],
+                "ai_location": "Beirut, Lebanon",
+                "ats_score": 85,
+                "years_of_experience": 5,
+                "job_level": "senior",
+                "is_actively_seeking": true
+              }
+            ],
+            "current_page": 1,
+            "per_page": 15,
+            "total": 42,
+            "total_pages": 3,
+            "next_page": 2,
+            "prev_page": null
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
     uri: 'api/users/{userId}'
     metadata:
       custom: []
@@ -1542,7 +1738,7 @@ endpoints:
         name: 'work_experience[].is_currently_working'
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -1618,7 +1814,7 @@ endpoints:
             - u
           from_date: jwvlxjklqppwqbew
           to_date: tnnoqitpxntltcvi
-          is_currently_working: false
+          is_currently_working: true
           description: 'Eius et animi quos velit et.'
     fileParameters:
       resume: null
@@ -3286,6 +3482,8 @@ endpoints:
       description: |-
         Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).
         `company_size` accepts either a plain string (`"100-500"`, `"500+"`) or a structured object `{ min, max?, isPlus }` — both are normalised to a canonical string before storage.
+
+        Note: Rating fields (rating, review_count, reviews, etc.) are read-only and managed by the system. They cannot be set by employers.
       authenticated: true
       deprecated: false
     headers:
@@ -3462,238 +3660,6 @@ endpoints:
         exampleWasSpecified: true
         nullable: true
         deprecated: false
-      rating:
-        custom: []
-        name: rating
-        description: 'Overall rating (0–5).'
-        required: false
-        example: 4.5
-        type: number
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      review_count:
-        custom: []
-        name: review_count
-        description: 'Total number of reviews.'
-        required: false
-        example: 1250
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      would_recommend:
-        custom: []
-        name: would_recommend
-        description: 'Percentage of employees who would recommend (0–100).'
-        required: false
-        example: 85
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      ceo_performance:
-        custom: []
-        name: ceo_performance
-        description: 'CEO approval percentage (0–100).'
-        required: false
-        example: 92
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      category_ratings:
-        custom: []
-        name: category_ratings
-        description: 'Per-category rating breakdown.'
-        required: false
-        example: []
-        type: object
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-      category_ratings.compensation:
-        custom: []
-        name: category_ratings.compensation
-        description: ''
-        required: false
-        example: 4.2
-        type: number
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      category_ratings.culture:
-        custom: []
-        name: category_ratings.culture
-        description: ''
-        required: false
-        example: 4.6
-        type: number
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      category_ratings.work_life:
-        custom: []
-        name: category_ratings.work_life
-        description: ''
-        required: false
-        example: 4.1
-        type: number
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      category_ratings.diversity:
-        custom: []
-        name: category_ratings.diversity
-        description: ''
-        required: false
-        example: 4.4
-        type: number
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      category_ratings.management:
-        custom: []
-        name: category_ratings.management
-        description: ''
-        required: false
-        example: 4.3
-        type: number
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      reviews:
-        custom: []
-        name: reviews
-        description: 'Array of embedded review objects.'
-        required: false
-        example:
-          - []
-        type: 'object[]'
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-      'reviews[].id':
-        custom: []
-        name: 'reviews[].id'
-        description: 'Unique review ID.'
-        required: true
-        example: '1'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      'reviews[].rating':
-        custom: []
-        name: 'reviews[].rating'
-        description: 'Rating 1–5.'
-        required: true
-        example: 4
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      'reviews[].user_name':
-        custom: []
-        name: 'reviews[].user_name'
-        description: 'Reviewer display name.'
-        required: true
-        example: 'John Doe'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      'reviews[].date':
-        custom: []
-        name: 'reviews[].date'
-        description: 'Display date.'
-        required: true
-        example: 27/01/2026
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      'reviews[].position':
-        custom: []
-        name: 'reviews[].position'
-        description: "Reviewer's position/tenure."
-        required: false
-        example: 'Former employee, last year at 2022'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      'reviews[].recommend':
-        custom: []
-        name: 'reviews[].recommend'
-        description: 'Whether reviewer recommends the company.'
-        required: false
-        example: false
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      'reviews[].ceo_approval':
-        custom: []
-        name: 'reviews[].ceo_approval'
-        description: 'Whether reviewer approves of CEO.'
-        required: false
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      'reviews[].subratings':
-        custom: []
-        name: 'reviews[].subratings'
-        description: 'Per-category sub-ratings for this review.'
-        required: false
-        example: []
-        type: object
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-      'reviews[].agrees':
-        custom: []
-        name: 'reviews[].agrees'
-        description: 'Agree votes on this review.'
-        required: false
-        example: 5
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      'reviews[].disagrees':
-        custom: []
-        name: 'reviews[].disagrees'
-        description: 'Disagree votes on this review.'
-        required: false
-        example: 2
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
     cleanBodyParameters:
       name: Google
       logo: 'https://logo.clearbit.com/google.com'
@@ -3710,28 +3676,6 @@ endpoints:
         twitter: 'https://twitter.com/Google'
         facebook: 'https://www.facebook.com/Google'
         instagram: 'https://www.instagram.com/google'
-      rating: 4.5
-      review_count: 1250
-      would_recommend: 85
-      ceo_performance: 92
-      category_ratings:
-        compensation: 4.2
-        culture: 4.6
-        work_life: 4.1
-        diversity: 4.4
-        management: 4.3
-      reviews:
-        -
-          id: '1'
-          rating: 4
-          user_name: 'John Doe'
-          date: 27/01/2026
-          position: 'Former employee, last year at 2022'
-          recommend: false
-          ceo_approval: true
-          subratings: []
-          agrees: 5
-          disagrees: 2
     fileParameters: []
     responses:
       -
@@ -3782,6 +3726,8 @@ endpoints:
       description: |-
         Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).
         `company_size` accepts either a plain string (`"100-500"`, `"500+"`) or a structured object `{ min, max?, isPlus }` — both are normalised to a canonical string before storage.
+
+        Note: Rating fields (rating, review_count, reviews, etc.) are read-only and managed by the system. They cannot be set by employers.
       authenticated: true
       deprecated: false
     headers:
@@ -3958,238 +3904,6 @@ endpoints:
         exampleWasSpecified: true
         nullable: true
         deprecated: false
-      rating:
-        custom: []
-        name: rating
-        description: 'Overall rating (0–5).'
-        required: false
-        example: 4.5
-        type: number
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      review_count:
-        custom: []
-        name: review_count
-        description: 'Total number of reviews.'
-        required: false
-        example: 1250
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      would_recommend:
-        custom: []
-        name: would_recommend
-        description: 'Percentage of employees who would recommend (0–100).'
-        required: false
-        example: 85
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      ceo_performance:
-        custom: []
-        name: ceo_performance
-        description: 'CEO approval percentage (0–100).'
-        required: false
-        example: 92
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      category_ratings:
-        custom: []
-        name: category_ratings
-        description: 'Per-category rating breakdown.'
-        required: false
-        example: []
-        type: object
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-      category_ratings.compensation:
-        custom: []
-        name: category_ratings.compensation
-        description: ''
-        required: false
-        example: 4.2
-        type: number
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      category_ratings.culture:
-        custom: []
-        name: category_ratings.culture
-        description: ''
-        required: false
-        example: 4.6
-        type: number
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      category_ratings.work_life:
-        custom: []
-        name: category_ratings.work_life
-        description: ''
-        required: false
-        example: 4.1
-        type: number
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      category_ratings.diversity:
-        custom: []
-        name: category_ratings.diversity
-        description: ''
-        required: false
-        example: 4.4
-        type: number
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      category_ratings.management:
-        custom: []
-        name: category_ratings.management
-        description: ''
-        required: false
-        example: 4.3
-        type: number
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      reviews:
-        custom: []
-        name: reviews
-        description: 'Array of embedded review objects.'
-        required: false
-        example:
-          - []
-        type: 'object[]'
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-      'reviews[].id':
-        custom: []
-        name: 'reviews[].id'
-        description: 'Unique review ID.'
-        required: true
-        example: '1'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      'reviews[].rating':
-        custom: []
-        name: 'reviews[].rating'
-        description: 'Rating 1–5.'
-        required: true
-        example: 4
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      'reviews[].user_name':
-        custom: []
-        name: 'reviews[].user_name'
-        description: 'Reviewer display name.'
-        required: true
-        example: 'John Doe'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      'reviews[].date':
-        custom: []
-        name: 'reviews[].date'
-        description: 'Display date.'
-        required: true
-        example: 27/01/2026
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      'reviews[].position':
-        custom: []
-        name: 'reviews[].position'
-        description: "Reviewer's position/tenure."
-        required: false
-        example: 'Former employee, last year at 2022'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      'reviews[].recommend':
-        custom: []
-        name: 'reviews[].recommend'
-        description: 'Whether reviewer recommends the company.'
-        required: false
-        example: false
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      'reviews[].ceo_approval':
-        custom: []
-        name: 'reviews[].ceo_approval'
-        description: 'Whether reviewer approves of CEO.'
-        required: false
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      'reviews[].subratings':
-        custom: []
-        name: 'reviews[].subratings'
-        description: 'Per-category sub-ratings for this review.'
-        required: false
-        example: []
-        type: object
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-      'reviews[].agrees':
-        custom: []
-        name: 'reviews[].agrees'
-        description: 'Agree votes on this review.'
-        required: false
-        example: 5
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      'reviews[].disagrees':
-        custom: []
-        name: 'reviews[].disagrees'
-        description: 'Disagree votes on this review.'
-        required: false
-        example: 2
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
     cleanBodyParameters:
       name: Google
       logo: 'https://logo.clearbit.com/google.com'
@@ -4206,28 +3920,6 @@ endpoints:
         twitter: 'https://twitter.com/Google'
         facebook: 'https://www.facebook.com/Google'
         instagram: 'https://www.instagram.com/google'
-      rating: 4.5
-      review_count: 1250
-      would_recommend: 85
-      ceo_performance: 92
-      category_ratings:
-        compensation: 4.2
-        culture: 4.6
-        work_life: 4.1
-        diversity: 4.4
-        management: 4.3
-      reviews:
-        -
-          id: '1'
-          rating: 4
-          user_name: 'John Doe'
-          date: 27/01/2026
-          position: 'Former employee, last year at 2022'
-          recommend: false
-          ceo_approval: true
-          subratings: []
-          agrees: 5
-          disagrees: 2
     fileParameters: []
     responses:
       -

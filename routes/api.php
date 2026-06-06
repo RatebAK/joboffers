@@ -12,6 +12,7 @@ use App\Http\Controllers\API\CompanyProfileController;
 use App\Http\Controllers\API\JobSeekerController;
 use App\Http\Controllers\API\MatchedJobsController;
 use App\Http\Controllers\API\UserProfileController;
+use App\Http\Controllers\API\UserSearchController;
 
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
@@ -31,6 +32,9 @@ Route::get('jobs/{id}', [JobPostController::class, 'show']);
 // Public Company Routes
 Route::get('companies', [CompanyProfileController::class, 'index']);
 Route::get('companies/{id}', [CompanyProfileController::class, 'show']);
+
+// Public User Search (talents/workers search)
+Route::get('search/users', [UserSearchController::class, 'index']);
 
 // Any authenticated user can view any user's full profile
 Route::middleware('jwt.auth')->get('users/{userId}', [UserProfileController::class, 'show']);

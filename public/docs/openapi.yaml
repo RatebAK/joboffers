@@ -1209,6 +1209,233 @@ paths:
         required: true
         schema:
           type: string
+  /api/search/users:
+    get:
+      summary: 'Search users (talents/workers)'
+      operationId: searchUserstalentsworkers
+      description: 'General-purpose search for job seekers with comprehensive filtering. Searches profiles and returns matching candidates.'
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'General search term matching name, current title, or summary.'
+          example: 'React Developer'
+          required: false
+          schema:
+            type: string
+            description: 'General search term matching name, current title, or summary.'
+            example: 'React Developer'
+        -
+          in: query
+          name: skills
+          description: 'Comma-separated list of skills (partial match, case-insensitive).'
+          example: 'React,TypeScript,Node.js'
+          required: false
+          schema:
+            type: string
+            description: 'Comma-separated list of skills (partial match, case-insensitive).'
+            example: 'React,TypeScript,Node.js'
+        -
+          in: query
+          name: min_experience
+          description: 'Minimum years of experience.'
+          example: 3
+          required: false
+          schema:
+            type: integer
+            description: 'Minimum years of experience.'
+            example: 3
+        -
+          in: query
+          name: max_experience
+          description: 'Maximum years of experience.'
+          example: 10
+          required: false
+          schema:
+            type: integer
+            description: 'Maximum years of experience.'
+            example: 10
+        -
+          in: query
+          name: min_ats_score
+          description: 'Minimum ATS score (0-100).'
+          example: 70
+          required: false
+          schema:
+            type: integer
+            description: 'Minimum ATS score (0-100).'
+            example: 70
+        -
+          in: query
+          name: max_ats_score
+          description: 'Maximum ATS score (0-100).'
+          example: 95
+          required: false
+          schema:
+            type: integer
+            description: 'Maximum ATS score (0-100).'
+            example: 95
+        -
+          in: query
+          name: location
+          description: 'Location search (partial match).'
+          example: Beirut
+          required: false
+          schema:
+            type: string
+            description: 'Location search (partial match).'
+            example: Beirut
+        -
+          in: query
+          name: job_level
+          description: 'Job level filter (entry, junior, mid, senior, lead, executive).'
+          example: senior
+          required: false
+          schema:
+            type: string
+            description: 'Job level filter (entry, junior, mid, senior, lead, executive).'
+            example: senior
+        -
+          in: query
+          name: actively_seeking
+          description: 'Filter by active job seeking status.'
+          example: true
+          required: false
+          schema:
+            type: boolean
+            description: 'Filter by active job seeking status.'
+            example: true
+        -
+          in: query
+          name: per_page
+          description: 'Number of results per page (max 100). Defaults to 15.'
+          example: 10
+          required: false
+          schema:
+            type: integer
+            description: 'Number of results per page (max 100). Defaults to 15.'
+            example: 10
+        -
+          in: query
+          name: page
+          description: 'Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number.'
+            example: 1
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 664f1a2b3c4d5e6f7a8b9c0d
+                      user_id: 664f1a2b3c4d5e6f7a8b9c0e
+                      name: 'Jane Smith'
+                      current_job_title: 'Senior Frontend Developer'
+                      ai_summary: 'Experienced frontend developer with 5 years...'
+                      ai_skills:
+                        - React
+                        - TypeScript
+                        - Node.js
+                      ai_location: 'Beirut, Lebanon'
+                      ats_score: 85
+                      years_of_experience: 5
+                      job_level: senior
+                      is_actively_seeking: true
+                  current_page: 1
+                  per_page: 15
+                  total: 42
+                  total_pages: 3
+                  next_page: 2
+                  prev_page: null
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 664f1a2b3c4d5e6f7a8b9c0d
+                        user_id: 664f1a2b3c4d5e6f7a8b9c0e
+                        name: 'Jane Smith'
+                        current_job_title: 'Senior Frontend Developer'
+                        ai_summary: 'Experienced frontend developer with 5 years...'
+                        ai_skills:
+                          - React
+                          - TypeScript
+                          - Node.js
+                        ai_location: 'Beirut, Lebanon'
+                        ats_score: 85
+                        years_of_experience: 5
+                        job_level: senior
+                        is_actively_seeking: true
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0d
+                        user_id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0e
+                        name:
+                          type: string
+                          example: 'Jane Smith'
+                        current_job_title:
+                          type: string
+                          example: 'Senior Frontend Developer'
+                        ai_summary:
+                          type: string
+                          example: 'Experienced frontend developer with 5 years...'
+                        ai_skills:
+                          type: array
+                          example:
+                            - React
+                            - TypeScript
+                            - Node.js
+                          items:
+                            type: string
+                        ai_location:
+                          type: string
+                          example: 'Beirut, Lebanon'
+                        ats_score:
+                          type: integer
+                          example: 85
+                        years_of_experience:
+                          type: integer
+                          example: 5
+                        job_level:
+                          type: string
+                          example: senior
+                        is_actively_seeking:
+                          type: boolean
+                          example: true
+                  current_page:
+                    type: integer
+                    example: 1
+                  per_page:
+                    type: integer
+                    example: 15
+                  total:
+                    type: integer
+                    example: 42
+                  total_pages:
+                    type: integer
+                    example: 3
+                  next_page:
+                    type: integer
+                    example: 2
+                  prev_page:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Endpoints
   '/api/users/{userId}':
     get:
       summary: "Get any user's full profile"
@@ -1679,7 +1906,7 @@ paths:
                       is_currently_working:
                         type: boolean
                         description: ''
-                        example: false
+                        example: true
                         nullable: true
                       description:
                         type: string
@@ -3097,7 +3324,7 @@ paths:
     post:
       summary: 'Upsert company profile'
       operationId: upsertCompanyProfile
-      description: "Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).\n`company_size` accepts either a plain string (`\"100-500\"`, `\"500+\"`) or a structured object `{ min, max?, isPlus }` — both are normalised to a canonical string before storage."
+      description: "Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).\n`company_size` accepts either a plain string (`\"100-500\"`, `\"500+\"`) or a structured object `{ min, max?, isPlus }` — both are normalised to a canonical string before storage.\n\nNote: Rating fields (rating, review_count, reviews, etc.) are read-only and managed by the system. They cannot be set by employers."
       parameters: []
       responses:
         200:
@@ -3264,124 +3491,12 @@ paths:
                       example: 'https://www.instagram.com/google'
                       nullable: true
                   nullable: true
-                rating:
-                  type: number
-                  description: 'Overall rating (0–5).'
-                  example: 4.5
-                  nullable: true
-                review_count:
-                  type: integer
-                  description: 'Total number of reviews.'
-                  example: 1250
-                  nullable: true
-                would_recommend:
-                  type: integer
-                  description: 'Percentage of employees who would recommend (0–100).'
-                  example: 85
-                  nullable: true
-                ceo_performance:
-                  type: integer
-                  description: 'CEO approval percentage (0–100).'
-                  example: 92
-                  nullable: true
-                category_ratings:
-                  type: object
-                  description: 'Per-category rating breakdown.'
-                  example: []
-                  properties:
-                    compensation:
-                      type: number
-                      description: ''
-                      example: 4.2
-                      nullable: true
-                    culture:
-                      type: number
-                      description: ''
-                      example: 4.6
-                      nullable: true
-                    work_life:
-                      type: number
-                      description: ''
-                      example: 4.1
-                      nullable: true
-                    diversity:
-                      type: number
-                      description: ''
-                      example: 4.4
-                      nullable: true
-                    management:
-                      type: number
-                      description: ''
-                      example: 4.3
-                      nullable: true
-                  nullable: true
-                reviews:
-                  type: array
-                  description: 'Array of embedded review objects.'
-                  example:
-                    - []
-                  items:
-                    type: object
-                    nullable: true
-                    properties:
-                      id:
-                        type: string
-                        description: 'Unique review ID.'
-                        example: '1'
-                      rating:
-                        type: integer
-                        description: 'Rating 1–5.'
-                        example: 4
-                      user_name:
-                        type: string
-                        description: 'Reviewer display name.'
-                        example: 'John Doe'
-                      date:
-                        type: string
-                        description: 'Display date.'
-                        example: 27/01/2026
-                      position:
-                        type: string
-                        description: "Reviewer's position/tenure."
-                        example: 'Former employee, last year at 2022'
-                        nullable: true
-                      recommend:
-                        type: boolean
-                        description: 'Whether reviewer recommends the company.'
-                        example: false
-                        nullable: true
-                      ceo_approval:
-                        type: boolean
-                        description: 'Whether reviewer approves of CEO.'
-                        example: true
-                        nullable: true
-                      subratings:
-                        type: object
-                        description: 'Per-category sub-ratings for this review.'
-                        example: []
-                        properties: {  }
-                        nullable: true
-                      agrees:
-                        type: integer
-                        description: 'Agree votes on this review.'
-                        example: 5
-                        nullable: true
-                      disagrees:
-                        type: integer
-                        description: 'Disagree votes on this review.'
-                        example: 2
-                        nullable: true
-                    required:
-                      - id
-                      - rating
-                      - user_name
-                      - date
               required:
                 - name
     put:
       summary: 'Upsert company profile'
       operationId: upsertCompanyProfile
-      description: "Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).\n`company_size` accepts either a plain string (`\"100-500\"`, `\"500+\"`) or a structured object `{ min, max?, isPlus }` — both are normalised to a canonical string before storage."
+      description: "Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).\n`company_size` accepts either a plain string (`\"100-500\"`, `\"500+\"`) or a structured object `{ min, max?, isPlus }` — both are normalised to a canonical string before storage.\n\nNote: Rating fields (rating, review_count, reviews, etc.) are read-only and managed by the system. They cannot be set by employers."
       parameters: []
       responses:
         200:
@@ -3548,118 +3663,6 @@ paths:
                       example: 'https://www.instagram.com/google'
                       nullable: true
                   nullable: true
-                rating:
-                  type: number
-                  description: 'Overall rating (0–5).'
-                  example: 4.5
-                  nullable: true
-                review_count:
-                  type: integer
-                  description: 'Total number of reviews.'
-                  example: 1250
-                  nullable: true
-                would_recommend:
-                  type: integer
-                  description: 'Percentage of employees who would recommend (0–100).'
-                  example: 85
-                  nullable: true
-                ceo_performance:
-                  type: integer
-                  description: 'CEO approval percentage (0–100).'
-                  example: 92
-                  nullable: true
-                category_ratings:
-                  type: object
-                  description: 'Per-category rating breakdown.'
-                  example: []
-                  properties:
-                    compensation:
-                      type: number
-                      description: ''
-                      example: 4.2
-                      nullable: true
-                    culture:
-                      type: number
-                      description: ''
-                      example: 4.6
-                      nullable: true
-                    work_life:
-                      type: number
-                      description: ''
-                      example: 4.1
-                      nullable: true
-                    diversity:
-                      type: number
-                      description: ''
-                      example: 4.4
-                      nullable: true
-                    management:
-                      type: number
-                      description: ''
-                      example: 4.3
-                      nullable: true
-                  nullable: true
-                reviews:
-                  type: array
-                  description: 'Array of embedded review objects.'
-                  example:
-                    - []
-                  items:
-                    type: object
-                    nullable: true
-                    properties:
-                      id:
-                        type: string
-                        description: 'Unique review ID.'
-                        example: '1'
-                      rating:
-                        type: integer
-                        description: 'Rating 1–5.'
-                        example: 4
-                      user_name:
-                        type: string
-                        description: 'Reviewer display name.'
-                        example: 'John Doe'
-                      date:
-                        type: string
-                        description: 'Display date.'
-                        example: 27/01/2026
-                      position:
-                        type: string
-                        description: "Reviewer's position/tenure."
-                        example: 'Former employee, last year at 2022'
-                        nullable: true
-                      recommend:
-                        type: boolean
-                        description: 'Whether reviewer recommends the company.'
-                        example: false
-                        nullable: true
-                      ceo_approval:
-                        type: boolean
-                        description: 'Whether reviewer approves of CEO.'
-                        example: true
-                        nullable: true
-                      subratings:
-                        type: object
-                        description: 'Per-category sub-ratings for this review.'
-                        example: []
-                        properties: {  }
-                        nullable: true
-                      agrees:
-                        type: integer
-                        description: 'Agree votes on this review.'
-                        example: 5
-                        nullable: true
-                      disagrees:
-                        type: integer
-                        description: 'Disagree votes on this review.'
-                        example: 2
-                        nullable: true
-                    required:
-                      - id
-                      - rating
-                      - user_name
-                      - date
               required:
                 - name
   '/api/employer/jobs/{jobId}/applications':

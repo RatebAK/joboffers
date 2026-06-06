@@ -198,6 +198,8 @@ class CompanyProfileController extends Controller
      *
      * Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).
      * `company_size` accepts either a plain string (`"100-500"`, `"500+"`) or a structured object `{ min, max?, isPlus }` — both are normalised to a canonical string before storage.
+     * 
+     * Note: Rating fields (rating, review_count, reviews, etc.) are read-only and managed by the system. They cannot be set by employers.
      *
      * @bodyParam name string required Company name. Max 150 chars. Example: Google
      * @bodyParam logo string URL to company logo. Example: https://logo.clearbit.com/google.com
@@ -214,27 +216,6 @@ class CompanyProfileController extends Controller
      * @bodyParam social_media.twitter string Twitter URL. Example: https://twitter.com/Google
      * @bodyParam social_media.facebook string Facebook URL. Example: https://www.facebook.com/Google
      * @bodyParam social_media.instagram string Instagram URL. Example: https://www.instagram.com/google
-     * @bodyParam rating number Overall rating (0–5). Example: 4.5
-     * @bodyParam review_count integer Total number of reviews. Example: 1250
-     * @bodyParam would_recommend integer Percentage of employees who would recommend (0–100). Example: 85
-     * @bodyParam ceo_performance integer CEO approval percentage (0–100). Example: 92
-     * @bodyParam category_ratings object Per-category rating breakdown.
-     * @bodyParam category_ratings.compensation number Example: 4.2
-     * @bodyParam category_ratings.culture number Example: 4.6
-     * @bodyParam category_ratings.work_life number Example: 4.1
-     * @bodyParam category_ratings.diversity number Example: 4.4
-     * @bodyParam category_ratings.management number Example: 4.3
-     * @bodyParam reviews object[] Array of embedded review objects.
-     * @bodyParam reviews[].id string required Unique review ID. Example: 1
-     * @bodyParam reviews[].rating integer required Rating 1–5. Example: 4
-     * @bodyParam reviews[].user_name string required Reviewer display name. Example: John Doe
-     * @bodyParam reviews[].date string required Display date. Example: 27/01/2026
-     * @bodyParam reviews[].position string Reviewer's position/tenure. Example: Former employee, last year at 2022
-     * @bodyParam reviews[].recommend boolean Whether reviewer recommends the company. Example: false
-     * @bodyParam reviews[].ceo_approval boolean Whether reviewer approves of CEO. Example: true
-     * @bodyParam reviews[].subratings object Per-category sub-ratings for this review.
-     * @bodyParam reviews[].agrees integer Agree votes on this review. Example: 5
-     * @bodyParam reviews[].disagrees integer Disagree votes on this review. Example: 2
      *
      * @response 200 {
      *   "id": "664f1a2b3c4d5e6f7a8b9c0d",
@@ -263,42 +244,21 @@ class CompanyProfileController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'name'                          => 'required|string|max:150',
-            'logo'                          => 'nullable|url',
-            'cover_image'                   => 'nullable|url',
-            'description'                   => 'nullable|string',
-            'location'                      => 'nullable|string|max:150',
-            'company_size'                  => 'nullable|string|max:100',
-            'employee_count'                => 'nullable|string|max:100',
-            'industry'                      => 'nullable|string|max:100',
-            'website'                       => 'nullable|url',
-            'founded'                       => 'nullable|string|max:10',
-            'social_media'                  => 'nullable|array',
-            'social_media.linkedin'         => 'nullable|url',
-            'social_media.twitter'          => 'nullable|url',
-            'social_media.facebook'         => 'nullable|url',
-            'social_media.instagram'        => 'nullable|url',
-            'rating'                        => 'nullable|numeric|min:0|max:5',
-            'review_count'                  => 'nullable|integer|min:0',
-            'would_recommend'               => 'nullable|integer|min:0|max:100',
-            'ceo_performance'               => 'nullable|integer|min:0|max:100',
-            'category_ratings'              => 'nullable|array',
-            'category_ratings.compensation' => 'nullable|numeric|min:0|max:5',
-            'category_ratings.culture'      => 'nullable|numeric|min:0|max:5',
-            'category_ratings.work_life'    => 'nullable|numeric|min:0|max:5',
-            'category_ratings.diversity'    => 'nullable|numeric|min:0|max:5',
-            'category_ratings.management'   => 'nullable|numeric|min:0|max:5',
-            'reviews'                       => 'nullable|array',
-            'reviews.*.id'                  => 'required|string',
-            'reviews.*.rating'              => 'required|integer|min:1|max:5',
-            'reviews.*.user_name'           => 'required|string',
-            'reviews.*.date'                => 'required|string',
-            'reviews.*.position'            => 'nullable|string',
-            'reviews.*.recommend'           => 'nullable|boolean',
-            'reviews.*.ceo_approval'        => 'nullable|boolean',
-            'reviews.*.subratings'          => 'nullable|array',
-            'reviews.*.agrees'              => 'nullable|integer|min:0',
-            'reviews.*.disagrees'           => 'nullable|integer|min:0',
+            'name'                  => 'required|string|max:150',
+            'logo'                  => 'nullable|url',
+            'cover_image'           => 'nullable|url',
+            'description'           => 'nullable|string',
+            'location'              => 'nullable|string|max:150',
+            'company_size'          => 'nullable|string|max:100',
+            'employee_count'        => 'nullable|string|max:100',
+            'industry'              => 'nullable|string|max:100',
+            'website'               => 'nullable|url',
+            'founded'               => 'nullable|string|max:10',
+            'social_media'          => 'nullable|array',
+            'social_media.linkedin' => 'nullable|url',
+            'social_media.twitter'  => 'nullable|url',
+            'social_media.facebook' => 'nullable|url',
+            'social_media.instagram'=> 'nullable|url',
         ]);
 
         if ($validator->fails()) {

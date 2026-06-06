@@ -346,48 +346,11 @@ test('upsert stores and show returns all enriched fields', function () {
         'employee_count'   => '100,000+ employees',
         'location'         => 'Mountain View, CA',
         'website'          => 'https://www.google.com',
-        'rating'           => 4.5,
-        'review_count'     => 1250,
-        'would_recommend'  => 85,
-        'ceo_performance'  => 92,
         'social_media'     => [
             'linkedin'  => 'https://www.linkedin.com/company/google',
             'twitter'   => 'https://twitter.com/Google',
             'facebook'  => 'https://www.facebook.com/Google',
             'instagram' => 'https://www.instagram.com/google',
-        ],
-        'category_ratings' => [
-            'compensation' => 4.2,
-            'culture'      => 4.6,
-            'work_life'    => 4.1,
-            'diversity'    => 4.4,
-            'management'   => 4.3,
-        ],
-        'reviews' => [
-            [
-                'id'          => '1',
-                'rating'      => 4,
-                'user_name'   => 'John Doe',
-                'date'        => '27/01/2026',
-                'position'    => 'Former employee, last year at 2022',
-                'recommend'   => false,
-                'ceo_approval'=> true,
-                'subratings'  => ['compensation' => 4, 'culture' => 4, 'work_life' => 3, 'diversity' => 5, 'management' => 3],
-                'agrees'      => 5,
-                'disagrees'   => 2,
-            ],
-            [
-                'id'          => '2',
-                'rating'      => 5,
-                'user_name'   => 'Jane Smith',
-                'date'        => '15/01/2026',
-                'position'    => 'Current employee, 3 years',
-                'recommend'   => true,
-                'ceo_approval'=> true,
-                'subratings'  => ['compensation' => 5, 'culture' => 5, 'work_life' => 4, 'diversity' => 5, 'management' => 5],
-                'agrees'      => 12,
-                'disagrees'   => 1,
-            ],
         ],
     ];
 
@@ -405,24 +368,16 @@ test('upsert stores and show returns all enriched fields', function () {
              ->assertJsonPath('employee_count', '100,000+ employees')
              ->assertJsonPath('location', 'Mountain View, CA')
              ->assertJsonPath('website', 'https://www.google.com')
-             ->assertJsonPath('rating', 4.5)
-             ->assertJsonPath('review_count', 1250)
-             ->assertJsonPath('would_recommend', 85)
-             ->assertJsonPath('ceo_performance', 92)
              ->assertJsonPath('social_media.linkedin', 'https://www.linkedin.com/company/google')
              ->assertJsonPath('social_media.twitter', 'https://twitter.com/Google')
              ->assertJsonPath('social_media.facebook', 'https://www.facebook.com/Google')
              ->assertJsonPath('social_media.instagram', 'https://www.instagram.com/google')
-             ->assertJsonPath('category_ratings.compensation', 4.2)
-             ->assertJsonPath('category_ratings.culture', 4.6)
-             ->assertJsonPath('category_ratings.work_life', 4.1)
-             ->assertJsonPath('category_ratings.diversity', 4.4)
-             ->assertJsonPath('category_ratings.management', 4.3)
              ->assertJsonStructure(['reviews', 'jobs', 'open_positions', 'company_size_range']);
 
-    expect(count($response->json('reviews')))->toBe(2);
-    expect($response->json('reviews.0.user_name'))->toBe('John Doe');
-    expect($response->json('reviews.1.user_name'))->toBe('Jane Smith');
+    // Rating fields should be null since employer didn't/couldn't set them
+    expect($response->json('rating'))->toBeNull();
+    expect($response->json('review_count'))->toBeNull();
+    expect($response->json('reviews'))->toBeArray();
 
     CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
     $employer->delete();
@@ -519,13 +474,100 @@ test('upsert validates social_media urls', function () {
     $employer->delete();
 });
 
-test('upsert validates category_ratings range', function () {
+// ── Rating Fields Protection Tests ────────────────────────────
+
+test('employer cannot set rating fields during profile creation', function () {
     [$employer, $token] = cpEmployer();
 
-    $this->withToken($token)->postJson('/api/employer/company', [
-        'name'             => 'Corp',
-        'category_ratings' => ['culture' => 6],
-    ])->assertStatus(422)->assertJsonStructure(['errors' => ['category_ratings.culture']]);
+    $response = $this->withToken($token)->postJson('/api/employer/company', [
+        'name'            => 'SelfRateCorp',
+        'rating'          => 5.0,
+        'review_count'    => 999,
+        'would_recommend' => 100,
+        'ceo_performance' => 100,
+    ]);
 
+    $response->assertStatus(200);
+    
+    // Rating fields should NOT be set by the employer
+    $profile = CompanyProfile::where('employer_id', (string) $employer->_id)->first();
+    expect($profile->rating)->toBeNull();
+    expect($profile->review_count)->toBeNull();
+    expect($profile->would_recommend)->toBeNull();
+    expect($profile->ceo_performance)->toBeNull();
+
+    $profile->delete();
+    $employer->delete();
+});
+
+test('employer cannot set category_ratings during profile creation', function () {
+    [$employer, $token] = cpEmployer();
+
+    $response = $this->withToken($token)->postJson('/api/employer/company', [
+        'name'             => 'SelfCategoryRateCorp',
+        'category_ratings' => [
+            'compensation' => 5.0,
+            'culture'      => 5.0,
+            'work_life'    => 5.0,
+        ],
+    ]);
+
+    $response->assertStatus(200);
+    
+    $profile = CompanyProfile::where('employer_id', (string) $employer->_id)->first();
+    expect($profile->category_ratings)->toBeNull();
+
+    $profile->delete();
+    $employer->delete();
+});
+
+test('employer cannot set reviews during profile creation', function () {
+    [$employer, $token] = cpEmployer();
+
+    $response = $this->withToken($token)->postJson('/api/employer/company', [
+        'name'    => 'SelfReviewCorp',
+        'reviews' => [
+            [
+                'id'        => '1',
+                'rating'    => 5,
+                'user_name' => 'Fake Reviewer',
+                'date'      => '2026-01-01',
+            ],
+        ],
+    ]);
+
+    $response->assertStatus(200);
+    
+    $profile = CompanyProfile::where('employer_id', (string) $employer->_id)->first();
+    expect($profile->reviews)->toBeNull();
+
+    $profile->delete();
+    $employer->delete();
+});
+
+test('rating fields remain read-only during profile updates', function () {
+    [$employer, $token] = cpEmployer();
+
+    // Create profile
+    $this->withToken($token)->postJson('/api/employer/company', [
+        'name' => 'UpdateTestCorp',
+    ]);
+
+    // Try to update with rating fields
+    $response = $this->withToken($token)->putJson('/api/employer/company', [
+        'name'            => 'UpdateTestCorp Updated',
+        'rating'          => 4.8,
+        'review_count'    => 500,
+        'would_recommend' => 95,
+    ]);
+
+    $response->assertStatus(200);
+    
+    $profile = CompanyProfile::where('employer_id', (string) $employer->_id)->first();
+    expect($profile->rating)->toBeNull();
+    expect($profile->review_count)->toBeNull();
+    expect($profile->would_recommend)->toBeNull();
+
+    $profile->delete();
     $employer->delete();
 });
