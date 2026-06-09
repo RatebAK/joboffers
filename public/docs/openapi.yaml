@@ -1577,9 +1577,328 @@ paths:
       tags:
         - Endpoints
     put:
-      summary: 'Update job seeker profile'
-      operationId: updateJobSeekerProfile
-      description: "Creates or updates the authenticated job seeker's profile fields. All fields are optional — only provided fields are updated."
+      summary: 'Legacy update method - DEPRECATED'
+      operationId: legacyUpdateMethodDEPRECATED
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      deprecated: true
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                  description: 'Personal Information. Must not be greater than 50 characters.'
+                  example: b
+                  nullable: true
+                last_name:
+                  type: string
+                  description: 'Must not be greater than 50 characters.'
+                  example: 'n'
+                  nullable: true
+                full_name:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: g
+                  nullable: true
+                image:
+                  type: string
+                  description: 'Must be a valid URL. Must not be greater than 500 characters.'
+                  example: z
+                  nullable: true
+                gender:
+                  type: string
+                  description: ''
+                  example: female
+                  enum:
+                    - male
+                    - female
+                    - other
+                    - prefer_not_to_say
+                  nullable: true
+                nationality:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: m
+                  nullable: true
+                city:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: i
+                  nullable: true
+                location:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'y'
+                  nullable: true
+                address:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: v
+                  nullable: true
+                phone:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: dljnikhwaykcmyuw
+                  nullable: true
+                date_of_birth:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: pwlvqwrsitcpscql
+                  nullable: true
+                marital_status:
+                  type: string
+                  description: ''
+                  example: divorced
+                  enum:
+                    - single
+                    - married
+                    - divorced
+                    - widowed
+                    - prefer_not_to_say
+                  nullable: true
+                salary_range_from:
+                  type: number
+                  description: 'Career Information. Must be at least 0.'
+                  example: 16
+                  nullable: true
+                salary_range_to:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 38
+                  nullable: true
+                current_job_status:
+                  type: string
+                  description: ''
+                  example: unemployed
+                  enum:
+                    - employed
+                    - unemployed
+                    - freelancing
+                    - student
+                    - open_to_work
+                  nullable: true
+                years_of_experience:
+                  type: integer
+                  description: 'Must be at least 0. Must not be greater than 60.'
+                  example: 8
+                  nullable: true
+                education_level:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: 'n'
+                  nullable: true
+                job_level:
+                  type: string
+                  description: ''
+                  example: mid
+                  enum:
+                    - entry
+                    - junior
+                    - mid
+                    - senior
+                    - lead
+                    - manager
+                    - director
+                    - executive
+                  nullable: true
+                job_types:
+                  type: array
+                  description: 'Must not be greater than 50 characters.'
+                  example:
+                    - r
+                  items:
+                    type: string
+                job_roles:
+                  type: array
+                  description: 'Must not be greater than 50 characters.'
+                  example:
+                    - w
+                  items:
+                    type: string
+                work_cities:
+                  type: array
+                  description: 'Must not be greater than 100 characters.'
+                  example:
+                    - t
+                  items:
+                    type: string
+                current_job_title:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: u
+                  nullable: true
+                experience_summary:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                expected_salary:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 39
+                  nullable: true
+                is_actively_seeking:
+                  type: boolean
+                  description: ''
+                  example: true
+                social_links:
+                  type: object
+                  description: 'Social Links (nested object).'
+                  example: null
+                  properties:
+                    linkedin:
+                      type: string
+                      description: 'Must be a valid URL. Must not be greater than 255 characters.'
+                      example: g
+                      nullable: true
+                    github:
+                      type: string
+                      description: 'Must be a valid URL. Must not be greater than 255 characters.'
+                      example: z
+                      nullable: true
+                    portfolio:
+                      type: string
+                      description: 'Must be a valid URL. Must not be greater than 255 characters.'
+                      example: m
+                      nullable: true
+                    twitter:
+                      type: string
+                      description: 'Must be a valid URL. Must not be greater than 255 characters.'
+                      example: i
+                      nullable: true
+                  nullable: true
+                skills:
+                  type: array
+                  description: Skills.
+                  example: null
+                  items:
+                    type: object
+                    nullable: true
+                    properties:
+                      name:
+                        type: string
+                        description: 'This field is required when <code>skills</code> is present. Must not be greater than 50 characters.'
+                        example: 'y'
+                      level:
+                        type: string
+                        description: ''
+                        example: advanced
+                        enum:
+                          - beginner
+                          - intermediate
+                          - advanced
+                          - expert
+                        nullable: true
+                education_history:
+                  type: array
+                  description: 'Education History.'
+                  example: null
+                  items:
+                    type: object
+                    nullable: true
+                    properties:
+                      certificate_type:
+                        type: string
+                        description: 'Must not be greater than 100 characters.'
+                        example: v
+                        nullable: true
+                      university:
+                        type: string
+                        description: 'Must not be greater than 150 characters.'
+                        example: d
+                        nullable: true
+                      faculty:
+                        type: string
+                        description: 'Must not be greater than 150 characters.'
+                        example: l
+                        nullable: true
+                      major:
+                        type: string
+                        description: 'Must not be greater than 100 characters.'
+                        example: j
+                        nullable: true
+                      major_name:
+                        type: string
+                        description: 'Must not be greater than 150 characters.'
+                        example: 'n'
+                        nullable: true
+                      grade:
+                        type: string
+                        description: 'Must not be greater than 50 characters.'
+                        example: i
+                        nullable: true
+                      from_date:
+                        type: string
+                        description: 'Must not be greater than 20 characters.'
+                        example: khwaykcmyuwpwlvq
+                        nullable: true
+                      awarded_date:
+                        type: string
+                        description: 'Must not be greater than 20 characters.'
+                        example: wrsitcpscqldzsnr
+                        nullable: true
+                work_experience:
+                  type: array
+                  description: 'Work Experience.'
+                  example: null
+                  items:
+                    type: object
+                    nullable: true
+                    properties:
+                      job_title:
+                        type: string
+                        description: 'Must not be greater than 100 characters.'
+                        example: w
+                        nullable: true
+                      company_name:
+                        type: string
+                        description: 'Must not be greater than 100 characters.'
+                        example: t
+                        nullable: true
+                      job_roles:
+                        type: array
+                        description: 'Must not be greater than 50 characters.'
+                        example:
+                          - u
+                        items:
+                          type: string
+                      from_date:
+                        type: string
+                        description: 'Must not be greater than 20 characters.'
+                        example: jwvlxjklqppwqbew
+                        nullable: true
+                      to_date:
+                        type: string
+                        description: 'Must not be greater than 20 characters.'
+                        example: tnnoqitpxntltcvi
+                        nullable: true
+                      is_currently_working:
+                        type: boolean
+                        description: ''
+                        example: true
+                        nullable: true
+                      description:
+                        type: string
+                        description: ''
+                        example: 'Eius et animi quos velit et.'
+                        nullable: true
+                resume:
+                  type: string
+                  format: binary
+                  description: 'Resume file. Must be a file. Must not be greater than 5120 kilobytes.'
+                  nullable: true
+  /api/job-seeker/profile/personal-info:
+    put:
+      summary: 'Update personal information'
+      operationId: updatePersonalInformation
+      description: "Updates the authenticated job seeker's personal information fields."
       parameters: []
       responses:
         200:
@@ -1589,15 +1908,14 @@ paths:
               schema:
                 type: object
                 example:
-                  message: 'Profile updated successfully'
+                  message: 'Personal information updated successfully'
                   profile:
                     id: 664f1a2b3c4d5e6f7a8b9c0d
                     full_name: 'Jane Smith'
-                    is_actively_seeking: true
                 properties:
                   message:
                     type: string
-                    example: 'Profile updated successfully'
+                    example: 'Personal information updated successfully'
                   profile:
                     type: object
                     properties:
@@ -1607,35 +1925,12 @@ paths:
                       full_name:
                         type: string
                         example: 'Jane Smith'
-                      is_actively_seeking:
-                        type: boolean
-                        example: true
-        422:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  errors:
-                    phone:
-                      - 'Must not be greater than 20 characters.'
-                properties:
-                  errors:
-                    type: object
-                    properties:
-                      phone:
-                        type: array
-                        example:
-                          - 'Must not be greater than 20 characters.'
-                        items:
-                          type: string
       tags:
         - Endpoints
       requestBody:
         required: false
         content:
-          multipart/form-data:
+          application/json:
             schema:
               type: object
               properties:
@@ -1699,6 +1994,46 @@ paths:
                   description: 'One of: single, married, divorced, widowed, prefer_not_to_say.'
                   example: architecto
                   nullable: true
+  /api/job-seeker/profile/career-info:
+    put:
+      summary: 'Update career information'
+      operationId: updateCareerInformation
+      description: "Updates the authenticated job seeker's career-related information."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Career information updated successfully'
+                  profile:
+                    id: 664f1a2b3c4d5e6f7a8b9c0d
+                    current_job_title: 'Frontend Developer'
+                properties:
+                  message:
+                    type: string
+                    example: 'Career information updated successfully'
+                  profile:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 664f1a2b3c4d5e6f7a8b9c0d
+                      current_job_title:
+                        type: string
+                        example: 'Frontend Developer'
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
                 salary_range_from:
                   type: number
                   description: ''
@@ -1772,6 +2107,46 @@ paths:
                   type: boolean
                   description: ''
                   example: true
+  /api/job-seeker/profile/social-links:
+    put:
+      summary: 'Update social links'
+      operationId: updateSocialLinks
+      description: "Updates the authenticated job seeker's social media links."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Social links updated successfully'
+                  profile:
+                    social_links:
+                      linkedin: 'https://linkedin.com/in/janesmith'
+                properties:
+                  message:
+                    type: string
+                    example: 'Social links updated successfully'
+                  profile:
+                    type: object
+                    properties:
+                      social_links:
+                        type: object
+                        properties:
+                          linkedin:
+                            type: string
+                            example: 'https://linkedin.com/in/janesmith'
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
                 social_links:
                   type: object
                   description: 'Social media URLs.'
@@ -1797,7 +2172,57 @@ paths:
                       description: ''
                       example: architecto
                       nullable: true
-                  nullable: true
+  /api/job-seeker/profile/skills:
+    put:
+      summary: 'Update skills'
+      operationId: updateSkills
+      description: 'Replaces all skills with the provided array.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Skills updated successfully'
+                  profile:
+                    skills:
+                      -
+                        name: React
+                        level: advanced
+                properties:
+                  message:
+                    type: string
+                    example: 'Skills updated successfully'
+                  profile:
+                    type: object
+                    properties:
+                      skills:
+                        type: array
+                        example:
+                          -
+                            name: React
+                            level: advanced
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: React
+                            level:
+                              type: string
+                              example: advanced
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
                 skills:
                   type: array
                   description: 'Array of skill objects.'
@@ -1805,7 +2230,6 @@ paths:
                     - []
                   items:
                     type: object
-                    nullable: true
                     properties:
                       name:
                         type: string
@@ -1818,6 +2242,79 @@ paths:
                         nullable: true
                     required:
                       - name
+              required:
+                - skills
+    delete:
+      summary: 'Delete skills'
+      operationId: deleteSkills
+      description: 'Removes all skills from the profile.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Skills deleted successfully'
+                properties:
+                  message:
+                    type: string
+                    example: 'Skills deleted successfully'
+      tags:
+        - Endpoints
+  /api/job-seeker/profile/education:
+    put:
+      summary: 'Update education history'
+      operationId: updateEducationHistory
+      description: 'Replaces all education entries with the provided array.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Education history updated successfully'
+                  profile:
+                    education_history:
+                      -
+                        university: AUB
+                        major: CS
+                properties:
+                  message:
+                    type: string
+                    example: 'Education history updated successfully'
+                  profile:
+                    type: object
+                    properties:
+                      education_history:
+                        type: array
+                        example:
+                          -
+                            university: AUB
+                            major: CS
+                        items:
+                          type: object
+                          properties:
+                            university:
+                              type: string
+                              example: AUB
+                            major:
+                              type: string
+                              example: CS
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
                 education_history:
                   type: array
                   description: 'Array of education entries.'
@@ -1825,48 +2322,120 @@ paths:
                     - []
                   items:
                     type: object
-                    nullable: true
                     properties:
                       certificate_type:
                         type: string
-                        description: 'Must not be greater than 100 characters.'
-                        example: v
+                        description: ''
+                        example: "Bachelor's Degree"
                         nullable: true
                       university:
                         type: string
-                        description: 'Must not be greater than 150 characters.'
-                        example: d
+                        description: ''
+                        example: 'American University of Beirut'
                         nullable: true
                       faculty:
                         type: string
-                        description: 'Must not be greater than 150 characters.'
-                        example: l
+                        description: ''
+                        example: Engineering
                         nullable: true
                       major:
                         type: string
-                        description: 'Must not be greater than 100 characters.'
-                        example: j
+                        description: ''
+                        example: 'Computer Science'
                         nullable: true
                       major_name:
                         type: string
                         description: 'Must not be greater than 150 characters.'
-                        example: 'n'
+                        example: m
                         nullable: true
                       grade:
                         type: string
-                        description: 'Must not be greater than 50 characters.'
-                        example: i
+                        description: ''
+                        example: '3.8 GPA'
                         nullable: true
                       from_date:
                         type: string
-                        description: 'Must not be greater than 20 characters.'
-                        example: khwaykcmyuwpwlvq
+                        description: ''
+                        example: 2015-09
                         nullable: true
                       awarded_date:
                         type: string
-                        description: 'Must not be greater than 20 characters.'
-                        example: wrsitcpscqldzsnr
+                        description: ''
+                        example: 2019-06
                         nullable: true
+              required:
+                - education_history
+    delete:
+      summary: 'Delete education history'
+      operationId: deleteEducationHistory
+      description: 'Removes all education entries from the profile.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Education history deleted successfully'
+                properties:
+                  message:
+                    type: string
+                    example: 'Education history deleted successfully'
+      tags:
+        - Endpoints
+  /api/job-seeker/profile/work-experience:
+    put:
+      summary: 'Update work experience'
+      operationId: updateWorkExperience
+      description: 'Replaces all work experience entries with the provided array.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Work experience updated successfully'
+                  profile:
+                    work_experience:
+                      -
+                        job_title: Developer
+                        company_name: Acme
+                properties:
+                  message:
+                    type: string
+                    example: 'Work experience updated successfully'
+                  profile:
+                    type: object
+                    properties:
+                      work_experience:
+                        type: array
+                        example:
+                          -
+                            job_title: Developer
+                            company_name: Acme
+                        items:
+                          type: object
+                          properties:
+                            job_title:
+                              type: string
+                              example: Developer
+                            company_name:
+                              type: string
+                              example: Acme
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
                 work_experience:
                   type: array
                   description: 'Array of work experience entries.'
@@ -1874,50 +2443,67 @@ paths:
                     - []
                   items:
                     type: object
-                    nullable: true
                     properties:
                       job_title:
                         type: string
-                        description: 'Must not be greater than 100 characters.'
-                        example: w
+                        description: ''
+                        example: 'Frontend Developer'
                         nullable: true
                       company_name:
                         type: string
-                        description: 'Must not be greater than 100 characters.'
-                        example: t
+                        description: ''
+                        example: 'Acme Corp'
                         nullable: true
                       job_roles:
                         type: array
-                        description: 'Must not be greater than 50 characters.'
+                        description: ''
                         example:
-                          - u
+                          - React
+                          - TypeScript
                         items:
                           type: string
                       from_date:
                         type: string
-                        description: 'Must not be greater than 20 characters.'
-                        example: jwvlxjklqppwqbew
+                        description: ''
+                        example: 2020-01
                         nullable: true
                       to_date:
                         type: string
-                        description: 'Must not be greater than 20 characters.'
-                        example: tnnoqitpxntltcvi
+                        description: ''
+                        example: 2023-06
                         nullable: true
                       is_currently_working:
                         type: boolean
                         description: ''
-                        example: true
+                        example: false
                         nullable: true
                       description:
                         type: string
                         description: ''
                         example: 'Eius et animi quos velit et.'
                         nullable: true
-                resume:
-                  type: string
-                  format: binary
-                  description: 'PDF/DOC resume file (max 5 MB).'
-                  nullable: true
+              required:
+                - work_experience
+    delete:
+      summary: 'Delete work experience'
+      operationId: deleteWorkExperience
+      description: 'Removes all work experience entries from the profile.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Work experience deleted successfully'
+                properties:
+                  message:
+                    type: string
+                    example: 'Work experience deleted successfully'
+      tags:
+        - Endpoints
   /api/job-seeker/resume/upload:
     post:
       summary: 'Upload resume'
@@ -2528,14 +3114,14 @@ paths:
                 type: object
                 example:
                   error: Unauthorized
-                  message: 'Authentication token has expired'
+                  message: 'Invalid authentication token signature'
                 properties:
                   error:
                     type: string
                     example: Unauthorized
                   message:
                     type: string
-                    example: 'Authentication token has expired'
+                    example: 'Invalid authentication token signature'
       tags:
         - Endpoints
   /api/job-seeker/offers:
@@ -4304,6 +4890,227 @@ paths:
                         nullable: true
       tags:
         - Endpoints
+  /api/employer/match-candidates:
+    post:
+      summary: 'Match candidates to job description'
+      operationId: matchCandidatesToJobDescription
+      description: "Uses AI to match job seekers to a job description based on skills and requirements.\nReturns candidates ordered by relevance with matched skills scores."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  extracted_requirements:
+                    - React
+                    - '5+ years'
+                    - 'Senior level'
+                  candidates:
+                    -
+                      user_id: 664f1a2b3c4d5e6f7a8b9c0d
+                      resume_id: 664f1a2b3c4d5e6f7a8b9c0d
+                      full_name: 'Jane Smith'
+                      matched_skills_score: 85
+                      skills:
+                        - React
+                        - TypeScript
+                        - Node.js
+                      profile_url: /api/employer/job-seeker/664f1a2b3c4d5e6f7a8b9c0d
+                properties:
+                  extracted_requirements:
+                    type: array
+                    example:
+                      - React
+                      - '5+ years'
+                      - 'Senior level'
+                    items:
+                      type: string
+                  candidates:
+                    type: array
+                    example:
+                      -
+                        user_id: 664f1a2b3c4d5e6f7a8b9c0d
+                        resume_id: 664f1a2b3c4d5e6f7a8b9c0d
+                        full_name: 'Jane Smith'
+                        matched_skills_score: 85
+                        skills:
+                          - React
+                          - TypeScript
+                          - Node.js
+                        profile_url: /api/employer/job-seeker/664f1a2b3c4d5e6f7a8b9c0d
+                    items:
+                      type: object
+                      properties:
+                        user_id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0d
+                        resume_id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0d
+                        full_name:
+                          type: string
+                          example: 'Jane Smith'
+                        matched_skills_score:
+                          type: integer
+                          example: 85
+                        skills:
+                          type: array
+                          example:
+                            - React
+                            - TypeScript
+                            - Node.js
+                          items:
+                            type: string
+                        profile_url:
+                          type: string
+                          example: /api/employer/job-seeker/664f1a2b3c4d5e6f7a8b9c0d
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Job matching failed'
+                  reason: 'Invalid job description'
+                properties:
+                  message:
+                    type: string
+                    example: 'Job matching failed'
+                  reason:
+                    type: string
+                    example: 'Invalid job description'
+        502:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Job matching service unavailable'
+                properties:
+                  message:
+                    type: string
+                    example: 'Job matching service unavailable'
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                job_description:
+                  type: string
+                  description: 'The job description or requirements. Max 5000 chars.'
+                  example: 'Senior React developer with 5+ years experience'
+                limit:
+                  type: integer
+                  description: 'Maximum number of candidates to return. Min: 1, Max: 50.'
+                  example: 10
+                  nullable: true
+              required:
+                - job_description
+  '/api/employer/jobs/{jobPostId}/match-candidates':
+    post:
+      summary: 'Match candidates to existing job post'
+      operationId: matchCandidatesToExistingJobPost
+      description: "Uses the job post's description to find matching candidates via AI.\nEmployer must own the job post."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  job_post:
+                    id: 664f1a2b3c4d5e6f7a8b9c0d
+                    title: 'Senior React Developer'
+                  extracted_requirements:
+                    - React
+                    - 'Senior level'
+                  candidates: []
+                properties:
+                  job_post:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 664f1a2b3c4d5e6f7a8b9c0d
+                      title:
+                        type: string
+                        example: 'Senior React Developer'
+                  extracted_requirements:
+                    type: array
+                    example:
+                      - React
+                      - 'Senior level'
+                    items:
+                      type: string
+                  candidates:
+                    type: array
+                    example: []
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not own this job post'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not own this job post'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Job post not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Job post not found'
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                  description: 'Maximum number of candidates to return. Min: 1, Max: 50.'
+                  example: 10
+                  nullable: true
+    parameters:
+      -
+        in: path
+        name: jobPostId
+        description: ''
+        example: architecto
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: job_post_id
+        description: 'Job post MongoDB ID.'
+        example: 664f1a2b3c4d5e6f7a8b9c0d
+        required: true
+        schema:
+          type: string
   /api/employer/analytics:
     get:
       summary: "Employer analytics - scoped to employer's jobs"
@@ -4319,14 +5126,14 @@ paths:
                 type: object
                 example:
                   error: Unauthorized
-                  message: 'Authentication token has expired'
+                  message: 'Invalid authentication token signature'
                 properties:
                   error:
                     type: string
                     example: Unauthorized
                   message:
                     type: string
-                    example: 'Authentication token has expired'
+                    example: 'Invalid authentication token signature'
       tags:
         - Endpoints
   /api/admin/employers:
@@ -4519,14 +5326,14 @@ paths:
                 type: object
                 example:
                   error: Unauthorized
-                  message: 'Authentication token has expired'
+                  message: 'Invalid authentication token signature'
                 properties:
                   error:
                     type: string
                     example: Unauthorized
                   message:
                     type: string
-                    example: 'Authentication token has expired'
+                    example: 'Invalid authentication token signature'
       tags:
         - Endpoints
   /api/admin/users:

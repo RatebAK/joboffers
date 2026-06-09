@@ -128,7 +128,12 @@ test('upload-and-analyze succeeds and populates ai fields', function () {
         'summary'           => 'Experienced developer.',
         'skills'            => ['PHP', 'Laravel'],
         'work_history'      => [],
+        'education_history' => [],
+        'languages'         => ['English', 'Arabic'],
         'projects'          => [],
+        'linkedin'          => 'https://linkedin.com/in/janeai',
+        'github'            => 'https://github.com/janeai',
+        'ai_overall_evaluation' => 'Strong candidate with relevant experience.',
         'ats_score'         => 88,
         'detected_language' => 'en',
     ]);
@@ -147,6 +152,8 @@ test('upload-and-analyze succeeds and populates ai fields', function () {
     $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
     expect($profile->ai_skills)->toContain('PHP');
     expect($profile->ai_skills)->toContain('Laravel');
+    expect($profile->ai_languages)->toContain('English');
+    expect($profile->ai_languages)->toContain('Arabic');
 
     $profile->delete();
     $seeker->delete();
@@ -220,4 +227,227 @@ test('unauthenticated user cannot upload-and-analyze', function () {
 
     $this->postJson('/api/job-seeker/resume/upload-and-analyze', ['cv' => $file])
          ->assertStatus(401);
+});
+
+// ── New field mapping tests ───────────────────────────────────
+
+test('upload-and-analyze maps education_history correctly', function () {
+    Storage::fake('public');
+    [$seeker, $token] = cvSeeker();
+
+    $mock = $this->mock(CvAnalysisService::class);
+    $mock->shouldReceive('analyze')->once()->andReturn([
+        'full_name' => 'Test User',
+        'education_history' => [
+            [
+                'institution' => 'Syrian Virtual University',
+                'degree' => 'BS IT-engineering',
+                'year' => '2021-2024',
+            ],
+        ],
+        'skills' => [],
+        'work_history' => [],
+        'ats_score' => 75,
+    ]);
+
+    $file = UploadedFile::fake()->create('cv.pdf', 100, 'application/pdf');
+
+    $this->withToken($token)->postJson('/api/job-seeker/resume/upload-and-analyze', [
+        'cv' => $file,
+    ])->assertStatus(200);
+
+    $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
+    expect($profile->ai_education_history)->toBeArray();
+    expect($profile->ai_education_history[0]['institution'] ?? null)->toBe('Syrian Virtual University');
+    expect($profile->ai_education_history[0]['degree'] ?? null)->toBe('BS IT-engineering');
+
+    $profile->delete();
+    $seeker->delete();
+});
+
+test('upload-and-analyze maps languages correctly', function () {
+    Storage::fake('public');
+    [$seeker, $token] = cvSeeker();
+
+    $mock = $this->mock(CvAnalysisService::class);
+    $mock->shouldReceive('analyze')->once()->andReturn([
+        'full_name' => 'Test User',
+        'languages' => ['English', 'Arabic', 'French'],
+        'skills' => [],
+        'work_history' => [],
+        'ats_score' => 80,
+    ]);
+
+    $file = UploadedFile::fake()->create('cv.pdf', 100, 'application/pdf');
+
+    $this->withToken($token)->postJson('/api/job-seeker/resume/upload-and-analyze', [
+        'cv' => $file,
+    ])->assertStatus(200);
+
+    $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
+    expect($profile->ai_languages)->toBeArray();
+    expect($profile->ai_languages)->toHaveCount(3);
+    expect($profile->ai_languages)->toContain('English');
+    expect($profile->ai_languages)->toContain('Arabic');
+
+    $profile->delete();
+    $seeker->delete();
+});
+
+test('upload-and-analyze maps social links correctly', function () {
+    Storage::fake('public');
+    [$seeker, $token] = cvSeeker();
+
+    $mock = $this->mock(CvAnalysisService::class);
+    $mock->shouldReceive('analyze')->once()->andReturn([
+        'full_name' => 'Test User',
+        'linkedin' => 'https://linkedin.com/in/testuser',
+        'github' => 'https://github.com/testuser',
+        'skills' => [],
+        'work_history' => [],
+        'ats_score' => 85,
+    ]);
+
+    $file = UploadedFile::fake()->create('cv.pdf', 100, 'application/pdf');
+
+    $this->withToken($token)->postJson('/api/job-seeker/resume/upload-and-analyze', [
+        'cv' => $file,
+    ])->assertStatus(200);
+
+    $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
+    expect($profile->ai_social_links)->toBeArray();
+    expect($profile->ai_social_links['linkedin'] ?? null)->toBe('https://linkedin.com/in/testuser');
+    expect($profile->ai_social_links['github'] ?? null)->toBe('https://github.com/testuser');
+
+    $profile->delete();
+    $seeker->delete();
+});
+
+test('upload-and-analyze maps work_history correctly', function () {
+    Storage::fake('public');
+    [$seeker, $token] = cvSeeker();
+
+    $mock = $this->mock(CvAnalysisService::class);
+    $mock->shouldReceive('analyze')->once()->andReturn([
+        'full_name' => 'Test User',
+        'work_history' => [
+            [
+                'company' => 'Freelance',
+                'role' => 'Web developer',
+                'duration' => 'Mar 2024 – Present',
+                'description' => 'Built web applications.',
+            ],
+            [
+                'company' => 'Remostart',
+                'role' => 'Frontend developer',
+                'duration' => 'Aug 2023 - Mar 2024',
+                'description' => 'Developed React applications.',
+            ],
+        ],
+        'skills' => [],
+        'ats_score' => 90,
+    ]);
+
+    $file = UploadedFile::fake()->create('cv.pdf', 100, 'application/pdf');
+
+    $this->withToken($token)->postJson('/api/job-seeker/resume/upload-and-analyze', [
+        'cv' => $file,
+    ])->assertStatus(200);
+
+    $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
+    expect($profile->ai_work_history)->toBeArray();
+    expect($profile->ai_work_history)->toHaveCount(2);
+    expect($profile->ai_work_history[0]['company'] ?? null)->toBe('Freelance');
+    expect($profile->ai_work_history[1]['company'] ?? null)->toBe('Remostart');
+
+    $profile->delete();
+    $seeker->delete();
+});
+
+test('upload-and-analyze maps projects correctly', function () {
+    Storage::fake('public');
+    [$seeker, $token] = cvSeeker();
+
+    $mock = $this->mock(CvAnalysisService::class);
+    $mock->shouldReceive('analyze')->once()->andReturn([
+        'full_name' => 'Test User',
+        'projects' => [
+            'VIP Honey De',
+            'E-commerce Website',
+            'Smart Transport Optimizer',
+        ],
+        'skills' => [],
+        'work_history' => [],
+        'ats_score' => 85,
+    ]);
+
+    $file = UploadedFile::fake()->create('cv.pdf', 100, 'application/pdf');
+
+    $this->withToken($token)->postJson('/api/job-seeker/resume/upload-and-analyze', [
+        'cv' => $file,
+    ])->assertStatus(200);
+
+    $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
+    expect($profile->ai_projects)->toBeArray();
+    expect($profile->ai_projects)->toHaveCount(3);
+    expect($profile->ai_projects)->toContain('VIP Honey De');
+    expect($profile->ai_projects)->toContain('E-commerce Website');
+
+    $profile->delete();
+    $seeker->delete();
+});
+
+test('upload-and-analyze handles missing optional fields gracefully', function () {
+    Storage::fake('public');
+    [$seeker, $token] = cvSeeker();
+
+    $mock = $this->mock(CvAnalysisService::class);
+    $mock->shouldReceive('analyze')->once()->andReturn([
+        'full_name' => 'Minimal User',
+        'ats_score' => 70,
+        // No other fields provided
+    ]);
+
+    $file = UploadedFile::fake()->create('cv.pdf', 100, 'application/pdf');
+
+    $response = $this->withToken($token)->postJson('/api/job-seeker/resume/upload-and-analyze', [
+        'cv' => $file,
+    ]);
+
+    $response->assertStatus(200)
+             ->assertJsonPath('profile.ai_full_name', 'Minimal User')
+             ->assertJsonPath('profile.ats_score', 70);
+
+    $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
+    expect($profile->ai_skills)->toBeArray();
+    expect($profile->ai_skills)->toHaveCount(0);
+    expect($profile->ai_languages)->toBeArray();
+    expect($profile->ai_languages)->toHaveCount(0);
+
+    $profile->delete();
+    $seeker->delete();
+});
+
+test('upload-and-analyze stores ai_analyzed_at timestamp', function () {
+    Storage::fake('public');
+    [$seeker, $token] = cvSeeker();
+
+    $mock = $this->mock(CvAnalysisService::class);
+    $mock->shouldReceive('analyze')->once()->andReturn([
+        'full_name' => 'Test User',
+        'ats_score' => 80,
+    ]);
+
+    $file = UploadedFile::fake()->create('cv.pdf', 100, 'application/pdf');
+
+    $this->withToken($token)->postJson('/api/job-seeker/resume/upload-and-analyze', [
+        'cv' => $file,
+    ])->assertStatus(200);
+
+    $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
+    expect($profile->ai_analyzed_at)->not->toBeNull();
+    expect($profile->ai_analyzed_at)->toBeInstanceOf(\Illuminate\Support\Carbon::class);
+
+    $profile->delete();
+    $seeker->delete();
 });

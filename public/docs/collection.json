@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "a57fc937-0442-49d2-b724-072152251330",
+        "_postman_id": "6db799db-22a1-402e-a9a4-405ef726d263",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -653,7 +653,313 @@
                     ]
                 },
                 {
-                    "name": "Update job seeker profile",
+                    "name": "Update personal information",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/profile\/personal-info",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/profile\/personal-info"
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"first_name\":\"Jane\",\"last_name\":\"Smith\",\"full_name\":\"Jane Smith\",\"image\":\"https:\\\/\\\/example.com\\\/photo.jpg\",\"gender\":\"female\",\"nationality\":\"Lebanese\",\"city\":\"Beirut\",\"location\":\"Beirut, Lebanon\",\"address\":\"v\",\"phone\":\"+961 70 123456\",\"date_of_birth\":\"1995-06-15\",\"marital_status\":\"architecto\"}"
+                        },
+                        "description": "Updates the authenticated job seeker's personal information fields."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Personal information updated successfully\",\n  \"profile\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"full_name\": \"Jane Smith\" }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update career information",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/profile\/career-info",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/profile\/career-info"
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"salary_range_from\":2000,\"salary_range_to\":5000,\"current_job_status\":\"architecto\",\"years_of_experience\":5,\"education_level\":\"Bachelor's Degree\",\"job_level\":\"architecto\",\"job_types\":[\"full_time\",\"remote\"],\"job_roles\":[\"Frontend\",\"React\"],\"work_cities\":[\"Beirut\",\"Dubai\"],\"current_job_title\":\"Frontend Developer\",\"experience_summary\":\"architecto\",\"expected_salary\":3500,\"is_actively_seeking\":true}"
+                        },
+                        "description": "Updates the authenticated job seeker's career-related information."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Career information updated successfully\",\n  \"profile\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"current_job_title\": \"Frontend Developer\" }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update social links",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/profile\/social-links",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/profile\/social-links"
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"social_links\":{\"linkedin\":\"https:\\\/\\\/linkedin.com\\\/in\\\/janesmith\",\"github\":\"https:\\\/\\\/github.com\\\/janesmith\",\"portfolio\":\"https:\\\/\\\/janesmith.dev\",\"twitter\":\"architecto\"}}"
+                        },
+                        "description": "Updates the authenticated job seeker's social media links."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Social links updated successfully\",\n  \"profile\": { \"social_links\": { \"linkedin\": \"https:\/\/linkedin.com\/in\/janesmith\" } }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update skills",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/profile\/skills",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/profile\/skills"
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"skills\":[{\"name\":\"React\",\"level\":\"advanced\"}]}"
+                        },
+                        "description": "Replaces all skills with the provided array."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Skills updated successfully\",\n  \"profile\": { \"skills\": [{ \"name\": \"React\", \"level\": \"advanced\" }] }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete skills",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/profile\/skills",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/profile\/skills"
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Removes all skills from the profile."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"Skills deleted successfully\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update education history",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/profile\/education",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/profile\/education"
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"education_history\":[{\"certificate_type\":\"Bachelor's Degree\",\"university\":\"American University of Beirut\",\"faculty\":\"Engineering\",\"major\":\"Computer Science\",\"major_name\":\"m\",\"grade\":\"3.8 GPA\",\"from_date\":\"2015-09\",\"awarded_date\":\"2019-06\"}]}"
+                        },
+                        "description": "Replaces all education entries with the provided array."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Education history updated successfully\",\n  \"profile\": { \"education_history\": [{ \"university\": \"AUB\", \"major\": \"CS\" }] }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete education history",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/profile\/education",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/profile\/education"
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Removes all education entries from the profile."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"Education history deleted successfully\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update work experience",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/profile\/work-experience",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/profile\/work-experience"
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"work_experience\":[{\"job_title\":\"Frontend Developer\",\"company_name\":\"Acme Corp\",\"job_roles\":[\"React\",\"TypeScript\"],\"from_date\":\"2020-01\",\"to_date\":\"2023-06\",\"is_currently_working\":false,\"description\":\"Eius et animi quos velit et.\"}]}"
+                        },
+                        "description": "Replaces all work experience entries with the provided array."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Work experience updated successfully\",\n  \"profile\": { \"work_experience\": [{ \"job_title\": \"Developer\", \"company_name\": \"Acme\" }] }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete work experience",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/profile\/work-experience",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/profile\/work-experience"
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Removes all work experience entries from the profile."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"Work experience deleted successfully\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Legacy update method - DEPRECATED [DEPRECATED]",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -677,51 +983,51 @@
                             "formdata": [
                                 {
                                     "key": "first_name",
-                                    "value": "Jane",
+                                    "value": "b",
                                     "type": "text",
-                                    "description": ""
+                                    "description": "Personal Information. Must not be greater than 50 characters."
                                 },
                                 {
                                     "key": "last_name",
-                                    "value": "Smith",
+                                    "value": "n",
                                     "type": "text",
-                                    "description": ""
+                                    "description": "Must not be greater than 50 characters."
                                 },
                                 {
                                     "key": "full_name",
-                                    "value": "Jane Smith",
+                                    "value": "g",
                                     "type": "text",
-                                    "description": ""
+                                    "description": "Must not be greater than 100 characters."
                                 },
                                 {
                                     "key": "image",
-                                    "value": "https:\/\/example.com\/photo.jpg",
+                                    "value": "z",
                                     "type": "text",
-                                    "description": "URL to profile photo."
+                                    "description": "Must be a valid URL. Must not be greater than 500 characters."
                                 },
                                 {
                                     "key": "gender",
                                     "value": "female",
                                     "type": "text",
-                                    "description": "One of: male, female, other, prefer_not_to_say."
+                                    "description": ""
                                 },
                                 {
                                     "key": "nationality",
-                                    "value": "Lebanese",
+                                    "value": "m",
                                     "type": "text",
-                                    "description": ""
+                                    "description": "Must not be greater than 100 characters."
                                 },
                                 {
                                     "key": "city",
-                                    "value": "Beirut",
+                                    "value": "i",
                                     "type": "text",
-                                    "description": ""
+                                    "description": "Must not be greater than 100 characters."
                                 },
                                 {
                                     "key": "location",
-                                    "value": "Beirut, Lebanon",
+                                    "value": "y",
                                     "type": "text",
-                                    "description": ""
+                                    "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "address",
@@ -731,99 +1037,81 @@
                                 },
                                 {
                                     "key": "phone",
-                                    "value": "+961 70 123456",
+                                    "value": "dljnikhwaykcmyuw",
                                     "type": "text",
-                                    "description": "Max 20 chars."
+                                    "description": "Must not be greater than 20 characters."
                                 },
                                 {
                                     "key": "date_of_birth",
-                                    "value": "1995-06-15",
+                                    "value": "pwlvqwrsitcpscql",
                                     "type": "text",
-                                    "description": ""
+                                    "description": "Must not be greater than 20 characters."
                                 },
                                 {
                                     "key": "marital_status",
-                                    "value": "architecto",
+                                    "value": "divorced",
                                     "type": "text",
-                                    "description": "One of: single, married, divorced, widowed, prefer_not_to_say."
+                                    "description": ""
                                 },
                                 {
                                     "key": "salary_range_from",
-                                    "value": "2000",
+                                    "value": "16",
                                     "type": "text",
-                                    "description": ""
+                                    "description": "Career Information. Must be at least 0."
                                 },
                                 {
                                     "key": "salary_range_to",
-                                    "value": "5000",
+                                    "value": "38",
                                     "type": "text",
-                                    "description": ""
+                                    "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "architecto",
+                                    "value": "unemployed",
                                     "type": "text",
-                                    "description": "One of: employed, unemployed, freelancing, student, open_to_work."
+                                    "description": ""
                                 },
                                 {
                                     "key": "years_of_experience",
-                                    "value": "5",
+                                    "value": "8",
                                     "type": "text",
-                                    "description": ""
+                                    "description": "Must be at least 0. Must not be greater than 60."
                                 },
                                 {
                                     "key": "education_level",
-                                    "value": "Bachelor's Degree",
+                                    "value": "n",
                                     "type": "text",
-                                    "description": ""
+                                    "description": "Must not be greater than 100 characters."
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "architecto",
-                                    "type": "text",
-                                    "description": "One of: entry, junior, mid, senior, lead, manager, director, executive."
-                                },
-                                {
-                                    "key": "job_types[0]",
-                                    "value": "full_time",
+                                    "value": "mid",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
-                                    "key": "job_types[1]",
-                                    "value": "remote",
+                                    "key": "job_types[0]",
+                                    "value": "r",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "job_roles[0]",
-                                    "value": "Frontend",
-                                    "type": "text",
-                                    "description": ""
-                                },
-                                {
-                                    "key": "job_roles[1]",
-                                    "value": "React",
+                                    "value": "w",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "work_cities[0]",
-                                    "value": "Beirut",
-                                    "type": "text",
-                                    "description": ""
-                                },
-                                {
-                                    "key": "work_cities[1]",
-                                    "value": "Dubai",
+                                    "value": "t",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "current_job_title",
-                                    "value": "Frontend Developer",
+                                    "value": "u",
                                     "type": "text",
-                                    "description": "Max 100 chars."
+                                    "description": "Must not be greater than 100 characters."
                                 },
                                 {
                                     "key": "experience_summary",
@@ -833,9 +1121,9 @@
                                 },
                                 {
                                     "key": "expected_salary",
-                                    "value": "3500",
+                                    "value": "39",
                                     "type": "text",
-                                    "description": ""
+                                    "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "is_actively_seeking",
@@ -845,31 +1133,31 @@
                                 },
                                 {
                                     "key": "social_links[linkedin]",
-                                    "value": "https:\/\/linkedin.com\/in\/janesmith",
+                                    "value": "g",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "social_links[github]",
-                                    "value": "https:\/\/github.com\/janesmith",
+                                    "value": "z",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "social_links[portfolio]",
-                                    "value": "https:\/\/janesmith.dev",
+                                    "value": "m",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "social_links[twitter]",
-                                    "value": "architecto",
+                                    "value": "i",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "skills[0][name]",
-                                    "value": "React",
+                                    "value": "y",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -981,22 +1269,9 @@
                                 }
                             ]
                         },
-                        "description": "Creates or updates the authenticated job seeker's profile fields. All fields are optional \u2014 only provided fields are updated."
+                        "description": ""
                     },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"message\": \"Profile updated successfully\",\n  \"profile\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"full_name\": \"Jane Smith\", \"is_actively_seeking\": true }\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 422,
-                            "body": "{ \"errors\": { \"phone\": [\"Must not be greater than 20 characters.\"] } }",
-                            "name": ""
-                        }
-                    ]
+                    "response": []
                 },
                 {
                     "name": "Upload resume",
@@ -1367,7 +1642,7 @@
                                 }
                             ],
                             "code": 401,
-                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Authentication token has expired\"}",
+                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Invalid authentication token signature\"}",
                             "name": ""
                         }
                     ]
@@ -2209,6 +2484,114 @@
                     ]
                 },
                 {
+                    "name": "Match candidates to job description",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/match-candidates",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/match-candidates"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"job_description\":\"Senior React developer with 5+ years experience\",\"limit\":10}"
+                        },
+                        "description": "Uses AI to match job seekers to a job description based on skills and requirements.\nReturns candidates ordered by relevance with matched skills scores."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"extracted_requirements\": [\"React\", \"5+ years\", \"Senior level\"],\n  \"candidates\": [\n    {\n      \"user_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n      \"resume_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n      \"full_name\": \"Jane Smith\",\n      \"matched_skills_score\": 85,\n      \"skills\": [\"React\", \"TypeScript\", \"Node.js\"],\n      \"profile_url\": \"\/api\/employer\/job-seeker\/664f1a2b3c4d5e6f7a8b9c0d\"\n    }\n  ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"message\": \"Job matching failed\", \"reason\": \"Invalid job description\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 502,
+                            "body": "{ \"message\": \"Job matching service unavailable\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Match candidates to existing job post",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/jobs\/:jobPostId\/match-candidates",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/jobs\/:jobPostId\/match-candidates",
+                            "variable": [
+                                {
+                                    "id": "jobPostId",
+                                    "key": "jobPostId",
+                                    "value": "architecto",
+                                    "description": ""
+                                },
+                                {
+                                    "id": "job_post_id",
+                                    "key": "job_post_id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "Job post MongoDB ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"limit\":10}"
+                        },
+                        "description": "Uses the job post's description to find matching candidates via AI.\nEmployer must own the job post."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"job_post\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"title\": \"Senior React Developer\" },\n  \"extracted_requirements\": [\"React\", \"Senior level\"],\n  \"candidates\": []\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"You do not own this job post\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Job post not found\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "Employer analytics - scoped to employer's jobs",
                     "request": {
                         "url": {
@@ -2248,7 +2631,7 @@
                                 }
                             ],
                             "code": 401,
-                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Authentication token has expired\"}",
+                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Invalid authentication token signature\"}",
                             "name": ""
                         }
                     ]
@@ -2420,7 +2803,7 @@
                                 }
                             ],
                             "code": 401,
-                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Authentication token has expired\"}",
+                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Invalid authentication token signature\"}",
                             "name": ""
                         }
                     ]

@@ -39,4 +39,8 @@ return [
         'url' => env('CV_ANALYSIS_API_URL'),
     ],
 
+    'job_matching' => [
+        'url' => env('JOB_MATCHING_API_URL'),
+    ],
+
 ];

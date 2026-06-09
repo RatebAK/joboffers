@@ -107,8 +107,35 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-job-seeker-profile">
                                 <a href="#endpoints-GETapi-job-seeker-profile">Get job seeker profile</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-PUTapi-job-seeker-profile-personal-info">
+                                <a href="#endpoints-PUTapi-job-seeker-profile-personal-info">Update personal information</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-PUTapi-job-seeker-profile-career-info">
+                                <a href="#endpoints-PUTapi-job-seeker-profile-career-info">Update career information</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-PUTapi-job-seeker-profile-social-links">
+                                <a href="#endpoints-PUTapi-job-seeker-profile-social-links">Update social links</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-PUTapi-job-seeker-profile-skills">
+                                <a href="#endpoints-PUTapi-job-seeker-profile-skills">Update skills</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-DELETEapi-job-seeker-profile-skills">
+                                <a href="#endpoints-DELETEapi-job-seeker-profile-skills">Delete skills</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-PUTapi-job-seeker-profile-education">
+                                <a href="#endpoints-PUTapi-job-seeker-profile-education">Update education history</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-DELETEapi-job-seeker-profile-education">
+                                <a href="#endpoints-DELETEapi-job-seeker-profile-education">Delete education history</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-PUTapi-job-seeker-profile-work-experience">
+                                <a href="#endpoints-PUTapi-job-seeker-profile-work-experience">Update work experience</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-DELETEapi-job-seeker-profile-work-experience">
+                                <a href="#endpoints-DELETEapi-job-seeker-profile-work-experience">Delete work experience</a>
+                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-PUTapi-job-seeker-profile">
-                                <a href="#endpoints-PUTapi-job-seeker-profile">Update job seeker profile</a>
+                                <a href="#endpoints-PUTapi-job-seeker-profile">Legacy update method - DEPRECATED</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-job-seeker-resume-upload">
                                 <a href="#endpoints-POSTapi-job-seeker-resume-upload">Upload resume</a>
@@ -188,6 +215,12 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-employer-offers">
                                 <a href="#endpoints-GETapi-employer-offers">Sent offers</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-employer-match-candidates">
+                                <a href="#endpoints-POSTapi-employer-match-candidates">Match candidates to job description</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-employer-jobs--jobPostId--match-candidates">
+                                <a href="#endpoints-POSTapi-employer-jobs--jobPostId--match-candidates">Match candidates to existing job post</a>
+                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-employer-analytics">
                                 <a href="#endpoints-GETapi-employer-analytics">Employer analytics - scoped to employer's jobs</a>
                             </li>
@@ -223,7 +256,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: June 6, 2026</li>
+        <li>Last updated: June 9, 2026</li>
     </ul>
 </div>
 
@@ -2599,13 +2632,2080 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                         </form>
 
-                    <h2 id="endpoints-PUTapi-job-seeker-profile">Update job seeker profile</h2>
+                    <h2 id="endpoints-PUTapi-job-seeker-profile-personal-info">Update personal information</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Creates or updates the authenticated job seeker's profile fields. All fields are optional — only provided fields are updated.</p>
+<p>Updates the authenticated job seeker's personal information fields.</p>
+
+<span id="example-requests-PUTapi-job-seeker-profile-personal-info">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PUT \
+    "http://localhost:8000/api/job-seeker/profile/personal-info" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"first_name\": \"Jane\",
+    \"last_name\": \"Smith\",
+    \"full_name\": \"Jane Smith\",
+    \"image\": \"https:\\/\\/example.com\\/photo.jpg\",
+    \"gender\": \"female\",
+    \"nationality\": \"Lebanese\",
+    \"city\": \"Beirut\",
+    \"location\": \"Beirut, Lebanon\",
+    \"address\": \"v\",
+    \"phone\": \"+961 70 123456\",
+    \"date_of_birth\": \"1995-06-15\",
+    \"marital_status\": \"architecto\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/job-seeker/profile/personal-info"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "first_name": "Jane",
+    "last_name": "Smith",
+    "full_name": "Jane Smith",
+    "image": "https:\/\/example.com\/photo.jpg",
+    "gender": "female",
+    "nationality": "Lebanese",
+    "city": "Beirut",
+    "location": "Beirut, Lebanon",
+    "address": "v",
+    "phone": "+961 70 123456",
+    "date_of_birth": "1995-06-15",
+    "marital_status": "architecto"
+};
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-PUTapi-job-seeker-profile-personal-info">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Personal information updated successfully&quot;,
+    &quot;profile&quot;: {
+        &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
+        &quot;full_name&quot;: &quot;Jane Smith&quot;
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-PUTapi-job-seeker-profile-personal-info" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PUTapi-job-seeker-profile-personal-info"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-job-seeker-profile-personal-info"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PUTapi-job-seeker-profile-personal-info" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-job-seeker-profile-personal-info">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PUTapi-job-seeker-profile-personal-info" data-method="PUT"
+      data-path="api/job-seeker/profile/personal-info"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-job-seeker-profile-personal-info', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PUTapi-job-seeker-profile-personal-info"
+                    onclick="tryItOut('PUTapi-job-seeker-profile-personal-info');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PUTapi-job-seeker-profile-personal-info"
+                    onclick="cancelTryOut('PUTapi-job-seeker-profile-personal-info');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PUTapi-job-seeker-profile-personal-info"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/job-seeker/profile/personal-info</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="PUTapi-job-seeker-profile-personal-info"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PUTapi-job-seeker-profile-personal-info"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PUTapi-job-seeker-profile-personal-info"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>first_name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="first_name"                data-endpoint="PUTapi-job-seeker-profile-personal-info"
+               value="Jane"
+               data-component="body">
+    <br>
+<p>Example: <code>Jane</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>last_name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="last_name"                data-endpoint="PUTapi-job-seeker-profile-personal-info"
+               value="Smith"
+               data-component="body">
+    <br>
+<p>Example: <code>Smith</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>full_name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="full_name"                data-endpoint="PUTapi-job-seeker-profile-personal-info"
+               value="Jane Smith"
+               data-component="body">
+    <br>
+<p>Example: <code>Jane Smith</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>image</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="image"                data-endpoint="PUTapi-job-seeker-profile-personal-info"
+               value="https://example.com/photo.jpg"
+               data-component="body">
+    <br>
+<p>URL to profile photo. Example: <code>https://example.com/photo.jpg</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>gender</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="gender"                data-endpoint="PUTapi-job-seeker-profile-personal-info"
+               value="female"
+               data-component="body">
+    <br>
+<p>One of: male, female, other, prefer_not_to_say. Example: <code>female</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>nationality</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="nationality"                data-endpoint="PUTapi-job-seeker-profile-personal-info"
+               value="Lebanese"
+               data-component="body">
+    <br>
+<p>Example: <code>Lebanese</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>city</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="city"                data-endpoint="PUTapi-job-seeker-profile-personal-info"
+               value="Beirut"
+               data-component="body">
+    <br>
+<p>Example: <code>Beirut</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>location</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="location"                data-endpoint="PUTapi-job-seeker-profile-personal-info"
+               value="Beirut, Lebanon"
+               data-component="body">
+    <br>
+<p>Example: <code>Beirut, Lebanon</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>address</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="address"                data-endpoint="PUTapi-job-seeker-profile-personal-info"
+               value="v"
+               data-component="body">
+    <br>
+<p>Must not be greater than 255 characters. Example: <code>v</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>phone</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="phone"                data-endpoint="PUTapi-job-seeker-profile-personal-info"
+               value="+961 70 123456"
+               data-component="body">
+    <br>
+<p>Max 20 chars. Example: <code>+961 70 123456</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>date_of_birth</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="date_of_birth"                data-endpoint="PUTapi-job-seeker-profile-personal-info"
+               value="1995-06-15"
+               data-component="body">
+    <br>
+<p>Example: <code>1995-06-15</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>marital_status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="marital_status"                data-endpoint="PUTapi-job-seeker-profile-personal-info"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>One of: single, married, divorced, widowed, prefer_not_to_say. Example: <code>architecto</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-PUTapi-job-seeker-profile-career-info">Update career information</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Updates the authenticated job seeker's career-related information.</p>
+
+<span id="example-requests-PUTapi-job-seeker-profile-career-info">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PUT \
+    "http://localhost:8000/api/job-seeker/profile/career-info" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"salary_range_from\": 2000,
+    \"salary_range_to\": 5000,
+    \"current_job_status\": \"architecto\",
+    \"years_of_experience\": 5,
+    \"education_level\": \"Bachelor\'s Degree\",
+    \"job_level\": \"architecto\",
+    \"job_types\": [
+        \"full_time\",
+        \"remote\"
+    ],
+    \"job_roles\": [
+        \"Frontend\",
+        \"React\"
+    ],
+    \"work_cities\": [
+        \"Beirut\",
+        \"Dubai\"
+    ],
+    \"current_job_title\": \"Frontend Developer\",
+    \"experience_summary\": \"architecto\",
+    \"expected_salary\": 3500,
+    \"is_actively_seeking\": true
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/job-seeker/profile/career-info"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "salary_range_from": 2000,
+    "salary_range_to": 5000,
+    "current_job_status": "architecto",
+    "years_of_experience": 5,
+    "education_level": "Bachelor's Degree",
+    "job_level": "architecto",
+    "job_types": [
+        "full_time",
+        "remote"
+    ],
+    "job_roles": [
+        "Frontend",
+        "React"
+    ],
+    "work_cities": [
+        "Beirut",
+        "Dubai"
+    ],
+    "current_job_title": "Frontend Developer",
+    "experience_summary": "architecto",
+    "expected_salary": 3500,
+    "is_actively_seeking": true
+};
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-PUTapi-job-seeker-profile-career-info">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Career information updated successfully&quot;,
+    &quot;profile&quot;: {
+        &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
+        &quot;current_job_title&quot;: &quot;Frontend Developer&quot;
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-PUTapi-job-seeker-profile-career-info" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PUTapi-job-seeker-profile-career-info"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-job-seeker-profile-career-info"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PUTapi-job-seeker-profile-career-info" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-job-seeker-profile-career-info">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PUTapi-job-seeker-profile-career-info" data-method="PUT"
+      data-path="api/job-seeker/profile/career-info"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-job-seeker-profile-career-info', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PUTapi-job-seeker-profile-career-info"
+                    onclick="tryItOut('PUTapi-job-seeker-profile-career-info');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PUTapi-job-seeker-profile-career-info"
+                    onclick="cancelTryOut('PUTapi-job-seeker-profile-career-info');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PUTapi-job-seeker-profile-career-info"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/job-seeker/profile/career-info</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="PUTapi-job-seeker-profile-career-info"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PUTapi-job-seeker-profile-career-info"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PUTapi-job-seeker-profile-career-info"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>salary_range_from</code></b>&nbsp;&nbsp;
+<small>number</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="salary_range_from"                data-endpoint="PUTapi-job-seeker-profile-career-info"
+               value="2000"
+               data-component="body">
+    <br>
+<p>Example: <code>2000</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>salary_range_to</code></b>&nbsp;&nbsp;
+<small>number</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="salary_range_to"                data-endpoint="PUTapi-job-seeker-profile-career-info"
+               value="5000"
+               data-component="body">
+    <br>
+<p>Example: <code>5000</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>current_job_status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="current_job_status"                data-endpoint="PUTapi-job-seeker-profile-career-info"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>One of: employed, unemployed, freelancing, student, open_to_work. Example: <code>architecto</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>years_of_experience</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="years_of_experience"                data-endpoint="PUTapi-job-seeker-profile-career-info"
+               value="5"
+               data-component="body">
+    <br>
+<p>Example: <code>5</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>education_level</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="education_level"                data-endpoint="PUTapi-job-seeker-profile-career-info"
+               value="Bachelor's Degree"
+               data-component="body">
+    <br>
+<p>Example: <code>Bachelor's Degree</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>job_level</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="job_level"                data-endpoint="PUTapi-job-seeker-profile-career-info"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>One of: entry, junior, mid, senior, lead, manager, director, executive. Example: <code>architecto</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>job_types</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="job_types[0]"                data-endpoint="PUTapi-job-seeker-profile-career-info"
+               data-component="body">
+        <input type="text" style="display: none"
+               name="job_types[1]"                data-endpoint="PUTapi-job-seeker-profile-career-info"
+               data-component="body">
+    <br>
+
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>job_roles</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="job_roles[0]"                data-endpoint="PUTapi-job-seeker-profile-career-info"
+               data-component="body">
+        <input type="text" style="display: none"
+               name="job_roles[1]"                data-endpoint="PUTapi-job-seeker-profile-career-info"
+               data-component="body">
+    <br>
+
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>work_cities</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="work_cities[0]"                data-endpoint="PUTapi-job-seeker-profile-career-info"
+               data-component="body">
+        <input type="text" style="display: none"
+               name="work_cities[1]"                data-endpoint="PUTapi-job-seeker-profile-career-info"
+               data-component="body">
+    <br>
+
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>current_job_title</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="current_job_title"                data-endpoint="PUTapi-job-seeker-profile-career-info"
+               value="Frontend Developer"
+               data-component="body">
+    <br>
+<p>Max 100 chars. Example: <code>Frontend Developer</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>experience_summary</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="experience_summary"                data-endpoint="PUTapi-job-seeker-profile-career-info"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>Example: <code>architecto</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>expected_salary</code></b>&nbsp;&nbsp;
+<small>number</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="expected_salary"                data-endpoint="PUTapi-job-seeker-profile-career-info"
+               value="3500"
+               data-component="body">
+    <br>
+<p>Example: <code>3500</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>is_actively_seeking</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="PUTapi-job-seeker-profile-career-info" style="display: none">
+            <input type="radio" name="is_actively_seeking"
+                   value="true"
+                   data-endpoint="PUTapi-job-seeker-profile-career-info"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="PUTapi-job-seeker-profile-career-info" style="display: none">
+            <input type="radio" name="is_actively_seeking"
+                   value="false"
+                   data-endpoint="PUTapi-job-seeker-profile-career-info"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>true</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-PUTapi-job-seeker-profile-social-links">Update social links</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Updates the authenticated job seeker's social media links.</p>
+
+<span id="example-requests-PUTapi-job-seeker-profile-social-links">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PUT \
+    "http://localhost:8000/api/job-seeker/profile/social-links" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"social_links\": {
+        \"linkedin\": \"https:\\/\\/linkedin.com\\/in\\/janesmith\",
+        \"github\": \"https:\\/\\/github.com\\/janesmith\",
+        \"portfolio\": \"https:\\/\\/janesmith.dev\",
+        \"twitter\": \"architecto\"
+    }
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/job-seeker/profile/social-links"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "social_links": {
+        "linkedin": "https:\/\/linkedin.com\/in\/janesmith",
+        "github": "https:\/\/github.com\/janesmith",
+        "portfolio": "https:\/\/janesmith.dev",
+        "twitter": "architecto"
+    }
+};
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-PUTapi-job-seeker-profile-social-links">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Social links updated successfully&quot;,
+    &quot;profile&quot;: {
+        &quot;social_links&quot;: {
+            &quot;linkedin&quot;: &quot;https://linkedin.com/in/janesmith&quot;
+        }
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-PUTapi-job-seeker-profile-social-links" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PUTapi-job-seeker-profile-social-links"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-job-seeker-profile-social-links"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PUTapi-job-seeker-profile-social-links" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-job-seeker-profile-social-links">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PUTapi-job-seeker-profile-social-links" data-method="PUT"
+      data-path="api/job-seeker/profile/social-links"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-job-seeker-profile-social-links', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PUTapi-job-seeker-profile-social-links"
+                    onclick="tryItOut('PUTapi-job-seeker-profile-social-links');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PUTapi-job-seeker-profile-social-links"
+                    onclick="cancelTryOut('PUTapi-job-seeker-profile-social-links');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PUTapi-job-seeker-profile-social-links"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/job-seeker/profile/social-links</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="PUTapi-job-seeker-profile-social-links"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PUTapi-job-seeker-profile-social-links"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PUTapi-job-seeker-profile-social-links"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>social_links</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+<br>
+<p>Social media URLs.</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>linkedin</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="social_links.linkedin"                data-endpoint="PUTapi-job-seeker-profile-social-links"
+               value="https://linkedin.com/in/janesmith"
+               data-component="body">
+    <br>
+<p>Example: <code>https://linkedin.com/in/janesmith</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>github</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="social_links.github"                data-endpoint="PUTapi-job-seeker-profile-social-links"
+               value="https://github.com/janesmith"
+               data-component="body">
+    <br>
+<p>Example: <code>https://github.com/janesmith</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>portfolio</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="social_links.portfolio"                data-endpoint="PUTapi-job-seeker-profile-social-links"
+               value="https://janesmith.dev"
+               data-component="body">
+    <br>
+<p>Example: <code>https://janesmith.dev</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>twitter</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="social_links.twitter"                data-endpoint="PUTapi-job-seeker-profile-social-links"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>Example: <code>architecto</code></p>
+                    </div>
+                                    </details>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-PUTapi-job-seeker-profile-skills">Update skills</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Replaces all skills with the provided array.</p>
+
+<span id="example-requests-PUTapi-job-seeker-profile-skills">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PUT \
+    "http://localhost:8000/api/job-seeker/profile/skills" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"skills\": [
+        {
+            \"name\": \"React\",
+            \"level\": \"advanced\"
+        }
+    ]
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/job-seeker/profile/skills"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "skills": [
+        {
+            "name": "React",
+            "level": "advanced"
+        }
+    ]
+};
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-PUTapi-job-seeker-profile-skills">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Skills updated successfully&quot;,
+    &quot;profile&quot;: {
+        &quot;skills&quot;: [
+            {
+                &quot;name&quot;: &quot;React&quot;,
+                &quot;level&quot;: &quot;advanced&quot;
+            }
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-PUTapi-job-seeker-profile-skills" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PUTapi-job-seeker-profile-skills"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-job-seeker-profile-skills"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PUTapi-job-seeker-profile-skills" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-job-seeker-profile-skills">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PUTapi-job-seeker-profile-skills" data-method="PUT"
+      data-path="api/job-seeker/profile/skills"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-job-seeker-profile-skills', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PUTapi-job-seeker-profile-skills"
+                    onclick="tryItOut('PUTapi-job-seeker-profile-skills');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PUTapi-job-seeker-profile-skills"
+                    onclick="cancelTryOut('PUTapi-job-seeker-profile-skills');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PUTapi-job-seeker-profile-skills"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/job-seeker/profile/skills</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="PUTapi-job-seeker-profile-skills"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PUTapi-job-seeker-profile-skills"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PUTapi-job-seeker-profile-skills"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>skills</code></b>&nbsp;&nbsp;
+<small>object[]</small>&nbsp;
+ &nbsp;
+ &nbsp;
+<br>
+<p>Array of skill objects.</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="skills.0.name"                data-endpoint="PUTapi-job-seeker-profile-skills"
+               value="React"
+               data-component="body">
+    <br>
+<p>Example: <code>React</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>level</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="skills.0.level"                data-endpoint="PUTapi-job-seeker-profile-skills"
+               value="advanced"
+               data-component="body">
+    <br>
+<p>One of: beginner, intermediate, advanced, expert. Example: <code>advanced</code></p>
+                    </div>
+                                    </details>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-DELETEapi-job-seeker-profile-skills">Delete skills</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Removes all skills from the profile.</p>
+
+<span id="example-requests-DELETEapi-job-seeker-profile-skills">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "http://localhost:8000/api/job-seeker/profile/skills" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/job-seeker/profile/skills"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-job-seeker-profile-skills">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Skills deleted successfully&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-DELETEapi-job-seeker-profile-skills" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-job-seeker-profile-skills"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-job-seeker-profile-skills"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-job-seeker-profile-skills" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-job-seeker-profile-skills">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-job-seeker-profile-skills" data-method="DELETE"
+      data-path="api/job-seeker/profile/skills"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-job-seeker-profile-skills', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-job-seeker-profile-skills"
+                    onclick="tryItOut('DELETEapi-job-seeker-profile-skills');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-job-seeker-profile-skills"
+                    onclick="cancelTryOut('DELETEapi-job-seeker-profile-skills');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-job-seeker-profile-skills"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/job-seeker/profile/skills</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-job-seeker-profile-skills"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-job-seeker-profile-skills"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-job-seeker-profile-skills"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="endpoints-PUTapi-job-seeker-profile-education">Update education history</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Replaces all education entries with the provided array.</p>
+
+<span id="example-requests-PUTapi-job-seeker-profile-education">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PUT \
+    "http://localhost:8000/api/job-seeker/profile/education" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"education_history\": [
+        {
+            \"certificate_type\": \"Bachelor\'s Degree\",
+            \"university\": \"American University of Beirut\",
+            \"faculty\": \"Engineering\",
+            \"major\": \"Computer Science\",
+            \"major_name\": \"m\",
+            \"grade\": \"3.8 GPA\",
+            \"from_date\": \"2015-09\",
+            \"awarded_date\": \"2019-06\"
+        }
+    ]
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/job-seeker/profile/education"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "education_history": [
+        {
+            "certificate_type": "Bachelor's Degree",
+            "university": "American University of Beirut",
+            "faculty": "Engineering",
+            "major": "Computer Science",
+            "major_name": "m",
+            "grade": "3.8 GPA",
+            "from_date": "2015-09",
+            "awarded_date": "2019-06"
+        }
+    ]
+};
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-PUTapi-job-seeker-profile-education">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Education history updated successfully&quot;,
+    &quot;profile&quot;: {
+        &quot;education_history&quot;: [
+            {
+                &quot;university&quot;: &quot;AUB&quot;,
+                &quot;major&quot;: &quot;CS&quot;
+            }
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-PUTapi-job-seeker-profile-education" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PUTapi-job-seeker-profile-education"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-job-seeker-profile-education"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PUTapi-job-seeker-profile-education" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-job-seeker-profile-education">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PUTapi-job-seeker-profile-education" data-method="PUT"
+      data-path="api/job-seeker/profile/education"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-job-seeker-profile-education', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PUTapi-job-seeker-profile-education"
+                    onclick="tryItOut('PUTapi-job-seeker-profile-education');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PUTapi-job-seeker-profile-education"
+                    onclick="cancelTryOut('PUTapi-job-seeker-profile-education');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PUTapi-job-seeker-profile-education"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/job-seeker/profile/education</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="PUTapi-job-seeker-profile-education"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PUTapi-job-seeker-profile-education"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PUTapi-job-seeker-profile-education"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>education_history</code></b>&nbsp;&nbsp;
+<small>object[]</small>&nbsp;
+ &nbsp;
+ &nbsp;
+<br>
+<p>Array of education entries.</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>certificate_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="education_history.0.certificate_type"                data-endpoint="PUTapi-job-seeker-profile-education"
+               value="Bachelor's Degree"
+               data-component="body">
+    <br>
+<p>Example: <code>Bachelor's Degree</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>university</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="education_history.0.university"                data-endpoint="PUTapi-job-seeker-profile-education"
+               value="American University of Beirut"
+               data-component="body">
+    <br>
+<p>Example: <code>American University of Beirut</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>faculty</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="education_history.0.faculty"                data-endpoint="PUTapi-job-seeker-profile-education"
+               value="Engineering"
+               data-component="body">
+    <br>
+<p>Example: <code>Engineering</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>major</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="education_history.0.major"                data-endpoint="PUTapi-job-seeker-profile-education"
+               value="Computer Science"
+               data-component="body">
+    <br>
+<p>Example: <code>Computer Science</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>major_name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="education_history.0.major_name"                data-endpoint="PUTapi-job-seeker-profile-education"
+               value="m"
+               data-component="body">
+    <br>
+<p>Must not be greater than 150 characters. Example: <code>m</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>grade</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="education_history.0.grade"                data-endpoint="PUTapi-job-seeker-profile-education"
+               value="3.8 GPA"
+               data-component="body">
+    <br>
+<p>Example: <code>3.8 GPA</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>from_date</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="education_history.0.from_date"                data-endpoint="PUTapi-job-seeker-profile-education"
+               value="2015-09"
+               data-component="body">
+    <br>
+<p>Example: <code>2015-09</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>awarded_date</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="education_history.0.awarded_date"                data-endpoint="PUTapi-job-seeker-profile-education"
+               value="2019-06"
+               data-component="body">
+    <br>
+<p>Example: <code>2019-06</code></p>
+                    </div>
+                                    </details>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-DELETEapi-job-seeker-profile-education">Delete education history</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Removes all education entries from the profile.</p>
+
+<span id="example-requests-DELETEapi-job-seeker-profile-education">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "http://localhost:8000/api/job-seeker/profile/education" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/job-seeker/profile/education"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-job-seeker-profile-education">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Education history deleted successfully&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-DELETEapi-job-seeker-profile-education" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-job-seeker-profile-education"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-job-seeker-profile-education"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-job-seeker-profile-education" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-job-seeker-profile-education">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-job-seeker-profile-education" data-method="DELETE"
+      data-path="api/job-seeker/profile/education"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-job-seeker-profile-education', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-job-seeker-profile-education"
+                    onclick="tryItOut('DELETEapi-job-seeker-profile-education');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-job-seeker-profile-education"
+                    onclick="cancelTryOut('DELETEapi-job-seeker-profile-education');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-job-seeker-profile-education"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/job-seeker/profile/education</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-job-seeker-profile-education"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-job-seeker-profile-education"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-job-seeker-profile-education"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="endpoints-PUTapi-job-seeker-profile-work-experience">Update work experience</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Replaces all work experience entries with the provided array.</p>
+
+<span id="example-requests-PUTapi-job-seeker-profile-work-experience">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PUT \
+    "http://localhost:8000/api/job-seeker/profile/work-experience" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"work_experience\": [
+        {
+            \"job_title\": \"Frontend Developer\",
+            \"company_name\": \"Acme Corp\",
+            \"job_roles\": [
+                \"React\",
+                \"TypeScript\"
+            ],
+            \"from_date\": \"2020-01\",
+            \"to_date\": \"2023-06\",
+            \"is_currently_working\": false,
+            \"description\": \"Eius et animi quos velit et.\"
+        }
+    ]
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/job-seeker/profile/work-experience"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "work_experience": [
+        {
+            "job_title": "Frontend Developer",
+            "company_name": "Acme Corp",
+            "job_roles": [
+                "React",
+                "TypeScript"
+            ],
+            "from_date": "2020-01",
+            "to_date": "2023-06",
+            "is_currently_working": false,
+            "description": "Eius et animi quos velit et."
+        }
+    ]
+};
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-PUTapi-job-seeker-profile-work-experience">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Work experience updated successfully&quot;,
+    &quot;profile&quot;: {
+        &quot;work_experience&quot;: [
+            {
+                &quot;job_title&quot;: &quot;Developer&quot;,
+                &quot;company_name&quot;: &quot;Acme&quot;
+            }
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-PUTapi-job-seeker-profile-work-experience" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PUTapi-job-seeker-profile-work-experience"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-job-seeker-profile-work-experience"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PUTapi-job-seeker-profile-work-experience" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-job-seeker-profile-work-experience">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PUTapi-job-seeker-profile-work-experience" data-method="PUT"
+      data-path="api/job-seeker/profile/work-experience"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-job-seeker-profile-work-experience', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PUTapi-job-seeker-profile-work-experience"
+                    onclick="tryItOut('PUTapi-job-seeker-profile-work-experience');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PUTapi-job-seeker-profile-work-experience"
+                    onclick="cancelTryOut('PUTapi-job-seeker-profile-work-experience');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PUTapi-job-seeker-profile-work-experience"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/job-seeker/profile/work-experience</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="PUTapi-job-seeker-profile-work-experience"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PUTapi-job-seeker-profile-work-experience"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PUTapi-job-seeker-profile-work-experience"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>work_experience</code></b>&nbsp;&nbsp;
+<small>object[]</small>&nbsp;
+ &nbsp;
+ &nbsp;
+<br>
+<p>Array of work experience entries.</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>job_title</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="work_experience.0.job_title"                data-endpoint="PUTapi-job-seeker-profile-work-experience"
+               value="Frontend Developer"
+               data-component="body">
+    <br>
+<p>Example: <code>Frontend Developer</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>company_name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="work_experience.0.company_name"                data-endpoint="PUTapi-job-seeker-profile-work-experience"
+               value="Acme Corp"
+               data-component="body">
+    <br>
+<p>Example: <code>Acme Corp</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>job_roles</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="work_experience.0.job_roles[0]"                data-endpoint="PUTapi-job-seeker-profile-work-experience"
+               data-component="body">
+        <input type="text" style="display: none"
+               name="work_experience.0.job_roles[1]"                data-endpoint="PUTapi-job-seeker-profile-work-experience"
+               data-component="body">
+    <br>
+
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>from_date</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="work_experience.0.from_date"                data-endpoint="PUTapi-job-seeker-profile-work-experience"
+               value="2020-01"
+               data-component="body">
+    <br>
+<p>Example: <code>2020-01</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>to_date</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="work_experience.0.to_date"                data-endpoint="PUTapi-job-seeker-profile-work-experience"
+               value="2023-06"
+               data-component="body">
+    <br>
+<p>Example: <code>2023-06</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>is_currently_working</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="PUTapi-job-seeker-profile-work-experience" style="display: none">
+            <input type="radio" name="work_experience.0.is_currently_working"
+                   value="true"
+                   data-endpoint="PUTapi-job-seeker-profile-work-experience"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="PUTapi-job-seeker-profile-work-experience" style="display: none">
+            <input type="radio" name="work_experience.0.is_currently_working"
+                   value="false"
+                   data-endpoint="PUTapi-job-seeker-profile-work-experience"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>false</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="work_experience.0.description"                data-endpoint="PUTapi-job-seeker-profile-work-experience"
+               value="Eius et animi quos velit et."
+               data-component="body">
+    <br>
+<p>Example: <code>Eius et animi quos velit et.</code></p>
+                    </div>
+                                    </details>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-DELETEapi-job-seeker-profile-work-experience">Delete work experience</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Removes all work experience entries from the profile.</p>
+
+<span id="example-requests-DELETEapi-job-seeker-profile-work-experience">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "http://localhost:8000/api/job-seeker/profile/work-experience" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/job-seeker/profile/work-experience"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-job-seeker-profile-work-experience">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Work experience deleted successfully&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-DELETEapi-job-seeker-profile-work-experience" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-job-seeker-profile-work-experience"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-job-seeker-profile-work-experience"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-job-seeker-profile-work-experience" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-job-seeker-profile-work-experience">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-job-seeker-profile-work-experience" data-method="DELETE"
+      data-path="api/job-seeker/profile/work-experience"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-job-seeker-profile-work-experience', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-job-seeker-profile-work-experience"
+                    onclick="tryItOut('DELETEapi-job-seeker-profile-work-experience');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-job-seeker-profile-work-experience"
+                    onclick="cancelTryOut('DELETEapi-job-seeker-profile-work-experience');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-job-seeker-profile-work-experience"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/job-seeker/profile/work-experience</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-job-seeker-profile-work-experience"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-job-seeker-profile-work-experience"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-job-seeker-profile-work-experience"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="endpoints-PUTapi-job-seeker-profile">Legacy update method - DEPRECATED</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+<small class="badge badge-darkgoldenrod">deprecated:Use specific update endpoints instead</small>
+</p>
+
+
 
 <span id="example-requests-PUTapi-job-seeker-profile">
 <blockquote>Example request:</blockquote>
@@ -2617,36 +4717,36 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "first_name=Jane"\
-    --form "last_name=Smith"\
-    --form "full_name=Jane Smith"\
-    --form "image=https://example.com/photo.jpg"\
+    --form "first_name=b"\
+    --form "last_name=n"\
+    --form "full_name=g"\
+    --form "image=z"\
     --form "gender=female"\
-    --form "nationality=Lebanese"\
-    --form "city=Beirut"\
-    --form "location=Beirut, Lebanon"\
+    --form "nationality=m"\
+    --form "city=i"\
+    --form "location=y"\
     --form "address=v"\
-    --form "phone=+961 70 123456"\
-    --form "date_of_birth=1995-06-15"\
-    --form "marital_status=architecto"\
-    --form "salary_range_from=2000"\
-    --form "salary_range_to=5000"\
-    --form "current_job_status=architecto"\
-    --form "years_of_experience=5"\
-    --form "education_level=Bachelor's Degree"\
-    --form "job_level=architecto"\
-    --form "job_types[]=full_time"\
-    --form "job_roles[]=Frontend"\
-    --form "work_cities[]=Beirut"\
-    --form "current_job_title=Frontend Developer"\
+    --form "phone=dljnikhwaykcmyuw"\
+    --form "date_of_birth=pwlvqwrsitcpscql"\
+    --form "marital_status=divorced"\
+    --form "salary_range_from=16"\
+    --form "salary_range_to=38"\
+    --form "current_job_status=unemployed"\
+    --form "years_of_experience=8"\
+    --form "education_level=n"\
+    --form "job_level=mid"\
+    --form "job_types[]=r"\
+    --form "job_roles[]=w"\
+    --form "work_cities[]=t"\
+    --form "current_job_title=u"\
     --form "experience_summary=architecto"\
-    --form "expected_salary=3500"\
+    --form "expected_salary=39"\
     --form "is_actively_seeking=1"\
-    --form "social_links[linkedin]=https://linkedin.com/in/janesmith"\
-    --form "social_links[github]=https://github.com/janesmith"\
-    --form "social_links[portfolio]=https://janesmith.dev"\
-    --form "social_links[twitter]=architecto"\
-    --form "skills[][name]=React"\
+    --form "social_links[linkedin]=g"\
+    --form "social_links[github]=z"\
+    --form "social_links[portfolio]=m"\
+    --form "social_links[twitter]=i"\
+    --form "skills[][name]=y"\
     --form "skills[][level]=advanced"\
     --form "education_history[][certificate_type]=v"\
     --form "education_history[][university]=d"\
@@ -2663,7 +4763,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "work_experience[][to_date]=tnnoqitpxntltcvi"\
     --form "work_experience[][is_currently_working]=1"\
     --form "work_experience[][description]=Eius et animi quos velit et."\
-    --form "resume=@/tmp/php0pG79J" </code></pre></div>
+    --form "resume=@/tmp/phpONR4Aa" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -2678,36 +4778,36 @@ const headers = {
 };
 
 const body = new FormData();
-body.append('first_name', 'Jane');
-body.append('last_name', 'Smith');
-body.append('full_name', 'Jane Smith');
-body.append('image', 'https://example.com/photo.jpg');
+body.append('first_name', 'b');
+body.append('last_name', 'n');
+body.append('full_name', 'g');
+body.append('image', 'z');
 body.append('gender', 'female');
-body.append('nationality', 'Lebanese');
-body.append('city', 'Beirut');
-body.append('location', 'Beirut, Lebanon');
+body.append('nationality', 'm');
+body.append('city', 'i');
+body.append('location', 'y');
 body.append('address', 'v');
-body.append('phone', '+961 70 123456');
-body.append('date_of_birth', '1995-06-15');
-body.append('marital_status', 'architecto');
-body.append('salary_range_from', '2000');
-body.append('salary_range_to', '5000');
-body.append('current_job_status', 'architecto');
-body.append('years_of_experience', '5');
-body.append('education_level', 'Bachelor's Degree');
-body.append('job_level', 'architecto');
-body.append('job_types[]', 'full_time');
-body.append('job_roles[]', 'Frontend');
-body.append('work_cities[]', 'Beirut');
-body.append('current_job_title', 'Frontend Developer');
+body.append('phone', 'dljnikhwaykcmyuw');
+body.append('date_of_birth', 'pwlvqwrsitcpscql');
+body.append('marital_status', 'divorced');
+body.append('salary_range_from', '16');
+body.append('salary_range_to', '38');
+body.append('current_job_status', 'unemployed');
+body.append('years_of_experience', '8');
+body.append('education_level', 'n');
+body.append('job_level', 'mid');
+body.append('job_types[]', 'r');
+body.append('job_roles[]', 'w');
+body.append('work_cities[]', 't');
+body.append('current_job_title', 'u');
 body.append('experience_summary', 'architecto');
-body.append('expected_salary', '3500');
+body.append('expected_salary', '39');
 body.append('is_actively_seeking', '1');
-body.append('social_links[linkedin]', 'https://linkedin.com/in/janesmith');
-body.append('social_links[github]', 'https://github.com/janesmith');
-body.append('social_links[portfolio]', 'https://janesmith.dev');
-body.append('social_links[twitter]', 'architecto');
-body.append('skills[][name]', 'React');
+body.append('social_links[linkedin]', 'g');
+body.append('social_links[github]', 'z');
+body.append('social_links[portfolio]', 'm');
+body.append('social_links[twitter]', 'i');
+body.append('skills[][name]', 'y');
 body.append('skills[][level]', 'advanced');
 body.append('education_history[][certificate_type]', 'v');
 body.append('education_history[][university]', 'd');
@@ -2735,34 +4835,7 @@ fetch(url, {
 </span>
 
 <span id="example-responses-PUTapi-job-seeker-profile">
-            <blockquote>
-            <p>Example response (200):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Profile updated successfully&quot;,
-    &quot;profile&quot;: {
-        &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
-        &quot;full_name&quot;: &quot;Jane Smith&quot;,
-        &quot;is_actively_seeking&quot;: true
-    }
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (422):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;errors&quot;: {
-        &quot;phone&quot;: [
-            &quot;Must not be greater than 20 characters.&quot;
-        ]
-    }
-}</code>
- </pre>
-    </span>
+</span>
 <span id="execution-results-PUTapi-job-seeker-profile" hidden>
     <blockquote>Received response<span
                 id="execution-response-status-PUTapi-job-seeker-profile"></span>:
@@ -2854,10 +4927,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="first_name"                data-endpoint="PUTapi-job-seeker-profile"
-               value="Jane"
+               value="b"
                data-component="body">
     <br>
-<p>Example: <code>Jane</code></p>
+<p>Personal Information. Must not be greater than 50 characters. Example: <code>b</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>last_name</code></b>&nbsp;&nbsp;
@@ -2866,10 +4939,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="last_name"                data-endpoint="PUTapi-job-seeker-profile"
-               value="Smith"
+               value="n"
                data-component="body">
     <br>
-<p>Example: <code>Smith</code></p>
+<p>Must not be greater than 50 characters. Example: <code>n</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>full_name</code></b>&nbsp;&nbsp;
@@ -2878,10 +4951,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="full_name"                data-endpoint="PUTapi-job-seeker-profile"
-               value="Jane Smith"
+               value="g"
                data-component="body">
     <br>
-<p>Example: <code>Jane Smith</code></p>
+<p>Must not be greater than 100 characters. Example: <code>g</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>image</code></b>&nbsp;&nbsp;
@@ -2890,10 +4963,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="image"                data-endpoint="PUTapi-job-seeker-profile"
-               value="https://example.com/photo.jpg"
+               value="z"
                data-component="body">
     <br>
-<p>URL to profile photo. Example: <code>https://example.com/photo.jpg</code></p>
+<p>Must be a valid URL. Must not be greater than 500 characters. Example: <code>z</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>gender</code></b>&nbsp;&nbsp;
@@ -2905,7 +4978,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="female"
                data-component="body">
     <br>
-<p>One of: male, female, other, prefer_not_to_say. Example: <code>female</code></p>
+<p>Example: <code>female</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>male</code></li> <li><code>female</code></li> <li><code>other</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>nationality</code></b>&nbsp;&nbsp;
@@ -2914,10 +4989,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="nationality"                data-endpoint="PUTapi-job-seeker-profile"
-               value="Lebanese"
+               value="m"
                data-component="body">
     <br>
-<p>Example: <code>Lebanese</code></p>
+<p>Must not be greater than 100 characters. Example: <code>m</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>city</code></b>&nbsp;&nbsp;
@@ -2926,10 +5001,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="city"                data-endpoint="PUTapi-job-seeker-profile"
-               value="Beirut"
+               value="i"
                data-component="body">
     <br>
-<p>Example: <code>Beirut</code></p>
+<p>Must not be greater than 100 characters. Example: <code>i</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>location</code></b>&nbsp;&nbsp;
@@ -2938,10 +5013,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="location"                data-endpoint="PUTapi-job-seeker-profile"
-               value="Beirut, Lebanon"
+               value="y"
                data-component="body">
     <br>
-<p>Example: <code>Beirut, Lebanon</code></p>
+<p>Must not be greater than 255 characters. Example: <code>y</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>address</code></b>&nbsp;&nbsp;
@@ -2962,10 +5037,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="phone"                data-endpoint="PUTapi-job-seeker-profile"
-               value="+961 70 123456"
+               value="dljnikhwaykcmyuw"
                data-component="body">
     <br>
-<p>Max 20 chars. Example: <code>+961 70 123456</code></p>
+<p>Must not be greater than 20 characters. Example: <code>dljnikhwaykcmyuw</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>date_of_birth</code></b>&nbsp;&nbsp;
@@ -2974,10 +5049,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_of_birth"                data-endpoint="PUTapi-job-seeker-profile"
-               value="1995-06-15"
+               value="pwlvqwrsitcpscql"
                data-component="body">
     <br>
-<p>Example: <code>1995-06-15</code></p>
+<p>Must not be greater than 20 characters. Example: <code>pwlvqwrsitcpscql</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>marital_status</code></b>&nbsp;&nbsp;
@@ -2986,10 +5061,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="marital_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="architecto"
+               value="divorced"
                data-component="body">
     <br>
-<p>One of: single, married, divorced, widowed, prefer_not_to_say. Example: <code>architecto</code></p>
+<p>Example: <code>divorced</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>single</code></li> <li><code>married</code></li> <li><code>divorced</code></li> <li><code>widowed</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>salary_range_from</code></b>&nbsp;&nbsp;
@@ -2998,10 +5075,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="salary_range_from"                data-endpoint="PUTapi-job-seeker-profile"
-               value="2000"
+               value="16"
                data-component="body">
     <br>
-<p>Example: <code>2000</code></p>
+<p>Career Information. Must be at least 0. Example: <code>16</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>salary_range_to</code></b>&nbsp;&nbsp;
@@ -3010,10 +5087,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="salary_range_to"                data-endpoint="PUTapi-job-seeker-profile"
-               value="5000"
+               value="38"
                data-component="body">
     <br>
-<p>Example: <code>5000</code></p>
+<p>Must be at least 0. Example: <code>38</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>current_job_status</code></b>&nbsp;&nbsp;
@@ -3022,10 +5099,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="current_job_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="architecto"
+               value="unemployed"
                data-component="body">
     <br>
-<p>One of: employed, unemployed, freelancing, student, open_to_work. Example: <code>architecto</code></p>
+<p>Example: <code>unemployed</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>employed</code></li> <li><code>unemployed</code></li> <li><code>freelancing</code></li> <li><code>student</code></li> <li><code>open_to_work</code></li></ul>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>years_of_experience</code></b>&nbsp;&nbsp;
@@ -3034,10 +5113,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="years_of_experience"                data-endpoint="PUTapi-job-seeker-profile"
-               value="5"
+               value="8"
                data-component="body">
     <br>
-<p>Example: <code>5</code></p>
+<p>Must be at least 0. Must not be greater than 60. Example: <code>8</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>education_level</code></b>&nbsp;&nbsp;
@@ -3046,10 +5125,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="education_level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="Bachelor's Degree"
+               value="n"
                data-component="body">
     <br>
-<p>Example: <code>Bachelor's Degree</code></p>
+<p>Must not be greater than 100 characters. Example: <code>n</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>job_level</code></b>&nbsp;&nbsp;
@@ -3058,10 +5137,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="architecto"
+               value="mid"
                data-component="body">
     <br>
-<p>One of: entry, junior, mid, senior, lead, manager, director, executive. Example: <code>architecto</code></p>
+<p>Example: <code>mid</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>entry</code></li> <li><code>junior</code></li> <li><code>mid</code></li> <li><code>senior</code></li> <li><code>lead</code></li> <li><code>manager</code></li> <li><code>director</code></li> <li><code>executive</code></li></ul>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>job_types</code></b>&nbsp;&nbsp;
@@ -3075,7 +5156,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                name="job_types[1]"                data-endpoint="PUTapi-job-seeker-profile"
                data-component="body">
     <br>
-
+<p>Must not be greater than 50 characters.</p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>job_roles</code></b>&nbsp;&nbsp;
@@ -3089,7 +5170,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                name="job_roles[1]"                data-endpoint="PUTapi-job-seeker-profile"
                data-component="body">
     <br>
-
+<p>Must not be greater than 50 characters.</p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>work_cities</code></b>&nbsp;&nbsp;
@@ -3103,7 +5184,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                name="work_cities[1]"                data-endpoint="PUTapi-job-seeker-profile"
                data-component="body">
     <br>
-
+<p>Must not be greater than 100 characters.</p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>current_job_title</code></b>&nbsp;&nbsp;
@@ -3112,10 +5193,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="current_job_title"                data-endpoint="PUTapi-job-seeker-profile"
-               value="Frontend Developer"
+               value="u"
                data-component="body">
     <br>
-<p>Max 100 chars. Example: <code>Frontend Developer</code></p>
+<p>Must not be greater than 100 characters. Example: <code>u</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>experience_summary</code></b>&nbsp;&nbsp;
@@ -3136,10 +5217,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="expected_salary"                data-endpoint="PUTapi-job-seeker-profile"
-               value="3500"
+               value="39"
                data-component="body">
     <br>
-<p>Example: <code>3500</code></p>
+<p>Must be at least 0. Example: <code>39</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>is_actively_seeking</code></b>&nbsp;&nbsp;
@@ -3171,7 +5252,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
  &nbsp;
 <br>
-<p>Social media URLs.</p>
+<p>Social Links (nested object).</p>
             </summary>
                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>linkedin</code></b>&nbsp;&nbsp;
@@ -3180,10 +5261,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="social_links.linkedin"                data-endpoint="PUTapi-job-seeker-profile"
-               value="https://linkedin.com/in/janesmith"
+               value="g"
                data-component="body">
     <br>
-<p>Example: <code>https://linkedin.com/in/janesmith</code></p>
+<p>Must be a valid URL. Must not be greater than 255 characters. Example: <code>g</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>github</code></b>&nbsp;&nbsp;
@@ -3192,10 +5273,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="social_links.github"                data-endpoint="PUTapi-job-seeker-profile"
-               value="https://github.com/janesmith"
+               value="z"
                data-component="body">
     <br>
-<p>Example: <code>https://github.com/janesmith</code></p>
+<p>Must be a valid URL. Must not be greater than 255 characters. Example: <code>z</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>portfolio</code></b>&nbsp;&nbsp;
@@ -3204,10 +5285,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="social_links.portfolio"                data-endpoint="PUTapi-job-seeker-profile"
-               value="https://janesmith.dev"
+               value="m"
                data-component="body">
     <br>
-<p>Example: <code>https://janesmith.dev</code></p>
+<p>Must be a valid URL. Must not be greater than 255 characters. Example: <code>m</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>twitter</code></b>&nbsp;&nbsp;
@@ -3216,10 +5297,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="social_links.twitter"                data-endpoint="PUTapi-job-seeker-profile"
-               value="architecto"
+               value="i"
                data-component="body">
     <br>
-<p>Example: <code>architecto</code></p>
+<p>Must be a valid URL. Must not be greater than 255 characters. Example: <code>i</code></p>
                     </div>
                                     </details>
         </div>
@@ -3231,19 +5312,19 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
  &nbsp;
 <br>
-<p>Array of skill objects.</p>
+<p>Skills.</p>
             </summary>
                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
- &nbsp;
+<i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
                               name="skills.0.name"                data-endpoint="PUTapi-job-seeker-profile"
-               value="React"
+               value="y"
                data-component="body">
     <br>
-<p>Example: <code>React</code></p>
+<p>This field is required when <code>skills</code> is present. Must not be greater than 50 characters. Example: <code>y</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>level</code></b>&nbsp;&nbsp;
@@ -3255,7 +5336,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="advanced"
                data-component="body">
     <br>
-<p>One of: beginner, intermediate, advanced, expert. Example: <code>advanced</code></p>
+<p>Example: <code>advanced</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>beginner</code></li> <li><code>intermediate</code></li> <li><code>advanced</code></li> <li><code>expert</code></li></ul>
                     </div>
                                     </details>
         </div>
@@ -3267,7 +5350,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
  &nbsp;
 <br>
-<p>Array of education entries.</p>
+<p>Education History.</p>
             </summary>
                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>certificate_type</code></b>&nbsp;&nbsp;
@@ -3375,7 +5458,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
  &nbsp;
 <br>
-<p>Array of work experience entries.</p>
+<p>Work Experience.</p>
             </summary>
                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>job_title</code></b>&nbsp;&nbsp;
@@ -3485,7 +5568,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC resume file (max 5 MB). Example: <code>/tmp/php0pG79J</code></p>
+<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>/tmp/phpONR4Aa</code></p>
         </div>
         </form>
 
@@ -3507,7 +5590,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@/tmp/phpuxcK9l" </code></pre></div>
+    --form "resume=@/tmp/phpMQ0yDL" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -3651,7 +5734,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 5 MB. Example: <code>/tmp/phpuxcK9l</code></p>
+<p>PDF/DOC/DOCX file, max 5 MB. Example: <code>/tmp/phpMQ0yDL</code></p>
         </div>
         </form>
 
@@ -3673,7 +5756,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cv=@/tmp/phpAb4cZz" </code></pre></div>
+    --form "cv=@/tmp/php7MFPeL" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -3833,7 +5916,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpAb4cZz</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/php7MFPeL</code></p>
         </div>
         </form>
 
@@ -4012,7 +6095,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "job_post_id=664f1a2b3c4d5e6f7a8b9c0d"\
     --form "cover_letter=I am very interested in this position."\
-    --form "resume=@/tmp/phpgwD0iv" </code></pre></div>
+    --form "resume=@/tmp/phpbE0MBq" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -4192,7 +6275,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/phpgwD0iv</code></p>
+<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/phpbE0MBq</code></p>
         </div>
         </form>
 
@@ -4826,7 +6909,7 @@ access-control-allow-origin: *
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;error&quot;: &quot;Unauthorized&quot;,
-    &quot;message&quot;: &quot;Authentication token has expired&quot;
+    &quot;message&quot;: &quot;Invalid authentication token signature&quot;
 }</code>
  </pre>
     </span>
@@ -5424,7 +7507,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "document=@/tmp/php1Vtk8z" </code></pre></div>
+    --form "document=@/tmp/phpjDFpRd" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -5573,7 +7656,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/php1Vtk8z</code></p>
+<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/phpjDFpRd</code></p>
         </div>
         </form>
 
@@ -8983,6 +11066,422 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                         </form>
 
+                    <h2 id="endpoints-POSTapi-employer-match-candidates">Match candidates to job description</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Uses AI to match job seekers to a job description based on skills and requirements.
+Returns candidates ordered by relevance with matched skills scores.</p>
+
+<span id="example-requests-POSTapi-employer-match-candidates">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost:8000/api/employer/match-candidates" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"job_description\": \"Senior React developer with 5+ years experience\",
+    \"limit\": 10
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/employer/match-candidates"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "job_description": "Senior React developer with 5+ years experience",
+    "limit": 10
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-employer-match-candidates">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;extracted_requirements&quot;: [
+        &quot;React&quot;,
+        &quot;5+ years&quot;,
+        &quot;Senior level&quot;
+    ],
+    &quot;candidates&quot;: [
+        {
+            &quot;user_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
+            &quot;resume_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
+            &quot;full_name&quot;: &quot;Jane Smith&quot;,
+            &quot;matched_skills_score&quot;: 85,
+            &quot;skills&quot;: [
+                &quot;React&quot;,
+                &quot;TypeScript&quot;,
+                &quot;Node.js&quot;
+            ],
+            &quot;profile_url&quot;: &quot;/api/employer/job-seeker/664f1a2b3c4d5e6f7a8b9c0d&quot;
+        }
+    ]
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Job matching failed&quot;,
+    &quot;reason&quot;: &quot;Invalid job description&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (502):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Job matching service unavailable&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-employer-match-candidates" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-employer-match-candidates"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-employer-match-candidates"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-employer-match-candidates" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-employer-match-candidates">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-employer-match-candidates" data-method="POST"
+      data-path="api/employer/match-candidates"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-employer-match-candidates', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-employer-match-candidates"
+                    onclick="tryItOut('POSTapi-employer-match-candidates');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-employer-match-candidates"
+                    onclick="cancelTryOut('POSTapi-employer-match-candidates');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-employer-match-candidates"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/employer/match-candidates</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-employer-match-candidates"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-employer-match-candidates"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-employer-match-candidates"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>job_description</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="job_description"                data-endpoint="POSTapi-employer-match-candidates"
+               value="Senior React developer with 5+ years experience"
+               data-component="body">
+    <br>
+<p>The job description or requirements. Max 5000 chars. Example: <code>Senior React developer with 5+ years experience</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>limit</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="limit"                data-endpoint="POSTapi-employer-match-candidates"
+               value="10"
+               data-component="body">
+    <br>
+<p>Maximum number of candidates to return. Min: 1, Max: 50. Example: <code>10</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-POSTapi-employer-jobs--jobPostId--match-candidates">Match candidates to existing job post</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Uses the job post's description to find matching candidates via AI.
+Employer must own the job post.</p>
+
+<span id="example-requests-POSTapi-employer-jobs--jobPostId--match-candidates">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost:8000/api/employer/jobs/architecto/match-candidates" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"limit\": 10
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/employer/jobs/architecto/match-candidates"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "limit": 10
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-employer-jobs--jobPostId--match-candidates">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;job_post&quot;: {
+        &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
+        &quot;title&quot;: &quot;Senior React Developer&quot;
+    },
+    &quot;extracted_requirements&quot;: [
+        &quot;React&quot;,
+        &quot;Senior level&quot;
+    ],
+    &quot;candidates&quot;: []
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;You do not own this job post&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Job post not found&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-employer-jobs--jobPostId--match-candidates" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-employer-jobs--jobPostId--match-candidates"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-employer-jobs--jobPostId--match-candidates"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-employer-jobs--jobPostId--match-candidates" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-employer-jobs--jobPostId--match-candidates">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-employer-jobs--jobPostId--match-candidates" data-method="POST"
+      data-path="api/employer/jobs/{jobPostId}/match-candidates"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-employer-jobs--jobPostId--match-candidates', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-employer-jobs--jobPostId--match-candidates"
+                    onclick="tryItOut('POSTapi-employer-jobs--jobPostId--match-candidates');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-employer-jobs--jobPostId--match-candidates"
+                    onclick="cancelTryOut('POSTapi-employer-jobs--jobPostId--match-candidates');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-employer-jobs--jobPostId--match-candidates"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/employer/jobs/{jobPostId}/match-candidates</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-employer-jobs--jobPostId--match-candidates"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-employer-jobs--jobPostId--match-candidates"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-employer-jobs--jobPostId--match-candidates"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>jobPostId</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="jobPostId"                data-endpoint="POSTapi-employer-jobs--jobPostId--match-candidates"
+               value="architecto"
+               data-component="url">
+    <br>
+<p>Example: <code>architecto</code></p>
+            </div>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>job_post_id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="job_post_id"                data-endpoint="POSTapi-employer-jobs--jobPostId--match-candidates"
+               value="664f1a2b3c4d5e6f7a8b9c0d"
+               data-component="url">
+    <br>
+<p>Job post MongoDB ID. Example: <code>664f1a2b3c4d5e6f7a8b9c0d</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>limit</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="limit"                data-endpoint="POSTapi-employer-jobs--jobPostId--match-candidates"
+               value="10"
+               data-component="body">
+    <br>
+<p>Maximum number of candidates to return. Min: 1, Max: 50. Example: <code>10</code></p>
+        </div>
+        </form>
+
                     <h2 id="endpoints-GETapi-employer-analytics">Employer analytics - scoped to employer&#039;s jobs</h2>
 
 <p>
@@ -9037,7 +11536,7 @@ access-control-allow-origin: *
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;error&quot;: &quot;Unauthorized&quot;,
-    &quot;message&quot;: &quot;Authentication token has expired&quot;
+    &quot;message&quot;: &quot;Invalid authentication token signature&quot;
 }</code>
  </pre>
     </span>
@@ -9669,7 +12168,7 @@ access-control-allow-origin: *
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;error&quot;: &quot;Unauthorized&quot;,
-    &quot;message&quot;: &quot;Authentication token has expired&quot;
+    &quot;message&quot;: &quot;Invalid authentication token signature&quot;
 }</code>
  </pre>
     </span>

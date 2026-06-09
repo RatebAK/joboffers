@@ -20,7 +20,10 @@ The platform builds on an existing Laravel/MongoDB codebase with JWT authenticat
 - **Direct_Offer**: A record created by an Employer targeting a specific Job_Seeker with a job opportunity, without requiring the seeker to apply first.
 - **CV_Analysis_Service**: The external HTTP API that accepts a CV file and returns an AI_Analysis JSON payload.
 - **JobSeekerProfile**: The MongoDB document storing a Job_Seeker's profile data, including AI_Analysis results.
+- **CompanyProfile**: The MongoDB document storing an Employer's company information.
 - **Admin**: A user with the `admin` role who manages employer approvals.
+- **Match_Score**: A numeric value representing how well a Job_Post matches a Job_Seeker's profile based on skills, location, job type, and experience level.
+- **Analytics_Dashboard**: A set of aggregated statistics returned by the API for a specific role (admin, employer, or job seeker).
 
 ---
 
@@ -48,112 +51,75 @@ The platform builds on an existing Laravel/MongoDB codebase with JWT authenticat
 
 #### Acceptance Criteria
 
-1. WHEN a Job_Seeker requests their profile, THE JobSeeker_Profile_Controller SHALL return the full JobSeekerProfile document including any AI_Analysis fields.
-2. WHEN a Job_Seeker submits a profile update with valid fields, THE JobSeeker_Profile_Controller SHALL update only the provided fields and return the updated profile.
-3. IF a Job_Seeker submits a profile update with invalid data (e.g., non-numeric expected salary, URL exceeding 255 characters), THEN THE JobSeeker_Profile_Controller SHALL return a 422 response listing each validation error.
-4. THE JobSeekerProfile SHALL store the `cv_file_path` field referencing the most recently uploaded CV file.
-5. WHEN a Job_Seeker uploads a new CV, THE CV_Upload_Handler SHALL replace the stored `cv_file_path` with the new file path and delete the previous file from storage.
+1. WHEN a Job_Seeker requests their profile, THE JobSeeker_Profile_Controller SHALL return the full JobSeekerProfile document including any AI_Analysis f
 
 ---
 
-### Requirement 3: Job Seeker Browsing and Searching Job Posts
+### Requirement 9: View Other Users and Profiles (Full Data)
 
-**User Story:** As a job seeker, I want to search and browse active job posts, so that I can find positions that match my skills and preferences.
+**User Story:** As any authenticated user, I want to view other users' full profile data, so that I can make informed decisions about hiring, applying, or connecting.
 
 #### Acceptance Criteria
 
-1. WHEN a Job_Seeker requests the job search endpoint, THE Job_Search_Controller SHALL return a paginated list of active Job_Posts (15 per page by default).
-2. WHEN a Job_Seeker provides a `keyword` query parameter, THE Job_Search_Controller SHALL return only Job_Posts where the title, description, or company name contains the keyword (case-insensitive).
-3. WHEN a Job_Seeker provides a `location` query parameter, THE Job_Search_Controller SHALL return only Job_Posts where the location field contains the provided value (case-insensitive).
-4. WHEN a Job_Seeker provides a `job_type` query parameter, THE Job_Search_Controller SHALL return only Job_Posts matching the specified type (`full_time`, `part_time`, `contract`, or `freelance`).
-5. WHEN a Job_Seeker provides a `category` query parameter, THE Job_Search_Controller SHALL return only Job_Posts matching the specified category.
-6. WHEN a Job_Seeker provides a `min_salary` query parameter, THE Job_Search_Controller SHALL return only Job_Posts where the salary range minimum is greater than or equal to the provided value.
-7. WHEN multiple filter parameters are provided simultaneously, THE Job_Search_Controller SHALL apply all filters conjunctively (AND logic).
-8. WHEN a Job_Seeker requests a specific Job_Post by ID, THE Job_Search_Controller SHALL return the full Job_Post details including employer company name.
-9. IF a requested Job_Post ID does not exist, THEN THE Job_Search_Controller SHALL return a 404 response.
+1. WHEN an Admin requests any user's profile by user ID, THE Profile_View_Controller SHALL return the full User record plus their associated profile (JobSeekerProfile or CompanyProfile) with all fields including sensitive ones (email, phone, ai_email, ai_phone).
+2. WHEN an Employer requests a Job_Seeker's profile by user ID, THE Profile_View_Controller SHALL return the full JobSeekerProfile including all AI-derived fields, skills, work history, education, and contact details.
+3. WHEN a Job_Seeker requests an Employer's profile by user ID, THE Profile_View_Controller SHALL return the full CompanyProfile including all company details, ratings, reviews, and the employer's active job posts.
+4. WHEN any authenticated user requests a profile for a user ID that does not exist, THE Profile_View_Controller SHALL return a 404 response.
+5. WHEN an Employer requests another Employer's profile, THE Profile_View_Controller SHALL return the CompanyProfile with all public fields.
+6. WHEN a Job_Seeker requests another Job_Seeker's profile, THE Profile_View_Controller SHALL return the JobSeekerProfile with all fields except password.
+7. WHEN any authenticated user requests the list of all users (admin only), THE Profile_View_Controller SHALL return a paginated list of all users with their roles and basic profile info.
+8. WHEN an Admin requests the list of all job seekers, THE Profile_View_Controller SHALL return a paginated list with full JobSeekerProfile data for each.
+9. WHEN an Admin requests the list of all employers, THE Profile_View_Controller SHALL return a paginated list with full CompanyProfile data for each.
 
 ---
 
-### Requirement 4: Job Seeker Applying to Job Posts
+### Requirement 10: Analytics Dashboards
 
-**User Story:** As a job seeker, I want to apply to job posts, so that I can express my interest to employers.
+**User Story:** As an admin, employer, or job seeker, I want to see analytics and statistics relevant to my role, so that I can make data-driven decisions.
 
 #### Acceptance Criteria
 
-1. WHEN a Job_Seeker submits an application to an active Job_Post, THE Application_Controller SHALL create an Application record with status `pending` and return a 201 response.
-2. IF a Job_Seeker attempts to apply to a Job_Post they have already applied to, THEN THE Application_Controller SHALL return a 409 response indicating a duplicate application.
-3. IF a Job_Seeker attempts to apply to a Job_Post that does not exist or is inactive, THEN THE Application_Controller SHALL return a 404 response.
-4. WHEN a Job_Seeker submits an application without attaching a CV file, THE Application_Controller SHALL use the CV file path stored in the Job_Seeker's JobSeekerProfile as the application resume.
-5. WHEN a Job_Seeker submits an application with an attached CV file, THE Application_Controller SHALL store the file and use it as the application resume.
-6. WHEN a Job_Seeker requests their application list, THE Application_Controller SHALL return a paginated list of the Job_Seeker's Applications including the associated Job_Post title and company name.
-7. WHEN a Job_Seeker withdraws a pending application, THE Application_Controller SHALL delete the Application record and return a 200 response.
-8. IF a Job_Seeker attempts to withdraw an application with status `accepted`, THEN THE Application_Controller SHALL return a 403 response.
+**Admin Analytics (10.1–10.7):**
+1. WHEN an Admin requests the admin analytics endpoint, THE Analytics_Controller SHALL return platform-wide stats including: total users broken down by role (employee, employer, admin), total active job posts, total applications, total direct offers, and total companies.
+2. WHEN an Admin requests admin analytics, THE Analytics_Controller SHALL return employer approval stats: total pending applications, total approved employers, total rejected employers, and approval rate percentage.
+3. WHEN an Admin requests admin analytics, THE Analytics_Controller SHALL return the top 10 most demanded skills across all job posts (based on `required_skills` / `roles` / `tags` fields).
+4. WHEN an Admin requests admin analytics, THE Analytics_Controller SHALL return application status breakdown: count of pending, reviewed, accepted, and rejected applications.
+5. WHEN an Admin requests admin analytics, THE Analytics_Controller SHALL return new user registrations grouped by month for the last 12 months.
+6. WHEN an Admin requests admin analytics, THE Analytics_Controller SHALL return the top 10 most active employers by number of job posts.
+7. WHEN an Admin requests admin analytics, THE Analytics_Controller SHALL return average ATS score across all job seeker profiles that have been analyzed.
+
+**Employer Analytics (10.8–10.14):**
+8. WHEN an Employer requests their analytics endpoint, THE Analytics_Controller SHALL return their own stats: total job posts (active and inactive), total applications received across all posts, and total direct offers sent.
+9. WHEN an Employer requests their analytics, THE Analytics_Controller SHALL return application status breakdown across all their job posts: count of pending, reviewed, accepted, and rejected.
+10. WHEN an Employer requests their analytics, THE Analytics_Controller SHALL return per-job-post application counts for all their posts.
+11. WHEN an Employer requests their analytics, THE Analytics_Controller SHALL return the top 10 skills among applicants to their job posts (based on applicants' ai_skills).
+12. WHEN an Employer requests their analytics, THE Analytics_Controller SHALL return the average ATS score of applicants to their job posts.
+13. WHEN an Employer requests their analytics, THE Analytics_Controller SHALL return direct offer stats: total sent, total accepted, total declined, and acceptance rate percentage.
+14. WHEN an Employer requests their analytics, THE Analytics_Controller SHALL return the most recent 5 applications across all their posts.
+
+**Job Seeker Analytics (10.15–10.20):**
+15. WHEN a Job_Seeker requests their analytics endpoint, THE Analytics_Controller SHALL return their own stats: total applications submitted, and breakdown by status (pending, reviewed, accepted, rejected).
+16. WHEN a Job_Seeker requests their analytics, THE Analytics_Controller SHALL return direct offer stats: total received, total accepted, total declined.
+17. WHEN a Job_Seeker requests their analytics, THE Analytics_Controller SHALL return their current ATS score and the date it was last analyzed.
+18. WHEN a Job_Seeker requests their analytics, THE Analytics_Controller SHALL return the number of job posts that match their profile (matched jobs count).
+19. WHEN a Job_Seeker requests their analytics, THE Analytics_Controller SHALL return the top 5 job categories/roles they have applied to.
+20. WHEN a Job_Seeker requests their analytics, THE Analytics_Controller SHALL return the most recent 5 applications with job post title and current status.
 
 ---
 
-### Requirement 5: Employer Job Post Management
+### Requirement 11: Matched Jobs
 
-**User Story:** As an employer, I want to create, update, and manage my job posts, so that I can attract suitable candidates.
-
-#### Acceptance Criteria
-
-1. WHEN an approved Employer submits a valid job post creation request, THE Job_Post_Controller SHALL create a Job_Post record associated with the employer and return a 201 response.
-2. THE Job_Post_Controller SHALL require the following fields for job post creation: `title` (string, max 150), `description` (string), `requirements` (string), `company_name` (string, max 150), `job_type` (one of: `full_time`, `part_time`, `contract`, `freelance`).
-3. WHEN an Employer creates a Job_Post, THE Job_Post_Controller SHALL set `is_active` to `true` by default.
-4. WHEN an Employer updates their own Job_Post with valid data, THE Job_Post_Controller SHALL apply the changes and return the updated Job_Post.
-5. IF an Employer attempts to update a Job_Post that belongs to a different employer, THEN THE Job_Post_Controller SHALL return a 403 response.
-6. WHEN an Employer deactivates a Job_Post, THE Job_Post_Controller SHALL set `is_active` to `false`, preventing it from appearing in Job_Seeker search results.
-7. WHEN an Employer requests their job post list, THE Job_Post_Controller SHALL return all Job_Posts belonging to that employer, including application counts.
-8. WHEN an Employer deletes their own Job_Post, THE Job_Post_Controller SHALL remove the record and return a 200 response.
-9. IF an Employer attempts to delete a Job_Post that belongs to a different employer, THEN THE Job_Post_Controller SHALL return a 403 response.
-
----
-
-### Requirement 6: Employer Searching Job Seekers
-
-**User Story:** As an employer, I want to search and filter job seekers by skills, ATS score, and other criteria, so that I can identify the best candidates for my positions.
+**User Story:** As a job seeker, I want to see job posts that match my profile, so that I can quickly find the most relevant opportunities.
 
 #### Acceptance Criteria
 
-1. WHEN an approved Employer requests the job seeker search endpoint, THE Employer_Search_Controller SHALL return a paginated list of Job_Seekers whose profiles are marked `is_actively_seeking = true` (10 per page by default).
-2. WHEN an Employer provides a `skills` query parameter (comma-separated list), THE Employer_Search_Controller SHALL return only Job_Seekers whose `skills` array contains all of the specified skills (case-insensitive).
-3. WHEN an Employer provides a `min_ats_score` query parameter, THE Employer_Search_Controller SHALL return only Job_Seekers whose `ats_score` is greater than or equal to the provided value.
-4. WHEN an Employer provides a `max_ats_score` query parameter, THE Employer_Search_Controller SHALL return only Job_Seekers whose `ats_score` is less than or equal to the provided value.
-5. WHEN an Employer provides a `location` query parameter, THE Employer_Search_Controller SHALL return only Job_Seekers whose profile location contains the provided value (case-insensitive).
-6. WHEN an Employer provides a `keyword` query parameter, THE Employer_Search_Controller SHALL return only Job_Seekers whose `summary` or `current_job_title` contains the keyword (case-insensitive).
-7. WHEN multiple filter parameters are provided simultaneously, THE Employer_Search_Controller SHALL apply all filters conjunctively (AND logic).
-8. WHEN an Employer requests a specific Job_Seeker's public profile by user ID, THE Employer_Search_Controller SHALL return the Job_Seeker's profile excluding sensitive fields (password, email, phone).
-9. IF a requested Job_Seeker profile does not exist or the user is not a job seeker, THEN THE Employer_Search_Controller SHALL return a 404 response.
-
----
-
-### Requirement 7: Employer Sending Direct Job Offers
-
-**User Story:** As an employer, I want to send direct job offers to specific job seekers, so that I can proactively recruit candidates I find suitable.
-
-#### Acceptance Criteria
-
-1. WHEN an approved Employer sends a Direct_Offer to a Job_Seeker, THE Direct_Offer_Controller SHALL create a Direct_Offer record with status `pending` and return a 201 response.
-2. THE Direct_Offer_Controller SHALL require the following fields: `job_seeker_id` (valid user ID with employee role), `job_post_id` (valid Job_Post ID belonging to the employer), `message` (string, max 1000 characters).
-3. IF an Employer attempts to send a Direct_Offer referencing a Job_Post that does not belong to them, THEN THE Direct_Offer_Controller SHALL return a 403 response.
-4. IF an Employer attempts to send a Direct_Offer to a user who is not a Job_Seeker, THEN THE Direct_Offer_Controller SHALL return a 422 response.
-5. IF an Employer has already sent a Direct_Offer for the same Job_Post to the same Job_Seeker, THEN THE Direct_Offer_Controller SHALL return a 409 response.
-6. WHEN a Job_Seeker requests their received Direct_Offers, THE Direct_Offer_Controller SHALL return a paginated list of Direct_Offers addressed to that Job_Seeker, including the Job_Post title and employer company name.
-7. WHEN a Job_Seeker accepts a Direct_Offer, THE Direct_Offer_Controller SHALL update the Direct_Offer status to `accepted` and automatically create an Application record with status `pending`.
-8. WHEN a Job_Seeker declines a Direct_Offer, THE Direct_Offer_Controller SHALL update the Direct_Offer status to `declined`.
-9. IF a Job_Seeker attempts to accept or decline a Direct_Offer that was not addressed to them, THEN THE Direct_Offer_Controller SHALL return a 403 response.
-10. WHEN an Employer requests their sent Direct_Offers, THE Direct_Offer_Controller SHALL return a paginated list of Direct_Offers sent by that employer, including the Job_Seeker name and offer status.
-
----
-
-### Requirement 8: Application Status Management by Employer
-
-**User Story:** As an employer, I want to review and update the status of applications to my job posts, so that I can manage my hiring pipeline.
-
-#### Acceptance Criteria
-
-1. WHEN an Employer requests applications for one of their Job_Posts, THE Application_Controller SHALL return a paginated list of Applications for that post, including the applicant's name and ATS score.
-2. WHEN an Employer updates an Application status to `reviewed`, `accepted`, or `rejected`, THE Application_Controller SHALL persist the new status and return the updated Application.
-3. IF an Employer attempts to update the status of an Application for a Job_Post that does not belong to them, THEN THE Application_Controller SHALL return a 403 response.
-4. WHEN an Employer provides feedback text when updating an Application, THE Application_Controller SHALL store the feedback on the Application record.
-5. IF an Employer attempts to set an Application status to a value outside of `pending`, `reviewed`, `accepted`, or `rejected`, THEN THE Application_Controller SHALL return a 422 response.
+1. WHEN a Job_Seeker requests the matched jobs endpoint, THE MatchedJobs_Controller SHALL return a paginated list of active job posts ranked by a `match_score` in descending order.
+2. WHEN computing the match_score for a job post, THE MatchedJobs_Controller SHALL award 2 points for each skill in the job post's `roles`/`tags` that matches any skill in the seeker's `ai_skills` or `skills` array (case-insensitive).
+3. WHEN computing the match_score, THE MatchedJobs_Controller SHALL award 3 bonus points if the job post's `location` matches the seeker's `ai_location` or `location` (case-insensitive partial match).
+4. WHEN computing the match_score, THE MatchedJobs_Controller SHALL award 2 bonus points if the job post's `job_type` matches any value in the seeker's `job_types` array.
+5. WHEN computing the match_score, THE MatchedJobs_Controller SHALL award 2 bonus points if the job post's `experience_level` matches the seeker's `job_level` (case-insensitive).
+6. WHEN a Job_Seeker has no profile or no AI-analyzed skills, THE MatchedJobs_Controller SHALL return active job posts ordered by creation date (newest first) with match_score of 0.
+7. WHEN a Job_Seeker requests matched jobs, each returned job post SHALL include the `match_score` field alongside all standard job post fields.
+8. WHEN a Job_Seeker requests matched jobs, THE MatchedJobs_Controller SHALL exclude job posts the seeker has already applied to.
+9. WHEN a Job_Seeker requests matched jobs, the response SHALL be paginated with the standard pagination envelope (data, current_page, per_page, total, total_pages, next_page, prev_page).
+10. WHEN a Job_Seeker requests matched jobs with a `min_score` query parameter, THE MatchedJobs_Controller SHALL only return posts with match_score >= min_score.

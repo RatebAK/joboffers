@@ -346,3 +346,148 @@ Each of the 27 properties above maps to one property-based test. Key generators 
 - Random job seeker profiles (mix of actively seeking, various skills/ATS scores)
 - Random filter parameter combinations
 - Random application and direct offer records
+
+---
+
+## New Features: Profile Viewing, Analytics, and Matched Jobs
+
+### Feature 1: View Other Users & Profiles (Full Data)
+
+**New controller:** `app/Http/Controllers/API/UserProfileController.php`
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/users/{userId}` | jwt.auth (any role) | Get any user's full profile |
+| GET | `/api/admin/users` | role:admin | Paginated list of all users |
+| GET | `/api/admin/users/seekers` | role:admin | All job seekers with full profiles |
+| GET | `/api/admin/users/employers` | role:admin | All employers with full company profiles |
+
+**Logic:**
+- Resolve the target user by `userId`; return 404 if not found
+- Determine the target user's primary role and load the appropriate profile:
+  - `employee` → load `JobSeekerProfile` (all fields); strip `password` from User record
+  - `employer` → load `CompanyProfile` + active job posts count; strip `password`
+  - `admin` → return User record only (no profile document)
+- Admin callers receive all fields including `ai_email`, `ai_phone`
+- Non-admin callers receive all fields except `password` on the User model (profile fields are fully exposed)
+
+**Response shape:**
+```json
+{
+  "user": {
+    "id": "...",
+    "name": "...",
+    "email": "...",
+    "roles": ["employee"],
+    "profile": {}
+  }
+}
+```
+
+---
+
+### Feature 2: Analytics Dashboards
+
+**New controller:** `app/Http/Controllers/API/AnalyticsController.php`
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/admin/analytics` | role:admin | Platform-wide analytics |
+| GET | `/api/employer/analytics` | role:employer | Employer-scoped analytics |
+| GET | `/api/job-seeker/analytics` | role:employee | Job seeker personal analytics |
+
+**Admin Analytics response fields:**
+- `users`: `{ total, by_role: { employee, employer, admin } }`
+- `jobs`: `{ total_active, total_all }`
+- `applications`: `{ total, by_status: { pending, reviewed, accepted, rejected } }`
+- `offers`: `{ total }`
+- `companies`: `{ total }`
+- `employer_approvals`: `{ pending, approved, rejected, approval_rate }`
+- `top_skills`: array of `{ skill, count }` — top 10 from job posts roles/tags
+- `registrations_by_month`: array of `{ month, count }` for last 12 months
+- `top_employers`: array of `{ employer_id, name, job_post_count }` — top 10
+- `avg_ats_score`: float across all analyzed profiles
+
+**Employer Analytics response fields:**
+- `jobs`: `{ total, active, inactive }`
+- `applications`: `{ total, by_status: { pending, reviewed, accepted, rejected } }`
+- `applications_per_job`: array of `{ job_id, title, count }`
+- `offers`: `{ total_sent, accepted, declined, acceptance_rate }`
+- `top_applicant_skills`: array of `{ skill, count }` — top 10
+- `avg_applicant_ats_score`: float
+- `recent_applications`: last 5 applications with applicant name and job title
+
+**Job Seeker Analytics response fields:**
+- `applications`: `{ total, by_status: { pending, reviewed, accepted, rejected } }`
+- `offers`: `{ total_received, accepted, declined }`
+- `ats_score`: `{ current, analyzed_at }`
+- `matched_jobs_count`: integer
+- `top_applied_categories`: array of `{ category, count }` — top 5
+- `recent_applications`: last 5 with job title and status
+
+**Implementation notes:**
+- All aggregations use MongoDB queries directly on the relevant collections
+- No caching in the initial implementation
+- All counts computed at request time
+
+---
+
+### Feature 3: Matched Jobs
+
+**New controller:** `app/Http/Controllers/API/MatchedJobsController.php`
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/job-seeker/matched-jobs` | role:employee | Paginated matched job posts with scores |
+
+**Matching algorithm:**
+1. Load the seeker's `JobSeekerProfile`
+2. Fetch all active job posts the seeker has NOT already applied to
+3. For each job post compute `match_score`:
+   - +2 per skill overlap between job `roles`/`tags` and seeker `ai_skills`/`skills[].name` (case-insensitive, deduplicated)
+   - +3 if job `location` partially matches seeker `ai_location` or `location`
+   - +2 if job `job_type` is in seeker `job_types`
+   - +2 if job `experience_level` matches seeker `job_level`
+4. Sort by `match_score` desc, then `created_at` desc as tiebreaker
+5. Apply optional `?min_score=` filter
+6. Paginate at 10 per page
+
+**Edge cases:**
+- No profile or no skills → return active jobs ordered by `created_at` desc, all `match_score: 0`
+- All active jobs already applied to → empty paginated response
+
+---
+
+### New Correctness Properties
+
+### Property 28: Profile view returns full data for the target user type
+*For any* authenticated user viewing another user's profile, the response must include the target user's complete profile document with no fields omitted except `password`.
+**Validates: Requirements 9.1, 9.2, 9.3**
+
+### Property 29: Admin user list is complete and paginated
+*For any* set of N users in the system, the admin user list endpoint must return all N users across pages with correct pagination metadata.
+**Validates: Requirements 9.7**
+
+### Property 30: Admin analytics counts are accurate
+*For any* known database state (N users, M job posts, K applications), the admin analytics endpoint must return counts that exactly match the actual database counts.
+**Validates: Requirements 10.1, 10.2, 10.4**
+
+### Property 31: Employer analytics are scoped to the requesting employer
+*For any* employer, their analytics must reflect only their own job posts, applications, and offers — never data belonging to other employers.
+**Validates: Requirements 10.8, 10.9, 10.10, 10.13**
+
+### Property 32: Job seeker analytics are scoped to the requesting seeker
+*For any* job seeker, their analytics must reflect only their own applications and offers.
+**Validates: Requirements 10.15, 10.16**
+
+### Property 33: Match score is computed correctly
+*For any* job seeker profile and job post, the match_score must equal the sum of: 2× skill overlaps + 3 if location matches + 2 if job_type matches + 2 if experience_level matches.
+**Validates: Requirements 11.2, 11.3, 11.4, 11.5**
+
+### Property 34: Matched jobs excludes already-applied posts
+*For any* job seeker who has applied to a subset of active job posts, the matched jobs endpoint must not include any of those applied posts.
+**Validates: Requirements 11.8**
+
+### Property 35: Matched jobs are sorted by match_score descending
+*For any* list of matched jobs returned, no job post should have a lower match_score than any job post that appears after it in the list.
+**Validates: Requirements 11.1**
