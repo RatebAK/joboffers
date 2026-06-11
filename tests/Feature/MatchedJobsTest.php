@@ -8,13 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 
-beforeEach(function () {
-    User::truncate();
-    JobSeekerProfile::truncate();
-    Employer::truncate();
-    JobPost::truncate();
-    Application::truncate();
-});
+// Note: Tests use unique data to avoid conflicts instead of truncating collections
 
 test('matched jobs returns posts with higher scores for matching skills', function () {
     $seekerRes = $this->postJson('/api/auth/register', [
