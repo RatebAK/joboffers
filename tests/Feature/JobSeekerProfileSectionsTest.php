@@ -38,6 +38,16 @@ test('can update personal information', function () {
         ])
         ->assertJsonPath('profile.full_name', 'Jane Doe')
         ->assertJsonPath('profile.phone', '+961 70 123456');
+    
+    // Verify data was actually saved to database
+    $profile = JobSeekerProfile::where('user_id', (string) $this->seeker->_id)->first();
+    expect($profile)->not->toBeNull();
+    expect($profile->full_name)->toBe('Jane Doe');
+    expect($profile->first_name)->toBe('Jane');
+    expect($profile->last_name)->toBe('Doe');
+    expect($profile->phone)->toBe('+961 70 123456');
+    expect($profile->gender)->toBe('female');
+    expect($profile->city)->toBe('Beirut');
 });
 
 test('personal info validates phone length', function () {
@@ -82,6 +92,15 @@ test('can update career information', function () {
         ->assertJsonPath('profile.current_job_title', 'Senior Frontend Developer')
         ->assertJsonPath('profile.years_of_experience', 5)
         ->assertJsonPath('profile.is_actively_seeking', true);
+    
+    // Verify data was actually saved to database
+    $profile = JobSeekerProfile::where('user_id', (string) $this->seeker->_id)->first();
+    expect($profile)->not->toBeNull();
+    expect($profile->current_job_title)->toBe('Senior Frontend Developer');
+    expect($profile->years_of_experience)->toBe(5);
+    expect($profile->job_level)->toBe('senior');
+    expect($profile->job_types)->toBe(['full_time', 'remote']);
+    expect($profile->is_actively_seeking)->toBeTrue();
 });
 
 test('career info validates job level enum', function () {
@@ -154,10 +173,15 @@ test('can update skills', function () {
             'message' => 'Skills updated successfully',
         ]);
     
-    $skills = $response->json('profile.skills');
-    expect($skills)->toHaveCount(3);
-    expect($skills[0]['name'])->toBe('React');
-    expect($skills[0]['level'])->toBe('advanced');
+    // Verify data was actually saved to database
+    $profile = JobSeekerProfile::where('user_id', (string) $this->seeker->_id)->first();
+    expect($profile)->not->toBeNull();
+    expect($profile->skills)->toBeArray();
+    expect($profile->skills)->toHaveCount(3);
+    expect($profile->skills[0]['name'])->toBe('React');
+    expect($profile->skills[0]['level'])->toBe('advanced');
+    expect($profile->skills[1]['name'])->toBe('TypeScript');
+    expect($profile->skills[2]['name'])->toBe('Node.js');
 });
 
 test('can delete all skills', function () {
@@ -168,6 +192,10 @@ test('can delete all skills', function () {
         ],
     ]);
 
+    // Verify skills were created
+    $profile = JobSeekerProfile::where('user_id', (string) $this->seeker->_id)->first();
+    expect($profile->skills)->toHaveCount(1);
+
     // Then delete them
     $response = $this->withToken($this->token)->deleteJson('/api/job-seeker/profile/skills');
 
@@ -175,6 +203,11 @@ test('can delete all skills', function () {
         ->assertJson([
             'message' => 'Skills deleted successfully',
         ]);
+    
+    // Verify skills were actually deleted
+    $profile->refresh();
+    expect($profile->skills)->toBeArray();
+    expect($profile->skills)->toHaveCount(0);
 });
 
 test('skills validates level enum', function () {
