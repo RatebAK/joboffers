@@ -256,7 +256,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: June 9, 2026</li>
+        <li>Last updated: June 11, 2026</li>
     </ul>
 </div>
 
@@ -4721,7 +4721,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "last_name=n"\
     --form "full_name=g"\
     --form "image=z"\
-    --form "gender=female"\
+    --form "gender=other"\
     --form "nationality=m"\
     --form "city=i"\
     --form "location=y"\
@@ -4731,23 +4731,23 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "marital_status=divorced"\
     --form "salary_range_from=16"\
     --form "salary_range_to=38"\
-    --form "current_job_status=unemployed"\
+    --form "current_job_status=student"\
     --form "years_of_experience=8"\
     --form "education_level=n"\
-    --form "job_level=mid"\
+    --form "job_level=executive"\
     --form "job_types[]=r"\
     --form "job_roles[]=w"\
     --form "work_cities[]=t"\
     --form "current_job_title=u"\
     --form "experience_summary=architecto"\
     --form "expected_salary=39"\
-    --form "is_actively_seeking=1"\
+    --form "is_actively_seeking="\
     --form "social_links[linkedin]=g"\
     --form "social_links[github]=z"\
     --form "social_links[portfolio]=m"\
     --form "social_links[twitter]=i"\
     --form "skills[][name]=y"\
-    --form "skills[][level]=advanced"\
+    --form "skills[][level]=expert"\
     --form "education_history[][certificate_type]=v"\
     --form "education_history[][university]=d"\
     --form "education_history[][faculty]=l"\
@@ -4761,9 +4761,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "work_experience[][job_roles][]=u"\
     --form "work_experience[][from_date]=jwvlxjklqppwqbew"\
     --form "work_experience[][to_date]=tnnoqitpxntltcvi"\
-    --form "work_experience[][is_currently_working]=1"\
+    --form "work_experience[][is_currently_working]="\
     --form "work_experience[][description]=Eius et animi quos velit et."\
-    --form "resume=@/tmp/phpONR4Aa" </code></pre></div>
+    --form "resume=@/tmp/phpMc3P8d" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -4782,7 +4782,7 @@ body.append('first_name', 'b');
 body.append('last_name', 'n');
 body.append('full_name', 'g');
 body.append('image', 'z');
-body.append('gender', 'female');
+body.append('gender', 'other');
 body.append('nationality', 'm');
 body.append('city', 'i');
 body.append('location', 'y');
@@ -4792,23 +4792,23 @@ body.append('date_of_birth', 'pwlvqwrsitcpscql');
 body.append('marital_status', 'divorced');
 body.append('salary_range_from', '16');
 body.append('salary_range_to', '38');
-body.append('current_job_status', 'unemployed');
+body.append('current_job_status', 'student');
 body.append('years_of_experience', '8');
 body.append('education_level', 'n');
-body.append('job_level', 'mid');
+body.append('job_level', 'executive');
 body.append('job_types[]', 'r');
 body.append('job_roles[]', 'w');
 body.append('work_cities[]', 't');
 body.append('current_job_title', 'u');
 body.append('experience_summary', 'architecto');
 body.append('expected_salary', '39');
-body.append('is_actively_seeking', '1');
+body.append('is_actively_seeking', '');
 body.append('social_links[linkedin]', 'g');
 body.append('social_links[github]', 'z');
 body.append('social_links[portfolio]', 'm');
 body.append('social_links[twitter]', 'i');
 body.append('skills[][name]', 'y');
-body.append('skills[][level]', 'advanced');
+body.append('skills[][level]', 'expert');
 body.append('education_history[][certificate_type]', 'v');
 body.append('education_history[][university]', 'd');
 body.append('education_history[][faculty]', 'l');
@@ -4822,7 +4822,7 @@ body.append('work_experience[][company_name]', 't');
 body.append('work_experience[][job_roles][]', 'u');
 body.append('work_experience[][from_date]', 'jwvlxjklqppwqbew');
 body.append('work_experience[][to_date]', 'tnnoqitpxntltcvi');
-body.append('work_experience[][is_currently_working]', '1');
+body.append('work_experience[][is_currently_working]', '');
 body.append('work_experience[][description]', 'Eius et animi quos velit et.');
 body.append('resume', document.querySelector('input[name="resume"]').files[0]);
 
@@ -4975,10 +4975,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="gender"                data-endpoint="PUTapi-job-seeker-profile"
-               value="female"
+               value="other"
                data-component="body">
     <br>
-<p>Example: <code>female</code></p>
+<p>Example: <code>other</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>male</code></li> <li><code>female</code></li> <li><code>other</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5099,10 +5099,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="current_job_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="unemployed"
+               value="student"
                data-component="body">
     <br>
-<p>Example: <code>unemployed</code></p>
+<p>Example: <code>student</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>employed</code></li> <li><code>unemployed</code></li> <li><code>freelancing</code></li> <li><code>student</code></li> <li><code>open_to_work</code></li></ul>
         </div>
@@ -5137,10 +5137,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="mid"
+               value="executive"
                data-component="body">
     <br>
-<p>Example: <code>mid</code></p>
+<p>Example: <code>executive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>entry</code></li> <li><code>junior</code></li> <li><code>mid</code></li> <li><code>senior</code></li> <li><code>lead</code></li> <li><code>manager</code></li> <li><code>director</code></li> <li><code>executive</code></li></ul>
         </div>
@@ -5242,7 +5242,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
         <details>
@@ -5333,10 +5333,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="skills.0.level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="advanced"
+               value="expert"
                data-component="body">
     <br>
-<p>Example: <code>advanced</code></p>
+<p>Example: <code>expert</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>beginner</code></li> <li><code>intermediate</code></li> <li><code>advanced</code></li> <li><code>expert</code></li></ul>
                     </div>
@@ -5542,7 +5542,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -5568,7 +5568,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>/tmp/phpONR4Aa</code></p>
+<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>/tmp/phpMc3P8d</code></p>
         </div>
         </form>
 
@@ -5590,7 +5590,7 @@ Must be one of:
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@/tmp/phpMQ0yDL" </code></pre></div>
+    --form "resume=@/tmp/phpjkTrvq" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -5734,7 +5734,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 5 MB. Example: <code>/tmp/phpMQ0yDL</code></p>
+<p>PDF/DOC/DOCX file, max 5 MB. Example: <code>/tmp/phpjkTrvq</code></p>
         </div>
         </form>
 
@@ -5756,7 +5756,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cv=@/tmp/php7MFPeL" </code></pre></div>
+    --form "cv=@/tmp/phpG8bsMr" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -5916,7 +5916,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/php7MFPeL</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpG8bsMr</code></p>
         </div>
         </form>
 
@@ -6095,7 +6095,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "job_post_id=664f1a2b3c4d5e6f7a8b9c0d"\
     --form "cover_letter=I am very interested in this position."\
-    --form "resume=@/tmp/phpbE0MBq" </code></pre></div>
+    --form "resume=@/tmp/php3Rwhw0" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6275,7 +6275,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/phpbE0MBq</code></p>
+<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/php3Rwhw0</code></p>
         </div>
         </form>
 
@@ -7507,7 +7507,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "document=@/tmp/phpjDFpRd" </code></pre></div>
+    --form "document=@/tmp/php2suDEE" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -7656,7 +7656,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/phpjDFpRd</code></p>
+<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/php2suDEE</code></p>
         </div>
         </form>
 

@@ -1,0 +1,32 @@
+meta {
+  name: Update Social Links
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{baseUrl}}/job-seeker/profile/social-links
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{authToken}}
+}
+
+body:json {
+  {
+    "social_links": {
+      "linkedin": "https://linkedin.com/in/janesmith",
+      "github": "https://github.com/janesmith",
+      "portfolio": "https://janesmith.dev",
+      "twitter": "https://twitter.com/janesmith"
+    }
+  }
+}
+
+docs {
+  Updates the authenticated job seeker's social media links.
+  
+  All social links are optional. Provide only the ones you want to update.
+}

@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "6db799db-22a1-402e-a9a4-405ef726d263",
+        "_postman_id": "e3f27b4d-c684-4a3f-a038-17309e4e15da",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -1007,7 +1007,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "female",
+                                    "value": "other",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1067,7 +1067,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "unemployed",
+                                    "value": "student",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1085,7 +1085,7 @@
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "mid",
+                                    "value": "executive",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1127,7 +1127,7 @@
                                 },
                                 {
                                     "key": "is_actively_seeking",
-                                    "value": "1",
+                                    "value": "",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1163,7 +1163,7 @@
                                 },
                                 {
                                     "key": "skills[0][level]",
-                                    "value": "advanced",
+                                    "value": "expert",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1247,7 +1247,7 @@
                                 },
                                 {
                                     "key": "work_experience[0][is_currently_working]",
-                                    "value": "1",
+                                    "value": "",
                                     "type": "text",
                                     "description": ""
                                 },

@@ -1,0 +1,45 @@
+meta {
+  name: Update Education
+  type: http
+  seq: 9
+}
+
+put {
+  url: {{baseUrl}}/job-seeker/profile/education
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{authToken}}
+}
+
+body:json {
+  {
+    "education_history": [
+      {
+        "certificate_type": "Bachelor's Degree",
+        "university": "American University of Beirut",
+        "faculty": "Engineering",
+        "major": "Computer Science",
+        "major_name": "Computer Science and Engineering",
+        "grade": "3.8 GPA",
+        "from_date": "2015-09",
+        "awarded_date": "2019-06"
+      },
+      {
+        "certificate_type": "High School Diploma",
+        "university": "International School",
+        "grade": "95%",
+        "from_date": "2012-09",
+        "awarded_date": "2015-06"
+      }
+    ]
+  }
+}
+
+docs {
+  Replaces all education entries with the provided array.
+  
+  All fields are optional within each entry.
+}

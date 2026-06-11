@@ -16,6 +16,19 @@
 4. **JobSeeker / Apply to Job** sets `{{application_id}}` automatically
 5. **Employer / Send Direct Offer** sets `{{offer_id}}` automatically
 
+## Profile Update Endpoints (New)
+
+Job seekers can now update their profile in sections instead of sending all fields at once:
+
+- **Update Personal Info** — first/last name, gender, nationality, city, address, phone, date of birth, marital status
+- **Update Career Info** — salary range, job status, experience, education level, job level, job types, roles, cities
+- **Update Social Links** — LinkedIn, GitHub, portfolio, Twitter
+- **Update Skills** — replace all skills (+ DELETE endpoint to remove all)
+- **Update Education** — replace all education history (+ DELETE endpoint)
+- **Update Work Experience** — replace all work experience (+ DELETE endpoint)
+
+Each endpoint only updates the specified section, preserving all other profile data. The legacy **Update My Profile** endpoint is still available for backwards compatibility.
+
 ## Variables
 
 | Variable | Set by |

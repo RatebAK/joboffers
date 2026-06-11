@@ -2248,7 +2248,7 @@ endpoints:
         name: gender
         description: ''
         required: false
-        example: female
+        example: other
         type: string
         enumValues:
           - male
@@ -2367,7 +2367,7 @@ endpoints:
         name: current_job_status
         description: ''
         required: false
-        example: unemployed
+        example: student
         type: string
         enumValues:
           - employed
@@ -2405,7 +2405,7 @@ endpoints:
         name: job_level
         description: ''
         required: false
-        example: mid
+        example: executive
         type: string
         enumValues:
           - entry
@@ -2493,7 +2493,7 @@ endpoints:
         name: is_actively_seeking
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -2614,7 +2614,7 @@ endpoints:
         name: 'skills[].level'
         description: ''
         required: false
-        example: advanced
+        example: expert
         type: string
         enumValues:
           - beginner
@@ -2773,7 +2773,7 @@ endpoints:
         name: 'work_experience[].is_currently_working'
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -2795,7 +2795,7 @@ endpoints:
       last_name: 'n'
       full_name: g
       image: z
-      gender: female
+      gender: other
       nationality: m
       city: i
       location: 'y'
@@ -2805,10 +2805,10 @@ endpoints:
       marital_status: divorced
       salary_range_from: 16
       salary_range_to: 38
-      current_job_status: unemployed
+      current_job_status: student
       years_of_experience: 8
       education_level: 'n'
-      job_level: mid
+      job_level: executive
       job_types:
         - r
       job_roles:
@@ -2818,7 +2818,7 @@ endpoints:
       current_job_title: u
       experience_summary: architecto
       expected_salary: 39
-      is_actively_seeking: true
+      is_actively_seeking: false
       social_links:
         linkedin: g
         github: z
@@ -2827,7 +2827,7 @@ endpoints:
       skills:
         -
           name: 'y'
-          level: advanced
+          level: expert
       education_history:
         -
           certificate_type: v
@@ -2846,7 +2846,7 @@ endpoints:
             - u
           from_date: jwvlxjklqppwqbew
           to_date: tnnoqitpxntltcvi
-          is_currently_working: true
+          is_currently_working: false
           description: 'Eius et animi quos velit et.'
     fileParameters:
       resume: null

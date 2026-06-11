@@ -1,0 +1,19 @@
+meta {
+  name: Delete Work Experience
+  type: http
+  seq: 12
+}
+
+delete {
+  url: {{baseUrl}}/job-seeker/profile/work-experience
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{authToken}}
+}
+
+docs {
+  Removes all work experience entries from the profile.
+}

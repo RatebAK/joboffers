@@ -1615,7 +1615,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: female
+                  example: other
                   enum:
                     - male
                     - female
@@ -1676,7 +1676,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: unemployed
+                  example: student
                   enum:
                     - employed
                     - unemployed
@@ -1697,7 +1697,7 @@ paths:
                 job_level:
                   type: string
                   description: ''
-                  example: mid
+                  example: executive
                   enum:
                     - entry
                     - junior
@@ -1747,7 +1747,7 @@ paths:
                 is_actively_seeking:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 social_links:
                   type: object
                   description: 'Social Links (nested object).'
@@ -1789,7 +1789,7 @@ paths:
                       level:
                         type: string
                         description: ''
-                        example: advanced
+                        example: expert
                         enum:
                           - beginner
                           - intermediate
@@ -1882,7 +1882,7 @@ paths:
                       is_currently_working:
                         type: boolean
                         description: ''
-                        example: true
+                        example: false
                         nullable: true
                       description:
                         type: string
