@@ -43,4 +43,12 @@ return [
         'url' => env('JOB_MATCHING_API_URL'),
     ],
 
+    'resume_matching' => [
+        'url' => env('RESUME_MATCHING_API_URL'),
+    ],
+
+    'resume_coach' => [
+        'url' => env('RESUME_COACH_API_URL'),
+    ],
+
 ];

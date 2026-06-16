@@ -12,6 +12,8 @@ use App\Http\Controllers\API\JobPostController;
 use App\Http\Controllers\API\CompanyProfileController;
 use App\Http\Controllers\API\JobSeekerController;
 use App\Http\Controllers\API\MatchedJobsController;
+use App\Http\Controllers\API\ResumeCoachController;
+use App\Http\Controllers\API\ResumeMatchingController;
 use App\Http\Controllers\API\UserProfileController;
 use App\Http\Controllers\API\UserSearchController;
 
@@ -81,6 +83,12 @@ Route::middleware(['jwt.auth', 'role:employee'])->prefix('job-seeker')->group(fu
     Route::get('offers', [DirectOfferController::class, 'indexReceived']);
     Route::post('offers/{id}/accept', [DirectOfferController::class, 'accept']);
     Route::post('offers/{id}/decline', [DirectOfferController::class, 'decline']);
+
+    // Resume Matching AI
+    Route::post('match-resume-to-jobs', [ResumeMatchingController::class, 'matchResume']);
+
+    // Resume Coach AI
+    Route::post('coach/chat', [ResumeCoachController::class, 'chat']);
 });
 
 // Employer application — any authenticated user can apply to become an employer
