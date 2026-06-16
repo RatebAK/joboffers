@@ -11,7 +11,7 @@ use App\Exceptions\CvAnalysisException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
-function matchingSeeker(): array
+function resumeMatchSeeker(): array
 {
     $seeker = User::factory()->employee()->create();
     $token = auth('api')->login($seeker);
@@ -23,7 +23,7 @@ function matchingSeeker(): array
 
 test('job seeker can match resume to jobs', function () {
     Storage::fake('public');
-    [$seeker, $token] = matchingSeeker();
+    [$seeker, $token] = resumeMatchSeeker();
 
     $mock = $this->mock(ResumeMatchingService::class);
     $mock->shouldReceive('matchResumeToJobs')
@@ -84,7 +84,7 @@ test('job seeker can match resume to jobs', function () {
 
 test('resume matching returns correct structure', function () {
     Storage::fake('public');
-    [$seeker, $token] = matchingSeeker();
+    [$seeker, $token] = resumeMatchSeeker();
 
     $mock = $this->mock(ResumeMatchingService::class);
     $mock->shouldReceive('matchResumeToJobs')
@@ -128,7 +128,7 @@ test('resume matching returns correct structure', function () {
 });
 
 test('resume matching requires resume file', function () {
-    [, $token] = matchingSeeker();
+    [, $token] = resumeMatchSeeker();
 
     $this->withToken($token)->postJson('/api/job-seeker/match-resume-to-jobs', [])
         ->assertStatus(422)
@@ -137,7 +137,7 @@ test('resume matching requires resume file', function () {
 
 test('resume matching accepts pdf files', function () {
     Storage::fake('public');
-    [$seeker, $token] = matchingSeeker();
+    [$seeker, $token] = resumeMatchSeeker();
 
     $mock = $this->mock(ResumeMatchingService::class);
     $mock->shouldReceive('matchResumeToJobs')
@@ -155,7 +155,7 @@ test('resume matching accepts pdf files', function () {
 
 test('resume matching accepts docx files', function () {
     Storage::fake('public');
-    [$seeker, $token] = matchingSeeker();
+    [$seeker, $token] = resumeMatchSeeker();
 
     $mock = $this->mock(ResumeMatchingService::class);
     $mock->shouldReceive('matchResumeToJobs')
@@ -173,7 +173,7 @@ test('resume matching accepts docx files', function () {
 
 test('resume matching rejects invalid file types', function () {
     Storage::fake('public');
-    [, $token] = matchingSeeker();
+    [, $token] = resumeMatchSeeker();
 
     $file = UploadedFile::fake()->create('resume.txt', 100, 'text/plain');
 
@@ -185,7 +185,7 @@ test('resume matching rejects invalid file types', function () {
 
 test('resume matching rejects files over 10MB', function () {
     Storage::fake('public');
-    [, $token] = matchingSeeker();
+    [, $token] = resumeMatchSeeker();
 
     $file = UploadedFile::fake()->create('large.pdf', 11000, 'application/pdf');
 
@@ -197,7 +197,7 @@ test('resume matching rejects files over 10MB', function () {
 
 test('resume matching returns 422 when service fails', function () {
     Storage::fake('public');
-    [$seeker, $token] = matchingSeeker();
+    [$seeker, $token] = resumeMatchSeeker();
 
     $mock = $this->mock(ResumeMatchingService::class);
     $mock->shouldReceive('matchResumeToJobs')
@@ -216,7 +216,7 @@ test('resume matching returns 422 when service fails', function () {
 
 test('resume matching returns 502 when service unavailable', function () {
     Storage::fake('public');
-    [$seeker, $token] = matchingSeeker();
+    [$seeker, $token] = resumeMatchSeeker();
 
     $mock = $this->mock(ResumeMatchingService::class);
     $mock->shouldReceive('matchResumeToJobs')
@@ -257,7 +257,7 @@ test('employer cannot match resume on job seeker endpoint', function () {
 
 test('resume matching handles empty results', function () {
     Storage::fake('public');
-    [$seeker, $token] = matchingSeeker();
+    [$seeker, $token] = resumeMatchSeeker();
 
     $mock = $this->mock(ResumeMatchingService::class);
     $mock->shouldReceive('matchResumeToJobs')
