@@ -1615,7 +1615,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: other
+                  example: prefer_not_to_say
                   enum:
                     - male
                     - female
@@ -1655,7 +1655,7 @@ paths:
                 marital_status:
                   type: string
                   description: ''
-                  example: divorced
+                  example: prefer_not_to_say
                   enum:
                     - single
                     - married
@@ -1697,7 +1697,7 @@ paths:
                 job_level:
                   type: string
                   description: ''
-                  example: executive
+                  example: manager
                   enum:
                     - entry
                     - junior
@@ -1747,7 +1747,7 @@ paths:
                 is_actively_seeking:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 social_links:
                   type: object
                   description: 'Social Links (nested object).'
@@ -1882,7 +1882,7 @@ paths:
                       is_currently_working:
                         type: boolean
                         description: ''
-                        example: false
+                        example: true
                         nullable: true
                       description:
                         type: string
@@ -3337,6 +3337,187 @@ paths:
         required: true
         schema:
           type: string
+  /api/job-seeker/match-resume-to-jobs:
+    post:
+      summary: 'Match resume to available jobs'
+      operationId: matchResumeToAvailableJobs
+      description: "Upload a resume and get AI-matched job recommendations from the database.\nReturns jobs ranked by match percentage and ATS compatibility."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  matches_found: 25
+                  recommended_jobs:
+                    -
+                      job_id: job_001
+                      title: 'Backend Python Developer'
+                      company: 'TechStream Solutions'
+                      location: Remote
+                      matched_skills_count: 4
+                      match_percentage: 66%
+                      ats_compatibility_score: 69%
+                      job_url: /api/jobs/job_001
+                properties:
+                  matches_found:
+                    type: integer
+                    example: 25
+                  recommended_jobs:
+                    type: array
+                    example:
+                      -
+                        job_id: job_001
+                        title: 'Backend Python Developer'
+                        company: 'TechStream Solutions'
+                        location: Remote
+                        matched_skills_count: 4
+                        match_percentage: 66%
+                        ats_compatibility_score: 69%
+                        job_url: /api/jobs/job_001
+                    items:
+                      type: object
+                      properties:
+                        job_id:
+                          type: string
+                          example: job_001
+                        title:
+                          type: string
+                          example: 'Backend Python Developer'
+                        company:
+                          type: string
+                          example: 'TechStream Solutions'
+                        location:
+                          type: string
+                          example: Remote
+                        matched_skills_count:
+                          type: integer
+                          example: 4
+                        match_percentage:
+                          type: string
+                          example: 66%
+                        ats_compatibility_score:
+                          type: string
+                          example: 69%
+                        job_url:
+                          type: string
+                          example: /api/jobs/job_001
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    resume:
+                      - 'The resume field is required.'
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      resume:
+                        type: array
+                        example:
+                          - 'The resume field is required.'
+                        items:
+                          type: string
+        502:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Resume matching service unavailable'
+                properties:
+                  message:
+                    type: string
+                    example: 'Resume matching service unavailable'
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                resume:
+                  type: string
+                  format: binary
+                  description: 'PDF/DOC/DOCX resume file, max 10 MB.'
+              required:
+                - resume
+  /api/job-seeker/coach/chat:
+    post:
+      summary: 'Chat with AI resume coach'
+      operationId: chatWithAIResumeCoach
+      description: 'Ask the AI coach for career advice, job market insights, resume tips, and more.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  response: 'To improve your resume, focus on quantifying your achievements...'
+                properties:
+                  response:
+                    type: string
+                    example: 'To improve your resume, focus on quantifying your achievements...'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    message:
+                      - 'The message field is required.'
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: array
+                        example:
+                          - 'The message field is required.'
+                        items:
+                          type: string
+        502:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Resume coach service unavailable'
+                properties:
+                  message:
+                    type: string
+                    example: 'Resume coach service unavailable'
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: 'Your question or message to the coach. Max 1000 chars.'
+                  example: 'Give me advice on improving my resume'
+              required:
+                - message
   /api/employer/apply:
     post:
       summary: 'Apply to become employer'
@@ -5188,11 +5369,11 @@ paths:
                       email: john@corp.com
       tags:
         - Endpoints
-  '/api/admin/{id}/approve':
+  '/api/admin/employers/{id}/approve':
     post:
       summary: 'Approve employer'
       operationId: approveEmployer
-      description: 'Approves an employer application. Grants the `employer` role to the user and sets `is_employer = true`. Admin only.'
+      description: "Approves an employer application. Grants the `employer` role to the user and sets `is_employer = true`. Admin only.\n\nRoute: POST /api/admin/employers/{id}/approve"
       parameters: []
       responses:
         200:
@@ -5242,11 +5423,11 @@ paths:
         required: true
         schema:
           type: string
-  '/api/admin/{id}/reject':
+  '/api/admin/employers/{id}/reject':
     post:
       summary: 'Reject employer'
       operationId: rejectEmployer
-      description: 'Rejects an employer application. Admin only.'
+      description: "Rejects an employer application. Admin only.\n\nRoute: POST /api/admin/employers/{id}/reject"
       parameters: []
       responses:
         200:

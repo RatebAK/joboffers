@@ -80,7 +80,7 @@ test('admin can approve an employer application and employer role is added', fun
     ]);
 
     $this->withToken($adminToken)
-         ->postJson("/api/admin/{$application->_id}/approve")
+         ->postJson("/api/admin/employers/{$application->_id}/approve")
          ->assertStatus(200)
          ->assertJsonPath('message', 'Approved employer request.');
 
@@ -108,7 +108,7 @@ test('admin can reject an employer application', function () {
     ]);
 
     $this->withToken($adminToken)
-         ->postJson("/api/admin/{$application->_id}/reject", [
+         ->postJson("/api/admin/employers/{$application->_id}/reject", [
              'review_notes' => 'Documents not valid.',
          ])
          ->assertStatus(200)

@@ -170,6 +170,12 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-job-seeker-offers--id--decline">
                                 <a href="#endpoints-POSTapi-job-seeker-offers--id--decline">Decline offer</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-job-seeker-match-resume-to-jobs">
+                                <a href="#endpoints-POSTapi-job-seeker-match-resume-to-jobs">Match resume to available jobs</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-job-seeker-coach-chat">
+                                <a href="#endpoints-POSTapi-job-seeker-coach-chat">Chat with AI resume coach</a>
+                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-employer-apply">
                                 <a href="#endpoints-POSTapi-employer-apply">Apply to become employer</a>
                             </li>
@@ -227,11 +233,11 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-admin-employers">
                                 <a href="#endpoints-GETapi-admin-employers">List pending employer applications</a>
                             </li>
-                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-admin--id--approve">
-                                <a href="#endpoints-POSTapi-admin--id--approve">Approve employer</a>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-admin-employers--id--approve">
+                                <a href="#endpoints-POSTapi-admin-employers--id--approve">Approve employer</a>
                             </li>
-                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-admin--id--reject">
-                                <a href="#endpoints-POSTapi-admin--id--reject">Reject employer</a>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-admin-employers--id--reject">
+                                <a href="#endpoints-POSTapi-admin-employers--id--reject">Reject employer</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-admin-analytics">
                                 <a href="#endpoints-GETapi-admin-analytics">Admin analytics - platform-wide statistics</a>
@@ -256,7 +262,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: June 11, 2026</li>
+        <li>Last updated: June 20, 2026</li>
     </ul>
 </div>
 
@@ -4721,27 +4727,27 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "last_name=n"\
     --form "full_name=g"\
     --form "image=z"\
-    --form "gender=other"\
+    --form "gender=prefer_not_to_say"\
     --form "nationality=m"\
     --form "city=i"\
     --form "location=y"\
     --form "address=v"\
     --form "phone=dljnikhwaykcmyuw"\
     --form "date_of_birth=pwlvqwrsitcpscql"\
-    --form "marital_status=divorced"\
+    --form "marital_status=prefer_not_to_say"\
     --form "salary_range_from=16"\
     --form "salary_range_to=38"\
     --form "current_job_status=student"\
     --form "years_of_experience=8"\
     --form "education_level=n"\
-    --form "job_level=executive"\
+    --form "job_level=manager"\
     --form "job_types[]=r"\
     --form "job_roles[]=w"\
     --form "work_cities[]=t"\
     --form "current_job_title=u"\
     --form "experience_summary=architecto"\
     --form "expected_salary=39"\
-    --form "is_actively_seeking="\
+    --form "is_actively_seeking=1"\
     --form "social_links[linkedin]=g"\
     --form "social_links[github]=z"\
     --form "social_links[portfolio]=m"\
@@ -4761,9 +4767,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "work_experience[][job_roles][]=u"\
     --form "work_experience[][from_date]=jwvlxjklqppwqbew"\
     --form "work_experience[][to_date]=tnnoqitpxntltcvi"\
-    --form "work_experience[][is_currently_working]="\
+    --form "work_experience[][is_currently_working]=1"\
     --form "work_experience[][description]=Eius et animi quos velit et."\
-    --form "resume=@/tmp/phpMc3P8d" </code></pre></div>
+    --form "resume=@/tmp/phpd7N6tp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -4782,27 +4788,27 @@ body.append('first_name', 'b');
 body.append('last_name', 'n');
 body.append('full_name', 'g');
 body.append('image', 'z');
-body.append('gender', 'other');
+body.append('gender', 'prefer_not_to_say');
 body.append('nationality', 'm');
 body.append('city', 'i');
 body.append('location', 'y');
 body.append('address', 'v');
 body.append('phone', 'dljnikhwaykcmyuw');
 body.append('date_of_birth', 'pwlvqwrsitcpscql');
-body.append('marital_status', 'divorced');
+body.append('marital_status', 'prefer_not_to_say');
 body.append('salary_range_from', '16');
 body.append('salary_range_to', '38');
 body.append('current_job_status', 'student');
 body.append('years_of_experience', '8');
 body.append('education_level', 'n');
-body.append('job_level', 'executive');
+body.append('job_level', 'manager');
 body.append('job_types[]', 'r');
 body.append('job_roles[]', 'w');
 body.append('work_cities[]', 't');
 body.append('current_job_title', 'u');
 body.append('experience_summary', 'architecto');
 body.append('expected_salary', '39');
-body.append('is_actively_seeking', '');
+body.append('is_actively_seeking', '1');
 body.append('social_links[linkedin]', 'g');
 body.append('social_links[github]', 'z');
 body.append('social_links[portfolio]', 'm');
@@ -4822,7 +4828,7 @@ body.append('work_experience[][company_name]', 't');
 body.append('work_experience[][job_roles][]', 'u');
 body.append('work_experience[][from_date]', 'jwvlxjklqppwqbew');
 body.append('work_experience[][to_date]', 'tnnoqitpxntltcvi');
-body.append('work_experience[][is_currently_working]', '');
+body.append('work_experience[][is_currently_working]', '1');
 body.append('work_experience[][description]', 'Eius et animi quos velit et.');
 body.append('resume', document.querySelector('input[name="resume"]').files[0]);
 
@@ -4975,10 +4981,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="gender"                data-endpoint="PUTapi-job-seeker-profile"
-               value="other"
+               value="prefer_not_to_say"
                data-component="body">
     <br>
-<p>Example: <code>other</code></p>
+<p>Example: <code>prefer_not_to_say</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>male</code></li> <li><code>female</code></li> <li><code>other</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5061,10 +5067,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="marital_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="divorced"
+               value="prefer_not_to_say"
                data-component="body">
     <br>
-<p>Example: <code>divorced</code></p>
+<p>Example: <code>prefer_not_to_say</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>single</code></li> <li><code>married</code></li> <li><code>divorced</code></li> <li><code>widowed</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5137,10 +5143,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="executive"
+               value="manager"
                data-component="body">
     <br>
-<p>Example: <code>executive</code></p>
+<p>Example: <code>manager</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>entry</code></li> <li><code>junior</code></li> <li><code>mid</code></li> <li><code>senior</code></li> <li><code>lead</code></li> <li><code>manager</code></li> <li><code>director</code></li> <li><code>executive</code></li></ul>
         </div>
@@ -5242,7 +5248,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
         <details>
@@ -5542,7 +5548,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -5568,7 +5574,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>/tmp/phpMc3P8d</code></p>
+<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>/tmp/phpd7N6tp</code></p>
         </div>
         </form>
 
@@ -5590,7 +5596,7 @@ Must be one of:
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@/tmp/phpjkTrvq" </code></pre></div>
+    --form "resume=@/tmp/php98JNts" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -5734,7 +5740,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 5 MB. Example: <code>/tmp/phpjkTrvq</code></p>
+<p>PDF/DOC/DOCX file, max 5 MB. Example: <code>/tmp/php98JNts</code></p>
         </div>
         </form>
 
@@ -5756,7 +5762,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cv=@/tmp/phpG8bsMr" </code></pre></div>
+    --form "cv=@/tmp/phpQab7vo" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -5916,7 +5922,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpG8bsMr</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpQab7vo</code></p>
         </div>
         </form>
 
@@ -6095,7 +6101,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "job_post_id=664f1a2b3c4d5e6f7a8b9c0d"\
     --form "cover_letter=I am very interested in this position."\
-    --form "resume=@/tmp/php3Rwhw0" </code></pre></div>
+    --form "resume=@/tmp/phpOpoqii" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6275,7 +6281,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/php3Rwhw0</code></p>
+<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/phpOpoqii</code></p>
         </div>
         </form>
 
@@ -7489,6 +7495,371 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                     </form>
 
+                    <h2 id="endpoints-POSTapi-job-seeker-match-resume-to-jobs">Match resume to available jobs</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Upload a resume and get AI-matched job recommendations from the database.
+Returns jobs ranked by match percentage and ATS compatibility.</p>
+
+<span id="example-requests-POSTapi-job-seeker-match-resume-to-jobs">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost:8000/api/job-seeker/match-resume-to-jobs" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: multipart/form-data" \
+    --header "Accept: application/json" \
+    --form "resume=@/tmp/phpZXhywp" </code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/job-seeker/match-resume-to-jobs"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "multipart/form-data",
+    "Accept": "application/json",
+};
+
+const body = new FormData();
+body.append('resume', document.querySelector('input[name="resume"]').files[0]);
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-job-seeker-match-resume-to-jobs">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;matches_found&quot;: 25,
+    &quot;recommended_jobs&quot;: [
+        {
+            &quot;job_id&quot;: &quot;job_001&quot;,
+            &quot;title&quot;: &quot;Backend Python Developer&quot;,
+            &quot;company&quot;: &quot;TechStream Solutions&quot;,
+            &quot;location&quot;: &quot;Remote&quot;,
+            &quot;matched_skills_count&quot;: 4,
+            &quot;match_percentage&quot;: &quot;66%&quot;,
+            &quot;ats_compatibility_score&quot;: &quot;69%&quot;,
+            &quot;job_url&quot;: &quot;/api/jobs/job_001&quot;
+        }
+    ]
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;errors&quot;: {
+        &quot;resume&quot;: [
+            &quot;The resume field is required.&quot;
+        ]
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (502):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Resume matching service unavailable&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-job-seeker-match-resume-to-jobs" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-job-seeker-match-resume-to-jobs"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-job-seeker-match-resume-to-jobs"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-job-seeker-match-resume-to-jobs" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-job-seeker-match-resume-to-jobs">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-job-seeker-match-resume-to-jobs" data-method="POST"
+      data-path="api/job-seeker/match-resume-to-jobs"
+      data-authed="1"
+      data-hasfiles="1"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-job-seeker-match-resume-to-jobs', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-job-seeker-match-resume-to-jobs"
+                    onclick="tryItOut('POSTapi-job-seeker-match-resume-to-jobs');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-job-seeker-match-resume-to-jobs"
+                    onclick="cancelTryOut('POSTapi-job-seeker-match-resume-to-jobs');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-job-seeker-match-resume-to-jobs"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/job-seeker/match-resume-to-jobs</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-job-seeker-match-resume-to-jobs"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-job-seeker-match-resume-to-jobs"
+               value="multipart/form-data"
+               data-component="header">
+    <br>
+<p>Example: <code>multipart/form-data</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-job-seeker-match-resume-to-jobs"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>resume</code></b>&nbsp;&nbsp;
+<small>file</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="file" style="display: none"
+                              name="resume"                data-endpoint="POSTapi-job-seeker-match-resume-to-jobs"
+               value=""
+               data-component="body">
+    <br>
+<p>PDF/DOC/DOCX resume file, max 10 MB. Example: <code>/tmp/phpZXhywp</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-POSTapi-job-seeker-coach-chat">Chat with AI resume coach</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Ask the AI coach for career advice, job market insights, resume tips, and more.</p>
+
+<span id="example-requests-POSTapi-job-seeker-coach-chat">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost:8000/api/job-seeker/coach/chat" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"message\": \"Give me advice on improving my resume\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/job-seeker/coach/chat"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "message": "Give me advice on improving my resume"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-job-seeker-coach-chat">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;response&quot;: &quot;To improve your resume, focus on quantifying your achievements...&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;errors&quot;: {
+        &quot;message&quot;: [
+            &quot;The message field is required.&quot;
+        ]
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (502):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Resume coach service unavailable&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-job-seeker-coach-chat" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-job-seeker-coach-chat"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-job-seeker-coach-chat"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-job-seeker-coach-chat" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-job-seeker-coach-chat">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-job-seeker-coach-chat" data-method="POST"
+      data-path="api/job-seeker/coach/chat"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-job-seeker-coach-chat', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-job-seeker-coach-chat"
+                    onclick="tryItOut('POSTapi-job-seeker-coach-chat');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-job-seeker-coach-chat"
+                    onclick="cancelTryOut('POSTapi-job-seeker-coach-chat');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-job-seeker-coach-chat"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/job-seeker/coach/chat</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-job-seeker-coach-chat"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-job-seeker-coach-chat"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-job-seeker-coach-chat"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>message</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="message"                data-endpoint="POSTapi-job-seeker-coach-chat"
+               value="Give me advice on improving my resume"
+               data-component="body">
+    <br>
+<p>Your question or message to the coach. Max 1000 chars. Example: <code>Give me advice on improving my resume</code></p>
+        </div>
+        </form>
+
                     <h2 id="endpoints-POSTapi-employer-apply">Apply to become employer</h2>
 
 <p>
@@ -7507,7 +7878,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "document=@/tmp/php2suDEE" </code></pre></div>
+    --form "document=@/tmp/phpLuWRJ3" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -7656,7 +8027,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/php2suDEE</code></p>
+<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/phpLuWRJ3</code></p>
         </div>
         </form>
 
@@ -11770,21 +12141,22 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                         </form>
 
-                    <h2 id="endpoints-POSTapi-admin--id--approve">Approve employer</h2>
+                    <h2 id="endpoints-POSTapi-admin-employers--id--approve">Approve employer</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>Approves an employer application. Grants the <code>employer</code> role to the user and sets <code>is_employer = true</code>. Admin only.</p>
+<p>Route: POST /api/admin/employers/{id}/approve</p>
 
-<span id="example-requests-POSTapi-admin--id--approve">
+<span id="example-requests-POSTapi-admin-employers--id--approve">
 <blockquote>Example request:</blockquote>
 
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/admin/664f1a2b3c4d5e6f7a8b9c0d/approve" \
+    "http://localhost:8000/api/admin/employers/664f1a2b3c4d5e6f7a8b9c0d/approve" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -11792,7 +12164,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/664f1a2b3c4d5e6f7a8b9c0d/approve"
+    "http://localhost:8000/api/admin/employers/664f1a2b3c4d5e6f7a8b9c0d/approve"
 );
 
 const headers = {
@@ -11809,7 +12181,7 @@ fetch(url, {
 
 </span>
 
-<span id="example-responses-POSTapi-admin--id--approve">
+<span id="example-responses-POSTapi-admin-employers--id--approve">
             <blockquote>
             <p>Example response (200):</p>
         </blockquote>
@@ -11833,43 +12205,43 @@ fetch(url, {
 }</code>
  </pre>
     </span>
-<span id="execution-results-POSTapi-admin--id--approve" hidden>
+<span id="execution-results-POSTapi-admin-employers--id--approve" hidden>
     <blockquote>Received response<span
-                id="execution-response-status-POSTapi-admin--id--approve"></span>:
+                id="execution-response-status-POSTapi-admin-employers--id--approve"></span>:
     </blockquote>
-    <pre class="json"><code id="execution-response-content-POSTapi-admin--id--approve"
+    <pre class="json"><code id="execution-response-content-POSTapi-admin-employers--id--approve"
       data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
 </span>
-<span id="execution-error-POSTapi-admin--id--approve" hidden>
+<span id="execution-error-POSTapi-admin-employers--id--approve" hidden>
     <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-POSTapi-admin--id--approve">
+    <pre><code id="execution-error-message-POSTapi-admin-employers--id--approve">
 
 Tip: Check that you&#039;re properly connected to the network.
 If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
 </span>
-<form id="form-POSTapi-admin--id--approve" data-method="POST"
-      data-path="api/admin/{id}/approve"
+<form id="form-POSTapi-admin-employers--id--approve" data-method="POST"
+      data-path="api/admin/employers/{id}/approve"
       data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('POSTapi-admin--id--approve', this);">
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-admin-employers--id--approve', this);">
     <h3>
         Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
                     style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-POSTapi-admin--id--approve"
-                    onclick="tryItOut('POSTapi-admin--id--approve');">Try it out ⚡
+                    id="btn-tryout-POSTapi-admin-employers--id--approve"
+                    onclick="tryItOut('POSTapi-admin-employers--id--approve');">Try it out ⚡
             </button>
             <button type="button"
                     style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-POSTapi-admin--id--approve"
-                    onclick="cancelTryOut('POSTapi-admin--id--approve');" hidden>Cancel 🛑
+                    id="btn-canceltryout-POSTapi-admin-employers--id--approve"
+                    onclick="cancelTryOut('POSTapi-admin-employers--id--approve');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
                     style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-POSTapi-admin--id--approve"
+                    id="btn-executetryout-POSTapi-admin-employers--id--approve"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
                     hidden>Send Request 💥
@@ -11877,7 +12249,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </h3>
             <p>
             <small class="badge badge-black">POST</small>
-            <b><code>api/admin/{id}/approve</code></b>
+            <b><code>api/admin/employers/{id}/approve</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
@@ -11886,7 +12258,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-admin--id--approve"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-admin-employers--id--approve"
                value="Bearer {YOUR_AUTH_KEY}"
                data-component="header">
     <br>
@@ -11898,7 +12270,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="POSTapi-admin--id--approve"
+                              name="Content-Type"                data-endpoint="POSTapi-admin-employers--id--approve"
                value="application/json"
                data-component="header">
     <br>
@@ -11910,7 +12282,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="POSTapi-admin--id--approve"
+                              name="Accept"                data-endpoint="POSTapi-admin-employers--id--approve"
                value="application/json"
                data-component="header">
     <br>
@@ -11923,7 +12295,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="id"                data-endpoint="POSTapi-admin--id--approve"
+                              name="id"                data-endpoint="POSTapi-admin-employers--id--approve"
                value="664f1a2b3c4d5e6f7a8b9c0d"
                data-component="url">
     <br>
@@ -11931,21 +12303,22 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                     </form>
 
-                    <h2 id="endpoints-POSTapi-admin--id--reject">Reject employer</h2>
+                    <h2 id="endpoints-POSTapi-admin-employers--id--reject">Reject employer</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>Rejects an employer application. Admin only.</p>
+<p>Route: POST /api/admin/employers/{id}/reject</p>
 
-<span id="example-requests-POSTapi-admin--id--reject">
+<span id="example-requests-POSTapi-admin-employers--id--reject">
 <blockquote>Example request:</blockquote>
 
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/admin/664f1a2b3c4d5e6f7a8b9c0d/reject" \
+    "http://localhost:8000/api/admin/employers/664f1a2b3c4d5e6f7a8b9c0d/reject" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -11957,7 +12330,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/664f1a2b3c4d5e6f7a8b9c0d/reject"
+    "http://localhost:8000/api/admin/employers/664f1a2b3c4d5e6f7a8b9c0d/reject"
 );
 
 const headers = {
@@ -11978,7 +12351,7 @@ fetch(url, {
 
 </span>
 
-<span id="example-responses-POSTapi-admin--id--reject">
+<span id="example-responses-POSTapi-admin-employers--id--reject">
             <blockquote>
             <p>Example response (200):</p>
         </blockquote>
@@ -12003,43 +12376,43 @@ fetch(url, {
 }</code>
  </pre>
     </span>
-<span id="execution-results-POSTapi-admin--id--reject" hidden>
+<span id="execution-results-POSTapi-admin-employers--id--reject" hidden>
     <blockquote>Received response<span
-                id="execution-response-status-POSTapi-admin--id--reject"></span>:
+                id="execution-response-status-POSTapi-admin-employers--id--reject"></span>:
     </blockquote>
-    <pre class="json"><code id="execution-response-content-POSTapi-admin--id--reject"
+    <pre class="json"><code id="execution-response-content-POSTapi-admin-employers--id--reject"
       data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
 </span>
-<span id="execution-error-POSTapi-admin--id--reject" hidden>
+<span id="execution-error-POSTapi-admin-employers--id--reject" hidden>
     <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-POSTapi-admin--id--reject">
+    <pre><code id="execution-error-message-POSTapi-admin-employers--id--reject">
 
 Tip: Check that you&#039;re properly connected to the network.
 If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
 </span>
-<form id="form-POSTapi-admin--id--reject" data-method="POST"
-      data-path="api/admin/{id}/reject"
+<form id="form-POSTapi-admin-employers--id--reject" data-method="POST"
+      data-path="api/admin/employers/{id}/reject"
       data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('POSTapi-admin--id--reject', this);">
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-admin-employers--id--reject', this);">
     <h3>
         Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
                     style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-POSTapi-admin--id--reject"
-                    onclick="tryItOut('POSTapi-admin--id--reject');">Try it out ⚡
+                    id="btn-tryout-POSTapi-admin-employers--id--reject"
+                    onclick="tryItOut('POSTapi-admin-employers--id--reject');">Try it out ⚡
             </button>
             <button type="button"
                     style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-POSTapi-admin--id--reject"
-                    onclick="cancelTryOut('POSTapi-admin--id--reject');" hidden>Cancel 🛑
+                    id="btn-canceltryout-POSTapi-admin-employers--id--reject"
+                    onclick="cancelTryOut('POSTapi-admin-employers--id--reject');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
                     style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-POSTapi-admin--id--reject"
+                    id="btn-executetryout-POSTapi-admin-employers--id--reject"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
                     hidden>Send Request 💥
@@ -12047,7 +12420,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </h3>
             <p>
             <small class="badge badge-black">POST</small>
-            <b><code>api/admin/{id}/reject</code></b>
+            <b><code>api/admin/employers/{id}/reject</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
@@ -12056,7 +12429,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-admin--id--reject"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-admin-employers--id--reject"
                value="Bearer {YOUR_AUTH_KEY}"
                data-component="header">
     <br>
@@ -12068,7 +12441,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="POSTapi-admin--id--reject"
+                              name="Content-Type"                data-endpoint="POSTapi-admin-employers--id--reject"
                value="application/json"
                data-component="header">
     <br>
@@ -12080,7 +12453,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="POSTapi-admin--id--reject"
+                              name="Accept"                data-endpoint="POSTapi-admin-employers--id--reject"
                value="application/json"
                data-component="header">
     <br>
@@ -12093,7 +12466,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="id"                data-endpoint="POSTapi-admin--id--reject"
+                              name="id"                data-endpoint="POSTapi-admin-employers--id--reject"
                value="664f1a2b3c4d5e6f7a8b9c0d"
                data-component="url">
     <br>
@@ -12106,7 +12479,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="review_notes"                data-endpoint="POSTapi-admin--id--reject"
+                              name="review_notes"                data-endpoint="POSTapi-admin-employers--id--reject"
                value="Insufficient documentation provided."
                data-component="body">
     <br>

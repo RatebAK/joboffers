@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "e3f27b4d-c684-4a3f-a038-17309e4e15da",
+        "_postman_id": "dd490976-90fb-4610-b308-11bc9bb0eb1a",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -1007,7 +1007,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "other",
+                                    "value": "prefer_not_to_say",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1049,7 +1049,7 @@
                                 },
                                 {
                                     "key": "marital_status",
-                                    "value": "divorced",
+                                    "value": "prefer_not_to_say",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1085,7 +1085,7 @@
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "executive",
+                                    "value": "manager",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1127,7 +1127,7 @@
                                 },
                                 {
                                     "key": "is_actively_seeking",
-                                    "value": "",
+                                    "value": "1",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1247,7 +1247,7 @@
                                 },
                                 {
                                     "key": "work_experience[0][is_currently_working]",
-                                    "value": "",
+                                    "value": "1",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1779,6 +1779,106 @@
                             "header": [],
                             "code": 404,
                             "body": "{ \"message\": \"Offer not found\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Match resume to available jobs",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/match-resume-to-jobs",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/match-resume-to-jobs"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "resume",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "Upload a resume and get AI-matched job recommendations from the database.\nReturns jobs ranked by match percentage and ATS compatibility."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"matches_found\": 25,\n  \"recommended_jobs\": [\n    {\n      \"job_id\": \"job_001\",\n      \"title\": \"Backend Python Developer\",\n      \"company\": \"TechStream Solutions\",\n      \"location\": \"Remote\",\n      \"matched_skills_count\": 4,\n      \"match_percentage\": \"66%\",\n      \"ats_compatibility_score\": \"69%\",\n      \"job_url\": \"\/api\/jobs\/job_001\"\n    }\n  ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"resume\": [\"The resume field is required.\"] } }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 502,
+                            "body": "{ \"message\": \"Resume matching service unavailable\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Chat with AI resume coach",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/coach\/chat",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/coach\/chat"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"message\":\"Give me advice on improving my resume\"}"
+                        },
+                        "description": "Ask the AI coach for career advice, job market insights, resume tips, and more."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"response\": \"To improve your resume, focus on quantifying your achievements...\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"message\": [\"The message field is required.\"] } }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 502,
+                            "body": "{ \"message\": \"Resume coach service unavailable\" }",
                             "name": ""
                         }
                     ]
@@ -2673,9 +2773,9 @@
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/admin\/:id\/approve",
+                            "path": "api\/admin\/employers\/:id\/approve",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/:id\/approve",
+                            "raw": "{{baseUrl}}\/api\/admin\/employers\/:id\/approve",
                             "variable": [
                                 {
                                     "id": "id",
@@ -2697,7 +2797,7 @@
                             }
                         ],
                         "body": null,
-                        "description": "Approves an employer application. Grants the `employer` role to the user and sets `is_employer = true`. Admin only."
+                        "description": "Approves an employer application. Grants the `employer` role to the user and sets `is_employer = true`. Admin only.\n\nRoute: POST \/api\/admin\/employers\/{id}\/approve"
                     },
                     "response": [
                         {
@@ -2719,9 +2819,9 @@
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/admin\/:id\/reject",
+                            "path": "api\/admin\/employers\/:id\/reject",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/:id\/reject",
+                            "raw": "{{baseUrl}}\/api\/admin\/employers\/:id\/reject",
                             "variable": [
                                 {
                                     "id": "id",
@@ -2746,7 +2846,7 @@
                             "mode": "raw",
                             "raw": "{\"review_notes\":\"Insufficient documentation provided.\"}"
                         },
-                        "description": "Rejects an employer application. Admin only."
+                        "description": "Rejects an employer application. Admin only.\n\nRoute: POST \/api\/admin\/employers\/{id}\/reject"
                     },
                     "response": [
                         {

@@ -2248,7 +2248,7 @@ endpoints:
         name: gender
         description: ''
         required: false
-        example: other
+        example: prefer_not_to_say
         type: string
         enumValues:
           - male
@@ -2329,7 +2329,7 @@ endpoints:
         name: marital_status
         description: ''
         required: false
-        example: divorced
+        example: prefer_not_to_say
         type: string
         enumValues:
           - single
@@ -2405,7 +2405,7 @@ endpoints:
         name: job_level
         description: ''
         required: false
-        example: executive
+        example: manager
         type: string
         enumValues:
           - entry
@@ -2493,7 +2493,7 @@ endpoints:
         name: is_actively_seeking
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -2773,7 +2773,7 @@ endpoints:
         name: 'work_experience[].is_currently_working'
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -2795,20 +2795,20 @@ endpoints:
       last_name: 'n'
       full_name: g
       image: z
-      gender: other
+      gender: prefer_not_to_say
       nationality: m
       city: i
       location: 'y'
       address: v
       phone: dljnikhwaykcmyuw
       date_of_birth: pwlvqwrsitcpscql
-      marital_status: divorced
+      marital_status: prefer_not_to_say
       salary_range_from: 16
       salary_range_to: 38
       current_job_status: student
       years_of_experience: 8
       education_level: 'n'
-      job_level: executive
+      job_level: manager
       job_types:
         - r
       job_roles:
@@ -2818,7 +2818,7 @@ endpoints:
       current_job_title: u
       experience_summary: architecto
       expected_salary: 39
-      is_actively_seeking: false
+      is_actively_seeking: true
       social_links:
         linkedin: g
         github: z
@@ -2846,7 +2846,7 @@ endpoints:
             - u
           from_date: jwvlxjklqppwqbew
           to_date: tnnoqitpxntltcvi
-          is_currently_working: false
+          is_currently_working: true
           description: 'Eius et animi quos velit et.'
     fileParameters:
       resume: null
@@ -3627,6 +3627,156 @@ endpoints:
         custom: []
         status: 404
         content: '{ "message": "Offer not found" }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/job-seeker/match-resume-to-jobs
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Match resume to available jobs'
+      description: |-
+        Upload a resume and get AI-matched job recommendations from the database.
+        Returns jobs ranked by match percentage and ATS compatibility.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: multipart/form-data
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      resume:
+        custom: []
+        name: resume
+        description: 'PDF/DOC/DOCX resume file, max 10 MB.'
+        required: true
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters: []
+    fileParameters:
+      resume: null
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "matches_found": 25,
+            "recommended_jobs": [
+              {
+                "job_id": "job_001",
+                "title": "Backend Python Developer",
+                "company": "TechStream Solutions",
+                "location": "Remote",
+                "matched_skills_count": 4,
+                "match_percentage": "66%",
+                "ats_compatibility_score": "69%",
+                "job_url": "/api/jobs/job_001"
+              }
+            ]
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{ "errors": { "resume": ["The resume field is required."] } }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 502
+        content: '{ "message": "Resume matching service unavailable" }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/job-seeker/coach/chat
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Chat with AI resume coach'
+      description: 'Ask the AI coach for career advice, job market insights, resume tips, and more.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      message:
+        custom: []
+        name: message
+        description: 'Your question or message to the coach. Max 1000 chars.'
+        required: true
+        example: 'Give me advice on improving my resume'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      message: 'Give me advice on improving my resume'
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "response": "To improve your resume, focus on quantifying your achievements..."
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{ "errors": { "message": ["The message field is required."] } }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 502
+        content: '{ "message": "Resume coach service unavailable" }'
         headers: []
         description: ''
     responseFields: []
@@ -5793,7 +5943,7 @@ endpoints:
     custom: []
     httpMethods:
       - POST
-    uri: 'api/admin/{id}/approve'
+    uri: 'api/admin/employers/{id}/approve'
     metadata:
       custom: []
       groupName: Endpoints
@@ -5801,7 +5951,10 @@ endpoints:
       subgroup: ''
       subgroupDescription: ''
       title: 'Approve employer'
-      description: 'Approves an employer application. Grants the `employer` role to the user and sets `is_employer = true`. Admin only.'
+      description: |-
+        Approves an employer application. Grants the `employer` role to the user and sets `is_employer = true`. Admin only.
+
+        Route: POST /api/admin/employers/{id}/approve
       authenticated: true
       deprecated: false
     headers:
@@ -5856,7 +6009,7 @@ endpoints:
     custom: []
     httpMethods:
       - POST
-    uri: 'api/admin/{id}/reject'
+    uri: 'api/admin/employers/{id}/reject'
     metadata:
       custom: []
       groupName: Endpoints
@@ -5864,7 +6017,10 @@ endpoints:
       subgroup: ''
       subgroupDescription: ''
       title: 'Reject employer'
-      description: 'Rejects an employer application. Admin only.'
+      description: |-
+        Rejects an employer application. Admin only.
+
+        Route: POST /api/admin/employers/{id}/reject
       authenticated: true
       deprecated: false
     headers:

@@ -1,21 +1,21 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AnalyticsController;
 use App\Http\Controllers\API\ApplicationController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\CompanyProfileController;
 use App\Http\Controllers\API\DirectOfferController;
 use App\Http\Controllers\API\EmployerController;
 use App\Http\Controllers\API\EmployerSearchController;
 use App\Http\Controllers\API\JobMatchingController;
 use App\Http\Controllers\API\JobPostController;
-use App\Http\Controllers\API\CompanyProfileController;
 use App\Http\Controllers\API\JobSeekerController;
 use App\Http\Controllers\API\MatchedJobsController;
 use App\Http\Controllers\API\ResumeCoachController;
 use App\Http\Controllers\API\ResumeMatchingController;
 use App\Http\Controllers\API\UserProfileController;
 use App\Http\Controllers\API\UserSearchController;
+use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
@@ -45,27 +45,27 @@ Route::middleware('jwt.auth')->get('users/{userId}', [UserProfileController::cla
 // Job Seeker Routes
 Route::middleware(['jwt.auth', 'role:employee'])->prefix('job-seeker')->group(function () {
     Route::get('profile', [JobSeekerController::class, 'show']);
-    
+
     // Profile section updates
     Route::put('profile/personal-info', [JobSeekerController::class, 'updatePersonalInfo']);
     Route::put('profile/career-info', [JobSeekerController::class, 'updateCareerInfo']);
     Route::put('profile/social-links', [JobSeekerController::class, 'updateSocialLinks']);
-    
+
     // Skills
     Route::put('profile/skills', [JobSeekerController::class, 'updateSkills']);
     Route::delete('profile/skills', [JobSeekerController::class, 'deleteSkills']);
-    
+
     // Education
     Route::put('profile/education', [JobSeekerController::class, 'updateEducation']);
     Route::delete('profile/education', [JobSeekerController::class, 'deleteEducation']);
-    
+
     // Work Experience
     Route::put('profile/work-experience', [JobSeekerController::class, 'updateWorkExperience']);
     Route::delete('profile/work-experience', [JobSeekerController::class, 'deleteWorkExperience']);
-    
+
     // Legacy endpoint (kept for backwards compatibility)
     Route::put('profile', [JobSeekerController::class, 'update']);
-    
+
     Route::post('resume/upload', [JobSeekerController::class, 'uploadResume']);
     Route::post('resume/upload-and-analyze', [JobSeekerController::class, 'uploadAndAnalyze']);
     Route::get('applications', [ApplicationController::class, 'index']);
@@ -135,8 +135,8 @@ Route::middleware(['jwt.auth', 'role:employer'])->prefix('employer')->group(func
 // Admin Routes
 Route::middleware(['jwt.auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('employers', [EmployerController::class, 'index']);
-    Route::post('{id}/approve', [EmployerController::class, 'approve']);
-    Route::post('{id}/reject', [EmployerController::class, 'reject']);
+    Route::post('employers/{id}/approve', [EmployerController::class, 'approve']);
+    Route::post('employers/{id}/reject', [EmployerController::class, 'reject']);
 
     // Analytics
     Route::get('analytics', [AnalyticsController::class, 'adminAnalytics']);

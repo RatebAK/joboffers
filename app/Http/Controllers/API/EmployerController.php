@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Employer;
+use Illuminate\Http\Request;
 
 class EmployerController extends Controller
 {
@@ -38,14 +38,14 @@ class EmployerController extends Controller
         $path = $file->store('employer_docs', 'public');
 
         $employer = Employer::create([
-            'user_id'       => $user->_id,
+            'user_id' => $user->_id,
             'document_path' => $path,
             'document_name' => $file->getClientOriginalName(),
-            'status'        => Employer::STATUS_PENDING,
+            'status' => Employer::STATUS_PENDING,
         ]);
 
         return response()->json([
-            'message'  => 'Employer application submitted.',
+            'message' => 'Employer application submitted.',
             'employer' => $employer,
         ], 201);
     }
@@ -68,7 +68,7 @@ class EmployerController extends Controller
     public function status(Request $request)
     {
         $user = $request->user();
-        
+
         // Find the latest employer application for this user
         $latest = Employer::where('user_id', $user->_id)
             ->latest()
@@ -111,6 +111,8 @@ class EmployerController extends Controller
      *
      * Approves an employer application. Grants the `employer` role to the user and sets `is_employer = true`. Admin only.
      *
+     * Route: POST /api/admin/employers/{id}/approve
+     *
      * @urlParam id string required The employer application ID. Example: 664f1a2b3c4d5e6f7a8b9c0d
      *
      * @response 200 {
@@ -125,20 +127,20 @@ class EmployerController extends Controller
         $user = $employer->user;
 
         $employer->update([
-            'status'      => Employer::STATUS_APPROVED,
+            'status' => Employer::STATUS_APPROVED,
             'reviewed_by' => $request->user()->id,
             'reviewed_at' => now(),
         ]);
 
         // Add employer role if not already present, and mark as approved
         $roles = $user->roles ?? [];
-        if (!in_array('employer', $roles)) {
+        if (! in_array('employer', $roles)) {
             $roles[] = 'employer';
         }
         $user->update(['roles' => $roles, 'is_employer' => true]);
 
         return response()->json([
-            'message'  => 'Approved employer request.',
+            'message' => 'Approved employer request.',
             'employer' => $employer,
         ]);
     }
@@ -148,7 +150,10 @@ class EmployerController extends Controller
      *
      * Rejects an employer application. Admin only.
      *
+     * Route: POST /api/admin/employers/{id}/reject
+     *
      * @urlParam id string required The employer application ID. Example: 664f1a2b3c4d5e6f7a8b9c0d
+     *
      * @bodyParam review_notes string Optional rejection reason. Example: Insufficient documentation provided.
      *
      * @response 200 {
