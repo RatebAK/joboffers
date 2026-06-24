@@ -73,9 +73,19 @@ class ApplicationController extends Controller
         $user = $request->user();
 
         $validator = Validator::make($request->all(), [
-            'job_post_id'  => 'required|string',
-            'cover_letter' => 'nullable|string|max:1000',
-            'resume'       => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'job_post_id'           => 'required|string',
+            'cover_letter'          => 'nullable|string|max:1000',
+            'resume'                => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            // Eager applicant profile fields
+            'education'             => 'nullable|string|max:255',
+            'last_work'             => 'nullable|string|max:255',
+            'years_of_experience'   => 'nullable|integer|min:0|max:60',
+            'why_join'              => 'nullable|string|max:2000',
+            'what_to_add'           => 'nullable|string|max:2000',
+            'positions_suited_for'  => 'nullable|array',
+            'positions_suited_for.*'=> 'string|max:100',
+            'notice_period'         => 'nullable|string|max:100',
+            'expected_salary'       => 'nullable|string|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -111,12 +121,21 @@ class ApplicationController extends Controller
         }
 
         $application = Application::create([
-            'user_id'      => $user->_id,
-            'job_post_id'  => $data['job_post_id'],
-            'cover_letter' => $data['cover_letter'] ?? null,
-            'resume'       => $data['resume'],
-            'status'       => 'pending',
-            'applied_at'   => now(),
+            'user_id'               => $user->_id,
+            'job_post_id'           => $data['job_post_id'],
+            'cover_letter'          => $data['cover_letter'] ?? null,
+            'resume'                => $data['resume'],
+            'status'                => 'pending',
+            'applied_at'            => now(),
+            // Eager applicant profile fields
+            'education'             => $data['education'] ?? null,
+            'last_work'             => $data['last_work'] ?? null,
+            'years_of_experience'   => $data['years_of_experience'] ?? null,
+            'why_join'              => $data['why_join'] ?? null,
+            'what_to_add'           => $data['what_to_add'] ?? null,
+            'positions_suited_for'  => $data['positions_suited_for'] ?? null,
+            'notice_period'         => $data['notice_period'] ?? null,
+            'expected_salary'       => $data['expected_salary'] ?? null,
         ]);
 
         return response()->json([

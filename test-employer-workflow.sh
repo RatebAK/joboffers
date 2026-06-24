@@ -39,8 +39,8 @@ echo -e "${GREEN}✓ Employer registered: $EMPLOYER_EMAIL${NC}"
 echo "  Token: ${EMPLOYER_TOKEN:0:20}..."
 echo ""
 
-# Step 2: Try to create job post (should fail)
-echo -e "${BLUE}STEP 2: Employer Tries to Create Job Post (Should Fail)${NC}"
+# Step 2: Try to create job post (should fail — not yet approved)
+echo -e "${BLUE}STEP 2: Employer Tries to Create Job Post (Should Fail — Not Approved)${NC}"
 JOB_ATTEMPT_1=$(curl -s -X POST "$BASE_URL/api/employer/jobs" \
   -H "Authorization: Bearer $EMPLOYER_TOKEN" \
   -H "Content-Type: application/json" \
@@ -48,8 +48,10 @@ JOB_ATTEMPT_1=$(curl -s -X POST "$BASE_URL/api/employer/jobs" \
     "title": "Software Engineer",
     "description": "Looking for a talented engineer",
     "requirements": "Minimum 3 years experience",
-    "company_name": "Test Company Inc",
-    "job_type": "full_time"
+    "communication_method": "by_forsa",
+    "job_type": "full_time",
+    "vacancies": 1,
+    "city": "Beirut"
   }')
 
 STATUS_1=$(echo $JOB_ATTEMPT_1 | jq -r '.error // "success"')
@@ -121,8 +123,29 @@ PENDING_COUNT_AFTER=$(echo $PENDING_AFTER | jq '. | length')
 echo -e "${GREEN}✓ Pending applications now: $PENDING_COUNT_AFTER${NC}"
 echo ""
 
+# Step 7: Employer creates company profile first (required before job post)
+echo -e "${BLUE}STEP 7a: Employer Creates Company Profile${NC}"
+COMPANY_RESPONSE=$(curl -s -X POST "$BASE_URL/api/employer/company" \
+  -H "Authorization: Bearer $EMPLOYER_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Test Company Inc",
+    "industry": "Technology",
+    "company_size": "less_than_10",
+    "city": "Beirut"
+  }')
+COMPANY_ID=$(echo $COMPANY_RESPONSE | jq -r '._id // .id')
+if [ "$COMPANY_ID" != "null" ] && [ ! -z "$COMPANY_ID" ]; then
+  echo -e "${GREEN}✓ Company profile created: $COMPANY_ID${NC}"
+else
+  echo -e "${YELLOW}⚠ Failed to create company profile${NC}"
+  echo $COMPANY_RESPONSE | jq
+  exit 1
+fi
+echo ""
+
 # Step 7: Employer creates job post (should succeed now)
-echo -e "${BLUE}STEP 7: Employer Creates Job Post (Should Succeed)${NC}"
+echo -e "${BLUE}STEP 7b: Employer Creates Job Post (Should Succeed)${NC}"
 JOB_ATTEMPT_2=$(curl -s -X POST "$BASE_URL/api/employer/jobs" \
   -H "Authorization: Bearer $EMPLOYER_TOKEN" \
   -H "Content-Type: application/json" \
@@ -130,15 +153,14 @@ JOB_ATTEMPT_2=$(curl -s -X POST "$BASE_URL/api/employer/jobs" \
     "title": "Senior PHP Developer",
     "description": "We are seeking an experienced PHP developer to join our team.",
     "requirements": "Minimum 5 years of PHP experience, Laravel expertise required",
-    "company_name": "Test Company Inc",
+    "communication_method": "by_forsa",
     "job_type": "full_time",
     "work_mode": "remote",
-    "location": "Remote",
-    "salary_range": {
-      "min": 80000,
-      "max": 120000,
-      "currency": "USD"
-    },
+    "city": "Remote",
+    "vacancies": 1,
+    "salary_from": 80000,
+    "salary_to": 120000,
+    "currency": "USD",
     "tags": ["PHP", "Laravel", "MongoDB"]
   }')
 
@@ -179,7 +201,8 @@ echo "  1. ✓ Employer registered"
 echo "  2. ✓ Pre-approval job creation blocked"
 echo "  3. ✓ Admin found employer in pending list"
 echo "  4. ✓ Admin approved employer"
-echo "  5. ✓ Employer created job post successfully"
-echo "  6. ✓ Job post visible publicly"
+echo "  5. ✓ Employer created company profile"
+echo "  6. ✓ Employer created job post successfully"
+echo "  7. ✓ Job post visible publicly"
 echo ""
 echo "All steps completed successfully!"

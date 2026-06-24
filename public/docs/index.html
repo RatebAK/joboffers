@@ -197,11 +197,23 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-employer-jobs--id--deactivate">
                                 <a href="#endpoints-POSTapi-employer-jobs--id--deactivate">Deactivate job post</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-employer-company">
+                                <a href="#endpoints-GETapi-employer-company">Get my company profile (owner view)</a>
+                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-employer-company">
-                                <a href="#endpoints-POSTapi-employer-company">Upsert company profile</a>
+                                <a href="#endpoints-POSTapi-employer-company">Update public company info</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-PUTapi-employer-company">
-                                <a href="#endpoints-PUTapi-employer-company">Upsert company profile</a>
+                                <a href="#endpoints-PUTapi-employer-company">Update public company info</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-PUTapi-employer-company-private">
+                                <a href="#endpoints-PUTapi-employer-company-private">Update private / general company info</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-employer-company-logo">
+                                <a href="#endpoints-POSTapi-employer-company-logo">Upload company logo</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-employer-company-cover">
+                                <a href="#endpoints-POSTapi-employer-company-cover">Upload company cover image</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-employer-jobs--jobId--applications">
                                 <a href="#endpoints-GETapi-employer-jobs--jobId--applications">Job applications (employer)</a>
@@ -262,7 +274,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: June 20, 2026</li>
+        <li>Last updated: June 24, 2026</li>
     </ul>
 </div>
 
@@ -1112,7 +1124,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/jobs?keyword=Laravel&amp;location=Beirut&amp;job_type=full_time&amp;work_mode=remote&amp;experience_level=senior&amp;category=Engineering&amp;min_salary=2000&amp;max_salary=8000&amp;tag=React&amp;per_page=10&amp;page=1" \
+    --get "http://localhost:8000/api/jobs?keyword=Laravel&amp;city=Damascus&amp;job_type=full_time&amp;work_mode=remote&amp;job_level=senior&amp;experience_years=3&amp;category=Engineering&amp;min_salary=500&amp;max_salary=3000&amp;tag=React&amp;communication_method=by_forsa&amp;per_page=10&amp;page=1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -1124,14 +1136,16 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 const params = {
     "keyword": "Laravel",
-    "location": "Beirut",
+    "city": "Damascus",
     "job_type": "full_time",
     "work_mode": "remote",
-    "experience_level": "senior",
+    "job_level": "senior",
+    "experience_years": "3",
     "category": "Engineering",
-    "min_salary": "2000",
-    "max_salary": "8000",
+    "min_salary": "500",
+    "max_salary": "3000",
     "tag": "React",
+    "communication_method": "by_forsa",
     "per_page": "10",
     "page": "1",
 };
@@ -1153,46 +1167,19 @@ fetch(url, {
 
 <span id="example-responses-GETapi-jobs">
             <blockquote>
-            <p>Example response (200):</p>
+            <p>Example response (500):</p>
         </blockquote>
-                <pre>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;data&quot;: [
-        {
-            &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
-            &quot;job_id&quot;: &quot;JOB-001&quot;,
-            &quot;title&quot;: &quot;Senior Laravel Developer&quot;,
-            &quot;description&quot;: &quot;We are looking for...&quot;,
-            &quot;requirements&quot;: &quot;Minimum 3 years...&quot;,
-            &quot;company_name&quot;: &quot;Acme Corp&quot;,
-            &quot;company_logo&quot;: &quot;https://logo.clearbit.com/acme.com&quot;,
-            &quot;job_type&quot;: &quot;full_time&quot;,
-            &quot;work_mode&quot;: &quot;remote&quot;,
-            &quot;experience_level&quot;: &quot;senior&quot;,
-            &quot;experience_required&quot;: &quot;5+ years&quot;,
-            &quot;location&quot;: &quot;Beirut, Lebanon&quot;,
-            &quot;category&quot;: &quot;Engineering&quot;,
-            &quot;salary_range&quot;: {
-                &quot;min&quot;: 2000,
-                &quot;max&quot;: 4000,
-                &quot;currency&quot;: &quot;USD&quot;
-            },
-            &quot;tags&quot;: [
-                &quot;Laravel&quot;,
-                &quot;PHP&quot;
-            ],
-            &quot;is_active&quot;: true,
-            &quot;employer_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0e&quot;,
-            &quot;created_at&quot;: &quot;2024-01-15T00:00:00Z&quot;
-        }
-    ],
-    &quot;current_page&quot;: 1,
-    &quot;per_page&quot;: 15,
-    &quot;total&quot;: 1,
-    &quot;total_pages&quot;: 1,
-    &quot;next_page&quot;: null,
-    &quot;prev_page&quot;: null
+    &quot;message&quot;: &quot;Server Error&quot;
 }</code>
  </pre>
     </span>
@@ -1281,16 +1268,16 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Search in title, description, company name. Example: <code>Laravel</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>location</code></b>&nbsp;&nbsp;
+                <b style="line-height: 2;"><code>city</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="location"                data-endpoint="GETapi-jobs"
-               value="Beirut"
+                              name="city"                data-endpoint="GETapi-jobs"
+               value="Damascus"
                data-component="query">
     <br>
-<p>Filter by location (partial match). Example: <code>Beirut</code></p>
+<p>Filter by city. Example: <code>Damascus</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>job_type</code></b>&nbsp;&nbsp;
@@ -1302,7 +1289,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="full_time"
                data-component="query">
     <br>
-<p>Filter by type. Example: <code>full_time</code></p>
+<p>Filter: full_time | part_time | contract | freelance. Example: <code>full_time</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>work_mode</code></b>&nbsp;&nbsp;
@@ -1314,19 +1301,31 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="remote"
                data-component="query">
     <br>
-<p>Filter by work mode. Example: <code>remote</code></p>
+<p>Filter: remote | hybrid | on_site. Example: <code>remote</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>experience_level</code></b>&nbsp;&nbsp;
+                <b style="line-height: 2;"><code>job_level</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="experience_level"                data-endpoint="GETapi-jobs"
+                              name="job_level"                data-endpoint="GETapi-jobs"
                value="senior"
                data-component="query">
     <br>
-<p>Filter by level. Example: <code>senior</code></p>
+<p>Filter: entry | junior | mid | senior | manager | director. Example: <code>senior</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>experience_years</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="experience_years"                data-endpoint="GETapi-jobs"
+               value="3"
+               data-component="query">
+    <br>
+<p>Filter by required experience (lte). Example: <code>3</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>category</code></b>&nbsp;&nbsp;
@@ -1347,10 +1346,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="min_salary"                data-endpoint="GETapi-jobs"
-               value="2000"
+               value="500"
                data-component="query">
     <br>
-<p>Minimum salary range. Example: <code>2000</code></p>
+<p>Minimum salary_from. Example: <code>500</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>max_salary</code></b>&nbsp;&nbsp;
@@ -1359,10 +1358,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="max_salary"                data-endpoint="GETapi-jobs"
-               value="8000"
+               value="3000"
                data-component="query">
     <br>
-<p>Maximum salary range. Example: <code>8000</code></p>
+<p>Maximum salary_to. Example: <code>3000</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>tag</code></b>&nbsp;&nbsp;
@@ -1377,6 +1376,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Filter by tag. Example: <code>React</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>communication_method</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="communication_method"                data-endpoint="GETapi-jobs"
+               value="by_forsa"
+               data-component="query">
+    <br>
+<p>Filter: by_phone | by_forsa | by_website. Example: <code>by_forsa</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
 <small>integer</small>&nbsp;
 <i>optional</i> &nbsp;
@@ -1386,7 +1397,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="10"
                data-component="query">
     <br>
-<p>Results per page (max 100). Defaults to 15. Example: <code>10</code></p>
+<p>Max 100, default 15. Example: <code>10</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
@@ -1407,7 +1418,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>
 </p>
 
-<p>Returns a single active job post by ID.</p>
+<p>Returns a single job post by ID. Inactive posts are still returned so
+employers/seekers can view their own closed postings — enforce access
+control at the client if needed.</p>
 
 <span id="example-requests-GETapi-jobs--id-">
 <blockquote>Example request:</blockquote>
@@ -1440,29 +1453,28 @@ fetch(url, {
 
 <span id="example-responses-GETapi-jobs--id-">
             <blockquote>
-            <p>Example response (200):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
-    &quot;job_id&quot;: &quot;JOB-001&quot;,
-    &quot;title&quot;: &quot;Senior Laravel Developer&quot;,
-    &quot;company_name&quot;: &quot;Acme Corp&quot;,
-    &quot;job_type&quot;: &quot;full_time&quot;,
-    &quot;work_mode&quot;: &quot;remote&quot;,
-    &quot;experience_level&quot;: &quot;senior&quot;,
-    &quot;location&quot;: &quot;Beirut, Lebanon&quot;,
-    &quot;is_active&quot;: true
-}</code>
- </pre>
-            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;message&quot;: &quot;Job post not found&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (500):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Server Error&quot;
 }</code>
  </pre>
     </span>
@@ -1548,7 +1560,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="664f1a2b3c4d5e6f7a8b9c0d"
                data-component="url">
     <br>
-<p>The job post ID. Example: <code>664f1a2b3c4d5e6f7a8b9c0d</code></p>
+<p>Job post ID. Example: <code>664f1a2b3c4d5e6f7a8b9c0d</code></p>
             </div>
                     </form>
 
@@ -1557,7 +1569,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>
 </p>
 
-<p>Paginated list of company profiles. Supports filtering by search term, industry, minimum rating, and company size.</p>
+<p>Paginated list of company profiles with optional filters.</p>
 
 <span id="example-requests-GETapi-companies">
 <blockquote>Example request:</blockquote>
@@ -1565,7 +1577,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/companies?search=Google&amp;industry=Technology&amp;min_rating=4&amp;company_size=100-500&amp;per_page=10&amp;page=1" \
+    --get "http://localhost:8000/api/companies?search=Tammam&amp;industry=Technology&amp;city=Damascus&amp;company_size=less_than_10&amp;min_rating=3.5&amp;per_page=10&amp;page=1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -1576,10 +1588,11 @@ You can check the Dev Tools console for debugging information.</code></pre>
 );
 
 const params = {
-    "search": "Google",
+    "search": "Tammam",
     "industry": "Technology",
-    "min_rating": "4",
-    "company_size": "100-500",
+    "city": "Damascus",
+    "company_size": "less_than_10",
+    "min_rating": "3.5",
     "per_page": "10",
     "page": "1",
 };
@@ -1601,41 +1614,19 @@ fetch(url, {
 
 <span id="example-responses-GETapi-companies">
             <blockquote>
-            <p>Example response (200):</p>
+            <p>Example response (500):</p>
         </blockquote>
-                <pre>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;data&quot;: [
-        {
-            &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
-            &quot;name&quot;: &quot;Google&quot;,
-            &quot;logo&quot;: &quot;https://logo.clearbit.com/google.com&quot;,
-            &quot;cover_image&quot;: &quot;https://images.unsplash.com/photo.jpg&quot;,
-            &quot;description&quot;: &quot;A multinational technology company.&quot;,
-            &quot;location&quot;: &quot;Mountain View, CA&quot;,
-            &quot;industry&quot;: &quot;Technology&quot;,
-            &quot;website&quot;: &quot;https://www.google.com&quot;,
-            &quot;founded&quot;: &quot;1998&quot;,
-            &quot;employee_count&quot;: &quot;100,000+ employees&quot;,
-            &quot;company_size&quot;: &quot;100000+&quot;,
-            &quot;rating&quot;: 4.5,
-            &quot;review_count&quot;: 1250,
-            &quot;would_recommend&quot;: 85,
-            &quot;ceo_performance&quot;: 92,
-            &quot;open_positions&quot;: 3,
-            &quot;company_size_range&quot;: {
-                &quot;min&quot;: 100000,
-                &quot;isPlus&quot;: true
-            }
-        }
-    ],
-    &quot;current_page&quot;: 1,
-    &quot;per_page&quot;: 15,
-    &quot;total&quot;: 1,
-    &quot;total_pages&quot;: 1,
-    &quot;next_page&quot;: null,
-    &quot;prev_page&quot;: null
+    &quot;message&quot;: &quot;Server Error&quot;
 }</code>
  </pre>
     </span>
@@ -1718,10 +1709,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="search"                data-endpoint="GETapi-companies"
-               value="Google"
+               value="Tammam"
                data-component="query">
     <br>
-<p>Filter by company name or location. Example: <code>Google</code></p>
+<p>Filter by name or city. Example: <code>Tammam</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>industry</code></b>&nbsp;&nbsp;
@@ -1733,19 +1724,19 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="Technology"
                data-component="query">
     <br>
-<p>Filter by industry (partial match). Example: <code>Technology</code></p>
+<p>Partial match on industry. Example: <code>Technology</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>min_rating</code></b>&nbsp;&nbsp;
-<small>number</small>&nbsp;
+                <b style="line-height: 2;"><code>city</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="min_rating"                data-endpoint="GETapi-companies"
-               value="4"
+                <input type="text" style="display: none"
+                              name="city"                data-endpoint="GETapi-companies"
+               value="Damascus"
                data-component="query">
     <br>
-<p>Filter by minimum rating (0–5). Example: <code>4</code></p>
+<p>Partial match on city. Example: <code>Damascus</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>company_size</code></b>&nbsp;&nbsp;
@@ -1754,10 +1745,22 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="company_size"                data-endpoint="GETapi-companies"
-               value="100-500"
+               value="less_than_10"
                data-component="query">
     <br>
-<p>Filter by company size string (partial match). Example: <code>100-500</code></p>
+<p>Exact enum value. Example: <code>less_than_10</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>min_rating</code></b>&nbsp;&nbsp;
+<small>number</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="min_rating"                data-endpoint="GETapi-companies"
+               value="3.5"
+               data-component="query">
+    <br>
+<p>Minimum aggregate rating (0–5). Example: <code>3.5</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
@@ -1769,7 +1772,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="10"
                data-component="query">
     <br>
-<p>Number of results per page (max 100). Defaults to 15. Example: <code>10</code></p>
+<p>Max 100, default 15. Example: <code>10</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
@@ -1790,7 +1793,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>
 </p>
 
-<p>Returns a single company profile including embedded reviews, active job posts, rating breakdowns, and social media links.</p>
+<p>Returns a single company public profile including active job posts, reviews, and ratings.</p>
 
 <span id="example-requests-GETapi-companies--id-">
 <blockquote>Example request:</blockquote>
@@ -1823,96 +1826,28 @@ fetch(url, {
 
 <span id="example-responses-GETapi-companies--id-">
             <blockquote>
-            <p>Example response (200):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
-    &quot;name&quot;: &quot;Google&quot;,
-    &quot;logo&quot;: &quot;https://logo.clearbit.com/google.com&quot;,
-    &quot;cover_image&quot;: &quot;https://images.unsplash.com/photo.jpg&quot;,
-    &quot;description&quot;: &quot;A multinational technology company.&quot;,
-    &quot;founded&quot;: &quot;1998&quot;,
-    &quot;employee_count&quot;: &quot;100,000+ employees&quot;,
-    &quot;location&quot;: &quot;Mountain View, CA&quot;,
-    &quot;website&quot;: &quot;https://www.google.com&quot;,
-    &quot;industry&quot;: &quot;Technology&quot;,
-    &quot;company_size&quot;: &quot;100000+&quot;,
-    &quot;rating&quot;: 4.5,
-    &quot;review_count&quot;: 1250,
-    &quot;would_recommend&quot;: 85,
-    &quot;ceo_performance&quot;: 92,
-    &quot;social_media&quot;: {
-        &quot;linkedin&quot;: &quot;https://www.linkedin.com/company/google&quot;,
-        &quot;twitter&quot;: &quot;https://twitter.com/Google&quot;,
-        &quot;facebook&quot;: &quot;https://www.facebook.com/Google&quot;,
-        &quot;instagram&quot;: &quot;https://www.instagram.com/google&quot;
-    },
-    &quot;category_ratings&quot;: {
-        &quot;compensation&quot;: 4.2,
-        &quot;culture&quot;: 4.6,
-        &quot;work_life&quot;: 4.1,
-        &quot;diversity&quot;: 4.4,
-        &quot;management&quot;: 4.3
-    },
-    &quot;reviews&quot;: [
-        {
-            &quot;id&quot;: &quot;1&quot;,
-            &quot;rating&quot;: 4,
-            &quot;user_name&quot;: &quot;John Doe&quot;,
-            &quot;date&quot;: &quot;27/01/2026&quot;,
-            &quot;position&quot;: &quot;Former employee, last year at 2022&quot;,
-            &quot;recommend&quot;: false,
-            &quot;ceo_approval&quot;: true,
-            &quot;subratings&quot;: {
-                &quot;compensation&quot;: 4,
-                &quot;culture&quot;: 4,
-                &quot;work_life&quot;: 3,
-                &quot;diversity&quot;: 5,
-                &quot;management&quot;: 3
-            },
-            &quot;agrees&quot;: 5,
-            &quot;disagrees&quot;: 2
-        }
-    ],
-    &quot;jobs&quot;: [
-        {
-            &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0e&quot;,
-            &quot;display_id&quot;: &quot;JOB-001&quot;,
-            &quot;company_name&quot;: &quot;Google&quot;,
-            &quot;company_logo&quot;: &quot;https://logo.clearbit.com/google.com&quot;,
-            &quot;title&quot;: &quot;Senior Frontend Developer&quot;,
-            &quot;created_at&quot;: &quot;2024-01-15&quot;,
-            &quot;roles&quot;: [
-                &quot;Frontend&quot;,
-                &quot;React&quot;
-            ],
-            &quot;types&quot;: [
-                &quot;full_time&quot;,
-                &quot;remote&quot;
-            ],
-            &quot;levels&quot;: [
-                &quot;senior&quot;
-            ],
-            &quot;experience&quot;: &quot;5+ years&quot;,
-            &quot;location&quot;: &quot;San Francisco, CA&quot;
-        }
-    ],
-    &quot;open_positions&quot;: 3,
-    &quot;company_size_range&quot;: {
-        &quot;min&quot;: 100000,
-        &quot;isPlus&quot;: true
-    }
-}</code>
- </pre>
-            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;message&quot;: &quot;Company profile not found&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (500):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Server Error&quot;
 }</code>
  </pre>
     </span>
@@ -1998,7 +1933,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="664f1a2b3c4d5e6f7a8b9c0d"
                data-component="url">
     <br>
-<p>The company profile ID. Example: <code>664f1a2b3c4d5e6f7a8b9c0d</code></p>
+<p>Company profile ID. Example: <code>664f1a2b3c4d5e6f7a8b9c0d</code></p>
             </div>
                     </form>
 
@@ -4727,7 +4662,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "last_name=n"\
     --form "full_name=g"\
     --form "image=z"\
-    --form "gender=prefer_not_to_say"\
+    --form "gender=other"\
     --form "nationality=m"\
     --form "city=i"\
     --form "location=y"\
@@ -4737,23 +4672,23 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "marital_status=prefer_not_to_say"\
     --form "salary_range_from=16"\
     --form "salary_range_to=38"\
-    --form "current_job_status=student"\
+    --form "current_job_status=employed"\
     --form "years_of_experience=8"\
     --form "education_level=n"\
-    --form "job_level=manager"\
+    --form "job_level=director"\
     --form "job_types[]=r"\
     --form "job_roles[]=w"\
     --form "work_cities[]=t"\
     --form "current_job_title=u"\
     --form "experience_summary=architecto"\
     --form "expected_salary=39"\
-    --form "is_actively_seeking=1"\
+    --form "is_actively_seeking="\
     --form "social_links[linkedin]=g"\
     --form "social_links[github]=z"\
     --form "social_links[portfolio]=m"\
     --form "social_links[twitter]=i"\
     --form "skills[][name]=y"\
-    --form "skills[][level]=expert"\
+    --form "skills[][level]=beginner"\
     --form "education_history[][certificate_type]=v"\
     --form "education_history[][university]=d"\
     --form "education_history[][faculty]=l"\
@@ -4769,7 +4704,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "work_experience[][to_date]=tnnoqitpxntltcvi"\
     --form "work_experience[][is_currently_working]=1"\
     --form "work_experience[][description]=Eius et animi quos velit et."\
-    --form "resume=@/tmp/phpd7N6tp" </code></pre></div>
+    --form "resume=@/tmp/phpaXNGfz" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -4788,7 +4723,7 @@ body.append('first_name', 'b');
 body.append('last_name', 'n');
 body.append('full_name', 'g');
 body.append('image', 'z');
-body.append('gender', 'prefer_not_to_say');
+body.append('gender', 'other');
 body.append('nationality', 'm');
 body.append('city', 'i');
 body.append('location', 'y');
@@ -4798,23 +4733,23 @@ body.append('date_of_birth', 'pwlvqwrsitcpscql');
 body.append('marital_status', 'prefer_not_to_say');
 body.append('salary_range_from', '16');
 body.append('salary_range_to', '38');
-body.append('current_job_status', 'student');
+body.append('current_job_status', 'employed');
 body.append('years_of_experience', '8');
 body.append('education_level', 'n');
-body.append('job_level', 'manager');
+body.append('job_level', 'director');
 body.append('job_types[]', 'r');
 body.append('job_roles[]', 'w');
 body.append('work_cities[]', 't');
 body.append('current_job_title', 'u');
 body.append('experience_summary', 'architecto');
 body.append('expected_salary', '39');
-body.append('is_actively_seeking', '1');
+body.append('is_actively_seeking', '');
 body.append('social_links[linkedin]', 'g');
 body.append('social_links[github]', 'z');
 body.append('social_links[portfolio]', 'm');
 body.append('social_links[twitter]', 'i');
 body.append('skills[][name]', 'y');
-body.append('skills[][level]', 'expert');
+body.append('skills[][level]', 'beginner');
 body.append('education_history[][certificate_type]', 'v');
 body.append('education_history[][university]', 'd');
 body.append('education_history[][faculty]', 'l');
@@ -4981,10 +4916,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="gender"                data-endpoint="PUTapi-job-seeker-profile"
-               value="prefer_not_to_say"
+               value="other"
                data-component="body">
     <br>
-<p>Example: <code>prefer_not_to_say</code></p>
+<p>Example: <code>other</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>male</code></li> <li><code>female</code></li> <li><code>other</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5105,10 +5040,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="current_job_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="student"
+               value="employed"
                data-component="body">
     <br>
-<p>Example: <code>student</code></p>
+<p>Example: <code>employed</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>employed</code></li> <li><code>unemployed</code></li> <li><code>freelancing</code></li> <li><code>student</code></li> <li><code>open_to_work</code></li></ul>
         </div>
@@ -5143,10 +5078,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="manager"
+               value="director"
                data-component="body">
     <br>
-<p>Example: <code>manager</code></p>
+<p>Example: <code>director</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>entry</code></li> <li><code>junior</code></li> <li><code>mid</code></li> <li><code>senior</code></li> <li><code>lead</code></li> <li><code>manager</code></li> <li><code>director</code></li> <li><code>executive</code></li></ul>
         </div>
@@ -5248,7 +5183,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
         <details>
@@ -5339,10 +5274,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="skills.0.level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="expert"
+               value="beginner"
                data-component="body">
     <br>
-<p>Example: <code>expert</code></p>
+<p>Example: <code>beginner</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>beginner</code></li> <li><code>intermediate</code></li> <li><code>advanced</code></li> <li><code>expert</code></li></ul>
                     </div>
@@ -5574,7 +5509,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>/tmp/phpd7N6tp</code></p>
+<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>/tmp/phpaXNGfz</code></p>
         </div>
         </form>
 
@@ -5596,7 +5531,7 @@ Must be one of:
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@/tmp/php98JNts" </code></pre></div>
+    --form "resume=@/tmp/phpf41iLz" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -5740,7 +5675,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 5 MB. Example: <code>/tmp/php98JNts</code></p>
+<p>PDF/DOC/DOCX file, max 5 MB. Example: <code>/tmp/phpf41iLz</code></p>
         </div>
         </form>
 
@@ -5762,7 +5697,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cv=@/tmp/phpQab7vo" </code></pre></div>
+    --form "cv=@/tmp/phpYE7KIm" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -5922,7 +5857,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpQab7vo</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpYE7KIm</code></p>
         </div>
         </form>
 
@@ -6101,7 +6036,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "job_post_id=664f1a2b3c4d5e6f7a8b9c0d"\
     --form "cover_letter=I am very interested in this position."\
-    --form "resume=@/tmp/phpOpoqii" </code></pre></div>
+    --form "education=g"\
+    --form "last_work=z"\
+    --form "years_of_experience=17"\
+    --form "why_join=i"\
+    --form "what_to_add=y"\
+    --form "positions_suited_for[]=v"\
+    --form "notice_period=d"\
+    --form "expected_salary=l"\
+    --form "resume=@/tmp/phphARpmD" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6118,6 +6061,14 @@ const headers = {
 const body = new FormData();
 body.append('job_post_id', '664f1a2b3c4d5e6f7a8b9c0d');
 body.append('cover_letter', 'I am very interested in this position.');
+body.append('education', 'g');
+body.append('last_work', 'z');
+body.append('years_of_experience', '17');
+body.append('why_join', 'i');
+body.append('what_to_add', 'y');
+body.append('positions_suited_for[]', 'v');
+body.append('notice_period', 'd');
+body.append('expected_salary', 'l');
 body.append('resume', document.querySelector('input[name="resume"]').files[0]);
 
 fetch(url, {
@@ -6281,7 +6232,105 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/phpOpoqii</code></p>
+<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/phphARpmD</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>education</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="education"                data-endpoint="POSTapi-job-seeker-apply"
+               value="g"
+               data-component="body">
+    <br>
+<p>Eager applicant profile fields. Must not be greater than 255 characters. Example: <code>g</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>last_work</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="last_work"                data-endpoint="POSTapi-job-seeker-apply"
+               value="z"
+               data-component="body">
+    <br>
+<p>Must not be greater than 255 characters. Example: <code>z</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>years_of_experience</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="years_of_experience"                data-endpoint="POSTapi-job-seeker-apply"
+               value="17"
+               data-component="body">
+    <br>
+<p>Must be at least 0. Must not be greater than 60. Example: <code>17</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>why_join</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="why_join"                data-endpoint="POSTapi-job-seeker-apply"
+               value="i"
+               data-component="body">
+    <br>
+<p>Must not be greater than 2000 characters. Example: <code>i</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>what_to_add</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="what_to_add"                data-endpoint="POSTapi-job-seeker-apply"
+               value="y"
+               data-component="body">
+    <br>
+<p>Must not be greater than 2000 characters. Example: <code>y</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>positions_suited_for</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="positions_suited_for[0]"                data-endpoint="POSTapi-job-seeker-apply"
+               data-component="body">
+        <input type="text" style="display: none"
+               name="positions_suited_for[1]"                data-endpoint="POSTapi-job-seeker-apply"
+               data-component="body">
+    <br>
+<p>Must not be greater than 100 characters.</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>notice_period</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="notice_period"                data-endpoint="POSTapi-job-seeker-apply"
+               value="d"
+               data-component="body">
+    <br>
+<p>Must not be greater than 100 characters. Example: <code>d</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>expected_salary</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="expected_salary"                data-endpoint="POSTapi-job-seeker-apply"
+               value="l"
+               data-component="body">
+    <br>
+<p>Must not be greater than 100 characters. Example: <code>l</code></p>
         </div>
         </form>
 
@@ -7514,7 +7563,7 @@ Returns jobs ranked by match percentage and ATS compatibility.</p>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@/tmp/phpZXhywp" </code></pre></div>
+    --form "resume=@/tmp/phpV8OIPt" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -7678,7 +7727,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX resume file, max 10 MB. Example: <code>/tmp/phpZXhywp</code></p>
+<p>PDF/DOC/DOCX resume file, max 10 MB. Example: <code>/tmp/phpV8OIPt</code></p>
         </div>
         </form>
 
@@ -7878,7 +7927,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "document=@/tmp/phpLuWRJ3" </code></pre></div>
+    --form "document=@/tmp/php3a5IrQ" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -8027,7 +8076,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/phpLuWRJ3</code></p>
+<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/php3a5IrQ</code></p>
         </div>
         </form>
 
@@ -8178,7 +8227,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Returns all job posts created by the authenticated employer, each with an application count.</p>
+<p>Returns all job posts by the authenticated employer, each with application count.</p>
 
 <span id="example-requests-GETapi-employer-jobs">
 <blockquote>Example request:</blockquote>
@@ -8213,19 +8262,21 @@ fetch(url, {
 
 <span id="example-responses-GETapi-employer-jobs">
             <blockquote>
-            <p>Example response (200):</p>
+            <p>Example response (401):</p>
         </blockquote>
-                <pre>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
 
-<code class="language-json" style="max-height: 300px;">[
-    {
-        &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
-        &quot;job_id&quot;: &quot;JOB-001&quot;,
-        &quot;title&quot;: &quot;Senior Laravel Developer&quot;,
-        &quot;is_active&quot;: true,
-        &quot;application_count&quot;: 5
-    }
-]</code>
+<code class="language-json" style="max-height: 300px;">{
+    &quot;error&quot;: &quot;Unauthorized&quot;,
+    &quot;message&quot;: &quot;Invalid authentication token signature&quot;
+}</code>
  </pre>
     </span>
 <span id="execution-results-GETapi-employer-jobs" hidden>
@@ -8319,7 +8370,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Creates a new job post owned by the authenticated employer.</p>
+<p>Creates a new job post. Company name and logo are automatically populated from
+the employer's company profile — they cannot be overridden here.</p>
+<p>An employer must have an approved company profile before creating a job post.</p>
 
 <span id="example-requests-POSTapi-employer-jobs">
 <blockquote>Example request:</blockquote>
@@ -8332,30 +8385,49 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
+    \"communication_method\": \"by_forsa\",
+    \"communication_value\": null,
     \"title\": \"Senior Laravel Developer\",
-    \"description\": \"We are looking for...\",
-    \"requirements\": \"Minimum 3 years of Laravel experience.\",
-    \"company_name\": \"Acme Corp\",
-    \"company_logo\": \"https:\\/\\/logo.clearbit.com\\/acme.com\",
-    \"job_type\": \"full_time\",
-    \"work_mode\": \"remote\",
-    \"experience_level\": \"senior\",
-    \"experience_required\": \"5+ years\",
-    \"location\": \"Beirut, Lebanon\",
-    \"category\": \"Engineering\",
-    \"salary_range\": {
-        \"min\": 2000,
-        \"max\": 4000,
-        \"currency\": \"USD\"
-    },
-    \"tags\": [
-        \"Laravel\",
+    \"roles\": [
+        \"Backend\",
         \"PHP\"
     ],
-    \"roles\": [
-        \"Frontend\",
-        \"React\"
-    ]
+    \"portfolio_required\": false,
+    \"cover_letter_required\": true,
+    \"gender\": \"no_preference\",
+    \"age_from\": null,
+    \"age_to\": null,
+    \"education_level\": \"bachelor\",
+    \"job_level\": \"mid\",
+    \"experience_years\": 3,
+    \"languages\": [
+        \"Arabic\",
+        \"English\"
+    ],
+    \"vacancies\": 2,
+    \"job_type\": \"full_time\",
+    \"work_mode\": \"on_site\",
+    \"city\": \"Damascus\",
+    \"address\": \"Mazzeh Street 12\",
+    \"salary_from\": \"500\",
+    \"salary_to\": \"1000\",
+    \"currency\": \"USD\",
+    \"display_salary\": true,
+    \"incentives\": \"Monthly bonuses\",
+    \"description\": \"We are looking for...\",
+    \"requirements\": \"3+ years Laravel experience.\",
+    \"questions\": [
+        {
+            \"question\": \"Describe your last project.\",
+            \"required\": \"true\"
+        }
+    ],
+    \"tags\": [
+        \"Laravel\",
+        \"MongoDB\"
+    ],
+    \"category\": \"Engineering\",
+    \"expires_at\": \"2026-12-31\"
 }"
 </code></pre></div>
 
@@ -8372,30 +8444,49 @@ const headers = {
 };
 
 let body = {
+    "communication_method": "by_forsa",
+    "communication_value": null,
     "title": "Senior Laravel Developer",
-    "description": "We are looking for...",
-    "requirements": "Minimum 3 years of Laravel experience.",
-    "company_name": "Acme Corp",
-    "company_logo": "https:\/\/logo.clearbit.com\/acme.com",
-    "job_type": "full_time",
-    "work_mode": "remote",
-    "experience_level": "senior",
-    "experience_required": "5+ years",
-    "location": "Beirut, Lebanon",
-    "category": "Engineering",
-    "salary_range": {
-        "min": 2000,
-        "max": 4000,
-        "currency": "USD"
-    },
-    "tags": [
-        "Laravel",
+    "roles": [
+        "Backend",
         "PHP"
     ],
-    "roles": [
-        "Frontend",
-        "React"
-    ]
+    "portfolio_required": false,
+    "cover_letter_required": true,
+    "gender": "no_preference",
+    "age_from": null,
+    "age_to": null,
+    "education_level": "bachelor",
+    "job_level": "mid",
+    "experience_years": 3,
+    "languages": [
+        "Arabic",
+        "English"
+    ],
+    "vacancies": 2,
+    "job_type": "full_time",
+    "work_mode": "on_site",
+    "city": "Damascus",
+    "address": "Mazzeh Street 12",
+    "salary_from": "500",
+    "salary_to": "1000",
+    "currency": "USD",
+    "display_salary": true,
+    "incentives": "Monthly bonuses",
+    "description": "We are looking for...",
+    "requirements": "3+ years Laravel experience.",
+    "questions": [
+        {
+            "question": "Describe your last project.",
+            "required": "true"
+        }
+    ],
+    "tags": [
+        "Laravel",
+        "MongoDB"
+    ],
+    "category": "Engineering",
+    "expires_at": "2026-12-31"
 };
 
 fetch(url, {
@@ -8408,16 +8499,19 @@ fetch(url, {
 
 <span id="example-responses-POSTapi-employer-jobs">
             <blockquote>
-            <p>Example response (201):</p>
+            <p>Example response (201, Created):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
         </blockquote>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
-    &quot;job_id&quot;: &quot;JOB-001&quot;,
-    &quot;title&quot;: &quot;Senior Laravel Developer&quot;,
-    &quot;is_active&quot;: true,
-    &quot;employer_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0e&quot;
+    &quot;message&quot;: &quot;You must create a company profile before posting a job.&quot;
 }</code>
  </pre>
             <blockquote>
@@ -8426,11 +8520,7 @@ fetch(url, {
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;errors&quot;: {
-        &quot;title&quot;: [
-            &quot;The title field is required.&quot;
-        ]
-    }
+    &quot;errors&quot;: {}
 }</code>
  </pre>
     </span>
@@ -8519,6 +8609,30 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                                 <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>communication_method</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="communication_method"                data-endpoint="POSTapi-employer-jobs"
+               value="by_forsa"
+               data-component="body">
+    <br>
+<p>One of: by_phone, by_forsa, by_website. Example: <code>by_forsa</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>communication_value</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="communication_value"                data-endpoint="POSTapi-employer-jobs"
+               value=""
+               data-component="body">
+    <br>
+<p>Phone or website URL (required when method is by_phone or by_website).</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>title</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
  &nbsp;
@@ -8528,55 +8642,163 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="Senior Laravel Developer"
                data-component="body">
     <br>
-<p>Job title. Max 150 chars. Example: <code>Senior Laravel Developer</code></p>
+<p>Job title. Example: <code>Senior Laravel Developer</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
+            <b style="line-height: 2;"><code>roles</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+<i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="description"                data-endpoint="POSTapi-employer-jobs"
-               value="We are looking for..."
+                              name="roles[0]"                data-endpoint="POSTapi-employer-jobs"
+               data-component="body">
+        <input type="text" style="display: none"
+               name="roles[1]"                data-endpoint="POSTapi-employer-jobs"
                data-component="body">
     <br>
-<p>Full job description. Example: <code>We are looking for...</code></p>
+<p>Role tags.</p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>requirements</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+            <b style="line-height: 2;"><code>portfolio_required</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
  &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="requirements"                data-endpoint="POSTapi-employer-jobs"
-               value="Minimum 3 years of Laravel experience."
-               data-component="body">
+                <label data-endpoint="POSTapi-employer-jobs" style="display: none">
+            <input type="radio" name="portfolio_required"
+                   value="true"
+                   data-endpoint="POSTapi-employer-jobs"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="POSTapi-employer-jobs" style="display: none">
+            <input type="radio" name="portfolio_required"
+                   value="false"
+                   data-endpoint="POSTapi-employer-jobs"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
     <br>
-<p>Job requirements. Example: <code>Minimum 3 years of Laravel experience.</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>company_name</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+            <b style="line-height: 2;"><code>cover_letter_required</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
  &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="company_name"                data-endpoint="POSTapi-employer-jobs"
-               value="Acme Corp"
-               data-component="body">
+                <label data-endpoint="POSTapi-employer-jobs" style="display: none">
+            <input type="radio" name="cover_letter_required"
+                   value="true"
+                   data-endpoint="POSTapi-employer-jobs"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="POSTapi-employer-jobs" style="display: none">
+            <input type="radio" name="cover_letter_required"
+                   value="false"
+                   data-endpoint="POSTapi-employer-jobs"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
     <br>
-<p>Company name. Max 150 chars. Example: <code>Acme Corp</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>company_logo</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>gender</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="company_logo"                data-endpoint="POSTapi-employer-jobs"
-               value="https://logo.clearbit.com/acme.com"
+                              name="gender"                data-endpoint="POSTapi-employer-jobs"
+               value="no_preference"
                data-component="body">
     <br>
-<p>URL to company logo. Example: <code>https://logo.clearbit.com/acme.com</code></p>
+<p>male | female | no_preference. Example: <code>no_preference</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>age_from</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="age_from"                data-endpoint="POSTapi-employer-jobs"
+               value=""
+               data-component="body">
+    <br>
+
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>age_to</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="age_to"                data-endpoint="POSTapi-employer-jobs"
+               value=""
+               data-component="body">
+    <br>
+
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>education_level</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="education_level"                data-endpoint="POSTapi-employer-jobs"
+               value="bachelor"
+               data-component="body">
+    <br>
+<p>high_school | diploma | bachelor | master | phd | any. Example: <code>bachelor</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>job_level</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="job_level"                data-endpoint="POSTapi-employer-jobs"
+               value="mid"
+               data-component="body">
+    <br>
+<p>entry | junior | mid | senior | manager | director. Example: <code>mid</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>experience_years</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="experience_years"                data-endpoint="POSTapi-employer-jobs"
+               value="3"
+               data-component="body">
+    <br>
+<p>Years of experience required. Example: <code>3</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>languages</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="languages[0]"                data-endpoint="POSTapi-employer-jobs"
+               data-component="body">
+        <input type="text" style="display: none"
+               name="languages[1]"                data-endpoint="POSTapi-employer-jobs"
+               data-component="body">
+    <br>
+
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>vacancies</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="vacancies"                data-endpoint="POSTapi-employer-jobs"
+               value="2"
+               data-component="body">
+    <br>
+<p>Number of open slots. Example: <code>2</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>job_type</code></b>&nbsp;&nbsp;
@@ -8588,7 +8810,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="full_time"
                data-component="body">
     <br>
-<p>One of: full_time, part_time, contract, freelance. Example: <code>full_time</code></p>
+<p>full_time | part_time | contract | freelance. Example: <code>full_time</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>work_mode</code></b>&nbsp;&nbsp;
@@ -8597,104 +8819,162 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="work_mode"                data-endpoint="POSTapi-employer-jobs"
-               value="remote"
+               value="on_site"
                data-component="body">
     <br>
-<p>One of: remote, hybrid, on_site. Example: <code>remote</code></p>
+<p>remote | hybrid | on_site. Example: <code>on_site</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>experience_level</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>city</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="experience_level"                data-endpoint="POSTapi-employer-jobs"
-               value="senior"
+                              name="city"                data-endpoint="POSTapi-employer-jobs"
+               value="Damascus"
                data-component="body">
     <br>
-<p>One of: junior, mid, senior. Example: <code>senior</code></p>
+<p>required. Example: <code>Damascus</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>experience_required</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>address</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="experience_required"                data-endpoint="POSTapi-employer-jobs"
-               value="5+ years"
+                              name="address"                data-endpoint="POSTapi-employer-jobs"
+               value="Mazzeh Street 12"
                data-component="body">
     <br>
-<p>Display string for required experience. Example: <code>5+ years</code></p>
+<p>Full address. Example: <code>Mazzeh Street 12</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>location</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+            <b style="line-height: 2;"><code>salary_from</code></b>&nbsp;&nbsp;
+<small>integer.</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="location"                data-endpoint="POSTapi-employer-jobs"
-               value="Beirut, Lebanon"
+                              name="salary_from"                data-endpoint="POSTapi-employer-jobs"
+               value="500"
                data-component="body">
     <br>
-<p>Example: <code>Beirut, Lebanon</code></p>
+<p>Example: <code>500</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>category</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+            <b style="line-height: 2;"><code>salary_to</code></b>&nbsp;&nbsp;
+<small>integer.</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="category"                data-endpoint="POSTapi-employer-jobs"
-               value="Engineering"
+                              name="salary_to"                data-endpoint="POSTapi-employer-jobs"
+               value="1000"
                data-component="body">
     <br>
-<p>Example: <code>Engineering</code></p>
+<p>Example: <code>1000</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-        <details>
-            <summary style="padding-bottom: 10px;">
-                <b style="line-height: 2;"><code>salary_range</code></b>&nbsp;&nbsp;
-<small>object</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-<br>
-<p>Salary range object.</p>
-            </summary>
-                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>min</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="salary_range.min"                data-endpoint="POSTapi-employer-jobs"
-               value="2000"
-               data-component="body">
-    <br>
-<p>Example: <code>2000</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>max</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="salary_range.max"                data-endpoint="POSTapi-employer-jobs"
-               value="4000"
-               data-component="body">
-    <br>
-<p>Example: <code>4000</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>currency</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+            <b style="line-height: 2;"><code>currency</code></b>&nbsp;&nbsp;
+<small>string.</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="salary_range.currency"                data-endpoint="POSTapi-employer-jobs"
+                              name="currency"                data-endpoint="POSTapi-employer-jobs"
                value="USD"
                data-component="body">
     <br>
 <p>Example: <code>USD</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>display_salary</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="POSTapi-employer-jobs" style="display: none">
+            <input type="radio" name="display_salary"
+                   value="true"
+                   data-endpoint="POSTapi-employer-jobs"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="POSTapi-employer-jobs" style="display: none">
+            <input type="radio" name="display_salary"
+                   value="false"
+                   data-endpoint="POSTapi-employer-jobs"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Show salary on listing. Example: <code>true</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>incentives</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="incentives"                data-endpoint="POSTapi-employer-jobs"
+               value="Monthly bonuses"
+               data-component="body">
+    <br>
+<p>Commissions / bonuses / insurance info. Example: <code>Monthly bonuses</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="description"                data-endpoint="POSTapi-employer-jobs"
+               value="We are looking for..."
+               data-component="body">
+    <br>
+<p>Job summary and responsibilities. Example: <code>We are looking for...</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>requirements</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="requirements"                data-endpoint="POSTapi-employer-jobs"
+               value="3+ years Laravel experience."
+               data-component="body">
+    <br>
+<p>Skills and expertise. Example: <code>3+ years Laravel experience.</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>questions</code></b>&nbsp;&nbsp;
+<small>object[]</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+<br>
+<p>Custom screening questions.</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>question</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="questions.0.question"                data-endpoint="POSTapi-employer-jobs"
+               value="Describe your last project."
+               data-component="body">
+    <br>
+<p>required. Example: <code>Describe your last project.</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>required</code></b>&nbsp;&nbsp;
+<small>boolean.</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="questions.0.required"                data-endpoint="POSTapi-employer-jobs"
+               value="true"
+               data-component="body">
+    <br>
+<p>Example: <code>true</code></p>
                     </div>
                                     </details>
         </div>
@@ -8710,21 +8990,31 @@ You can check the Dev Tools console for debugging information.</code></pre>
                name="tags[1]"                data-endpoint="POSTapi-employer-jobs"
                data-component="body">
     <br>
-<p>Array of tags.</p>
+<p>Searchable tags.</p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>roles</code></b>&nbsp;&nbsp;
-<small>string[]</small>&nbsp;
+            <b style="line-height: 2;"><code>category</code></b>&nbsp;&nbsp;
+<small>string.</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="roles[0]"                data-endpoint="POSTapi-employer-jobs"
-               data-component="body">
-        <input type="text" style="display: none"
-               name="roles[1]"                data-endpoint="POSTapi-employer-jobs"
+                              name="category"                data-endpoint="POSTapi-employer-jobs"
+               value="Engineering"
                data-component="body">
     <br>
-<p>Array of role categories.</p>
+<p>Example: <code>Engineering</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>expires_at</code></b>&nbsp;&nbsp;
+<small>date</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="expires_at"                data-endpoint="POSTapi-employer-jobs"
+               value="2026-12-31"
+               data-component="body">
+    <br>
+<p>ISO date for expiry. Example: <code>2026-12-31</code></p>
         </div>
         </form>
 
@@ -8734,7 +9024,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Updates an existing job post. Only the owning employer can update it.</p>
+<p>Updates an existing job post. <code>company_name</code> and <code>company_logo</code> are read-only
+and always sourced from the employer's company profile.</p>
 
 <span id="example-requests-PUTapi-employer-jobs--id-">
 <blockquote>Example request:</blockquote>
@@ -8745,30 +9036,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     "http://localhost:8000/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
-    --header "Accept: application/json" \
-    --data "{
-    \"title\": \"Updated Title\",
-    \"description\": \"Eius et animi quos velit et.\",
-    \"requirements\": \"architecto\",
-    \"company_name\": \"architecto\",
-    \"company_logo\": \"architecto\",
-    \"job_type\": \"architecto\",
-    \"work_mode\": \"architecto\",
-    \"experience_level\": \"architecto\",
-    \"experience_required\": \"architecto\",
-    \"location\": \"architecto\",
-    \"category\": \"architecto\",
-    \"salary_range\": {
-        \"min\": 39,
-        \"max\": 84,
-        \"currency\": \"architecto\"
-    },
-    \"tags\": [
-        \"architecto\"
-    ],
-    \"is_active\": false
-}"
-</code></pre></div>
+    --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
@@ -8782,48 +9050,15 @@ const headers = {
     "Accept": "application/json",
 };
 
-let body = {
-    "title": "Updated Title",
-    "description": "Eius et animi quos velit et.",
-    "requirements": "architecto",
-    "company_name": "architecto",
-    "company_logo": "architecto",
-    "job_type": "architecto",
-    "work_mode": "architecto",
-    "experience_level": "architecto",
-    "experience_required": "architecto",
-    "location": "architecto",
-    "category": "architecto",
-    "salary_range": {
-        "min": 39,
-        "max": 84,
-        "currency": "architecto"
-    },
-    "tags": [
-        "architecto"
-    ],
-    "is_active": false
-};
 
 fetch(url, {
     method: "PUT",
     headers,
-    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 </span>
 
 <span id="example-responses-PUTapi-employer-jobs--id-">
-            <blockquote>
-            <p>Example response (200):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
-    &quot;title&quot;: &quot;Updated Title&quot;
-}</code>
- </pre>
             <blockquote>
             <p>Example response (403):</p>
         </blockquote>
@@ -8840,6 +9075,15 @@ fetch(url, {
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;message&quot;: &quot;Job post not found&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;errors&quot;: {}
 }</code>
  </pre>
     </span>
@@ -8937,238 +9181,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="664f1a2b3c4d5e6f7a8b9c0d"
                data-component="url">
     <br>
-<p>The job post ID. Example: <code>664f1a2b3c4d5e6f7a8b9c0d</code></p>
+<p>Job post ID. Example: <code>664f1a2b3c4d5e6f7a8b9c0d</code></p>
             </div>
-                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-        <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>title</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="title"                data-endpoint="PUTapi-employer-jobs--id-"
-               value="Updated Title"
-               data-component="body">
-    <br>
-<p>Example: <code>Updated Title</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="description"                data-endpoint="PUTapi-employer-jobs--id-"
-               value="Eius et animi quos velit et."
-               data-component="body">
-    <br>
-<p>Example: <code>Eius et animi quos velit et.</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>requirements</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="requirements"                data-endpoint="PUTapi-employer-jobs--id-"
-               value="architecto"
-               data-component="body">
-    <br>
-<p>Example: <code>architecto</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>company_name</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="company_name"                data-endpoint="PUTapi-employer-jobs--id-"
-               value="architecto"
-               data-component="body">
-    <br>
-<p>Example: <code>architecto</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>company_logo</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="company_logo"                data-endpoint="PUTapi-employer-jobs--id-"
-               value="architecto"
-               data-component="body">
-    <br>
-<p>URL Example: <code>architecto</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>job_type</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="job_type"                data-endpoint="PUTapi-employer-jobs--id-"
-               value="architecto"
-               data-component="body">
-    <br>
-<p>One of: full_time, part_time, contract, freelance. Example: <code>architecto</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>work_mode</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="work_mode"                data-endpoint="PUTapi-employer-jobs--id-"
-               value="architecto"
-               data-component="body">
-    <br>
-<p>One of: remote, hybrid, on_site. Example: <code>architecto</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>experience_level</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="experience_level"                data-endpoint="PUTapi-employer-jobs--id-"
-               value="architecto"
-               data-component="body">
-    <br>
-<p>One of: junior, mid, senior. Example: <code>architecto</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>experience_required</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="experience_required"                data-endpoint="PUTapi-employer-jobs--id-"
-               value="architecto"
-               data-component="body">
-    <br>
-<p>Example: <code>architecto</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>location</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="location"                data-endpoint="PUTapi-employer-jobs--id-"
-               value="architecto"
-               data-component="body">
-    <br>
-<p>Example: <code>architecto</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>category</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="category"                data-endpoint="PUTapi-employer-jobs--id-"
-               value="architecto"
-               data-component="body">
-    <br>
-<p>Example: <code>architecto</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-        <details>
-            <summary style="padding-bottom: 10px;">
-                <b style="line-height: 2;"><code>salary_range</code></b>&nbsp;&nbsp;
-<small>object</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-<br>
-
-            </summary>
-                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>min</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="salary_range.min"                data-endpoint="PUTapi-employer-jobs--id-"
-               value="39"
-               data-component="body">
-    <br>
-<p>Must be at least 0. Example: <code>39</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>max</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="salary_range.max"                data-endpoint="PUTapi-employer-jobs--id-"
-               value="84"
-               data-component="body">
-    <br>
-<p>Must be at least 0. Example: <code>84</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>currency</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="salary_range.currency"                data-endpoint="PUTapi-employer-jobs--id-"
-               value="architecto"
-               data-component="body">
-    <br>
-<p>Example: <code>architecto</code></p>
-                    </div>
-                                    </details>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>tags</code></b>&nbsp;&nbsp;
-<small>string[]</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="tags[0]"                data-endpoint="PUTapi-employer-jobs--id-"
-               data-component="body">
-        <input type="text" style="display: none"
-               name="tags[1]"                data-endpoint="PUTapi-employer-jobs--id-"
-               data-component="body">
-    <br>
-
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>roles</code></b>&nbsp;&nbsp;
-<small>object</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="roles"                data-endpoint="PUTapi-employer-jobs--id-"
-               value=""
-               data-component="body">
-    <br>
-
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>is_active</code></b>&nbsp;&nbsp;
-<small>boolean</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <label data-endpoint="PUTapi-employer-jobs--id-" style="display: none">
-            <input type="radio" name="is_active"
-                   value="true"
-                   data-endpoint="PUTapi-employer-jobs--id-"
-                   data-component="body"             >
-            <code>true</code>
-        </label>
-        <label data-endpoint="PUTapi-employer-jobs--id-" style="display: none">
-            <input type="radio" name="is_active"
-                   value="false"
-                   data-endpoint="PUTapi-employer-jobs--id-"
-                   data-component="body"             >
-            <code>false</code>
-        </label>
-    <br>
-<p>Example: <code>false</code></p>
-        </div>
-        </form>
+                    </form>
 
                     <h2 id="endpoints-DELETEapi-employer-jobs--id-">Delete job post</h2>
 
@@ -9176,7 +9191,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Permanently deletes a job post. Only the owning employer can delete it.</p>
+
 
 <span id="example-requests-DELETEapi-employer-jobs--id-">
 <blockquote>Example request:</blockquote>
@@ -9332,7 +9347,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="664f1a2b3c4d5e6f7a8b9c0d"
                data-component="url">
     <br>
-<p>The job post ID. Example: <code>664f1a2b3c4d5e6f7a8b9c0d</code></p>
+<p>Job post ID. Example: <code>664f1a2b3c4d5e6f7a8b9c0d</code></p>
             </div>
                     </form>
 
@@ -9342,7 +9357,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Sets <code>is_active</code> to false, hiding the post from public listings. Only the owning employer can deactivate it.</p>
+<p>Sets <code>is_active</code> to false, hiding the post from public listings.</p>
 
 <span id="example-requests-POSTapi-employer-jobs--id--deactivate">
 <blockquote>Example request:</blockquote>
@@ -9381,10 +9396,7 @@ fetch(url, {
         </blockquote>
                 <pre>
 
-<code class="language-json" style="max-height: 300px;">{
-    &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
-    &quot;is_active&quot;: false
-}</code>
+<code class="language-json" style="max-height: 300px;">{}</code>
  </pre>
             <blockquote>
             <p>Example response (403):</p>
@@ -9499,19 +9511,169 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="664f1a2b3c4d5e6f7a8b9c0d"
                data-component="url">
     <br>
-<p>The job post ID. Example: <code>664f1a2b3c4d5e6f7a8b9c0d</code></p>
+<p>Job post ID. Example: <code>664f1a2b3c4d5e6f7a8b9c0d</code></p>
             </div>
                     </form>
 
-                    <h2 id="endpoints-POSTapi-employer-company">Upsert company profile</h2>
+                    <h2 id="endpoints-GETapi-employer-company">Get my company profile (owner view)</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).
-<code>company_size</code> accepts either a plain string (<code>"100-500"</code>, <code>"500+"</code>) or a structured object <code>{ min, max?, isPlus }</code> — both are normalised to a canonical string before storage.</p>
-<p>Note: Rating fields (rating, review_count, reviews, etc.) are read-only and managed by the system. They cannot be set by employers.</p>
+<p>Returns the full profile including private info, for the authenticated employer.</p>
+
+<span id="example-requests-GETapi-employer-company">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost:8000/api/employer/company" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/employer/company"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-employer-company">
+            <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;error&quot;: &quot;Unauthorized&quot;,
+    &quot;message&quot;: &quot;Invalid authentication token signature&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;No company profile found. Create one first.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-employer-company" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-employer-company"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-employer-company"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-employer-company" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-employer-company">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-employer-company" data-method="GET"
+      data-path="api/employer/company"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-employer-company', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-employer-company"
+                    onclick="tryItOut('GETapi-employer-company');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-employer-company"
+                    onclick="cancelTryOut('GETapi-employer-company');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-employer-company"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/employer/company</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-employer-company"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-employer-company"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-employer-company"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="endpoints-POSTapi-employer-company">Update public company info</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Creates or updates the employer's company public profile.     *</p>
 
 <span id="example-requests-POSTapi-employer-company">
 <blockquote>Example request:</blockquote>
@@ -9524,22 +9686,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"Google\",
-    \"logo\": \"https:\\/\\/logo.clearbit.com\\/google.com\",
-    \"cover_image\": \"https:\\/\\/images.unsplash.com\\/photo.jpg\",
-    \"description\": \"Eius et animi quos velit et.\",
-    \"location\": \"Mountain View, CA\",
-    \"company_size\": \"100-500\",
-    \"employee_count\": \"100,000+ employees\",
-    \"industry\": \"Technology\",
-    \"website\": \"https:\\/\\/www.google.com\",
-    \"founded\": \"1998\",
-    \"social_media\": {
-        \"linkedin\": \"https:\\/\\/www.linkedin.com\\/company\\/google\",
-        \"twitter\": \"https:\\/\\/twitter.com\\/Google\",
-        \"facebook\": \"https:\\/\\/www.facebook.com\\/Google\",
-        \"instagram\": \"https:\\/\\/www.instagram.com\\/google\"
-    }
+    \"name\": \"Tammam company\",
+    \"description\": \"We build software.\",
+    \"industry\": \"Information Technology Services\",
+    \"company_size\": \"less_than_10\",
+    \"city\": \"Damascus\",
+    \"country\": \"Syria\",
+    \"phone\": \"0932444357\",
+    \"phone_visible\": false,
+    \"email\": \"tamammb97@gmail.com\"
 }"
 </code></pre></div>
 
@@ -9556,22 +9711,15 @@ const headers = {
 };
 
 let body = {
-    "name": "Google",
-    "logo": "https:\/\/logo.clearbit.com\/google.com",
-    "cover_image": "https:\/\/images.unsplash.com\/photo.jpg",
-    "description": "Eius et animi quos velit et.",
-    "location": "Mountain View, CA",
-    "company_size": "100-500",
-    "employee_count": "100,000+ employees",
-    "industry": "Technology",
-    "website": "https:\/\/www.google.com",
-    "founded": "1998",
-    "social_media": {
-        "linkedin": "https:\/\/www.linkedin.com\/company\/google",
-        "twitter": "https:\/\/twitter.com\/Google",
-        "facebook": "https:\/\/www.facebook.com\/Google",
-        "instagram": "https:\/\/www.instagram.com\/google"
-    }
+    "name": "Tammam company",
+    "description": "We build software.",
+    "industry": "Information Technology Services",
+    "company_size": "less_than_10",
+    "city": "Damascus",
+    "country": "Syria",
+    "phone": "0932444357",
+    "phone_visible": false,
+    "email": "tamammb97@gmail.com"
 };
 
 fetch(url, {
@@ -9584,38 +9732,12 @@ fetch(url, {
 
 <span id="example-responses-POSTapi-employer-company">
             <blockquote>
-            <p>Example response (200):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
-    &quot;name&quot;: &quot;Google&quot;,
-    &quot;logo&quot;: &quot;https://logo.clearbit.com/google.com&quot;,
-    &quot;cover_image&quot;: &quot;https://images.unsplash.com/photo.jpg&quot;,
-    &quot;founded&quot;: &quot;1998&quot;,
-    &quot;employee_count&quot;: &quot;100,000+ employees&quot;,
-    &quot;location&quot;: &quot;Mountain View, CA&quot;,
-    &quot;website&quot;: &quot;https://www.google.com&quot;,
-    &quot;company_size&quot;: &quot;100000+&quot;,
-    &quot;open_positions&quot;: 0,
-    &quot;company_size_range&quot;: {
-        &quot;min&quot;: 100000,
-        &quot;isPlus&quot;: true
-    }
-}</code>
- </pre>
-            <blockquote>
             <p>Example response (422):</p>
         </blockquote>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;errors&quot;: {
-        &quot;name&quot;: [
-            &quot;The name field is required.&quot;
-        ]
-    }
+    &quot;errors&quot;: {}
 }</code>
  </pre>
     </span>
@@ -9706,38 +9828,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
         <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
- &nbsp;
+<i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-employer-company"
-               value="Google"
+               value="Tammam company"
                data-component="body">
     <br>
-<p>Company name. Max 150 chars. Example: <code>Google</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>logo</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="logo"                data-endpoint="POSTapi-employer-company"
-               value="https://logo.clearbit.com/google.com"
-               data-component="body">
-    <br>
-<p>URL to company logo. Example: <code>https://logo.clearbit.com/google.com</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>cover_image</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="cover_image"                data-endpoint="POSTapi-employer-company"
-               value="https://images.unsplash.com/photo.jpg"
-               data-component="body">
-    <br>
-<p>URL to cover/banner image. Example: <code>https://images.unsplash.com/photo.jpg</code></p>
+<p>Company name (required on first creation, max 150). Example: <code>Tammam company</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -9746,46 +9844,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="description"                data-endpoint="POSTapi-employer-company"
-               value="Eius et animi quos velit et."
+               value="We build software."
                data-component="body">
     <br>
-<p>Company description. Example: <code>Eius et animi quos velit et.</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>location</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="location"                data-endpoint="POSTapi-employer-company"
-               value="Mountain View, CA"
-               data-component="body">
-    <br>
-<p>Headquarters location. Example: <code>Mountain View, CA</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>company_size</code></b>&nbsp;&nbsp;
-<small>string|object</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="company_size"                data-endpoint="POSTapi-employer-company"
-               value="100-500"
-               data-component="body">
-    <br>
-<p>Size string ("100-500", "500+") or object {min, max?, isPlus}. Example: <code>100-500</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>employee_count</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="employee_count"                data-endpoint="POSTapi-employer-company"
-               value="100,000+ employees"
-               data-component="body">
-    <br>
-<p>Display string for employee count. Example: <code>100,000+ employees</code></p>
+<p>Free-text description. Example: <code>We build software.</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>industry</code></b>&nbsp;&nbsp;
@@ -9794,106 +9856,104 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="industry"                data-endpoint="POSTapi-employer-company"
-               value="Technology"
+               value="Information Technology Services"
                data-component="body">
     <br>
-<p>Industry name. Example: <code>Technology</code></p>
+<p>Industry label. Example: <code>Information Technology Services</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>website</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>company_size</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="website"                data-endpoint="POSTapi-employer-company"
-               value="https://www.google.com"
+                              name="company_size"                data-endpoint="POSTapi-employer-company"
+               value="less_than_10"
                data-component="body">
     <br>
-<p>Company website URL. Example: <code>https://www.google.com</code></p>
+<p>Example: <code>less_than_10</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>less_than_10 | 10_to_50 | 51_to_200 | 201_to_500 | 501_to_1000 | 1001_to_5000 | more_than_5000</code></li></ul>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>founded</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>city</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="founded"                data-endpoint="POSTapi-employer-company"
-               value="1998"
+                              name="city"                data-endpoint="POSTapi-employer-company"
+               value="Damascus"
                data-component="body">
     <br>
-<p>Year founded. Example: <code>1998</code></p>
+<p>City name. Example: <code>Damascus</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-        <details>
-            <summary style="padding-bottom: 10px;">
-                <b style="line-height: 2;"><code>social_media</code></b>&nbsp;&nbsp;
-<small>object</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-<br>
-<p>Social media links.</p>
-            </summary>
-                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>linkedin</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>country</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="social_media.linkedin"                data-endpoint="POSTapi-employer-company"
-               value="https://www.linkedin.com/company/google"
+                              name="country"                data-endpoint="POSTapi-employer-company"
+               value="Syria"
                data-component="body">
     <br>
-<p>LinkedIn URL. Example: <code>https://www.linkedin.com/company/google</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>twitter</code></b>&nbsp;&nbsp;
+<p>Country. Example: <code>Syria</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>phone</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="social_media.twitter"                data-endpoint="POSTapi-employer-company"
-               value="https://twitter.com/Google"
+                              name="phone"                data-endpoint="POSTapi-employer-company"
+               value="0932444357"
                data-component="body">
     <br>
-<p>Twitter URL. Example: <code>https://twitter.com/Google</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>facebook</code></b>&nbsp;&nbsp;
+<p>Contact phone. Example: <code>0932444357</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>phone_visible</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="POSTapi-employer-company" style="display: none">
+            <input type="radio" name="phone_visible"
+                   value="true"
+                   data-endpoint="POSTapi-employer-company"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="POSTapi-employer-company" style="display: none">
+            <input type="radio" name="phone_visible"
+                   value="false"
+                   data-endpoint="POSTapi-employer-company"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Whether phone is shown to job seekers. Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="social_media.facebook"                data-endpoint="POSTapi-employer-company"
-               value="https://www.facebook.com/Google"
+                              name="email"                data-endpoint="POSTapi-employer-company"
+               value="tamammb97@gmail.com"
                data-component="body">
     <br>
-<p>Facebook URL. Example: <code>https://www.facebook.com/Google</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>instagram</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="social_media.instagram"                data-endpoint="POSTapi-employer-company"
-               value="https://www.instagram.com/google"
-               data-component="body">
-    <br>
-<p>Instagram URL. Example: <code>https://www.instagram.com/google</code></p>
-                    </div>
-                                    </details>
+<p>Contact email. Example: <code>tamammb97@gmail.com</code></p>
         </div>
         </form>
 
-                    <h2 id="endpoints-PUTapi-employer-company">Upsert company profile</h2>
+                    <h2 id="endpoints-PUTapi-employer-company">Update public company info</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).
-<code>company_size</code> accepts either a plain string (<code>"100-500"</code>, <code>"500+"</code>) or a structured object <code>{ min, max?, isPlus }</code> — both are normalised to a canonical string before storage.</p>
-<p>Note: Rating fields (rating, review_count, reviews, etc.) are read-only and managed by the system. They cannot be set by employers.</p>
+<p>Creates or updates the employer's company public profile.     *</p>
 
 <span id="example-requests-PUTapi-employer-company">
 <blockquote>Example request:</blockquote>
@@ -9906,22 +9966,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"Google\",
-    \"logo\": \"https:\\/\\/logo.clearbit.com\\/google.com\",
-    \"cover_image\": \"https:\\/\\/images.unsplash.com\\/photo.jpg\",
-    \"description\": \"Eius et animi quos velit et.\",
-    \"location\": \"Mountain View, CA\",
-    \"company_size\": \"100-500\",
-    \"employee_count\": \"100,000+ employees\",
-    \"industry\": \"Technology\",
-    \"website\": \"https:\\/\\/www.google.com\",
-    \"founded\": \"1998\",
-    \"social_media\": {
-        \"linkedin\": \"https:\\/\\/www.linkedin.com\\/company\\/google\",
-        \"twitter\": \"https:\\/\\/twitter.com\\/Google\",
-        \"facebook\": \"https:\\/\\/www.facebook.com\\/Google\",
-        \"instagram\": \"https:\\/\\/www.instagram.com\\/google\"
-    }
+    \"name\": \"Tammam company\",
+    \"description\": \"We build software.\",
+    \"industry\": \"Information Technology Services\",
+    \"company_size\": \"less_than_10\",
+    \"city\": \"Damascus\",
+    \"country\": \"Syria\",
+    \"phone\": \"0932444357\",
+    \"phone_visible\": false,
+    \"email\": \"tamammb97@gmail.com\"
 }"
 </code></pre></div>
 
@@ -9938,22 +9991,15 @@ const headers = {
 };
 
 let body = {
-    "name": "Google",
-    "logo": "https:\/\/logo.clearbit.com\/google.com",
-    "cover_image": "https:\/\/images.unsplash.com\/photo.jpg",
-    "description": "Eius et animi quos velit et.",
-    "location": "Mountain View, CA",
-    "company_size": "100-500",
-    "employee_count": "100,000+ employees",
-    "industry": "Technology",
-    "website": "https:\/\/www.google.com",
-    "founded": "1998",
-    "social_media": {
-        "linkedin": "https:\/\/www.linkedin.com\/company\/google",
-        "twitter": "https:\/\/twitter.com\/Google",
-        "facebook": "https:\/\/www.facebook.com\/Google",
-        "instagram": "https:\/\/www.instagram.com\/google"
-    }
+    "name": "Tammam company",
+    "description": "We build software.",
+    "industry": "Information Technology Services",
+    "company_size": "less_than_10",
+    "city": "Damascus",
+    "country": "Syria",
+    "phone": "0932444357",
+    "phone_visible": false,
+    "email": "tamammb97@gmail.com"
 };
 
 fetch(url, {
@@ -9966,38 +10012,12 @@ fetch(url, {
 
 <span id="example-responses-PUTapi-employer-company">
             <blockquote>
-            <p>Example response (200):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
-    &quot;name&quot;: &quot;Google&quot;,
-    &quot;logo&quot;: &quot;https://logo.clearbit.com/google.com&quot;,
-    &quot;cover_image&quot;: &quot;https://images.unsplash.com/photo.jpg&quot;,
-    &quot;founded&quot;: &quot;1998&quot;,
-    &quot;employee_count&quot;: &quot;100,000+ employees&quot;,
-    &quot;location&quot;: &quot;Mountain View, CA&quot;,
-    &quot;website&quot;: &quot;https://www.google.com&quot;,
-    &quot;company_size&quot;: &quot;100000+&quot;,
-    &quot;open_positions&quot;: 0,
-    &quot;company_size_range&quot;: {
-        &quot;min&quot;: 100000,
-        &quot;isPlus&quot;: true
-    }
-}</code>
- </pre>
-            <blockquote>
             <p>Example response (422):</p>
         </blockquote>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;errors&quot;: {
-        &quot;name&quot;: [
-            &quot;The name field is required.&quot;
-        ]
-    }
+    &quot;errors&quot;: {}
 }</code>
  </pre>
     </span>
@@ -10088,38 +10108,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
         <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
- &nbsp;
+<i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="PUTapi-employer-company"
-               value="Google"
+               value="Tammam company"
                data-component="body">
     <br>
-<p>Company name. Max 150 chars. Example: <code>Google</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>logo</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="logo"                data-endpoint="PUTapi-employer-company"
-               value="https://logo.clearbit.com/google.com"
-               data-component="body">
-    <br>
-<p>URL to company logo. Example: <code>https://logo.clearbit.com/google.com</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>cover_image</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="cover_image"                data-endpoint="PUTapi-employer-company"
-               value="https://images.unsplash.com/photo.jpg"
-               data-component="body">
-    <br>
-<p>URL to cover/banner image. Example: <code>https://images.unsplash.com/photo.jpg</code></p>
+<p>Company name (required on first creation, max 150). Example: <code>Tammam company</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -10128,46 +10124,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="description"                data-endpoint="PUTapi-employer-company"
-               value="Eius et animi quos velit et."
+               value="We build software."
                data-component="body">
     <br>
-<p>Company description. Example: <code>Eius et animi quos velit et.</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>location</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="location"                data-endpoint="PUTapi-employer-company"
-               value="Mountain View, CA"
-               data-component="body">
-    <br>
-<p>Headquarters location. Example: <code>Mountain View, CA</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>company_size</code></b>&nbsp;&nbsp;
-<small>string|object</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="company_size"                data-endpoint="PUTapi-employer-company"
-               value="100-500"
-               data-component="body">
-    <br>
-<p>Size string ("100-500", "500+") or object {min, max?, isPlus}. Example: <code>100-500</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>employee_count</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="employee_count"                data-endpoint="PUTapi-employer-company"
-               value="100,000+ employees"
-               data-component="body">
-    <br>
-<p>Display string for employee count. Example: <code>100,000+ employees</code></p>
+<p>Free-text description. Example: <code>We build software.</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>industry</code></b>&nbsp;&nbsp;
@@ -10176,10 +10136,380 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="industry"                data-endpoint="PUTapi-employer-company"
-               value="Technology"
+               value="Information Technology Services"
                data-component="body">
     <br>
-<p>Industry name. Example: <code>Technology</code></p>
+<p>Industry label. Example: <code>Information Technology Services</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>company_size</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="company_size"                data-endpoint="PUTapi-employer-company"
+               value="less_than_10"
+               data-component="body">
+    <br>
+<p>Example: <code>less_than_10</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>less_than_10 | 10_to_50 | 51_to_200 | 201_to_500 | 501_to_1000 | 1001_to_5000 | more_than_5000</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>city</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="city"                data-endpoint="PUTapi-employer-company"
+               value="Damascus"
+               data-component="body">
+    <br>
+<p>City name. Example: <code>Damascus</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>country</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="country"                data-endpoint="PUTapi-employer-company"
+               value="Syria"
+               data-component="body">
+    <br>
+<p>Country. Example: <code>Syria</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>phone</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="phone"                data-endpoint="PUTapi-employer-company"
+               value="0932444357"
+               data-component="body">
+    <br>
+<p>Contact phone. Example: <code>0932444357</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>phone_visible</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="PUTapi-employer-company" style="display: none">
+            <input type="radio" name="phone_visible"
+                   value="true"
+                   data-endpoint="PUTapi-employer-company"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="PUTapi-employer-company" style="display: none">
+            <input type="radio" name="phone_visible"
+                   value="false"
+                   data-endpoint="PUTapi-employer-company"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Whether phone is shown to job seekers. Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="email"                data-endpoint="PUTapi-employer-company"
+               value="tamammb97@gmail.com"
+               data-component="body">
+    <br>
+<p>Contact email. Example: <code>tamammb97@gmail.com</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-PUTapi-employer-company-private">Update private / general company info</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Updates employer-only private info (address, founded year, extra phones, social links, etc.).
+Set <code>expose_to_applicants</code> to <code>true</code> to make this block visible on job posts.</p>
+
+<span id="example-requests-PUTapi-employer-company-private">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PUT \
+    "http://localhost:8000/api/employer/company/private" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"expose_to_applicants\": false,
+    \"address\": \"Mazzeh, Damascus\",
+    \"industries\": [
+        \"Information Technology Services\"
+    ],
+    \"company_size\": \"less_than_10\",
+    \"founded_year\": 2018,
+    \"phone_main\": \"0932444357\",
+    \"phone_extra\": null,
+    \"website\": \"https:\\/\\/tammam.co\",
+    \"social_media\": {
+        \"instagram\": \"architecto\",
+        \"telegram\": \"architecto\",
+        \"twitter\": \"architecto\",
+        \"facebook\": \"architecto\",
+        \"behance\": \"architecto\",
+        \"github\": \"architecto\",
+        \"linkedin\": \"architecto\"
+    }
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/employer/company/private"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "expose_to_applicants": false,
+    "address": "Mazzeh, Damascus",
+    "industries": [
+        "Information Technology Services"
+    ],
+    "company_size": "less_than_10",
+    "founded_year": 2018,
+    "phone_main": "0932444357",
+    "phone_extra": null,
+    "website": "https:\/\/tammam.co",
+    "social_media": {
+        "instagram": "architecto",
+        "telegram": "architecto",
+        "twitter": "architecto",
+        "facebook": "architecto",
+        "behance": "architecto",
+        "github": "architecto",
+        "linkedin": "architecto"
+    }
+};
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-PUTapi-employer-company-private">
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;No company profile found. Create one first.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;errors&quot;: {}
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-PUTapi-employer-company-private" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PUTapi-employer-company-private"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-employer-company-private"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PUTapi-employer-company-private" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-employer-company-private">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PUTapi-employer-company-private" data-method="PUT"
+      data-path="api/employer/company/private"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-employer-company-private', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PUTapi-employer-company-private"
+                    onclick="tryItOut('PUTapi-employer-company-private');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PUTapi-employer-company-private"
+                    onclick="cancelTryOut('PUTapi-employer-company-private');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PUTapi-employer-company-private"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/employer/company/private</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="PUTapi-employer-company-private"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PUTapi-employer-company-private"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PUTapi-employer-company-private"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>expose_to_applicants</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="PUTapi-employer-company-private" style="display: none">
+            <input type="radio" name="expose_to_applicants"
+                   value="true"
+                   data-endpoint="PUTapi-employer-company-private"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="PUTapi-employer-company-private" style="display: none">
+            <input type="radio" name="expose_to_applicants"
+                   value="false"
+                   data-endpoint="PUTapi-employer-company-private"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Show this info to applicants on job posts. Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>address</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="address"                data-endpoint="PUTapi-employer-company-private"
+               value="Mazzeh, Damascus"
+               data-component="body">
+    <br>
+<p>Full street address. Example: <code>Mazzeh, Damascus</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>industries</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="industries[0]"                data-endpoint="PUTapi-employer-company-private"
+               data-component="body">
+        <input type="text" style="display: none"
+               name="industries[1]"                data-endpoint="PUTapi-employer-company-private"
+               data-component="body">
+    <br>
+<p>Multi-select industries.</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>company_size</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="company_size"                data-endpoint="PUTapi-employer-company-private"
+               value="less_than_10"
+               data-component="body">
+    <br>
+<p>Enum value (same as public). Example: <code>less_than_10</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>founded_year</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="founded_year"                data-endpoint="PUTapi-employer-company-private"
+               value="2018"
+               data-component="body">
+    <br>
+<p>Year company was founded. Example: <code>2018</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>phone_main</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="phone_main"                data-endpoint="PUTapi-employer-company-private"
+               value="0932444357"
+               data-component="body">
+    <br>
+<p>Primary phone. Example: <code>0932444357</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>phone_extra</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="phone_extra"                data-endpoint="PUTapi-employer-company-private"
+               value=""
+               data-component="body">
+    <br>
+<p>Secondary phone.</p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>website</code></b>&nbsp;&nbsp;
@@ -10187,23 +10517,11 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="website"                data-endpoint="PUTapi-employer-company"
-               value="https://www.google.com"
+                              name="website"                data-endpoint="PUTapi-employer-company-private"
+               value="https://tammam.co"
                data-component="body">
     <br>
-<p>Company website URL. Example: <code>https://www.google.com</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>founded</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="founded"                data-endpoint="PUTapi-employer-company"
-               value="1998"
-               data-component="body">
-    <br>
-<p>Year founded. Example: <code>1998</code></p>
+<p>Company website URL. Example: <code>https://tammam.co</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
         <details>
@@ -10216,16 +10534,28 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Social media links.</p>
             </summary>
                                                 <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>linkedin</code></b>&nbsp;&nbsp;
+                        <b style="line-height: 2;"><code>instagram</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="social_media.linkedin"                data-endpoint="PUTapi-employer-company"
-               value="https://www.linkedin.com/company/google"
+                              name="social_media.instagram"                data-endpoint="PUTapi-employer-company-private"
+               value="architecto"
                data-component="body">
     <br>
-<p>LinkedIn URL. Example: <code>https://www.linkedin.com/company/google</code></p>
+<p>Example: <code>architecto</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>telegram</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="social_media.telegram"                data-endpoint="PUTapi-employer-company-private"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>Example: <code>architecto</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>twitter</code></b>&nbsp;&nbsp;
@@ -10233,11 +10563,11 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="social_media.twitter"                data-endpoint="PUTapi-employer-company"
-               value="https://twitter.com/Google"
+                              name="social_media.twitter"                data-endpoint="PUTapi-employer-company-private"
+               value="architecto"
                data-component="body">
     <br>
-<p>Twitter URL. Example: <code>https://twitter.com/Google</code></p>
+<p>Example: <code>architecto</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>facebook</code></b>&nbsp;&nbsp;
@@ -10245,25 +10575,371 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="social_media.facebook"                data-endpoint="PUTapi-employer-company"
-               value="https://www.facebook.com/Google"
+                              name="social_media.facebook"                data-endpoint="PUTapi-employer-company-private"
+               value="architecto"
                data-component="body">
     <br>
-<p>Facebook URL. Example: <code>https://www.facebook.com/Google</code></p>
+<p>Example: <code>architecto</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>instagram</code></b>&nbsp;&nbsp;
+                        <b style="line-height: 2;"><code>behance</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="social_media.instagram"                data-endpoint="PUTapi-employer-company"
-               value="https://www.instagram.com/google"
+                              name="social_media.behance"                data-endpoint="PUTapi-employer-company-private"
+               value="architecto"
                data-component="body">
     <br>
-<p>Instagram URL. Example: <code>https://www.instagram.com/google</code></p>
+<p>Example: <code>architecto</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>github</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="social_media.github"                data-endpoint="PUTapi-employer-company-private"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>Example: <code>architecto</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>linkedin</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="social_media.linkedin"                data-endpoint="PUTapi-employer-company-private"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>Example: <code>architecto</code></p>
                     </div>
                                     </details>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-POSTapi-employer-company-logo">Upload company logo</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Uploads and replaces the company logo. Accepts JPEG, PNG, WebP; max 2 MB.</p>
+
+<span id="example-requests-POSTapi-employer-company-logo">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost:8000/api/employer/company/logo" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: multipart/form-data" \
+    --header "Accept: application/json" \
+    --form "logo=@/tmp/phppnlnnU" </code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/employer/company/logo"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "multipart/form-data",
+    "Accept": "application/json",
+};
+
+const body = new FormData();
+body.append('logo', document.querySelector('input[name="logo"]').files[0]);
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-employer-company-logo">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;logo&quot;: &quot;https://...&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;No company profile found. Create one first.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-employer-company-logo" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-employer-company-logo"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-employer-company-logo"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-employer-company-logo" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-employer-company-logo">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-employer-company-logo" data-method="POST"
+      data-path="api/employer/company/logo"
+      data-authed="1"
+      data-hasfiles="1"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-employer-company-logo', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-employer-company-logo"
+                    onclick="tryItOut('POSTapi-employer-company-logo');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-employer-company-logo"
+                    onclick="cancelTryOut('POSTapi-employer-company-logo');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-employer-company-logo"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/employer/company/logo</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-employer-company-logo"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-employer-company-logo"
+               value="multipart/form-data"
+               data-component="header">
+    <br>
+<p>Example: <code>multipart/form-data</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-employer-company-logo"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>logo</code></b>&nbsp;&nbsp;
+<small>file</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="file" style="display: none"
+                              name="logo"                data-endpoint="POSTapi-employer-company-logo"
+               value=""
+               data-component="body">
+    <br>
+<p>Image file. Max 2 MB. Example: <code>/tmp/phppnlnnU</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-POSTapi-employer-company-cover">Upload company cover image</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Uploads and replaces the cover/banner image. Accepts JPEG, PNG, WebP; max 4 MB.</p>
+
+<span id="example-requests-POSTapi-employer-company-cover">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost:8000/api/employer/company/cover" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: multipart/form-data" \
+    --header "Accept: application/json" \
+    --form "cover_image=@/tmp/php17a9JI" </code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/employer/company/cover"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "multipart/form-data",
+    "Accept": "application/json",
+};
+
+const body = new FormData();
+body.append('cover_image', document.querySelector('input[name="cover_image"]').files[0]);
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-employer-company-cover">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;cover_image&quot;: &quot;https://...&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;No company profile found. Create one first.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-employer-company-cover" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-employer-company-cover"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-employer-company-cover"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-employer-company-cover" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-employer-company-cover">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-employer-company-cover" data-method="POST"
+      data-path="api/employer/company/cover"
+      data-authed="1"
+      data-hasfiles="1"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-employer-company-cover', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-employer-company-cover"
+                    onclick="tryItOut('POSTapi-employer-company-cover');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-employer-company-cover"
+                    onclick="cancelTryOut('POSTapi-employer-company-cover');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-employer-company-cover"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/employer/company/cover</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-employer-company-cover"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-employer-company-cover"
+               value="multipart/form-data"
+               data-component="header">
+    <br>
+<p>Example: <code>multipart/form-data</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-employer-company-cover"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>cover_image</code></b>&nbsp;&nbsp;
+<small>file</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="file" style="display: none"
+                              name="cover_image"                data-endpoint="POSTapi-employer-company-cover"
+               value=""
+               data-component="body">
+    <br>
+<p>Image file. Max 4 MB. Example: <code>/tmp/php17a9JI</code></p>
         </div>
         </form>
 

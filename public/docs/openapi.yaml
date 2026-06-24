@@ -340,44 +340,54 @@ paths:
             example: Laravel
         -
           in: query
-          name: location
-          description: 'Filter by location (partial match).'
-          example: Beirut
+          name: city
+          description: 'Filter by city.'
+          example: Damascus
           required: false
           schema:
             type: string
-            description: 'Filter by location (partial match).'
-            example: Beirut
+            description: 'Filter by city.'
+            example: Damascus
         -
           in: query
           name: job_type
-          description: 'Filter by type.'
+          description: 'Filter: full_time | part_time | contract | freelance.'
           example: full_time
           required: false
           schema:
             type: string
-            description: 'Filter by type.'
+            description: 'Filter: full_time | part_time | contract | freelance.'
             example: full_time
         -
           in: query
           name: work_mode
-          description: 'Filter by work mode.'
+          description: 'Filter: remote | hybrid | on_site.'
           example: remote
           required: false
           schema:
             type: string
-            description: 'Filter by work mode.'
+            description: 'Filter: remote | hybrid | on_site.'
             example: remote
         -
           in: query
-          name: experience_level
-          description: 'Filter by level.'
+          name: job_level
+          description: 'Filter: entry | junior | mid | senior | manager | director.'
           example: senior
           required: false
           schema:
             type: string
-            description: 'Filter by level.'
+            description: 'Filter: entry | junior | mid | senior | manager | director.'
             example: senior
+        -
+          in: query
+          name: experience_years
+          description: 'Filter by required experience (lte).'
+          example: 3
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by required experience (lte).'
+            example: 3
         -
           in: query
           name: category
@@ -391,23 +401,23 @@ paths:
         -
           in: query
           name: min_salary
-          description: 'Minimum salary range.'
-          example: 2000
+          description: 'Minimum salary_from.'
+          example: 500
           required: false
           schema:
             type: integer
-            description: 'Minimum salary range.'
-            example: 2000
+            description: 'Minimum salary_from.'
+            example: 500
         -
           in: query
           name: max_salary
-          description: 'Maximum salary range.'
-          example: 8000
+          description: 'Maximum salary_to.'
+          example: 3000
           required: false
           schema:
             type: integer
-            description: 'Maximum salary range.'
-            example: 8000
+            description: 'Maximum salary_to.'
+            example: 3000
         -
           in: query
           name: tag
@@ -420,13 +430,23 @@ paths:
             example: React
         -
           in: query
+          name: communication_method
+          description: 'Filter: by_phone | by_forsa | by_website.'
+          example: by_forsa
+          required: false
+          schema:
+            type: string
+            description: 'Filter: by_phone | by_forsa | by_website.'
+            example: by_forsa
+        -
+          in: query
           name: per_page
-          description: 'Results per page (max 100). Defaults to 15.'
+          description: 'Max 100, default 15.'
           example: 10
           required: false
           schema:
             type: integer
-            description: 'Results per page (max 100). Defaults to 15.'
+            description: 'Max 100, default 15.'
             example: 10
         -
           in: query
@@ -439,162 +459,18 @@ paths:
             description: 'Page number.'
             example: 1
       responses:
-        200:
+        500:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  data:
-                    -
-                      id: 664f1a2b3c4d5e6f7a8b9c0d
-                      job_id: JOB-001
-                      title: 'Senior Laravel Developer'
-                      description: 'We are looking for...'
-                      requirements: 'Minimum 3 years...'
-                      company_name: 'Acme Corp'
-                      company_logo: 'https://logo.clearbit.com/acme.com'
-                      job_type: full_time
-                      work_mode: remote
-                      experience_level: senior
-                      experience_required: '5+ years'
-                      location: 'Beirut, Lebanon'
-                      category: Engineering
-                      salary_range:
-                        min: 2000
-                        max: 4000
-                        currency: USD
-                      tags:
-                        - Laravel
-                        - PHP
-                      is_active: true
-                      employer_id: 664f1a2b3c4d5e6f7a8b9c0e
-                      created_at: '2024-01-15T00:00:00Z'
-                  current_page: 1
-                  per_page: 15
-                  total: 1
-                  total_pages: 1
-                  next_page: null
-                  prev_page: null
+                  message: 'Server Error'
                 properties:
-                  data:
-                    type: array
-                    example:
-                      -
-                        id: 664f1a2b3c4d5e6f7a8b9c0d
-                        job_id: JOB-001
-                        title: 'Senior Laravel Developer'
-                        description: 'We are looking for...'
-                        requirements: 'Minimum 3 years...'
-                        company_name: 'Acme Corp'
-                        company_logo: 'https://logo.clearbit.com/acme.com'
-                        job_type: full_time
-                        work_mode: remote
-                        experience_level: senior
-                        experience_required: '5+ years'
-                        location: 'Beirut, Lebanon'
-                        category: Engineering
-                        salary_range:
-                          min: 2000
-                          max: 4000
-                          currency: USD
-                        tags:
-                          - Laravel
-                          - PHP
-                        is_active: true
-                        employer_id: 664f1a2b3c4d5e6f7a8b9c0e
-                        created_at: '2024-01-15T00:00:00Z'
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          example: 664f1a2b3c4d5e6f7a8b9c0d
-                        job_id:
-                          type: string
-                          example: JOB-001
-                        title:
-                          type: string
-                          example: 'Senior Laravel Developer'
-                        description:
-                          type: string
-                          example: 'We are looking for...'
-                        requirements:
-                          type: string
-                          example: 'Minimum 3 years...'
-                        company_name:
-                          type: string
-                          example: 'Acme Corp'
-                        company_logo:
-                          type: string
-                          example: 'https://logo.clearbit.com/acme.com'
-                        job_type:
-                          type: string
-                          example: full_time
-                        work_mode:
-                          type: string
-                          example: remote
-                        experience_level:
-                          type: string
-                          example: senior
-                        experience_required:
-                          type: string
-                          example: '5+ years'
-                        location:
-                          type: string
-                          example: 'Beirut, Lebanon'
-                        category:
-                          type: string
-                          example: Engineering
-                        salary_range:
-                          type: object
-                          properties:
-                            min:
-                              type: integer
-                              example: 2000
-                            max:
-                              type: integer
-                              example: 4000
-                            currency:
-                              type: string
-                              example: USD
-                        tags:
-                          type: array
-                          example:
-                            - Laravel
-                            - PHP
-                          items:
-                            type: string
-                        is_active:
-                          type: boolean
-                          example: true
-                        employer_id:
-                          type: string
-                          example: 664f1a2b3c4d5e6f7a8b9c0e
-                        created_at:
-                          type: string
-                          example: '2024-01-15T00:00:00Z'
-                  current_page:
-                    type: integer
-                    example: 1
-                  per_page:
-                    type: integer
-                    example: 15
-                  total:
-                    type: integer
-                    example: 1
-                  total_pages:
-                    type: integer
-                    example: 1
-                  next_page:
+                  message:
                     type: string
-                    example: null
-                    nullable: true
-                  prev_page:
-                    type: string
-                    example: null
-                    nullable: true
+                    example: 'Server Error'
       tags:
         - Endpoints
       security: []
@@ -602,53 +478,9 @@ paths:
     get:
       summary: 'Get job'
       operationId: getJob
-      description: 'Returns a single active job post by ID.'
+      description: "Returns a single job post by ID. Inactive posts are still returned so\nemployers/seekers can view their own closed postings — enforce access\ncontrol at the client if needed."
       parameters: []
       responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  id: 664f1a2b3c4d5e6f7a8b9c0d
-                  job_id: JOB-001
-                  title: 'Senior Laravel Developer'
-                  company_name: 'Acme Corp'
-                  job_type: full_time
-                  work_mode: remote
-                  experience_level: senior
-                  location: 'Beirut, Lebanon'
-                  is_active: true
-                properties:
-                  id:
-                    type: string
-                    example: 664f1a2b3c4d5e6f7a8b9c0d
-                  job_id:
-                    type: string
-                    example: JOB-001
-                  title:
-                    type: string
-                    example: 'Senior Laravel Developer'
-                  company_name:
-                    type: string
-                    example: 'Acme Corp'
-                  job_type:
-                    type: string
-                    example: full_time
-                  work_mode:
-                    type: string
-                    example: remote
-                  experience_level:
-                    type: string
-                    example: senior
-                  location:
-                    type: string
-                    example: 'Beirut, Lebanon'
-                  is_active:
-                    type: boolean
-                    example: true
         404:
           description: ''
           content:
@@ -661,6 +493,18 @@ paths:
                   message:
                     type: string
                     example: 'Job post not found'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Server Error'
+                properties:
+                  message:
+                    type: string
+                    example: 'Server Error'
       tags:
         - Endpoints
       security: []
@@ -668,7 +512,7 @@ paths:
       -
         in: path
         name: id
-        description: 'The job post ID.'
+        description: 'Job post ID.'
         example: 664f1a2b3c4d5e6f7a8b9c0d
         required: true
         schema:
@@ -677,57 +521,67 @@ paths:
     get:
       summary: 'List companies'
       operationId: listCompanies
-      description: 'Paginated list of company profiles. Supports filtering by search term, industry, minimum rating, and company size.'
+      description: 'Paginated list of company profiles with optional filters.'
       parameters:
         -
           in: query
           name: search
-          description: 'Filter by company name or location.'
-          example: Google
+          description: 'Filter by name or city.'
+          example: Tammam
           required: false
           schema:
             type: string
-            description: 'Filter by company name or location.'
-            example: Google
+            description: 'Filter by name or city.'
+            example: Tammam
         -
           in: query
           name: industry
-          description: 'Filter by industry (partial match).'
+          description: 'Partial match on industry.'
           example: Technology
           required: false
           schema:
             type: string
-            description: 'Filter by industry (partial match).'
+            description: 'Partial match on industry.'
             example: Technology
         -
           in: query
-          name: min_rating
-          description: 'Filter by minimum rating (0–5).'
-          example: 4.0
-          required: false
-          schema:
-            type: number
-            description: 'Filter by minimum rating (0–5).'
-            example: 4.0
-        -
-          in: query
-          name: company_size
-          description: 'Filter by company size string (partial match).'
-          example: 100-500
+          name: city
+          description: 'Partial match on city.'
+          example: Damascus
           required: false
           schema:
             type: string
-            description: 'Filter by company size string (partial match).'
-            example: 100-500
+            description: 'Partial match on city.'
+            example: Damascus
+        -
+          in: query
+          name: company_size
+          description: 'Exact enum value.'
+          example: less_than_10
+          required: false
+          schema:
+            type: string
+            description: 'Exact enum value.'
+            example: less_than_10
+        -
+          in: query
+          name: min_rating
+          description: 'Minimum aggregate rating (0–5).'
+          example: 3.5
+          required: false
+          schema:
+            type: number
+            description: 'Minimum aggregate rating (0–5).'
+            example: 3.5
         -
           in: query
           name: per_page
-          description: 'Number of results per page (max 100). Defaults to 15.'
+          description: 'Max 100, default 15.'
           example: 10
           required: false
           schema:
             type: integer
-            description: 'Number of results per page (max 100). Defaults to 15.'
+            description: 'Max 100, default 15.'
             example: 10
         -
           in: query
@@ -740,144 +594,18 @@ paths:
             description: 'Page number.'
             example: 1
       responses:
-        200:
+        500:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  data:
-                    -
-                      id: 664f1a2b3c4d5e6f7a8b9c0d
-                      name: Google
-                      logo: 'https://logo.clearbit.com/google.com'
-                      cover_image: 'https://images.unsplash.com/photo.jpg'
-                      description: 'A multinational technology company.'
-                      location: 'Mountain View, CA'
-                      industry: Technology
-                      website: 'https://www.google.com'
-                      founded: '1998'
-                      employee_count: '100,000+ employees'
-                      company_size: 100000+
-                      rating: 4.5
-                      review_count: 1250
-                      would_recommend: 85
-                      ceo_performance: 92
-                      open_positions: 3
-                      company_size_range:
-                        min: 100000
-                        isPlus: true
-                  current_page: 1
-                  per_page: 15
-                  total: 1
-                  total_pages: 1
-                  next_page: null
-                  prev_page: null
+                  message: 'Server Error'
                 properties:
-                  data:
-                    type: array
-                    example:
-                      -
-                        id: 664f1a2b3c4d5e6f7a8b9c0d
-                        name: Google
-                        logo: 'https://logo.clearbit.com/google.com'
-                        cover_image: 'https://images.unsplash.com/photo.jpg'
-                        description: 'A multinational technology company.'
-                        location: 'Mountain View, CA'
-                        industry: Technology
-                        website: 'https://www.google.com'
-                        founded: '1998'
-                        employee_count: '100,000+ employees'
-                        company_size: 100000+
-                        rating: 4.5
-                        review_count: 1250
-                        would_recommend: 85
-                        ceo_performance: 92
-                        open_positions: 3
-                        company_size_range:
-                          min: 100000
-                          isPlus: true
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          example: 664f1a2b3c4d5e6f7a8b9c0d
-                        name:
-                          type: string
-                          example: Google
-                        logo:
-                          type: string
-                          example: 'https://logo.clearbit.com/google.com'
-                        cover_image:
-                          type: string
-                          example: 'https://images.unsplash.com/photo.jpg'
-                        description:
-                          type: string
-                          example: 'A multinational technology company.'
-                        location:
-                          type: string
-                          example: 'Mountain View, CA'
-                        industry:
-                          type: string
-                          example: Technology
-                        website:
-                          type: string
-                          example: 'https://www.google.com'
-                        founded:
-                          type: string
-                          example: '1998'
-                        employee_count:
-                          type: string
-                          example: '100,000+ employees'
-                        company_size:
-                          type: string
-                          example: 100000+
-                        rating:
-                          type: number
-                          example: 4.5
-                        review_count:
-                          type: integer
-                          example: 1250
-                        would_recommend:
-                          type: integer
-                          example: 85
-                        ceo_performance:
-                          type: integer
-                          example: 92
-                        open_positions:
-                          type: integer
-                          example: 3
-                        company_size_range:
-                          type: object
-                          properties:
-                            min:
-                              type: integer
-                              example: 100000
-                            isPlus:
-                              type: boolean
-                              example: true
-                  current_page:
-                    type: integer
-                    example: 1
-                  per_page:
-                    type: integer
-                    example: 15
-                  total:
-                    type: integer
-                    example: 1
-                  total_pages:
-                    type: integer
-                    example: 1
-                  next_page:
+                  message:
                     type: string
-                    example: null
-                    nullable: true
-                  prev_page:
-                    type: string
-                    example: null
-                    nullable: true
+                    example: 'Server Error'
       tags:
         - Endpoints
       security: []
@@ -885,306 +613,9 @@ paths:
     get:
       summary: 'Get company'
       operationId: getCompany
-      description: 'Returns a single company profile including embedded reviews, active job posts, rating breakdowns, and social media links.'
+      description: 'Returns a single company public profile including active job posts, reviews, and ratings.'
       parameters: []
       responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  id: 664f1a2b3c4d5e6f7a8b9c0d
-                  name: Google
-                  logo: 'https://logo.clearbit.com/google.com'
-                  cover_image: 'https://images.unsplash.com/photo.jpg'
-                  description: 'A multinational technology company.'
-                  founded: '1998'
-                  employee_count: '100,000+ employees'
-                  location: 'Mountain View, CA'
-                  website: 'https://www.google.com'
-                  industry: Technology
-                  company_size: 100000+
-                  rating: 4.5
-                  review_count: 1250
-                  would_recommend: 85
-                  ceo_performance: 92
-                  social_media:
-                    linkedin: 'https://www.linkedin.com/company/google'
-                    twitter: 'https://twitter.com/Google'
-                    facebook: 'https://www.facebook.com/Google'
-                    instagram: 'https://www.instagram.com/google'
-                  category_ratings:
-                    compensation: 4.2
-                    culture: 4.6
-                    work_life: 4.1
-                    diversity: 4.4
-                    management: 4.3
-                  reviews:
-                    -
-                      id: '1'
-                      rating: 4
-                      user_name: 'John Doe'
-                      date: 27/01/2026
-                      position: 'Former employee, last year at 2022'
-                      recommend: false
-                      ceo_approval: true
-                      subratings:
-                        compensation: 4
-                        culture: 4
-                        work_life: 3
-                        diversity: 5
-                        management: 3
-                      agrees: 5
-                      disagrees: 2
-                  jobs:
-                    -
-                      id: 664f1a2b3c4d5e6f7a8b9c0e
-                      display_id: JOB-001
-                      company_name: Google
-                      company_logo: 'https://logo.clearbit.com/google.com'
-                      title: 'Senior Frontend Developer'
-                      created_at: '2024-01-15'
-                      roles:
-                        - Frontend
-                        - React
-                      types:
-                        - full_time
-                        - remote
-                      levels:
-                        - senior
-                      experience: '5+ years'
-                      location: 'San Francisco, CA'
-                  open_positions: 3
-                  company_size_range:
-                    min: 100000
-                    isPlus: true
-                properties:
-                  id:
-                    type: string
-                    example: 664f1a2b3c4d5e6f7a8b9c0d
-                  name:
-                    type: string
-                    example: Google
-                  logo:
-                    type: string
-                    example: 'https://logo.clearbit.com/google.com'
-                  cover_image:
-                    type: string
-                    example: 'https://images.unsplash.com/photo.jpg'
-                  description:
-                    type: string
-                    example: 'A multinational technology company.'
-                  founded:
-                    type: string
-                    example: '1998'
-                  employee_count:
-                    type: string
-                    example: '100,000+ employees'
-                  location:
-                    type: string
-                    example: 'Mountain View, CA'
-                  website:
-                    type: string
-                    example: 'https://www.google.com'
-                  industry:
-                    type: string
-                    example: Technology
-                  company_size:
-                    type: string
-                    example: 100000+
-                  rating:
-                    type: number
-                    example: 4.5
-                  review_count:
-                    type: integer
-                    example: 1250
-                  would_recommend:
-                    type: integer
-                    example: 85
-                  ceo_performance:
-                    type: integer
-                    example: 92
-                  social_media:
-                    type: object
-                    properties:
-                      linkedin:
-                        type: string
-                        example: 'https://www.linkedin.com/company/google'
-                      twitter:
-                        type: string
-                        example: 'https://twitter.com/Google'
-                      facebook:
-                        type: string
-                        example: 'https://www.facebook.com/Google'
-                      instagram:
-                        type: string
-                        example: 'https://www.instagram.com/google'
-                  category_ratings:
-                    type: object
-                    properties:
-                      compensation:
-                        type: number
-                        example: 4.2
-                      culture:
-                        type: number
-                        example: 4.6
-                      work_life:
-                        type: number
-                        example: 4.1
-                      diversity:
-                        type: number
-                        example: 4.4
-                      management:
-                        type: number
-                        example: 4.3
-                  reviews:
-                    type: array
-                    example:
-                      -
-                        id: '1'
-                        rating: 4
-                        user_name: 'John Doe'
-                        date: 27/01/2026
-                        position: 'Former employee, last year at 2022'
-                        recommend: false
-                        ceo_approval: true
-                        subratings:
-                          compensation: 4
-                          culture: 4
-                          work_life: 3
-                          diversity: 5
-                          management: 3
-                        agrees: 5
-                        disagrees: 2
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          example: '1'
-                        rating:
-                          type: integer
-                          example: 4
-                        user_name:
-                          type: string
-                          example: 'John Doe'
-                        date:
-                          type: string
-                          example: 27/01/2026
-                        position:
-                          type: string
-                          example: 'Former employee, last year at 2022'
-                        recommend:
-                          type: boolean
-                          example: false
-                        ceo_approval:
-                          type: boolean
-                          example: true
-                        subratings:
-                          type: object
-                          properties:
-                            compensation:
-                              type: integer
-                              example: 4
-                            culture:
-                              type: integer
-                              example: 4
-                            work_life:
-                              type: integer
-                              example: 3
-                            diversity:
-                              type: integer
-                              example: 5
-                            management:
-                              type: integer
-                              example: 3
-                        agrees:
-                          type: integer
-                          example: 5
-                        disagrees:
-                          type: integer
-                          example: 2
-                  jobs:
-                    type: array
-                    example:
-                      -
-                        id: 664f1a2b3c4d5e6f7a8b9c0e
-                        display_id: JOB-001
-                        company_name: Google
-                        company_logo: 'https://logo.clearbit.com/google.com'
-                        title: 'Senior Frontend Developer'
-                        created_at: '2024-01-15'
-                        roles:
-                          - Frontend
-                          - React
-                        types:
-                          - full_time
-                          - remote
-                        levels:
-                          - senior
-                        experience: '5+ years'
-                        location: 'San Francisco, CA'
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          example: 664f1a2b3c4d5e6f7a8b9c0e
-                        display_id:
-                          type: string
-                          example: JOB-001
-                        company_name:
-                          type: string
-                          example: Google
-                        company_logo:
-                          type: string
-                          example: 'https://logo.clearbit.com/google.com'
-                        title:
-                          type: string
-                          example: 'Senior Frontend Developer'
-                        created_at:
-                          type: string
-                          example: '2024-01-15'
-                        roles:
-                          type: array
-                          example:
-                            - Frontend
-                            - React
-                          items:
-                            type: string
-                        types:
-                          type: array
-                          example:
-                            - full_time
-                            - remote
-                          items:
-                            type: string
-                        levels:
-                          type: array
-                          example:
-                            - senior
-                          items:
-                            type: string
-                        experience:
-                          type: string
-                          example: '5+ years'
-                        location:
-                          type: string
-                          example: 'San Francisco, CA'
-                  open_positions:
-                    type: integer
-                    example: 3
-                  company_size_range:
-                    type: object
-                    properties:
-                      min:
-                        type: integer
-                        example: 100000
-                      isPlus:
-                        type: boolean
-                        example: true
         404:
           description: ''
           content:
@@ -1197,6 +628,18 @@ paths:
                   message:
                     type: string
                     example: 'Company profile not found'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Server Error'
+                properties:
+                  message:
+                    type: string
+                    example: 'Server Error'
       tags:
         - Endpoints
       security: []
@@ -1204,7 +647,7 @@ paths:
       -
         in: path
         name: id
-        description: 'The company profile ID.'
+        description: 'Company profile ID.'
         example: 664f1a2b3c4d5e6f7a8b9c0d
         required: true
         schema:
@@ -1615,7 +1058,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: prefer_not_to_say
+                  example: other
                   enum:
                     - male
                     - female
@@ -1676,7 +1119,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: student
+                  example: employed
                   enum:
                     - employed
                     - unemployed
@@ -1697,7 +1140,7 @@ paths:
                 job_level:
                   type: string
                   description: ''
-                  example: manager
+                  example: director
                   enum:
                     - entry
                     - junior
@@ -1747,7 +1190,7 @@ paths:
                 is_actively_seeking:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 social_links:
                   type: object
                   description: 'Social Links (nested object).'
@@ -1789,7 +1232,7 @@ paths:
                       level:
                         type: string
                         description: ''
-                        example: expert
+                        example: beginner
                         enum:
                           - beginner
                           - intermediate
@@ -2838,6 +2281,48 @@ paths:
                   format: binary
                   description: 'Optional PDF/DOC resume file (max 5 MB). Overrides profile CV.'
                   nullable: true
+                education:
+                  type: string
+                  description: 'Eager applicant profile fields. Must not be greater than 255 characters.'
+                  example: g
+                  nullable: true
+                last_work:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: z
+                  nullable: true
+                years_of_experience:
+                  type: integer
+                  description: 'Must be at least 0. Must not be greater than 60.'
+                  example: 17
+                  nullable: true
+                why_join:
+                  type: string
+                  description: 'Must not be greater than 2000 characters.'
+                  example: i
+                  nullable: true
+                what_to_add:
+                  type: string
+                  description: 'Must not be greater than 2000 characters.'
+                  example: 'y'
+                  nullable: true
+                positions_suited_for:
+                  type: array
+                  description: 'Must not be greater than 100 characters.'
+                  example:
+                    - v
+                  items:
+                    type: string
+                notice_period:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: d
+                  nullable: true
+                expected_salary:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: l
+                  nullable: true
               required:
                 - job_post_id
   '/api/job-seeker/applications/{id}/withdraw':
@@ -3637,76 +3122,53 @@ paths:
     get:
       summary: 'My job posts'
       operationId: myJobPosts
-      description: 'Returns all job posts created by the authenticated employer, each with an application count.'
+      description: 'Returns all job posts by the authenticated employer, each with application count.'
       parameters: []
       responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                      example: 664f1a2b3c4d5e6f7a8b9c0d
-                    job_id:
-                      type: string
-                      example: JOB-001
-                    title:
-                      type: string
-                      example: 'Senior Laravel Developer'
-                    is_active:
-                      type: boolean
-                      example: true
-                    application_count:
-                      type: integer
-                      example: 5
-                example:
-                  -
-                    id: 664f1a2b3c4d5e6f7a8b9c0d
-                    job_id: JOB-001
-                    title: 'Senior Laravel Developer'
-                    is_active: true
-                    application_count: 5
-      tags:
-        - Endpoints
-    post:
-      summary: 'Create job post'
-      operationId: createJobPost
-      description: 'Creates a new job post owned by the authenticated employer.'
-      parameters: []
-      responses:
-        201:
+        401:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  id: 664f1a2b3c4d5e6f7a8b9c0d
-                  job_id: JOB-001
-                  title: 'Senior Laravel Developer'
-                  is_active: true
-                  employer_id: 664f1a2b3c4d5e6f7a8b9c0e
+                  error: Unauthorized
+                  message: 'Invalid authentication token signature'
                 properties:
-                  id:
+                  error:
                     type: string
-                    example: 664f1a2b3c4d5e6f7a8b9c0d
-                  job_id:
+                    example: Unauthorized
+                  message:
                     type: string
-                    example: JOB-001
-                  title:
+                    example: 'Invalid authentication token signature'
+      tags:
+        - Endpoints
+    post:
+      summary: 'Create job post'
+      operationId: createJobPost
+      description: "Creates a new job post. Company name and logo are automatically populated from\nthe employer's company profile — they cannot be overridden here.\n\nAn employer must have an approved company profile before creating a job post."
+      parameters: []
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {  }
+                properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You must create a company profile before posting a job.'
+                properties:
+                  message:
                     type: string
-                    example: 'Senior Laravel Developer'
-                  is_active:
-                    type: boolean
-                    example: true
-                  employer_id:
-                    type: string
-                    example: 664f1a2b3c4d5e6f7a8b9c0e
+                    example: 'You must create a company profile before posting a job.'
         422:
           description: ''
           content:
@@ -3714,19 +3176,11 @@ paths:
               schema:
                 type: object
                 example:
-                  errors:
-                    title:
-                      - 'The title field is required.'
+                  errors: {  }
                 properties:
                   errors:
                     type: object
-                    properties:
-                      title:
-                        type: array
-                        example:
-                          - 'The title field is required.'
-                        items:
-                          type: string
+                    properties: {  }
       tags:
         - Endpoints
       requestBody:
@@ -3736,124 +3190,159 @@ paths:
             schema:
               type: object
               properties:
+                communication_method:
+                  type: string
+                  description: 'One of: by_phone, by_forsa, by_website.'
+                  example: by_forsa
+                communication_value:
+                  type: string
+                  description: 'Phone or website URL (required when method is by_phone or by_website).'
+                  example: null
                 title:
                   type: string
-                  description: 'Job title. Max 150 chars.'
+                  description: 'Job title.'
                   example: 'Senior Laravel Developer'
-                description:
-                  type: string
-                  description: 'Full job description.'
-                  example: 'We are looking for...'
-                requirements:
-                  type: string
-                  description: 'Job requirements.'
-                  example: 'Minimum 3 years of Laravel experience.'
-                company_name:
-                  type: string
-                  description: 'Company name. Max 150 chars.'
-                  example: 'Acme Corp'
-                company_logo:
-                  type: string
-                  description: 'URL to company logo.'
-                  example: 'https://logo.clearbit.com/acme.com'
-                  nullable: true
-                job_type:
-                  type: string
-                  description: 'One of: full_time, part_time, contract, freelance.'
-                  example: full_time
-                work_mode:
-                  type: string
-                  description: 'One of: remote, hybrid, on_site.'
-                  example: remote
-                  nullable: true
-                experience_level:
-                  type: string
-                  description: 'One of: junior, mid, senior.'
-                  example: senior
-                  nullable: true
-                experience_required:
-                  type: string
-                  description: 'Display string for required experience.'
-                  example: '5+ years'
-                  nullable: true
-                location:
-                  type: string
-                  description: ''
-                  example: 'Beirut, Lebanon'
-                  nullable: true
-                category:
-                  type: string
-                  description: ''
-                  example: Engineering
-                  nullable: true
-                salary_range:
-                  type: object
-                  description: 'Salary range object.'
-                  example: []
-                  properties:
-                    min:
-                      type: integer
-                      description: ''
-                      example: 2000
-                      nullable: true
-                    max:
-                      type: integer
-                      description: ''
-                      example: 4000
-                      nullable: true
-                    currency:
-                      type: string
-                      description: ''
-                      example: USD
-                      nullable: true
-                  nullable: true
-                tags:
+                roles:
                   type: array
-                  description: 'Array of tags.'
+                  description: 'Role tags.'
                   example:
-                    - Laravel
+                    - Backend
                     - PHP
                   items:
                     type: string
-                    nullable: true
-                roles:
+                portfolio_required:
+                  type: boolean
+                  description: ''
+                  example: false
+                cover_letter_required:
+                  type: boolean
+                  description: ''
+                  example: true
+                gender:
+                  type: string
+                  description: 'male | female | no_preference.'
+                  example: no_preference
+                age_from:
+                  type: integer
+                  description: ''
+                  example: null
+                age_to:
+                  type: integer
+                  description: ''
+                  example: null
+                education_level:
+                  type: string
+                  description: 'high_school | diploma | bachelor | master | phd | any.'
+                  example: bachelor
+                job_level:
+                  type: string
+                  description: 'entry | junior | mid | senior | manager | director.'
+                  example: mid
+                experience_years:
+                  type: integer
+                  description: 'Years of experience required.'
+                  example: 3
+                languages:
                   type: array
-                  description: 'Array of role categories.'
+                  description: ''
                   example:
-                    - Frontend
-                    - React
+                    - Arabic
+                    - English
                   items:
                     type: string
-                    nullable: true
+                vacancies:
+                  type: integer
+                  description: 'Number of open slots.'
+                  example: 2
+                job_type:
+                  type: string
+                  description: 'full_time | part_time | contract | freelance.'
+                  example: full_time
+                work_mode:
+                  type: string
+                  description: 'remote | hybrid | on_site.'
+                  example: on_site
+                city:
+                  type: string
+                  description: required.
+                  example: Damascus
+                address:
+                  type: string
+                  description: 'Full address.'
+                  example: 'Mazzeh Street 12'
+                salary_from:
+                  type: integer.
+                  description: ''
+                  example: '500'
+                salary_to:
+                  type: integer.
+                  description: ''
+                  example: '1000'
+                currency:
+                  type: string.
+                  description: ''
+                  example: USD
+                display_salary:
+                  type: boolean
+                  description: 'Show salary on listing.'
+                  example: true
+                incentives:
+                  type: string
+                  description: 'Commissions / bonuses / insurance info.'
+                  example: 'Monthly bonuses'
+                description:
+                  type: string
+                  description: 'Job summary and responsibilities.'
+                  example: 'We are looking for...'
+                requirements:
+                  type: string
+                  description: 'Skills and expertise.'
+                  example: '3+ years Laravel experience.'
+                questions:
+                  type: array
+                  description: 'Custom screening questions.'
+                  example:
+                    - []
+                  items:
+                    type: object
+                    properties:
+                      question:
+                        type: string
+                        description: required.
+                        example: 'Describe your last project.'
+                      required:
+                        type: boolean.
+                        description: ''
+                        example: 'true'
+                tags:
+                  type: array
+                  description: 'Searchable tags.'
+                  example:
+                    - Laravel
+                    - MongoDB
+                  items:
+                    type: string
+                category:
+                  type: string.
+                  description: ''
+                  example: Engineering
+                expires_at:
+                  type: date
+                  description: 'ISO date for expiry.'
+                  example: '2026-12-31'
               required:
+                - communication_method
                 - title
-                - description
-                - requirements
-                - company_name
+                - vacancies
                 - job_type
+                - description
   '/api/employer/jobs/{id}':
     put:
       summary: 'Update job post'
       operationId: updateJobPost
-      description: 'Updates an existing job post. Only the owning employer can update it.'
+      description: "Updates an existing job post. `company_name` and `company_logo` are read-only\nand always sourced from the employer's company profile."
       parameters: []
       responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  id: 664f1a2b3c4d5e6f7a8b9c0d
-                  title: 'Updated Title'
-                properties:
-                  id:
-                    type: string
-                    example: 664f1a2b3c4d5e6f7a8b9c0d
-                  title:
-                    type: string
-                    example: 'Updated Title'
         403:
           description: ''
           content:
@@ -3878,108 +3367,24 @@ paths:
                   message:
                     type: string
                     example: 'Job post not found'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors: {  }
+                properties:
+                  errors:
+                    type: object
+                    properties: {  }
       tags:
         - Endpoints
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                  description: ''
-                  example: 'Updated Title'
-                description:
-                  type: string
-                  description: ''
-                  example: 'Eius et animi quos velit et.'
-                requirements:
-                  type: string
-                  description: ''
-                  example: architecto
-                company_name:
-                  type: string
-                  description: ''
-                  example: architecto
-                company_logo:
-                  type: string
-                  description: URL
-                  example: architecto
-                  nullable: true
-                job_type:
-                  type: string
-                  description: 'One of: full_time, part_time, contract, freelance.'
-                  example: architecto
-                work_mode:
-                  type: string
-                  description: 'One of: remote, hybrid, on_site.'
-                  example: architecto
-                  nullable: true
-                experience_level:
-                  type: string
-                  description: 'One of: junior, mid, senior.'
-                  example: architecto
-                  nullable: true
-                experience_required:
-                  type: string
-                  description: ''
-                  example: architecto
-                  nullable: true
-                location:
-                  type: string
-                  description: ''
-                  example: architecto
-                  nullable: true
-                category:
-                  type: string
-                  description: ''
-                  example: architecto
-                  nullable: true
-                salary_range:
-                  type: object
-                  description: ''
-                  example: []
-                  properties:
-                    min:
-                      type: integer
-                      description: 'Must be at least 0.'
-                      example: 39
-                      nullable: true
-                    max:
-                      type: integer
-                      description: 'Must be at least 0.'
-                      example: 84
-                      nullable: true
-                    currency:
-                      type: string
-                      description: ''
-                      example: architecto
-                      nullable: true
-                  nullable: true
-                tags:
-                  type: array
-                  description: ''
-                  example:
-                    - architecto
-                  items:
-                    type: string
-                    nullable: true
-                roles:
-                  type: object
-                  description: ''
-                  example: null
-                  properties: {  }
-                  nullable: true
-                is_active:
-                  type: boolean
-                  description: ''
-                  example: false
     delete:
       summary: 'Delete job post'
       operationId: deleteJobPost
-      description: 'Permanently deletes a job post. Only the owning employer can delete it.'
+      description: ''
       parameters: []
       responses:
         200:
@@ -4024,7 +3429,7 @@ paths:
       -
         in: path
         name: id
-        description: 'The job post ID.'
+        description: 'Job post ID.'
         example: 664f1a2b3c4d5e6f7a8b9c0d
         required: true
         schema:
@@ -4033,7 +3438,7 @@ paths:
     post:
       summary: 'Deactivate job post'
       operationId: deactivateJobPost
-      description: 'Sets `is_active` to false, hiding the post from public listings. Only the owning employer can deactivate it.'
+      description: 'Sets `is_active` to false, hiding the post from public listings.'
       parameters: []
       responses:
         200:
@@ -4042,16 +3447,8 @@ paths:
             application/json:
               schema:
                 type: object
-                example:
-                  id: 664f1a2b3c4d5e6f7a8b9c0d
-                  is_active: false
-                properties:
-                  id:
-                    type: string
-                    example: 664f1a2b3c4d5e6f7a8b9c0d
-                  is_active:
-                    type: boolean
-                    example: false
+                example: {  }
+                properties: {  }
         403:
           description: ''
           content:
@@ -4082,78 +3479,54 @@ paths:
       -
         in: path
         name: id
-        description: 'The job post ID.'
+        description: 'Job post ID.'
         example: 664f1a2b3c4d5e6f7a8b9c0d
         required: true
         schema:
           type: string
   /api/employer/company:
+    get:
+      summary: 'Get my company profile (owner view)'
+      operationId: getMyCompanyProfileownerView
+      description: 'Returns the full profile including private info, for the authenticated employer.'
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: Unauthorized
+                  message: 'Invalid authentication token signature'
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+                  message:
+                    type: string
+                    example: 'Invalid authentication token signature'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No company profile found. Create one first.'
+                properties:
+                  message:
+                    type: string
+                    example: 'No company profile found. Create one first.'
+      tags:
+        - Endpoints
     post:
-      summary: 'Upsert company profile'
-      operationId: upsertCompanyProfile
-      description: "Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).\n`company_size` accepts either a plain string (`\"100-500\"`, `\"500+\"`) or a structured object `{ min, max?, isPlus }` — both are normalised to a canonical string before storage.\n\nNote: Rating fields (rating, review_count, reviews, etc.) are read-only and managed by the system. They cannot be set by employers."
+      summary: 'Update public company info'
+      operationId: updatePublicCompanyInfo
+      description: "Creates or updates the employer's company public profile.     *"
       parameters: []
       responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  id: 664f1a2b3c4d5e6f7a8b9c0d
-                  name: Google
-                  logo: 'https://logo.clearbit.com/google.com'
-                  cover_image: 'https://images.unsplash.com/photo.jpg'
-                  founded: '1998'
-                  employee_count: '100,000+ employees'
-                  location: 'Mountain View, CA'
-                  website: 'https://www.google.com'
-                  company_size: 100000+
-                  open_positions: 0
-                  company_size_range:
-                    min: 100000
-                    isPlus: true
-                properties:
-                  id:
-                    type: string
-                    example: 664f1a2b3c4d5e6f7a8b9c0d
-                  name:
-                    type: string
-                    example: Google
-                  logo:
-                    type: string
-                    example: 'https://logo.clearbit.com/google.com'
-                  cover_image:
-                    type: string
-                    example: 'https://images.unsplash.com/photo.jpg'
-                  founded:
-                    type: string
-                    example: '1998'
-                  employee_count:
-                    type: string
-                    example: '100,000+ employees'
-                  location:
-                    type: string
-                    example: 'Mountain View, CA'
-                  website:
-                    type: string
-                    example: 'https://www.google.com'
-                  company_size:
-                    type: string
-                    example: 100000+
-                  open_positions:
-                    type: integer
-                    example: 0
-                  company_size_range:
-                    type: object
-                    properties:
-                      min:
-                        type: integer
-                        example: 100000
-                      isPlus:
-                        type: boolean
-                        example: true
         422:
           description: ''
           content:
@@ -4161,23 +3534,15 @@ paths:
               schema:
                 type: object
                 example:
-                  errors:
-                    name:
-                      - 'The name field is required.'
+                  errors: {  }
                 properties:
                   errors:
                     type: object
-                    properties:
-                      name:
-                        type: array
-                        example:
-                          - 'The name field is required.'
-                        items:
-                          type: string
+                    properties: {  }
       tags:
         - Endpoints
       requestBody:
-        required: true
+        required: false
         content:
           application/json:
             schema:
@@ -4185,85 +3550,247 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'Company name. Max 150 chars.'
-                  example: Google
-                logo:
-                  type: string
-                  description: 'URL to company logo.'
-                  example: 'https://logo.clearbit.com/google.com'
-                  nullable: true
-                cover_image:
-                  type: string
-                  description: 'URL to cover/banner image.'
-                  example: 'https://images.unsplash.com/photo.jpg'
-                  nullable: true
+                  description: 'Company name (required on first creation, max 150).'
+                  example: 'Tammam company'
                 description:
                   type: string
-                  description: 'Company description.'
-                  example: 'Eius et animi quos velit et.'
-                  nullable: true
-                location:
-                  type: string
-                  description: 'Headquarters location.'
-                  example: 'Mountain View, CA'
-                  nullable: true
-                company_size:
-                  type: string|object
-                  description: 'Size string ("100-500", "500+") or object {min, max?, isPlus}.'
-                  example: 100-500
-                  nullable: true
-                employee_count:
-                  type: string
-                  description: 'Display string for employee count.'
-                  example: '100,000+ employees'
+                  description: 'Free-text description.'
+                  example: 'We build software.'
                   nullable: true
                 industry:
                   type: string
-                  description: 'Industry name.'
-                  example: Technology
+                  description: 'Industry label.'
+                  example: 'Information Technology Services'
                   nullable: true
-                website:
+                company_size:
                   type: string
-                  description: 'Company website URL.'
-                  example: 'https://www.google.com'
-                  nullable: true
-                founded:
+                  description: ''
+                  example: less_than_10
+                  enum:
+                    - 'less_than_10 | 10_to_50 | 51_to_200 | 201_to_500 | 501_to_1000 | 1001_to_5000 | more_than_5000'
+                city:
                   type: string
-                  description: 'Year founded.'
-                  example: '1998'
+                  description: 'City name.'
+                  example: Damascus
                   nullable: true
-                social_media:
-                  type: object
-                  description: 'Social media links.'
-                  example: []
-                  properties:
-                    linkedin:
-                      type: string
-                      description: 'LinkedIn URL.'
-                      example: 'https://www.linkedin.com/company/google'
-                      nullable: true
-                    twitter:
-                      type: string
-                      description: 'Twitter URL.'
-                      example: 'https://twitter.com/Google'
-                      nullable: true
-                    facebook:
-                      type: string
-                      description: 'Facebook URL.'
-                      example: 'https://www.facebook.com/Google'
-                      nullable: true
-                    instagram:
-                      type: string
-                      description: 'Instagram URL.'
-                      example: 'https://www.instagram.com/google'
-                      nullable: true
+                country:
+                  type: string
+                  description: Country.
+                  example: Syria
                   nullable: true
-              required:
-                - name
+                phone:
+                  type: string
+                  description: 'Contact phone.'
+                  example: '0932444357'
+                  nullable: true
+                phone_visible:
+                  type: boolean
+                  description: 'Whether phone is shown to job seekers.'
+                  example: false
+                  nullable: true
+                email:
+                  type: string
+                  description: 'Contact email.'
+                  example: tamammb97@gmail.com
+                  nullable: true
     put:
-      summary: 'Upsert company profile'
-      operationId: upsertCompanyProfile
-      description: "Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).\n`company_size` accepts either a plain string (`\"100-500\"`, `\"500+\"`) or a structured object `{ min, max?, isPlus }` — both are normalised to a canonical string before storage.\n\nNote: Rating fields (rating, review_count, reviews, etc.) are read-only and managed by the system. They cannot be set by employers."
+      summary: 'Update public company info'
+      operationId: updatePublicCompanyInfo
+      description: "Creates or updates the employer's company public profile.     *"
+      parameters: []
+      responses:
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors: {  }
+                properties:
+                  errors:
+                    type: object
+                    properties: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Company name (required on first creation, max 150).'
+                  example: 'Tammam company'
+                description:
+                  type: string
+                  description: 'Free-text description.'
+                  example: 'We build software.'
+                  nullable: true
+                industry:
+                  type: string
+                  description: 'Industry label.'
+                  example: 'Information Technology Services'
+                  nullable: true
+                company_size:
+                  type: string
+                  description: ''
+                  example: less_than_10
+                  enum:
+                    - 'less_than_10 | 10_to_50 | 51_to_200 | 201_to_500 | 501_to_1000 | 1001_to_5000 | more_than_5000'
+                city:
+                  type: string
+                  description: 'City name.'
+                  example: Damascus
+                  nullable: true
+                country:
+                  type: string
+                  description: Country.
+                  example: Syria
+                  nullable: true
+                phone:
+                  type: string
+                  description: 'Contact phone.'
+                  example: '0932444357'
+                  nullable: true
+                phone_visible:
+                  type: boolean
+                  description: 'Whether phone is shown to job seekers.'
+                  example: false
+                  nullable: true
+                email:
+                  type: string
+                  description: 'Contact email.'
+                  example: tamammb97@gmail.com
+                  nullable: true
+  /api/employer/company/private:
+    put:
+      summary: 'Update private / general company info'
+      operationId: updatePrivateGeneralCompanyInfo
+      description: "Updates employer-only private info (address, founded year, extra phones, social links, etc.).\nSet `expose_to_applicants` to `true` to make this block visible on job posts."
+      parameters: []
+      responses:
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No company profile found. Create one first.'
+                properties:
+                  message:
+                    type: string
+                    example: 'No company profile found. Create one first.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors: {  }
+                properties:
+                  errors:
+                    type: object
+                    properties: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expose_to_applicants:
+                  type: boolean
+                  description: 'Show this info to applicants on job posts.'
+                  example: false
+                  nullable: true
+                address:
+                  type: string
+                  description: 'Full street address.'
+                  example: 'Mazzeh, Damascus'
+                  nullable: true
+                industries:
+                  type: array
+                  description: 'Multi-select industries.'
+                  example:
+                    - 'Information Technology Services'
+                  items:
+                    type: string
+                company_size:
+                  type: string
+                  description: 'Enum value (same as public).'
+                  example: less_than_10
+                founded_year:
+                  type: integer
+                  description: 'Year company was founded.'
+                  example: 2018
+                phone_main:
+                  type: string
+                  description: 'Primary phone.'
+                  example: '0932444357'
+                  nullable: true
+                phone_extra:
+                  type: string
+                  description: 'Secondary phone.'
+                  example: null
+                  nullable: true
+                website:
+                  type: string
+                  description: 'Company website URL.'
+                  example: 'https://tammam.co'
+                  nullable: true
+                social_media:
+                  type: object
+                  description: 'Social media links.'
+                  example: []
+                  properties:
+                    instagram:
+                      type: string
+                      description: ''
+                      example: architecto
+                      nullable: true
+                    telegram:
+                      type: string
+                      description: ''
+                      example: architecto
+                      nullable: true
+                    twitter:
+                      type: string
+                      description: ''
+                      example: architecto
+                      nullable: true
+                    facebook:
+                      type: string
+                      description: ''
+                      example: architecto
+                      nullable: true
+                    behance:
+                      type: string
+                      description: ''
+                      example: architecto
+                      nullable: true
+                    github:
+                      type: string
+                      description: ''
+                      example: architecto
+                      nullable: true
+                    linkedin:
+                      type: string
+                      description: ''
+                      example: architecto
+                      nullable: true
+                  nullable: true
+  /api/employer/company/logo:
+    post:
+      summary: 'Upload company logo'
+      operationId: uploadCompanyLogo
+      description: 'Uploads and replaces the company logo. Accepts JPEG, PNG, WebP; max 2 MB.'
       parameters: []
       responses:
         200:
@@ -4273,165 +3800,84 @@ paths:
               schema:
                 type: object
                 example:
-                  id: 664f1a2b3c4d5e6f7a8b9c0d
-                  name: Google
-                  logo: 'https://logo.clearbit.com/google.com'
-                  cover_image: 'https://images.unsplash.com/photo.jpg'
-                  founded: '1998'
-                  employee_count: '100,000+ employees'
-                  location: 'Mountain View, CA'
-                  website: 'https://www.google.com'
-                  company_size: 100000+
-                  open_positions: 0
-                  company_size_range:
-                    min: 100000
-                    isPlus: true
+                  logo: 'https://...'
                 properties:
-                  id:
-                    type: string
-                    example: 664f1a2b3c4d5e6f7a8b9c0d
-                  name:
-                    type: string
-                    example: Google
                   logo:
                     type: string
-                    example: 'https://logo.clearbit.com/google.com'
-                  cover_image:
-                    type: string
-                    example: 'https://images.unsplash.com/photo.jpg'
-                  founded:
-                    type: string
-                    example: '1998'
-                  employee_count:
-                    type: string
-                    example: '100,000+ employees'
-                  location:
-                    type: string
-                    example: 'Mountain View, CA'
-                  website:
-                    type: string
-                    example: 'https://www.google.com'
-                  company_size:
-                    type: string
-                    example: 100000+
-                  open_positions:
-                    type: integer
-                    example: 0
-                  company_size_range:
-                    type: object
-                    properties:
-                      min:
-                        type: integer
-                        example: 100000
-                      isPlus:
-                        type: boolean
-                        example: true
-        422:
+                    example: 'https://...'
+        404:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  errors:
-                    name:
-                      - 'The name field is required.'
+                  message: 'No company profile found. Create one first.'
                 properties:
-                  errors:
-                    type: object
-                    properties:
-                      name:
-                        type: array
-                        example:
-                          - 'The name field is required.'
-                        items:
-                          type: string
+                  message:
+                    type: string
+                    example: 'No company profile found. Create one first.'
       tags:
         - Endpoints
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
-                name:
-                  type: string
-                  description: 'Company name. Max 150 chars.'
-                  example: Google
                 logo:
                   type: string
-                  description: 'URL to company logo.'
-                  example: 'https://logo.clearbit.com/google.com'
-                  nullable: true
+                  format: binary
+                  description: 'Image file. Max 2 MB.'
+              required:
+                - logo
+  /api/employer/company/cover:
+    post:
+      summary: 'Upload company cover image'
+      operationId: uploadCompanyCoverImage
+      description: 'Uploads and replaces the cover/banner image. Accepts JPEG, PNG, WebP; max 4 MB.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  cover_image: 'https://...'
+                properties:
+                  cover_image:
+                    type: string
+                    example: 'https://...'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No company profile found. Create one first.'
+                properties:
+                  message:
+                    type: string
+                    example: 'No company profile found. Create one first.'
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
                 cover_image:
                   type: string
-                  description: 'URL to cover/banner image.'
-                  example: 'https://images.unsplash.com/photo.jpg'
-                  nullable: true
-                description:
-                  type: string
-                  description: 'Company description.'
-                  example: 'Eius et animi quos velit et.'
-                  nullable: true
-                location:
-                  type: string
-                  description: 'Headquarters location.'
-                  example: 'Mountain View, CA'
-                  nullable: true
-                company_size:
-                  type: string|object
-                  description: 'Size string ("100-500", "500+") or object {min, max?, isPlus}.'
-                  example: 100-500
-                  nullable: true
-                employee_count:
-                  type: string
-                  description: 'Display string for employee count.'
-                  example: '100,000+ employees'
-                  nullable: true
-                industry:
-                  type: string
-                  description: 'Industry name.'
-                  example: Technology
-                  nullable: true
-                website:
-                  type: string
-                  description: 'Company website URL.'
-                  example: 'https://www.google.com'
-                  nullable: true
-                founded:
-                  type: string
-                  description: 'Year founded.'
-                  example: '1998'
-                  nullable: true
-                social_media:
-                  type: object
-                  description: 'Social media links.'
-                  example: []
-                  properties:
-                    linkedin:
-                      type: string
-                      description: 'LinkedIn URL.'
-                      example: 'https://www.linkedin.com/company/google'
-                      nullable: true
-                    twitter:
-                      type: string
-                      description: 'Twitter URL.'
-                      example: 'https://twitter.com/Google'
-                      nullable: true
-                    facebook:
-                      type: string
-                      description: 'Facebook URL.'
-                      example: 'https://www.facebook.com/Google'
-                      nullable: true
-                    instagram:
-                      type: string
-                      description: 'Instagram URL.'
-                      example: 'https://www.instagram.com/google'
-                      nullable: true
-                  nullable: true
+                  format: binary
+                  description: 'Image file. Max 4 MB.'
               required:
-                - name
+                - cover_image
   '/api/employer/jobs/{jobId}/applications':
     get:
       summary: 'Job applications (employer)'

@@ -109,8 +109,12 @@ Route::middleware(['jwt.auth', 'role:employer'])->prefix('employer')->group(func
     Route::post('jobs/{id}/deactivate', [JobPostController::class, 'deactivate']);
 
     // Company Profile
-    Route::post('company', [CompanyProfileController::class, 'upsert']);
-    Route::put('company', [CompanyProfileController::class, 'upsert']);
+    Route::get('company', [CompanyProfileController::class, 'myProfile']);
+    Route::post('company', [CompanyProfileController::class, 'updatePublic']);
+    Route::put('company', [CompanyProfileController::class, 'updatePublic']);
+    Route::put('company/private', [CompanyProfileController::class, 'updatePrivate']);
+    Route::post('company/logo', [CompanyProfileController::class, 'uploadLogo']);
+    Route::post('company/cover', [CompanyProfileController::class, 'uploadCoverImage']);
 
     // Application Management
     Route::get('jobs/{jobId}/applications', [ApplicationController::class, 'indexForEmployer']);

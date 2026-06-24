@@ -16,10 +16,21 @@ class Application extends Model
         'status',
         'feedback',
         'applied_at',
+        // Eager applicant profile fields
+        'education',              // highest education level / degree
+        'last_work',              // last job title / company
+        'years_of_experience',    // integer
+        'why_join',               // free text — motivation
+        'what_to_add',            // free text — value proposition
+        'positions_suited_for',   // array of position strings
+        'notice_period',          // e.g. "2 weeks", "1 month", "immediately"
+        'expected_salary',        // numeric or string e.g. "3000 USD"
     ];
 
     protected $casts = [
-        'applied_at' => 'datetime',
+        'applied_at'           => 'datetime',
+        'years_of_experience'  => 'integer',
+        'positions_suited_for' => 'array',
     ];
 
     // Relationship with user (job seeker)

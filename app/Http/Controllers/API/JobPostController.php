@@ -4,12 +4,73 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Application;
+use App\Models\CompanyProfile;
 use App\Models\JobPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class JobPostController extends Controller
 {
+    // -----------------------------------------------------------------------
+    // Shared validation rules
+    // -----------------------------------------------------------------------
+
+    private function postRules(bool $required = true): array
+    {
+        $r = $required ? 'required' : 'sometimes';
+
+        return [
+            // Communication
+            'communication_method'  => "{$r}|in:by_phone,by_forsa,by_website",
+            'communication_value'   => 'nullable|string|max:255',
+
+            // Employee specification
+            'title'                 => "{$r}|string|max:150",
+            'roles'                 => 'nullable|array',
+            'roles.*'               => 'string|max:100',
+            'portfolio_required'    => 'nullable|boolean',
+            'cover_letter_required' => 'nullable|boolean',
+            'gender'                => 'nullable|in:male,female,no_preference',
+            'age_from'              => 'nullable|integer|min:16|max:100',
+            'age_to'                => 'nullable|integer|min:16|max:100|gte:age_from',
+            'education_level'       => 'nullable|in:high_school,diploma,bachelor,master,phd,any',
+            'job_level'             => 'nullable|in:entry,junior,mid,senior,manager,director',
+            'experience_years'      => 'nullable|integer|min:0|max:50',
+            'languages'             => 'nullable|array',
+            'languages.*'           => 'string|max:50',
+
+            // Work details
+            'vacancies'             => "{$r}|integer|min:1",
+            'job_type'              => "{$r}|in:full_time,part_time,contract,freelance",
+            'work_mode'             => 'nullable|in:remote,hybrid,on_site',
+            'city'                  => "{$r}|string|max:100",
+            'address'               => 'nullable|string|max:255',
+            'salary_from'           => 'nullable|integer|min:0',
+            'salary_to'             => 'nullable|integer|min:0|gte:salary_from',
+            'currency'              => 'nullable|string|max:10',
+            'display_salary'        => 'nullable|boolean',
+            'incentives'            => 'nullable|string|max:500',
+
+            // Job info
+            'description'           => "{$r}|string",
+            'requirements'          => 'nullable|string',
+            'questions'             => 'nullable|array',
+            'questions.*.question'  => 'required_with:questions|string|max:500',
+            'questions.*.required'  => 'nullable|boolean',
+
+            // Meta
+            'category'              => 'nullable|string|max:100',
+            'tags'                  => 'nullable|array',
+            'tags.*'                => 'string|max:50',
+            'expires_at'            => 'nullable|date|after:today',
+        ];
+    }
+
+    // -----------------------------------------------------------------------
+    // Public endpoints
+    // -----------------------------------------------------------------------
+
     /**
      * List jobs
      *
@@ -17,47 +78,18 @@ class JobPostController extends Controller
      *
      * @unauthenticated
      * @queryParam keyword string Search in title, description, company name. Example: Laravel
-     * @queryParam location string Filter by location (partial match). Example: Beirut
-     * @queryParam job_type string Filter by type. Example: full_time
-     * @queryParam work_mode string Filter by work mode. Example: remote
-     * @queryParam experience_level string Filter by level. Example: senior
+     * @queryParam city string Filter by city. Example: Damascus
+     * @queryParam job_type string Filter: full_time | part_time | contract | freelance. Example: full_time
+     * @queryParam work_mode string Filter: remote | hybrid | on_site. Example: remote
+     * @queryParam job_level string Filter: entry | junior | mid | senior | manager | director. Example: senior
+     * @queryParam experience_years integer Filter by required experience (lte). Example: 3
      * @queryParam category string Filter by category. Example: Engineering
-     * @queryParam min_salary integer Minimum salary range. Example: 2000
-     * @queryParam max_salary integer Maximum salary range. Example: 8000
+     * @queryParam min_salary integer Minimum salary_from. Example: 500
+     * @queryParam max_salary integer Maximum salary_to. Example: 3000
      * @queryParam tag string Filter by tag. Example: React
-     * @queryParam per_page integer Results per page (max 100). Defaults to 15. Example: 10
+     * @queryParam communication_method string Filter: by_phone | by_forsa | by_website. Example: by_forsa
+     * @queryParam per_page integer Max 100, default 15. Example: 10
      * @queryParam page integer Page number. Example: 1
-     *
-     * @response 200 {
-     *   "data": [
-     *     {
-     *       "id": "664f1a2b3c4d5e6f7a8b9c0d",
-     *       "job_id": "JOB-001",
-     *       "title": "Senior Laravel Developer",
-     *       "description": "We are looking for...",
-     *       "requirements": "Minimum 3 years...",
-     *       "company_name": "Acme Corp",
-     *       "company_logo": "https://logo.clearbit.com/acme.com",
-     *       "job_type": "full_time",
-     *       "work_mode": "remote",
-     *       "experience_level": "senior",
-     *       "experience_required": "5+ years",
-     *       "location": "Beirut, Lebanon",
-     *       "category": "Engineering",
-     *       "salary_range": { "min": 2000, "max": 4000, "currency": "USD" },
-     *       "tags": ["Laravel", "PHP"],
-     *       "is_active": true,
-     *       "employer_id": "664f1a2b3c4d5e6f7a8b9c0e",
-     *       "created_at": "2024-01-15T00:00:00Z"
-     *     }
-     *   ],
-     *   "current_page": 1,
-     *   "per_page": 15,
-     *   "total": 1,
-     *   "total_pages": 1,
-     *   "next_page": null,
-     *   "prev_page": null
-     * }
      */
     public function index(Request $request)
     {
@@ -72,32 +104,26 @@ class JobPostController extends Controller
             });
         }
 
-        if ($location = $request->query('location')) {
-            $query->where('location', new \MongoDB\BSON\Regex($location, 'i'));
+        if ($city = $request->query('city')) {
+            $query->where('city', new \MongoDB\BSON\Regex($city, 'i'));
         }
 
-        if ($jobType = $request->query('job_type')) {
-            $query->where('job_type', $jobType);
+        foreach (['job_type', 'work_mode', 'job_level', 'category', 'communication_method'] as $exact) {
+            if ($v = $request->query($exact)) {
+                $query->where($exact, $v);
+            }
         }
 
-        if ($workMode = $request->query('work_mode')) {
-            $query->where('work_mode', $workMode);
+        if ($exp = $request->query('experience_years')) {
+            $query->where('experience_years', '<=', (int) $exp);
         }
 
-        if ($experienceLevel = $request->query('experience_level')) {
-            $query->where('experience_level', $experienceLevel);
+        if ($min = $request->query('min_salary')) {
+            $query->where('salary_from', '>=', (int) $min);
         }
 
-        if ($category = $request->query('category')) {
-            $query->where('category', $category);
-        }
-
-        if ($minSalary = $request->query('min_salary')) {
-            $query->where('salary_range.min', '>=', (int) $minSalary);
-        }
-
-        if ($maxSalary = $request->query('max_salary')) {
-            $query->where('salary_range.max', '<=', (int) $maxSalary);
+        if ($max = $request->query('max_salary')) {
+            $query->where('salary_to', '<=', (int) $max);
         }
 
         if ($tag = $request->query('tag')) {
@@ -115,30 +141,18 @@ class JobPostController extends Controller
             'total_pages'  => $paginator->lastPage(),
             'next_page'    => $paginator->hasMorePages() ? $paginator->currentPage() + 1 : null,
             'prev_page'    => $paginator->currentPage() > 1 ? $paginator->currentPage() - 1 : null,
-            'next_page_url'=> $paginator->nextPageUrl(),
-            'prev_page_url'=> $paginator->previousPageUrl(),
         ]);
     }
 
     /**
      * Get job
      *
-     * Returns a single active job post by ID.
+     * Returns a single job post by ID. Inactive posts are still returned so
+     * employers/seekers can view their own closed postings — enforce access
+     * control at the client if needed.
      *
      * @unauthenticated
-     * @urlParam id string required The job post ID. Example: 664f1a2b3c4d5e6f7a8b9c0d
-     *
-     * @response 200 {
-     *   "id": "664f1a2b3c4d5e6f7a8b9c0d",
-     *   "job_id": "JOB-001",
-     *   "title": "Senior Laravel Developer",
-     *   "company_name": "Acme Corp",
-     *   "job_type": "full_time",
-     *   "work_mode": "remote",
-     *   "experience_level": "senior",
-     *   "location": "Beirut, Lebanon",
-     *   "is_active": true
-     * }
+     * @urlParam id string required Job post ID. Example: 664f1a2b3c4d5e6f7a8b9c0d
      * @response 404 { "message": "Job post not found" }
      */
     public function show(string $id)
@@ -152,70 +166,87 @@ class JobPostController extends Controller
         return response()->json($post);
     }
 
+    // -----------------------------------------------------------------------
+    // Employer endpoints
+    // -----------------------------------------------------------------------
+
     /**
      * Create job post
      *
-     * Creates a new job post owned by the authenticated employer.
+     * Creates a new job post. Company name and logo are automatically populated from
+     * the employer's company profile — they cannot be overridden here.
      *
-     * @bodyParam title string required Job title. Max 150 chars. Example: Senior Laravel Developer
-     * @bodyParam description string required Full job description. Example: We are looking for...
-     * @bodyParam requirements string required Job requirements. Example: Minimum 3 years of Laravel experience.
-     * @bodyParam company_name string required Company name. Max 150 chars. Example: Acme Corp
-     * @bodyParam company_logo string URL to company logo. Example: https://logo.clearbit.com/acme.com
-     * @bodyParam job_type string required One of: full_time, part_time, contract, freelance. Example: full_time
-     * @bodyParam work_mode string One of: remote, hybrid, on_site. Example: remote
-     * @bodyParam experience_level string One of: junior, mid, senior. Example: senior
-     * @bodyParam experience_required string Display string for required experience. Example: 5+ years
-     * @bodyParam location string Example: Beirut, Lebanon
-     * @bodyParam category string Example: Engineering
-     * @bodyParam salary_range object Salary range object.
-     * @bodyParam salary_range.min integer Example: 2000
-     * @bodyParam salary_range.max integer Example: 4000
-     * @bodyParam salary_range.currency string Example: USD
-     * @bodyParam tags string[] Array of tags. Example: ["Laravel","PHP"]
-     * @bodyParam roles string[] Array of role categories. Example: ["Frontend","React"]
+     * An employer must have an approved company profile before creating a job post.
      *
-     * @response 201 {
-     *   "id": "664f1a2b3c4d5e6f7a8b9c0d",
-     *   "job_id": "JOB-001",
-     *   "title": "Senior Laravel Developer",
-     *   "is_active": true,
-     *   "employer_id": "664f1a2b3c4d5e6f7a8b9c0e"
-     * }
-     * @response 422 { "errors": { "title": ["The title field is required."] } }
+     * @bodyParam communication_method string required One of: by_phone, by_forsa, by_website. Example: by_forsa
+     * @bodyParam communication_value string Phone or website URL (required when method is by_phone or by_website). Example: null
+     * @bodyParam title string required Job title. Example: Senior Laravel Developer
+     * @bodyParam roles string[] Role tags. Example: ["Backend","PHP"]
+     * @bodyParam portfolio_required boolean Example: false
+     * @bodyParam cover_letter_required boolean Example: true
+     * @bodyParam gender string male | female | no_preference. Example: no_preference
+     * @bodyParam age_from integer Example: null
+     * @bodyParam age_to integer Example: null
+     * @bodyParam education_level string high_school | diploma | bachelor | master | phd | any. Example: bachelor
+     * @bodyParam job_level string entry | junior | mid | senior | manager | director. Example: mid
+     * @bodyParam experience_years integer Years of experience required. Example: 3
+     * @bodyParam languages string[] Example: ["Arabic","English"]
+     * @bodyParam vacancies integer required Number of open slots. Example: 2
+     * @bodyParam job_type string required full_time | part_time | contract | freelance. Example: full_time
+     * @bodyParam work_mode string remote | hybrid | on_site. Example: on_site
+     * @bodyParam city string required. Example: Damascus
+     * @bodyParam address string Full address. Example: Mazzeh Street 12
+     * @bodyParam salary_from integer. Example: 500
+     * @bodyParam salary_to integer. Example: 1000
+     * @bodyParam currency string. Example: USD
+     * @bodyParam display_salary boolean Show salary on listing. Example: true
+     * @bodyParam incentives string Commissions / bonuses / insurance info. Example: Monthly bonuses
+     * @bodyParam description string required Job summary and responsibilities. Example: We are looking for...
+     * @bodyParam requirements string Skills and expertise. Example: 3+ years Laravel experience.
+     * @bodyParam questions object[] Custom screening questions.
+     * @bodyParam questions[].question string required. Example: Describe your last project.
+     * @bodyParam questions[].required boolean. Example: true
+     * @bodyParam tags string[] Searchable tags. Example: ["Laravel","MongoDB"]
+     * @bodyParam category string. Example: Engineering
+     * @bodyParam expires_at date ISO date for expiry. Example: 2026-12-31
+     *
+     * @response 201 scenario="Created" {}
+     * @response 404 { "message": "You must create a company profile before posting a job." }
+     * @response 422 { "errors": {} }
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title'               => 'required|string|max:150',
-            'description'         => 'required|string',
-            'requirements'        => 'required|string',
-            'company_name'        => 'required|string|max:150',
-            'company_logo'        => 'nullable|url',
-            'job_type'            => 'required|in:full_time,part_time,contract,freelance',
-            'work_mode'           => 'nullable|in:remote,hybrid,on_site',
-            'experience_level'    => 'nullable|in:junior,mid,senior',
-            'experience_required' => 'nullable|string|max:50',
-            'location'            => 'nullable|string',
-            'category'            => 'nullable|string',
-            'salary_range'        => 'nullable|array',
-            'salary_range.min'    => 'nullable|integer|min:0',
-            'salary_range.max'    => 'nullable|integer|min:0',
-            'salary_range.currency' => 'nullable|string',
-            'tags'                => 'nullable|array',
-            'roles'               => 'nullable|array',
-        ]);
-
         $user = Auth::user();
 
-        // Generate a human-readable job ID
-        $count = JobPost::count() + 1;
-        $jobId = 'JOB-' . str_pad($count, 3, '0', STR_PAD_LEFT);
+        // Enforce one-company rule: post must be linked to employer's existing profile
+        $company = CompanyProfile::where('employer_id', (string) $user->_id)->first();
 
-        $post = JobPost::create(array_merge($validated, [
-            'job_id'      => $jobId,
-            'employer_id' => (string) $user->_id,
-            'is_active'   => true,
+        if (!$company) {
+            return response()->json(
+                ['message' => 'You must create a company profile before posting a job.'],
+                404
+            );
+        }
+
+        $validator = Validator::make($request->all(), $this->postRules(true));
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $data = $validator->validated();
+
+        $count = JobPost::count() + 1;
+        $jobId = 'JOB-' . str_pad($count, 4, '0', STR_PAD_LEFT);
+
+        $post = JobPost::create(array_merge($data, [
+            'job_id'             => $jobId,
+            'employer_id'        => (string) $user->_id,
+            'company_profile_id' => (string) $company->_id,
+            // Denormalise company identity — immutable on post
+            'company_name'       => $company->name,
+            'company_logo'       => $company->logo,
+            'is_active'          => true,
         ]));
 
         return response()->json($post, 201);
@@ -224,27 +255,13 @@ class JobPostController extends Controller
     /**
      * Update job post
      *
-     * Updates an existing job post. Only the owning employer can update it.
+     * Updates an existing job post. `company_name` and `company_logo` are read-only
+     * and always sourced from the employer's company profile.
      *
-     * @urlParam id string required The job post ID. Example: 664f1a2b3c4d5e6f7a8b9c0d
-     * @bodyParam title string Example: Updated Title
-     * @bodyParam description string
-     * @bodyParam requirements string
-     * @bodyParam company_name string
-     * @bodyParam company_logo string URL
-     * @bodyParam job_type string One of: full_time, part_time, contract, freelance.
-     * @bodyParam work_mode string One of: remote, hybrid, on_site.
-     * @bodyParam experience_level string One of: junior, mid, senior.
-     * @bodyParam experience_required string
-     * @bodyParam location string
-     * @bodyParam category string
-     * @bodyParam salary_range object
-     * @bodyParam tags string[]
-     * @bodyParam is_active boolean
-     *
-     * @response 200 { "id": "664f1a2b3c4d5e6f7a8b9c0d", "title": "Updated Title" }
+     * @urlParam id string required Job post ID. Example: 664f1a2b3c4d5e6f7a8b9c0d
      * @response 403 { "message": "Forbidden" }
      * @response 404 { "message": "Job post not found" }
+     * @response 422 { "errors": {} }
      */
     public function update(Request $request, string $id)
     {
@@ -256,43 +273,36 @@ class JobPostController extends Controller
 
         $user = Auth::user();
 
-        if ($post->employer_id !== (string) $user->_id) {
+        if ((string) $post->employer_id !== (string) $user->_id) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
 
-        $validated = $request->validate([
-            'title'               => 'sometimes|string|max:150',
-            'description'         => 'sometimes|string',
-            'requirements'        => 'sometimes|string',
-            'company_name'        => 'sometimes|string|max:150',
-            'company_logo'        => 'nullable|url',
-            'job_type'            => 'sometimes|in:full_time,part_time,contract,freelance',
-            'work_mode'           => 'nullable|in:remote,hybrid,on_site',
-            'experience_level'    => 'nullable|in:junior,mid,senior',
-            'experience_required' => 'nullable|string|max:50',
-            'location'            => 'nullable|string',
-            'category'            => 'nullable|string',
-            'salary_range'        => 'nullable|array',
-            'salary_range.min'    => 'nullable|integer|min:0',
-            'salary_range.max'    => 'nullable|integer|min:0',
-            'salary_range.currency' => 'nullable|string',
-            'tags'                => 'nullable|array',
-            'roles'               => 'nullable|array',
-            'is_active'           => 'sometimes|boolean',
-        ]);
+        $validator = Validator::make($request->all(), $this->postRules(false));
 
-        $post->update($validated);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
-        return response()->json($post);
+        $data = $validator->validated();
+
+        // Never allow overriding company identity
+        unset($data['company_name'], $data['company_logo'], $data['company_profile_id']);
+
+        // Sync company logo in case employer updated it since posting
+        $company = CompanyProfile::where('employer_id', (string) $user->_id)->first();
+        if ($company) {
+            $data['company_logo'] = $company->logo;
+        }
+
+        $post->update($data);
+
+        return response()->json($post->fresh());
     }
 
     /**
      * Delete job post
      *
-     * Permanently deletes a job post. Only the owning employer can delete it.
-     *
-     * @urlParam id string required The job post ID. Example: 664f1a2b3c4d5e6f7a8b9c0d
-     *
+     * @urlParam id string required Job post ID. Example: 664f1a2b3c4d5e6f7a8b9c0d
      * @response 200 { "message": "Job post deleted successfully" }
      * @response 403 { "message": "Forbidden" }
      * @response 404 { "message": "Job post not found" }
@@ -307,7 +317,7 @@ class JobPostController extends Controller
 
         $user = Auth::user();
 
-        if ($post->employer_id !== (string) $user->_id) {
+        if ((string) $post->employer_id !== (string) $user->_id) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
 
@@ -319,27 +329,19 @@ class JobPostController extends Controller
     /**
      * My job posts
      *
-     * Returns all job posts created by the authenticated employer, each with an application count.
-     *
-     * @response 200 [
-     *   {
-     *     "id": "664f1a2b3c4d5e6f7a8b9c0d",
-     *     "job_id": "JOB-001",
-     *     "title": "Senior Laravel Developer",
-     *     "is_active": true,
-     *     "application_count": 5
-     *   }
-     * ]
+     * Returns all job posts by the authenticated employer, each with application count.
      */
     public function myPosts()
     {
         $user = Auth::user();
 
-        $posts = JobPost::where('employer_id', (string) $user->_id)->get();
+        $posts = JobPost::where('employer_id', (string) $user->_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         $result = $posts->map(function ($post) {
             $data = $post->toArray();
-            $data['application_count'] = Application::where('job_post_id', $post->_id)->count();
+            $data['application_count'] = Application::where('job_post_id', (string) $post->_id)->count();
             return $data;
         });
 
@@ -349,11 +351,10 @@ class JobPostController extends Controller
     /**
      * Deactivate job post
      *
-     * Sets `is_active` to false, hiding the post from public listings. Only the owning employer can deactivate it.
+     * Sets `is_active` to false, hiding the post from public listings.
      *
-     * @urlParam id string required The job post ID. Example: 664f1a2b3c4d5e6f7a8b9c0d
-     *
-     * @response 200 { "id": "664f1a2b3c4d5e6f7a8b9c0d", "is_active": false }
+     * @urlParam id string required Job post ID. Example: 664f1a2b3c4d5e6f7a8b9c0d
+     * @response 200 {}
      * @response 403 { "message": "Forbidden" }
      * @response 404 { "message": "Job post not found" }
      */
@@ -367,12 +368,12 @@ class JobPostController extends Controller
 
         $user = Auth::user();
 
-        if ($post->employer_id !== (string) $user->_id) {
+        if ((string) $post->employer_id !== (string) $user->_id) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
 
         $post->update(['is_active' => false]);
 
-        return response()->json($post);
+        return response()->json($post->fresh());
     }
 }

@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "dd490976-90fb-4610-b308-11bc9bb0eb1a",
+        "_postman_id": "f15d20b5-4ba1-4c83-a933-47e43f0131eb",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -217,27 +217,33 @@
                                     "disabled": false
                                 },
                                 {
-                                    "key": "location",
-                                    "value": "Beirut",
-                                    "description": "Filter by location (partial match).",
+                                    "key": "city",
+                                    "value": "Damascus",
+                                    "description": "Filter by city.",
                                     "disabled": false
                                 },
                                 {
                                     "key": "job_type",
                                     "value": "full_time",
-                                    "description": "Filter by type.",
+                                    "description": "Filter: full_time | part_time | contract | freelance.",
                                     "disabled": false
                                 },
                                 {
                                     "key": "work_mode",
                                     "value": "remote",
-                                    "description": "Filter by work mode.",
+                                    "description": "Filter: remote | hybrid | on_site.",
                                     "disabled": false
                                 },
                                 {
-                                    "key": "experience_level",
+                                    "key": "job_level",
                                     "value": "senior",
-                                    "description": "Filter by level.",
+                                    "description": "Filter: entry | junior | mid | senior | manager | director.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "experience_years",
+                                    "value": "3",
+                                    "description": "Filter by required experience (lte).",
                                     "disabled": false
                                 },
                                 {
@@ -248,14 +254,14 @@
                                 },
                                 {
                                     "key": "min_salary",
-                                    "value": "2000",
-                                    "description": "Minimum salary range.",
+                                    "value": "500",
+                                    "description": "Minimum salary_from.",
                                     "disabled": false
                                 },
                                 {
                                     "key": "max_salary",
-                                    "value": "8000",
-                                    "description": "Maximum salary range.",
+                                    "value": "3000",
+                                    "description": "Maximum salary_to.",
                                     "disabled": false
                                 },
                                 {
@@ -265,9 +271,15 @@
                                     "disabled": false
                                 },
                                 {
+                                    "key": "communication_method",
+                                    "value": "by_forsa",
+                                    "description": "Filter: by_phone | by_forsa | by_website.",
+                                    "disabled": false
+                                },
+                                {
                                     "key": "per_page",
                                     "value": "10",
-                                    "description": "Results per page (max 100). Defaults to 15.",
+                                    "description": "Max 100, default 15.",
                                     "disabled": false
                                 },
                                 {
@@ -277,7 +289,7 @@
                                     "disabled": false
                                 }
                             ],
-                            "raw": "{{baseUrl}}\/api\/jobs?keyword=Laravel&location=Beirut&job_type=full_time&work_mode=remote&experience_level=senior&category=Engineering&min_salary=2000&max_salary=8000&tag=React&per_page=10&page=1"
+                            "raw": "{{baseUrl}}\/api\/jobs?keyword=Laravel&city=Damascus&job_type=full_time&work_mode=remote&job_level=senior&experience_years=3&category=Engineering&min_salary=500&max_salary=3000&tag=React&communication_method=by_forsa&per_page=10&page=1"
                         },
                         "method": "GET",
                         "header": [
@@ -298,9 +310,22 @@
                     },
                     "response": [
                         {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n      \"job_id\": \"JOB-001\",\n      \"title\": \"Senior Laravel Developer\",\n      \"description\": \"We are looking for...\",\n      \"requirements\": \"Minimum 3 years...\",\n      \"company_name\": \"Acme Corp\",\n      \"company_logo\": \"https:\/\/logo.clearbit.com\/acme.com\",\n      \"job_type\": \"full_time\",\n      \"work_mode\": \"remote\",\n      \"experience_level\": \"senior\",\n      \"experience_required\": \"5+ years\",\n      \"location\": \"Beirut, Lebanon\",\n      \"category\": \"Engineering\",\n      \"salary_range\": { \"min\": 2000, \"max\": 4000, \"currency\": \"USD\" },\n      \"tags\": [\"Laravel\", \"PHP\"],\n      \"is_active\": true,\n      \"employer_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n      \"created_at\": \"2024-01-15T00:00:00Z\"\n    }\n  ],\n  \"current_page\": 1,\n  \"per_page\": 15,\n  \"total\": 1,\n  \"total_pages\": 1,\n  \"next_page\": null,\n  \"prev_page\": null\n}",
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 500,
+                            "body": "{\n    \"message\": \"Server Error\"\n}",
                             "name": ""
                         }
                     ]
@@ -318,7 +343,7 @@
                                     "id": "id",
                                     "key": "id",
                                     "value": "664f1a2b3c4d5e6f7a8b9c0d",
-                                    "description": "The job post ID."
+                                    "description": "Job post ID."
                                 }
                             ]
                         },
@@ -334,7 +359,7 @@
                             }
                         ],
                         "body": null,
-                        "description": "Returns a single active job post by ID.",
+                        "description": "Returns a single job post by ID. Inactive posts are still returned so\nemployers\/seekers can view their own closed postings \u2014 enforce access\ncontrol at the client if needed.",
                         "auth": {
                             "type": "noauth"
                         }
@@ -342,14 +367,27 @@
                     "response": [
                         {
                             "header": [],
-                            "code": 200,
-                            "body": "{\n  \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"job_id\": \"JOB-001\",\n  \"title\": \"Senior Laravel Developer\",\n  \"company_name\": \"Acme Corp\",\n  \"job_type\": \"full_time\",\n  \"work_mode\": \"remote\",\n  \"experience_level\": \"senior\",\n  \"location\": \"Beirut, Lebanon\",\n  \"is_active\": true\n}",
+                            "code": 404,
+                            "body": "{ \"message\": \"Job post not found\" }",
                             "name": ""
                         },
                         {
-                            "header": [],
-                            "code": 404,
-                            "body": "{ \"message\": \"Job post not found\" }",
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 500,
+                            "body": "{\n    \"message\": \"Server Error\"\n}",
                             "name": ""
                         }
                     ]
@@ -363,32 +401,38 @@
                             "query": [
                                 {
                                     "key": "search",
-                                    "value": "Google",
-                                    "description": "Filter by company name or location.",
+                                    "value": "Tammam",
+                                    "description": "Filter by name or city.",
                                     "disabled": false
                                 },
                                 {
                                     "key": "industry",
                                     "value": "Technology",
-                                    "description": "Filter by industry (partial match).",
+                                    "description": "Partial match on industry.",
                                     "disabled": false
                                 },
                                 {
-                                    "key": "min_rating",
-                                    "value": "4",
-                                    "description": "Filter by minimum rating (0\u20135).",
+                                    "key": "city",
+                                    "value": "Damascus",
+                                    "description": "Partial match on city.",
                                     "disabled": false
                                 },
                                 {
                                     "key": "company_size",
-                                    "value": "100-500",
-                                    "description": "Filter by company size string (partial match).",
+                                    "value": "less_than_10",
+                                    "description": "Exact enum value.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "min_rating",
+                                    "value": "3.5",
+                                    "description": "Minimum aggregate rating (0\u20135).",
                                     "disabled": false
                                 },
                                 {
                                     "key": "per_page",
                                     "value": "10",
-                                    "description": "Number of results per page (max 100). Defaults to 15.",
+                                    "description": "Max 100, default 15.",
                                     "disabled": false
                                 },
                                 {
@@ -398,7 +442,7 @@
                                     "disabled": false
                                 }
                             ],
-                            "raw": "{{baseUrl}}\/api\/companies?search=Google&industry=Technology&min_rating=4&company_size=100-500&per_page=10&page=1"
+                            "raw": "{{baseUrl}}\/api\/companies?search=Tammam&industry=Technology&city=Damascus&company_size=less_than_10&min_rating=3.5&per_page=10&page=1"
                         },
                         "method": "GET",
                         "header": [
@@ -412,16 +456,29 @@
                             }
                         ],
                         "body": null,
-                        "description": "Paginated list of company profiles. Supports filtering by search term, industry, minimum rating, and company size.",
+                        "description": "Paginated list of company profiles with optional filters.",
                         "auth": {
                             "type": "noauth"
                         }
                     },
                     "response": [
                         {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n      \"name\": \"Google\",\n      \"logo\": \"https:\/\/logo.clearbit.com\/google.com\",\n      \"cover_image\": \"https:\/\/images.unsplash.com\/photo.jpg\",\n      \"description\": \"A multinational technology company.\",\n      \"location\": \"Mountain View, CA\",\n      \"industry\": \"Technology\",\n      \"website\": \"https:\/\/www.google.com\",\n      \"founded\": \"1998\",\n      \"employee_count\": \"100,000+ employees\",\n      \"company_size\": \"100000+\",\n      \"rating\": 4.5,\n      \"review_count\": 1250,\n      \"would_recommend\": 85,\n      \"ceo_performance\": 92,\n      \"open_positions\": 3,\n      \"company_size_range\": { \"min\": 100000, \"isPlus\": true }\n    }\n  ],\n  \"current_page\": 1,\n  \"per_page\": 15,\n  \"total\": 1,\n  \"total_pages\": 1,\n  \"next_page\": null,\n  \"prev_page\": null\n}",
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 500,
+                            "body": "{\n    \"message\": \"Server Error\"\n}",
                             "name": ""
                         }
                     ]
@@ -439,7 +496,7 @@
                                     "id": "id",
                                     "key": "id",
                                     "value": "664f1a2b3c4d5e6f7a8b9c0d",
-                                    "description": "The company profile ID."
+                                    "description": "Company profile ID."
                                 }
                             ]
                         },
@@ -455,7 +512,7 @@
                             }
                         ],
                         "body": null,
-                        "description": "Returns a single company profile including embedded reviews, active job posts, rating breakdowns, and social media links.",
+                        "description": "Returns a single company public profile including active job posts, reviews, and ratings.",
                         "auth": {
                             "type": "noauth"
                         }
@@ -463,14 +520,27 @@
                     "response": [
                         {
                             "header": [],
-                            "code": 200,
-                            "body": "{\n  \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"name\": \"Google\",\n  \"logo\": \"https:\/\/logo.clearbit.com\/google.com\",\n  \"cover_image\": \"https:\/\/images.unsplash.com\/photo.jpg\",\n  \"description\": \"A multinational technology company.\",\n  \"founded\": \"1998\",\n  \"employee_count\": \"100,000+ employees\",\n  \"location\": \"Mountain View, CA\",\n  \"website\": \"https:\/\/www.google.com\",\n  \"industry\": \"Technology\",\n  \"company_size\": \"100000+\",\n  \"rating\": 4.5,\n  \"review_count\": 1250,\n  \"would_recommend\": 85,\n  \"ceo_performance\": 92,\n  \"social_media\": {\n    \"linkedin\": \"https:\/\/www.linkedin.com\/company\/google\",\n    \"twitter\": \"https:\/\/twitter.com\/Google\",\n    \"facebook\": \"https:\/\/www.facebook.com\/Google\",\n    \"instagram\": \"https:\/\/www.instagram.com\/google\"\n  },\n  \"category_ratings\": {\n    \"compensation\": 4.2,\n    \"culture\": 4.6,\n    \"work_life\": 4.1,\n    \"diversity\": 4.4,\n    \"management\": 4.3\n  },\n  \"reviews\": [\n    {\n      \"id\": \"1\",\n      \"rating\": 4,\n      \"user_name\": \"John Doe\",\n      \"date\": \"27\/01\/2026\",\n      \"position\": \"Former employee, last year at 2022\",\n      \"recommend\": false,\n      \"ceo_approval\": true,\n      \"subratings\": { \"compensation\": 4, \"culture\": 4, \"work_life\": 3, \"diversity\": 5, \"management\": 3 },\n      \"agrees\": 5,\n      \"disagrees\": 2\n    }\n  ],\n  \"jobs\": [\n    {\n      \"id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n      \"display_id\": \"JOB-001\",\n      \"company_name\": \"Google\",\n      \"company_logo\": \"https:\/\/logo.clearbit.com\/google.com\",\n      \"title\": \"Senior Frontend Developer\",\n      \"created_at\": \"2024-01-15\",\n      \"roles\": [\"Frontend\", \"React\"],\n      \"types\": [\"full_time\", \"remote\"],\n      \"levels\": [\"senior\"],\n      \"experience\": \"5+ years\",\n      \"location\": \"San Francisco, CA\"\n    }\n  ],\n  \"open_positions\": 3,\n  \"company_size_range\": { \"min\": 100000, \"isPlus\": true }\n}",
+                            "code": 404,
+                            "body": "{ \"message\": \"Company profile not found\" }",
                             "name": ""
                         },
                         {
-                            "header": [],
-                            "code": 404,
-                            "body": "{ \"message\": \"Company profile not found\" }",
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 500,
+                            "body": "{\n    \"message\": \"Server Error\"\n}",
                             "name": ""
                         }
                     ]
@@ -1007,7 +1077,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "prefer_not_to_say",
+                                    "value": "other",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1067,7 +1137,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "student",
+                                    "value": "employed",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1085,7 +1155,7 @@
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "manager",
+                                    "value": "director",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1127,7 +1197,7 @@
                                 },
                                 {
                                     "key": "is_actively_seeking",
-                                    "value": "1",
+                                    "value": "",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1163,7 +1233,7 @@
                                 },
                                 {
                                     "key": "skills[0][level]",
-                                    "value": "expert",
+                                    "value": "beginner",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1439,6 +1509,54 @@
                                     "value": "I am very interested in this position.",
                                     "type": "text",
                                     "description": "Optional cover letter. Max 1000 chars."
+                                },
+                                {
+                                    "key": "education",
+                                    "value": "g",
+                                    "type": "text",
+                                    "description": "Eager applicant profile fields. Must not be greater than 255 characters."
+                                },
+                                {
+                                    "key": "last_work",
+                                    "value": "z",
+                                    "type": "text",
+                                    "description": "Must not be greater than 255 characters."
+                                },
+                                {
+                                    "key": "years_of_experience",
+                                    "value": "17",
+                                    "type": "text",
+                                    "description": "Must be at least 0. Must not be greater than 60."
+                                },
+                                {
+                                    "key": "why_join",
+                                    "value": "i",
+                                    "type": "text",
+                                    "description": "Must not be greater than 2000 characters."
+                                },
+                                {
+                                    "key": "what_to_add",
+                                    "value": "y",
+                                    "type": "text",
+                                    "description": "Must not be greater than 2000 characters."
+                                },
+                                {
+                                    "key": "positions_suited_for[0]",
+                                    "value": "v",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "notice_period",
+                                    "value": "d",
+                                    "type": "text",
+                                    "description": "Must not be greater than 100 characters."
+                                },
+                                {
+                                    "key": "expected_salary",
+                                    "value": "l",
+                                    "type": "text",
+                                    "description": "Must not be greater than 100 characters."
                                 },
                                 {
                                     "key": "resume",
@@ -1983,13 +2101,26 @@
                             }
                         ],
                         "body": null,
-                        "description": "Returns all job posts created by the authenticated employer, each with an application count."
+                        "description": "Returns all job posts by the authenticated employer, each with application count."
                     },
                     "response": [
                         {
-                            "header": [],
-                            "code": 200,
-                            "body": "[\n  {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"job_id\": \"JOB-001\",\n    \"title\": \"Senior Laravel Developer\",\n    \"is_active\": true,\n    \"application_count\": 5\n  }\n]",
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Invalid authentication token signature\"}",
                             "name": ""
                         }
                     ]
@@ -2016,21 +2147,27 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"title\":\"Senior Laravel Developer\",\"description\":\"We are looking for...\",\"requirements\":\"Minimum 3 years of Laravel experience.\",\"company_name\":\"Acme Corp\",\"company_logo\":\"https:\\\/\\\/logo.clearbit.com\\\/acme.com\",\"job_type\":\"full_time\",\"work_mode\":\"remote\",\"experience_level\":\"senior\",\"experience_required\":\"5+ years\",\"location\":\"Beirut, Lebanon\",\"category\":\"Engineering\",\"salary_range\":{\"min\":2000,\"max\":4000,\"currency\":\"USD\"},\"tags\":[\"Laravel\",\"PHP\"],\"roles\":[\"Frontend\",\"React\"]}"
+                            "raw": "{\"communication_method\":\"by_forsa\",\"communication_value\":null,\"title\":\"Senior Laravel Developer\",\"roles\":[\"Backend\",\"PHP\"],\"portfolio_required\":false,\"cover_letter_required\":true,\"gender\":\"no_preference\",\"age_from\":null,\"age_to\":null,\"education_level\":\"bachelor\",\"job_level\":\"mid\",\"experience_years\":3,\"languages\":[\"Arabic\",\"English\"],\"vacancies\":2,\"job_type\":\"full_time\",\"work_mode\":\"on_site\",\"city\":\"Damascus\",\"address\":\"Mazzeh Street 12\",\"salary_from\":\"500\",\"salary_to\":\"1000\",\"currency\":\"USD\",\"display_salary\":true,\"incentives\":\"Monthly bonuses\",\"description\":\"We are looking for...\",\"requirements\":\"3+ years Laravel experience.\",\"questions\":[{\"question\":\"Describe your last project.\",\"required\":\"true\"}],\"tags\":[\"Laravel\",\"MongoDB\"],\"category\":\"Engineering\",\"expires_at\":\"2026-12-31\"}"
                         },
-                        "description": "Creates a new job post owned by the authenticated employer."
+                        "description": "Creates a new job post. Company name and logo are automatically populated from\nthe employer's company profile \u2014 they cannot be overridden here.\n\nAn employer must have an approved company profile before creating a job post."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 201,
-                            "body": "{\n  \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"job_id\": \"JOB-001\",\n  \"title\": \"Senior Laravel Developer\",\n  \"is_active\": true,\n  \"employer_id\": \"664f1a2b3c4d5e6f7a8b9c0e\"\n}",
+                            "body": "{}",
+                            "name": "Created"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"You must create a company profile before posting a job.\" }",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 422,
-                            "body": "{ \"errors\": { \"title\": [\"The title field is required.\"] } }",
+                            "body": "{ \"errors\": {} }",
                             "name": ""
                         }
                     ]
@@ -2048,7 +2185,7 @@
                                     "id": "id",
                                     "key": "id",
                                     "value": "664f1a2b3c4d5e6f7a8b9c0d",
-                                    "description": "The job post ID."
+                                    "description": "Job post ID."
                                 }
                             ]
                         },
@@ -2063,19 +2200,10 @@
                                 "value": "application\/json"
                             }
                         ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"title\":\"Updated Title\",\"description\":\"Eius et animi quos velit et.\",\"requirements\":\"architecto\",\"company_name\":\"architecto\",\"company_logo\":\"architecto\",\"job_type\":\"architecto\",\"work_mode\":\"architecto\",\"experience_level\":\"architecto\",\"experience_required\":\"architecto\",\"location\":\"architecto\",\"category\":\"architecto\",\"salary_range\":{\"min\":39,\"max\":84,\"currency\":\"architecto\"},\"tags\":[\"architecto\"],\"is_active\":false}"
-                        },
-                        "description": "Updates an existing job post. Only the owning employer can update it."
+                        "body": null,
+                        "description": "Updates an existing job post. `company_name` and `company_logo` are read-only\nand always sourced from the employer's company profile."
                     },
                     "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{ \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"title\": \"Updated Title\" }",
-                            "name": ""
-                        },
                         {
                             "header": [],
                             "code": 403,
@@ -2086,6 +2214,12 @@
                             "header": [],
                             "code": 404,
                             "body": "{ \"message\": \"Job post not found\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": {} }",
                             "name": ""
                         }
                     ]
@@ -2103,7 +2237,7 @@
                                     "id": "id",
                                     "key": "id",
                                     "value": "664f1a2b3c4d5e6f7a8b9c0d",
-                                    "description": "The job post ID."
+                                    "description": "Job post ID."
                                 }
                             ]
                         },
@@ -2119,7 +2253,7 @@
                             }
                         ],
                         "body": null,
-                        "description": "Permanently deletes a job post. Only the owning employer can delete it."
+                        "description": ""
                     },
                     "response": [
                         {
@@ -2155,7 +2289,7 @@
                                     "id": "id",
                                     "key": "id",
                                     "value": "664f1a2b3c4d5e6f7a8b9c0d",
-                                    "description": "The job post ID."
+                                    "description": "Job post ID."
                                 }
                             ]
                         },
@@ -2171,13 +2305,13 @@
                             }
                         ],
                         "body": null,
-                        "description": "Sets `is_active` to false, hiding the post from public listings. Only the owning employer can deactivate it."
+                        "description": "Sets `is_active` to false, hiding the post from public listings."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{ \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"is_active\": false }",
+                            "body": "{}",
                             "name": ""
                         },
                         {
@@ -2195,7 +2329,58 @@
                     ]
                 },
                 {
-                    "name": "Upsert company profile",
+                    "name": "Get my company profile (owner view)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/company",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/company"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns the full profile including private info, for the authenticated employer."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Invalid authentication token signature\"}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"No company profile found. Create one first.\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update public company info",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -2216,27 +2401,21 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"Google\",\"logo\":\"https:\\\/\\\/logo.clearbit.com\\\/google.com\",\"cover_image\":\"https:\\\/\\\/images.unsplash.com\\\/photo.jpg\",\"description\":\"Eius et animi quos velit et.\",\"location\":\"Mountain View, CA\",\"company_size\":\"100-500\",\"employee_count\":\"100,000+ employees\",\"industry\":\"Technology\",\"website\":\"https:\\\/\\\/www.google.com\",\"founded\":\"1998\",\"social_media\":{\"linkedin\":\"https:\\\/\\\/www.linkedin.com\\\/company\\\/google\",\"twitter\":\"https:\\\/\\\/twitter.com\\\/Google\",\"facebook\":\"https:\\\/\\\/www.facebook.com\\\/Google\",\"instagram\":\"https:\\\/\\\/www.instagram.com\\\/google\"}}"
+                            "raw": "{\"name\":\"Tammam company\",\"description\":\"We build software.\",\"industry\":\"Information Technology Services\",\"company_size\":\"less_than_10\",\"city\":\"Damascus\",\"country\":\"Syria\",\"phone\":\"0932444357\",\"phone_visible\":false,\"email\":\"tamammb97@gmail.com\"}"
                         },
-                        "description": "Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).\n`company_size` accepts either a plain string (`\"100-500\"`, `\"500+\"`) or a structured object `{ min, max?, isPlus }` \u2014 both are normalised to a canonical string before storage.\n\nNote: Rating fields (rating, review_count, reviews, etc.) are read-only and managed by the system. They cannot be set by employers."
+                        "description": "Creates or updates the employer's company public profile.     *"
                     },
                     "response": [
                         {
                             "header": [],
-                            "code": 200,
-                            "body": "{\n  \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"name\": \"Google\",\n  \"logo\": \"https:\/\/logo.clearbit.com\/google.com\",\n  \"cover_image\": \"https:\/\/images.unsplash.com\/photo.jpg\",\n  \"founded\": \"1998\",\n  \"employee_count\": \"100,000+ employees\",\n  \"location\": \"Mountain View, CA\",\n  \"website\": \"https:\/\/www.google.com\",\n  \"company_size\": \"100000+\",\n  \"open_positions\": 0,\n  \"company_size_range\": { \"min\": 100000, \"isPlus\": true }\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
                             "code": 422,
-                            "body": "{ \"errors\": { \"name\": [\"The name field is required.\"] } }",
+                            "body": "{ \"errors\": {} }",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Upsert company profile",
+                    "name": "Update public company info",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -2257,21 +2436,150 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"Google\",\"logo\":\"https:\\\/\\\/logo.clearbit.com\\\/google.com\",\"cover_image\":\"https:\\\/\\\/images.unsplash.com\\\/photo.jpg\",\"description\":\"Eius et animi quos velit et.\",\"location\":\"Mountain View, CA\",\"company_size\":\"100-500\",\"employee_count\":\"100,000+ employees\",\"industry\":\"Technology\",\"website\":\"https:\\\/\\\/www.google.com\",\"founded\":\"1998\",\"social_media\":{\"linkedin\":\"https:\\\/\\\/www.linkedin.com\\\/company\\\/google\",\"twitter\":\"https:\\\/\\\/twitter.com\\\/Google\",\"facebook\":\"https:\\\/\\\/www.facebook.com\\\/Google\",\"instagram\":\"https:\\\/\\\/www.instagram.com\\\/google\"}}"
+                            "raw": "{\"name\":\"Tammam company\",\"description\":\"We build software.\",\"industry\":\"Information Technology Services\",\"company_size\":\"less_than_10\",\"city\":\"Damascus\",\"country\":\"Syria\",\"phone\":\"0932444357\",\"phone_visible\":false,\"email\":\"tamammb97@gmail.com\"}"
                         },
-                        "description": "Create or update the authenticated employer's company profile. Calling this endpoint a second time updates the existing profile (one profile per employer).\n`company_size` accepts either a plain string (`\"100-500\"`, `\"500+\"`) or a structured object `{ min, max?, isPlus }` \u2014 both are normalised to a canonical string before storage.\n\nNote: Rating fields (rating, review_count, reviews, etc.) are read-only and managed by the system. They cannot be set by employers."
+                        "description": "Creates or updates the employer's company public profile.     *"
                     },
                     "response": [
                         {
                             "header": [],
-                            "code": 200,
-                            "body": "{\n  \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"name\": \"Google\",\n  \"logo\": \"https:\/\/logo.clearbit.com\/google.com\",\n  \"cover_image\": \"https:\/\/images.unsplash.com\/photo.jpg\",\n  \"founded\": \"1998\",\n  \"employee_count\": \"100,000+ employees\",\n  \"location\": \"Mountain View, CA\",\n  \"website\": \"https:\/\/www.google.com\",\n  \"company_size\": \"100000+\",\n  \"open_positions\": 0,\n  \"company_size_range\": { \"min\": 100000, \"isPlus\": true }\n}",
+                            "code": 422,
+                            "body": "{ \"errors\": {} }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update private \/ general company info",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/company\/private",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/company\/private"
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"expose_to_applicants\":false,\"address\":\"Mazzeh, Damascus\",\"industries\":[\"Information Technology Services\"],\"company_size\":\"less_than_10\",\"founded_year\":2018,\"phone_main\":\"0932444357\",\"phone_extra\":null,\"website\":\"https:\\\/\\\/tammam.co\",\"social_media\":{\"instagram\":\"architecto\",\"telegram\":\"architecto\",\"twitter\":\"architecto\",\"facebook\":\"architecto\",\"behance\":\"architecto\",\"github\":\"architecto\",\"linkedin\":\"architecto\"}}"
+                        },
+                        "description": "Updates employer-only private info (address, founded year, extra phones, social links, etc.).\nSet `expose_to_applicants` to `true` to make this block visible on job posts."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"No company profile found. Create one first.\" }",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 422,
-                            "body": "{ \"errors\": { \"name\": [\"The name field is required.\"] } }",
+                            "body": "{ \"errors\": {} }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Upload company logo",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/company\/logo",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/company\/logo"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "logo",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "Uploads and replaces the company logo. Accepts JPEG, PNG, WebP; max 2 MB."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"logo\": \"https:\/\/...\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"No company profile found. Create one first.\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Upload company cover image",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/company\/cover",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/company\/cover"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "cover_image",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "Uploads and replaces the cover\/banner image. Accepts JPEG, PNG, WebP; max 4 MB."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"cover_image\": \"https:\/\/...\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"No company profile found. Create one first.\" }",
                             "name": ""
                         }
                     ]
