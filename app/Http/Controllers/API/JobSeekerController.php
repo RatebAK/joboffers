@@ -655,11 +655,11 @@ class JobSeekerController extends Controller
      *
      * Paginated search of active job posts for the authenticated job seeker.
      *
-     * @bodyParam keyword string Search in title, description, company name. Max 100 chars. Example: React
-     * @bodyParam location string Partial location match. Max 100 chars. Example: Beirut
-     * @bodyParam job_type string One of: full_time, part_time, contract, freelance. Example: full_time
-     * @bodyParam category string Example: Engineering
-     * @bodyParam min_salary number Minimum salary. Example: 2000
+     * @queryParam keyword string Search in title, description, company name. Max 100 chars. Example: React
+     * @queryParam location string Partial location match. Max 100 chars. Example: Beirut
+     * @queryParam job_type string One of: full_time, part_time, contract, freelance. Example: full_time
+     * @queryParam category string Example: Engineering
+     * @queryParam min_salary number Minimum salary. Example: 2000
      *
      * @response 200 {
      *   "jobs": {
@@ -687,28 +687,29 @@ class JobSeekerController extends Controller
 
         $query = JobPost::where('is_active', true);
 
-        if ($request->keyword) {
-            $query->where(function ($q) use ($request) {
-                $q->where('title', 'like', "%{$request->keyword}%")
-                    ->orWhere('description', 'like', "%{$request->keyword}%")
-                    ->orWhere('company_name', 'like', "%{$request->keyword}%");
+        if ($keyword = $request->query('keyword')) {
+            $regex = new \MongoDB\BSON\Regex($keyword, 'i');
+            $query->where(function ($q) use ($regex) {
+                $q->where('title', $regex)
+                    ->orWhere('description', $regex)
+                    ->orWhere('company_name', $regex);
             });
         }
 
-        if ($request->location) {
-            $query->where('location', 'like', "%{$request->location}%");
+        if ($location = $request->query('location')) {
+            $query->where('city', new \MongoDB\BSON\Regex($location, 'i'));
         }
 
-        if ($request->job_type) {
-            $query->where('job_type', $request->job_type);
+        if ($jobType = $request->query('job_type')) {
+            $query->where('job_type', $jobType);
         }
 
-        if ($request->category) {
-            $query->where('category', $request->category);
+        if ($category = $request->query('category')) {
+            $query->where('category', $category);
         }
 
-        if ($request->min_salary !== null) {
-            $query->where('salary_range.min', '>=', (int) $request->min_salary);
+        if (($minSalary = $request->query('min_salary')) !== null) {
+            $query->where('salary_from', '>=', (int) $minSalary);
         }
 
         $jobs = $query->orderBy('created_at', 'desc')
