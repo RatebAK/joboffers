@@ -243,7 +243,25 @@ class JobPostController extends Controller
      *   "is_active": true,
      *   "expires_at": "2026-12-31T00:00:00.000000Z",
      *   "created_at": "2026-01-15T10:00:00.000000Z",
-     *   "updated_at": "2026-01-15T10:00:00.000000Z"
+     *   "updated_at": "2026-01-15T10:00:00.000000Z",
+     *   "company": {
+     *     "_id": "664f1a2b3c4d5e6f7a8b9c0f",
+     *     "slug": "acme-corp",
+     *     "name": "Acme Corp",
+     *     "logo": "https://example.com/logo.png",
+     *     "description": "We build software.",
+     *     "city": "Damascus",
+     *     "country": "Syria",
+     *     "social_media": {
+     *       "linkedin": "https://linkedin.com/company/acme",
+     *       "github": null,
+     *       "twitter": null,
+     *       "facebook": null,
+     *       "instagram": null,
+     *       "telegram": null,
+     *       "behance": null
+     *     }
+     *   }
      * }
      * @response 404 { "message": "Job post not found" }
      */
@@ -255,7 +273,25 @@ class JobPostController extends Controller
             return response()->json(['message' => 'Job post not found'], 404);
         }
 
-        return response()->json($post);
+        $data = $post->toArray();
+
+        // Embed company snippet for the "About Company" section
+        $company = CompanyProfile::find($post->company_profile_id);
+        if ($company) {
+            $snippet = [
+                '_id'         => (string) $company->_id,
+                'slug'        => $company->slug,
+                'name'        => $company->name,
+                'logo'        => $company->logo,
+                'description' => $company->description,
+                'city'        => $company->city,
+                'country'     => $company->country,
+                'social_media' => $company->private_info['social_media'] ?? null,
+            ];
+            $data['company'] = $snippet;
+        }
+
+        return response()->json($data);
     }
 
     // -----------------------------------------------------------------------
