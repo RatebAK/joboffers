@@ -802,6 +802,22 @@ paths:
                   expires_at: '2026-12-31T00:00:00.000000Z'
                   created_at: '2026-01-15T10:00:00.000000Z'
                   updated_at: '2026-01-15T10:00:00.000000Z'
+                  company:
+                    _id: 664f1a2b3c4d5e6f7a8b9c0f
+                    slug: acme-corp
+                    name: 'Acme Corp'
+                    logo: 'https://example.com/logo.png'
+                    description: 'We build software.'
+                    city: Damascus
+                    country: Syria
+                    social_media:
+                      linkedin: 'https://linkedin.com/company/acme'
+                      github: null
+                      twitter: null
+                      facebook: null
+                      instagram: null
+                      telegram: null
+                      behance: null
                 properties:
                   _id:
                     type: string
@@ -945,6 +961,60 @@ paths:
                   updated_at:
                     type: string
                     example: '2026-01-15T10:00:00.000000Z'
+                  company:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 664f1a2b3c4d5e6f7a8b9c0f
+                      slug:
+                        type: string
+                        example: acme-corp
+                      name:
+                        type: string
+                        example: 'Acme Corp'
+                      logo:
+                        type: string
+                        example: 'https://example.com/logo.png'
+                      description:
+                        type: string
+                        example: 'We build software.'
+                      city:
+                        type: string
+                        example: Damascus
+                      country:
+                        type: string
+                        example: Syria
+                      social_media:
+                        type: object
+                        properties:
+                          linkedin:
+                            type: string
+                            example: 'https://linkedin.com/company/acme'
+                          github:
+                            type: string
+                            example: null
+                            nullable: true
+                          twitter:
+                            type: string
+                            example: null
+                            nullable: true
+                          facebook:
+                            type: string
+                            example: null
+                            nullable: true
+                          instagram:
+                            type: string
+                            example: null
+                            nullable: true
+                          telegram:
+                            type: string
+                            example: null
+                            nullable: true
+                          behance:
+                            type: string
+                            example: null
+                            nullable: true
         404:
           description: ''
           content:
@@ -1510,7 +1580,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: male
+                  example: prefer_not_to_say
                   enum:
                     - male
                     - female
@@ -1571,7 +1641,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: student
+                  example: freelancing
                   enum:
                     - employed
                     - unemployed
@@ -1592,7 +1662,7 @@ paths:
                 job_level:
                   type: string
                   description: ''
-                  example: director
+                  example: entry
                   enum:
                     - entry
                     - junior
@@ -1642,7 +1712,7 @@ paths:
                 is_actively_seeking:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 social_links:
                   type: object
                   description: 'Social Links (nested object).'
@@ -1684,7 +1754,7 @@ paths:
                       level:
                         type: string
                         description: ''
-                        example: beginner
+                        example: expert
                         enum:
                           - beginner
                           - intermediate
@@ -1777,7 +1847,7 @@ paths:
                       is_currently_working:
                         type: boolean
                         description: ''
-                        example: true
+                        example: false
                         nullable: true
                       description:
                         type: string
@@ -2972,7 +3042,7 @@ paths:
                 job_type:
                   type: string
                   description: ''
-                  example: full_time
+                  example: freelance
                   enum:
                     - full_time
                     - part_time

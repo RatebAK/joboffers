@@ -650,7 +650,25 @@ endpoints:
             "is_active": true,
             "expires_at": "2026-12-31T00:00:00.000000Z",
             "created_at": "2026-01-15T10:00:00.000000Z",
-            "updated_at": "2026-01-15T10:00:00.000000Z"
+            "updated_at": "2026-01-15T10:00:00.000000Z",
+            "company": {
+              "_id": "664f1a2b3c4d5e6f7a8b9c0f",
+              "slug": "acme-corp",
+              "name": "Acme Corp",
+              "logo": "https://example.com/logo.png",
+              "description": "We build software.",
+              "city": "Damascus",
+              "country": "Syria",
+              "social_media": {
+                "linkedin": "https://linkedin.com/company/acme",
+                "github": null,
+                "twitter": null,
+                "facebook": null,
+                "instagram": null,
+                "telegram": null,
+                "behance": null
+              }
+            }
           }
         headers: []
         description: Success
@@ -2260,7 +2278,7 @@ endpoints:
         name: gender
         description: ''
         required: false
-        example: male
+        example: prefer_not_to_say
         type: string
         enumValues:
           - male
@@ -2379,7 +2397,7 @@ endpoints:
         name: current_job_status
         description: ''
         required: false
-        example: student
+        example: freelancing
         type: string
         enumValues:
           - employed
@@ -2417,7 +2435,7 @@ endpoints:
         name: job_level
         description: ''
         required: false
-        example: director
+        example: entry
         type: string
         enumValues:
           - entry
@@ -2505,7 +2523,7 @@ endpoints:
         name: is_actively_seeking
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -2626,7 +2644,7 @@ endpoints:
         name: 'skills[].level'
         description: ''
         required: false
-        example: beginner
+        example: expert
         type: string
         enumValues:
           - beginner
@@ -2785,7 +2803,7 @@ endpoints:
         name: 'work_experience[].is_currently_working'
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -2807,7 +2825,7 @@ endpoints:
       last_name: 'n'
       full_name: g
       image: z
-      gender: male
+      gender: prefer_not_to_say
       nationality: m
       city: i
       location: 'y'
@@ -2817,10 +2835,10 @@ endpoints:
       marital_status: married
       salary_range_from: 16
       salary_range_to: 38
-      current_job_status: student
+      current_job_status: freelancing
       years_of_experience: 8
       education_level: 'n'
-      job_level: director
+      job_level: entry
       job_types:
         - r
       job_roles:
@@ -2830,7 +2848,7 @@ endpoints:
       current_job_title: u
       experience_summary: architecto
       expected_salary: 39
-      is_actively_seeking: true
+      is_actively_seeking: false
       social_links:
         linkedin: g
         github: z
@@ -2839,7 +2857,7 @@ endpoints:
       skills:
         -
           name: 'y'
-          level: beginner
+          level: expert
       education_history:
         -
           certificate_type: v
@@ -2858,7 +2876,7 @@ endpoints:
             - u
           from_date: jwvlxjklqppwqbew
           to_date: tnnoqitpxntltcvi
-          is_currently_working: true
+          is_currently_working: false
           description: 'Eius et animi quos velit et.'
     fileParameters:
       resume: null
@@ -3437,7 +3455,7 @@ endpoints:
         name: job_type
         description: ''
         required: false
-        example: full_time
+        example: freelance
         type: string
         enumValues:
           - full_time
@@ -3472,7 +3490,7 @@ endpoints:
     cleanBodyParameters:
       keyword: b
       location: 'n'
-      job_type: full_time
+      job_type: freelance
       category: g
       min_salary: 12
     fileParameters: []

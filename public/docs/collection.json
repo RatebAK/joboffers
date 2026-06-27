@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "974dd9d1-9481-48f2-bd36-d35d404deaff",
+        "_postman_id": "f1723c35-8340-4cad-8a8c-d21c7f533ee8",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -355,7 +355,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"job_id\": \"JOB-0001\",\n  \"employer_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n  \"company_profile_id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n  \"company_name\": \"Acme Corp\",\n  \"company_logo\": \"https:\/\/example.com\/logo.png\",\n  \"title\": \"Senior Laravel Developer\",\n  \"description\": \"We are looking for an experienced Laravel developer...\",\n  \"requirements\": \"3+ years Laravel, MongoDB experience preferred.\",\n  \"roles\": [\"Backend\", \"PHP\"],\n  \"category\": \"Engineering\",\n  \"tags\": [\"Laravel\", \"MongoDB\", \"PHP\"],\n  \"job_type\": \"full_time\",\n  \"work_mode\": \"on_site\",\n  \"job_level\": \"senior\",\n  \"education_level\": \"bachelor\",\n  \"experience_years\": 3,\n  \"languages\": [\"Arabic\", \"English\"],\n  \"vacancies\": 2,\n  \"city\": \"Damascus\",\n  \"address\": \"Mazzeh Street 12\",\n  \"salary_from\": 500,\n  \"salary_to\": 1000,\n  \"currency\": \"USD\",\n  \"display_salary\": true,\n  \"incentives\": \"Monthly bonuses\",\n  \"gender\": \"no_preference\",\n  \"age_from\": null,\n  \"age_to\": null,\n  \"portfolio_required\": false,\n  \"cover_letter_required\": true,\n  \"communication_method\": \"by_forsa\",\n  \"communication_value\": null,\n  \"questions\": [\n    { \"question\": \"Describe your last project.\", \"required\": true }\n  ],\n  \"is_active\": true,\n  \"expires_at\": \"2026-12-31T00:00:00.000000Z\",\n  \"created_at\": \"2026-01-15T10:00:00.000000Z\",\n  \"updated_at\": \"2026-01-15T10:00:00.000000Z\"\n}",
+                            "body": "{\n  \"_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"job_id\": \"JOB-0001\",\n  \"employer_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n  \"company_profile_id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n  \"company_name\": \"Acme Corp\",\n  \"company_logo\": \"https:\/\/example.com\/logo.png\",\n  \"title\": \"Senior Laravel Developer\",\n  \"description\": \"We are looking for an experienced Laravel developer...\",\n  \"requirements\": \"3+ years Laravel, MongoDB experience preferred.\",\n  \"roles\": [\"Backend\", \"PHP\"],\n  \"category\": \"Engineering\",\n  \"tags\": [\"Laravel\", \"MongoDB\", \"PHP\"],\n  \"job_type\": \"full_time\",\n  \"work_mode\": \"on_site\",\n  \"job_level\": \"senior\",\n  \"education_level\": \"bachelor\",\n  \"experience_years\": 3,\n  \"languages\": [\"Arabic\", \"English\"],\n  \"vacancies\": 2,\n  \"city\": \"Damascus\",\n  \"address\": \"Mazzeh Street 12\",\n  \"salary_from\": 500,\n  \"salary_to\": 1000,\n  \"currency\": \"USD\",\n  \"display_salary\": true,\n  \"incentives\": \"Monthly bonuses\",\n  \"gender\": \"no_preference\",\n  \"age_from\": null,\n  \"age_to\": null,\n  \"portfolio_required\": false,\n  \"cover_letter_required\": true,\n  \"communication_method\": \"by_forsa\",\n  \"communication_value\": null,\n  \"questions\": [\n    { \"question\": \"Describe your last project.\", \"required\": true }\n  ],\n  \"is_active\": true,\n  \"expires_at\": \"2026-12-31T00:00:00.000000Z\",\n  \"created_at\": \"2026-01-15T10:00:00.000000Z\",\n  \"updated_at\": \"2026-01-15T10:00:00.000000Z\",\n  \"company\": {\n    \"_id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n    \"slug\": \"acme-corp\",\n    \"name\": \"Acme Corp\",\n    \"logo\": \"https:\/\/example.com\/logo.png\",\n    \"description\": \"We build software.\",\n    \"city\": \"Damascus\",\n    \"country\": \"Syria\",\n    \"social_media\": {\n      \"linkedin\": \"https:\/\/linkedin.com\/company\/acme\",\n      \"github\": null,\n      \"twitter\": null,\n      \"facebook\": null,\n      \"instagram\": null,\n      \"telegram\": null,\n      \"behance\": null\n    }\n  }\n}",
                             "name": "Success"
                         },
                         {
@@ -1051,7 +1051,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "male",
+                                    "value": "prefer_not_to_say",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1111,7 +1111,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "student",
+                                    "value": "freelancing",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1129,7 +1129,7 @@
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "director",
+                                    "value": "entry",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1171,7 +1171,7 @@
                                 },
                                 {
                                     "key": "is_actively_seeking",
-                                    "value": "1",
+                                    "value": "",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1207,7 +1207,7 @@
                                 },
                                 {
                                     "key": "skills[0][level]",
-                                    "value": "beginner",
+                                    "value": "expert",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1291,7 +1291,7 @@
                                 },
                                 {
                                     "key": "work_experience[0][is_currently_working]",
-                                    "value": "1",
+                                    "value": "",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1667,7 +1667,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"full_time\",\"category\":\"g\",\"min_salary\":12}"
+                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"freelance\",\"category\":\"g\",\"min_salary\":12}"
                         },
                         "description": "Paginated search of active job posts for the authenticated job seeker."
                     },
