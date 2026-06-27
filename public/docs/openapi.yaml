@@ -459,18 +459,284 @@ paths:
             description: 'Page number.'
             example: 1
       responses:
-        500:
+        200:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  message: 'Server Error'
+                  data:
+                    -
+                      _id: 664f1a2b3c4d5e6f7a8b9c0d
+                      job_id: JOB-0001
+                      employer_id: 664f1a2b3c4d5e6f7a8b9c0e
+                      company_profile_id: 664f1a2b3c4d5e6f7a8b9c0f
+                      company_name: 'Acme Corp'
+                      company_logo: 'https://example.com/logo.png'
+                      title: 'Senior Laravel Developer'
+                      description: 'We are looking for...'
+                      requirements: '3+ years Laravel experience.'
+                      roles:
+                        - Backend
+                        - PHP
+                      category: Engineering
+                      tags:
+                        - Laravel
+                        - MongoDB
+                      job_type: full_time
+                      work_mode: on_site
+                      job_level: senior
+                      education_level: bachelor
+                      experience_years: 3
+                      languages:
+                        - Arabic
+                        - English
+                      vacancies: 2
+                      city: Damascus
+                      address: 'Mazzeh Street 12'
+                      salary_from: 500
+                      salary_to: 1000
+                      currency: USD
+                      display_salary: true
+                      incentives: 'Monthly bonuses'
+                      gender: no_preference
+                      age_from: null
+                      age_to: null
+                      portfolio_required: false
+                      cover_letter_required: true
+                      communication_method: by_forsa
+                      communication_value: null
+                      questions:
+                        -
+                          question: 'Describe your last project.'
+                          required: true
+                      is_active: true
+                      expires_at: '2026-12-31T00:00:00.000000Z'
+                      created_at: '2026-01-15T10:00:00.000000Z'
+                      updated_at: '2026-01-15T10:00:00.000000Z'
+                  current_page: 1
+                  per_page: 15
+                  total: 1
+                  total_pages: 1
+                  next_page: null
+                  prev_page: null
                 properties:
-                  message:
+                  data:
+                    type: array
+                    example:
+                      -
+                        _id: 664f1a2b3c4d5e6f7a8b9c0d
+                        job_id: JOB-0001
+                        employer_id: 664f1a2b3c4d5e6f7a8b9c0e
+                        company_profile_id: 664f1a2b3c4d5e6f7a8b9c0f
+                        company_name: 'Acme Corp'
+                        company_logo: 'https://example.com/logo.png'
+                        title: 'Senior Laravel Developer'
+                        description: 'We are looking for...'
+                        requirements: '3+ years Laravel experience.'
+                        roles:
+                          - Backend
+                          - PHP
+                        category: Engineering
+                        tags:
+                          - Laravel
+                          - MongoDB
+                        job_type: full_time
+                        work_mode: on_site
+                        job_level: senior
+                        education_level: bachelor
+                        experience_years: 3
+                        languages:
+                          - Arabic
+                          - English
+                        vacancies: 2
+                        city: Damascus
+                        address: 'Mazzeh Street 12'
+                        salary_from: 500
+                        salary_to: 1000
+                        currency: USD
+                        display_salary: true
+                        incentives: 'Monthly bonuses'
+                        gender: no_preference
+                        age_from: null
+                        age_to: null
+                        portfolio_required: false
+                        cover_letter_required: true
+                        communication_method: by_forsa
+                        communication_value: null
+                        questions:
+                          -
+                            question: 'Describe your last project.'
+                            required: true
+                        is_active: true
+                        expires_at: '2026-12-31T00:00:00.000000Z'
+                        created_at: '2026-01-15T10:00:00.000000Z'
+                        updated_at: '2026-01-15T10:00:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0d
+                        job_id:
+                          type: string
+                          example: JOB-0001
+                        employer_id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0e
+                        company_profile_id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0f
+                        company_name:
+                          type: string
+                          example: 'Acme Corp'
+                        company_logo:
+                          type: string
+                          example: 'https://example.com/logo.png'
+                        title:
+                          type: string
+                          example: 'Senior Laravel Developer'
+                        description:
+                          type: string
+                          example: 'We are looking for...'
+                        requirements:
+                          type: string
+                          example: '3+ years Laravel experience.'
+                        roles:
+                          type: array
+                          example:
+                            - Backend
+                            - PHP
+                          items:
+                            type: string
+                        category:
+                          type: string
+                          example: Engineering
+                        tags:
+                          type: array
+                          example:
+                            - Laravel
+                            - MongoDB
+                          items:
+                            type: string
+                        job_type:
+                          type: string
+                          example: full_time
+                        work_mode:
+                          type: string
+                          example: on_site
+                        job_level:
+                          type: string
+                          example: senior
+                        education_level:
+                          type: string
+                          example: bachelor
+                        experience_years:
+                          type: integer
+                          example: 3
+                        languages:
+                          type: array
+                          example:
+                            - Arabic
+                            - English
+                          items:
+                            type: string
+                        vacancies:
+                          type: integer
+                          example: 2
+                        city:
+                          type: string
+                          example: Damascus
+                        address:
+                          type: string
+                          example: 'Mazzeh Street 12'
+                        salary_from:
+                          type: integer
+                          example: 500
+                        salary_to:
+                          type: integer
+                          example: 1000
+                        currency:
+                          type: string
+                          example: USD
+                        display_salary:
+                          type: boolean
+                          example: true
+                        incentives:
+                          type: string
+                          example: 'Monthly bonuses'
+                        gender:
+                          type: string
+                          example: no_preference
+                        age_from:
+                          type: string
+                          example: null
+                          nullable: true
+                        age_to:
+                          type: string
+                          example: null
+                          nullable: true
+                        portfolio_required:
+                          type: boolean
+                          example: false
+                        cover_letter_required:
+                          type: boolean
+                          example: true
+                        communication_method:
+                          type: string
+                          example: by_forsa
+                        communication_value:
+                          type: string
+                          example: null
+                          nullable: true
+                        questions:
+                          type: array
+                          example:
+                            -
+                              question: 'Describe your last project.'
+                              required: true
+                          items:
+                            type: object
+                            properties:
+                              question:
+                                type: string
+                                example: 'Describe your last project.'
+                              required:
+                                type: boolean
+                                example: true
+                        is_active:
+                          type: boolean
+                          example: true
+                        expires_at:
+                          type: string
+                          example: '2026-12-31T00:00:00.000000Z'
+                        created_at:
+                          type: string
+                          example: '2026-01-15T10:00:00.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2026-01-15T10:00:00.000000Z'
+                  current_page:
+                    type: integer
+                    example: 1
+                  per_page:
+                    type: integer
+                    example: 15
+                  total:
+                    type: integer
+                    example: 1
+                  total_pages:
+                    type: integer
+                    example: 1
+                  next_page:
                     type: string
-                    example: 'Server Error'
+                    example: null
+                    nullable: true
+                  prev_page:
+                    type: string
+                    example: null
+                    nullable: true
       tags:
         - Endpoints
       security: []
@@ -481,6 +747,204 @@ paths:
       description: "Returns a single job post by ID. Inactive posts are still returned so\nemployers/seekers can view their own closed postings — enforce access\ncontrol at the client if needed."
       parameters: []
       responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  _id: 664f1a2b3c4d5e6f7a8b9c0d
+                  job_id: JOB-0001
+                  employer_id: 664f1a2b3c4d5e6f7a8b9c0e
+                  company_profile_id: 664f1a2b3c4d5e6f7a8b9c0f
+                  company_name: 'Acme Corp'
+                  company_logo: 'https://example.com/logo.png'
+                  title: 'Senior Laravel Developer'
+                  description: 'We are looking for an experienced Laravel developer...'
+                  requirements: '3+ years Laravel, MongoDB experience preferred.'
+                  roles:
+                    - Backend
+                    - PHP
+                  category: Engineering
+                  tags:
+                    - Laravel
+                    - MongoDB
+                    - PHP
+                  job_type: full_time
+                  work_mode: on_site
+                  job_level: senior
+                  education_level: bachelor
+                  experience_years: 3
+                  languages:
+                    - Arabic
+                    - English
+                  vacancies: 2
+                  city: Damascus
+                  address: 'Mazzeh Street 12'
+                  salary_from: 500
+                  salary_to: 1000
+                  currency: USD
+                  display_salary: true
+                  incentives: 'Monthly bonuses'
+                  gender: no_preference
+                  age_from: null
+                  age_to: null
+                  portfolio_required: false
+                  cover_letter_required: true
+                  communication_method: by_forsa
+                  communication_value: null
+                  questions:
+                    -
+                      question: 'Describe your last project.'
+                      required: true
+                  is_active: true
+                  expires_at: '2026-12-31T00:00:00.000000Z'
+                  created_at: '2026-01-15T10:00:00.000000Z'
+                  updated_at: '2026-01-15T10:00:00.000000Z'
+                properties:
+                  _id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0d
+                  job_id:
+                    type: string
+                    example: JOB-0001
+                  employer_id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0e
+                  company_profile_id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0f
+                  company_name:
+                    type: string
+                    example: 'Acme Corp'
+                  company_logo:
+                    type: string
+                    example: 'https://example.com/logo.png'
+                  title:
+                    type: string
+                    example: 'Senior Laravel Developer'
+                  description:
+                    type: string
+                    example: 'We are looking for an experienced Laravel developer...'
+                  requirements:
+                    type: string
+                    example: '3+ years Laravel, MongoDB experience preferred.'
+                  roles:
+                    type: array
+                    example:
+                      - Backend
+                      - PHP
+                    items:
+                      type: string
+                  category:
+                    type: string
+                    example: Engineering
+                  tags:
+                    type: array
+                    example:
+                      - Laravel
+                      - MongoDB
+                      - PHP
+                    items:
+                      type: string
+                  job_type:
+                    type: string
+                    example: full_time
+                  work_mode:
+                    type: string
+                    example: on_site
+                  job_level:
+                    type: string
+                    example: senior
+                  education_level:
+                    type: string
+                    example: bachelor
+                  experience_years:
+                    type: integer
+                    example: 3
+                  languages:
+                    type: array
+                    example:
+                      - Arabic
+                      - English
+                    items:
+                      type: string
+                  vacancies:
+                    type: integer
+                    example: 2
+                  city:
+                    type: string
+                    example: Damascus
+                  address:
+                    type: string
+                    example: 'Mazzeh Street 12'
+                  salary_from:
+                    type: integer
+                    example: 500
+                  salary_to:
+                    type: integer
+                    example: 1000
+                  currency:
+                    type: string
+                    example: USD
+                  display_salary:
+                    type: boolean
+                    example: true
+                  incentives:
+                    type: string
+                    example: 'Monthly bonuses'
+                  gender:
+                    type: string
+                    example: no_preference
+                  age_from:
+                    type: string
+                    example: null
+                    nullable: true
+                  age_to:
+                    type: string
+                    example: null
+                    nullable: true
+                  portfolio_required:
+                    type: boolean
+                    example: false
+                  cover_letter_required:
+                    type: boolean
+                    example: true
+                  communication_method:
+                    type: string
+                    example: by_forsa
+                  communication_value:
+                    type: string
+                    example: null
+                    nullable: true
+                  questions:
+                    type: array
+                    example:
+                      -
+                        question: 'Describe your last project.'
+                        required: true
+                    items:
+                      type: object
+                      properties:
+                        question:
+                          type: string
+                          example: 'Describe your last project.'
+                        required:
+                          type: boolean
+                          example: true
+                  is_active:
+                    type: boolean
+                    example: true
+                  expires_at:
+                    type: string
+                    example: '2026-12-31T00:00:00.000000Z'
+                  created_at:
+                    type: string
+                    example: '2026-01-15T10:00:00.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2026-01-15T10:00:00.000000Z'
         404:
           description: ''
           content:
@@ -493,18 +957,6 @@ paths:
                   message:
                     type: string
                     example: 'Job post not found'
-        500:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Server Error'
-                properties:
-                  message:
-                    type: string
-                    example: 'Server Error'
       tags:
         - Endpoints
       security: []
@@ -1058,7 +1510,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: other
+                  example: male
                   enum:
                     - male
                     - female
@@ -1098,7 +1550,7 @@ paths:
                 marital_status:
                   type: string
                   description: ''
-                  example: prefer_not_to_say
+                  example: married
                   enum:
                     - single
                     - married
@@ -1119,7 +1571,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: employed
+                  example: student
                   enum:
                     - employed
                     - unemployed
@@ -1190,7 +1642,7 @@ paths:
                 is_actively_seeking:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 social_links:
                   type: object
                   description: 'Social Links (nested object).'
@@ -2384,7 +2836,57 @@ paths:
       summary: 'Search jobs'
       operationId: searchJobs
       description: 'Paginated search of active job posts for the authenticated job seeker.'
-      parameters: []
+      parameters:
+        -
+          in: query
+          name: keyword
+          description: 'Search in title, description, company name. Max 100 chars.'
+          example: React
+          required: false
+          schema:
+            type: string
+            description: 'Search in title, description, company name. Max 100 chars.'
+            example: React
+        -
+          in: query
+          name: location
+          description: 'Partial location match. Max 100 chars.'
+          example: Beirut
+          required: false
+          schema:
+            type: string
+            description: 'Partial location match. Max 100 chars.'
+            example: Beirut
+        -
+          in: query
+          name: job_type
+          description: 'One of: full_time, part_time, contract, freelance.'
+          example: full_time
+          required: false
+          schema:
+            type: string
+            description: 'One of: full_time, part_time, contract, freelance.'
+            example: full_time
+        -
+          in: query
+          name: category
+          description: ''
+          example: Engineering
+          required: false
+          schema:
+            type: string
+            description: ''
+            example: Engineering
+        -
+          in: query
+          name: min_salary
+          description: 'Minimum salary.'
+          example: 2000.0
+          required: false
+          schema:
+            type: number
+            description: 'Minimum salary.'
+            example: 2000.0
       responses:
         200:
           description: ''
@@ -2459,28 +2961,33 @@ paths:
               properties:
                 keyword:
                   type: string
-                  description: 'Search in title, description, company name. Max 100 chars.'
-                  example: React
+                  description: 'Must not be greater than 100 characters.'
+                  example: b
                   nullable: true
                 location:
                   type: string
-                  description: 'Partial location match. Max 100 chars.'
-                  example: Beirut
+                  description: 'Must not be greater than 100 characters.'
+                  example: 'n'
                   nullable: true
                 job_type:
                   type: string
-                  description: 'One of: full_time, part_time, contract, freelance.'
+                  description: ''
                   example: full_time
+                  enum:
+                    - full_time
+                    - part_time
+                    - contract
+                    - freelance
                   nullable: true
                 category:
                   type: string
-                  description: ''
-                  example: Engineering
+                  description: 'Must not be greater than 100 characters.'
+                  example: g
                   nullable: true
                 min_salary:
                   type: number
-                  description: 'Minimum salary.'
-                  example: 2000.0
+                  description: 'Must be at least 0.'
+                  example: 12
                   nullable: true
   /api/job-seeker/matched-jobs:
     get:
@@ -2937,11 +3444,11 @@ paths:
                   description: 'PDF/DOC/DOCX resume file, max 10 MB.'
               required:
                 - resume
-  /api/job-seeker/coach/chat:
-    post:
-      summary: 'Chat with AI resume coach'
-      operationId: chatWithAIResumeCoach
-      description: 'Ask the AI coach for career advice, job market insights, resume tips, and more.'
+  /api/job-seeker/coach/sessions:
+    get:
+      summary: 'List all chat sessions for the authenticated job seeker.'
+      operationId: listAllChatSessionsForTheAuthenticatedJobSeeker
+      description: ''
       parameters: []
       responses:
         200:
@@ -2951,11 +3458,205 @@ paths:
               schema:
                 type: object
                 example:
-                  response: 'To improve your resume, focus on quantifying your achievements...'
+                  data:
+                    -
+                      id: ...
+                      title: 'Resume tips'
+                      created_at: ...
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: ...
+                        title: 'Resume tips'
+                        created_at: ...
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: ...
+                        title:
+                          type: string
+                          example: 'Resume tips'
+                        created_at:
+                          type: string
+                          example: ...
+      tags:
+        - Endpoints
+    post:
+      summary: 'Create a new coach chat session.'
+      operationId: createANewCoachChatSession
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: ...
+                  title: 'Resume review session'
+                  created_at: ...
+                properties:
+                  id:
+                    type: string
+                    example: ...
+                  title:
+                    type: string
+                    example: 'Resume review session'
+                  created_at:
+                    type: string
+                    example: ...
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'optional Session title. Max 100 chars.'
+                  example: 'Resume review session'
+  '/api/job-seeker/coach/sessions/{sessionId}':
+    get:
+      summary: 'Get a session with its full message history.'
+      operationId: getASessionWithItsFullMessageHistory
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: ...
+                  title: 'Resume tips'
+                  messages:
+                    -
+                      role: user
+                      content: ...
+                      created_at: ...
+                properties:
+                  id:
+                    type: string
+                    example: ...
+                  title:
+                    type: string
+                    example: 'Resume tips'
+                  messages:
+                    type: array
+                    example:
+                      -
+                        role: user
+                        content: ...
+                        created_at: ...
+                    items:
+                      type: object
+                      properties:
+                        role:
+                          type: string
+                          example: user
+                        content:
+                          type: string
+                          example: ...
+                        created_at:
+                          type: string
+                          example: ...
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Session not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Session not found'
+      tags:
+        - Endpoints
+    delete:
+      summary: 'Delete a coach chat session and all its messages.'
+      operationId: deleteACoachChatSessionAndAllItsMessages
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Session deleted'
+                properties:
+                  message:
+                    type: string
+                    example: 'Session deleted'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Session not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Session not found'
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: sessionId
+        description: 'The session ID.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  '/api/job-seeker/coach/sessions/{sessionId}/chat':
+    post:
+      summary: 'Send a message in a coach chat session.'
+      operationId: sendAMessageInACoachChatSession
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  response: 'Here are some tips...'
                 properties:
                   response:
                     type: string
-                    example: 'To improve your resume, focus on quantifying your achievements...'
+                    example: 'Here are some tips...'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Session not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Session not found'
         422:
           description: ''
           content:
@@ -2999,10 +3700,19 @@ paths:
               properties:
                 message:
                   type: string
-                  description: 'Your question or message to the coach. Max 1000 chars.'
-                  example: 'Give me advice on improving my resume'
+                  description: 'Your message. Max 1000 chars.'
+                  example: 'How can I improve my resume?'
               required:
                 - message
+    parameters:
+      -
+        in: path
+        name: sessionId
+        description: 'The session ID.'
+        example: architecto
+        required: true
+        schema:
+          type: string
   /api/employer/apply:
     post:
       summary: 'Apply to become employer'
@@ -3122,25 +3832,92 @@ paths:
     get:
       summary: 'My job posts'
       operationId: myJobPosts
-      description: 'Returns all job posts by the authenticated employer, each with application count.'
+      description: 'Returns all job posts by the authenticated employer, each with an `application_count` field.'
       parameters: []
       responses:
-        401:
-          description: ''
+        200:
+          description: Success
           content:
             application/json:
               schema:
-                type: object
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      example: 664f1a2b3c4d5e6f7a8b9c0d
+                    job_id:
+                      type: string
+                      example: JOB-0001
+                    employer_id:
+                      type: string
+                      example: 664f1a2b3c4d5e6f7a8b9c0e
+                    company_name:
+                      type: string
+                      example: 'Acme Corp'
+                    company_logo:
+                      type: string
+                      example: 'https://example.com/logo.png'
+                    title:
+                      type: string
+                      example: 'Senior Laravel Developer'
+                    job_type:
+                      type: string
+                      example: full_time
+                    work_mode:
+                      type: string
+                      example: on_site
+                    city:
+                      type: string
+                      example: Damascus
+                    is_active:
+                      type: boolean
+                      example: true
+                    vacancies:
+                      type: integer
+                      example: 2
+                    salary_from:
+                      type: integer
+                      example: 500
+                    salary_to:
+                      type: integer
+                      example: 1000
+                    currency:
+                      type: string
+                      example: USD
+                    expires_at:
+                      type: string
+                      example: '2026-12-31T00:00:00.000000Z'
+                    created_at:
+                      type: string
+                      example: '2026-01-15T10:00:00.000000Z'
+                    updated_at:
+                      type: string
+                      example: '2026-01-15T10:00:00.000000Z'
+                    application_count:
+                      type: integer
+                      example: 7
                 example:
-                  error: Unauthorized
-                  message: 'Invalid authentication token signature'
-                properties:
-                  error:
-                    type: string
-                    example: Unauthorized
-                  message:
-                    type: string
-                    example: 'Invalid authentication token signature'
+                  -
+                    _id: 664f1a2b3c4d5e6f7a8b9c0d
+                    job_id: JOB-0001
+                    employer_id: 664f1a2b3c4d5e6f7a8b9c0e
+                    company_name: 'Acme Corp'
+                    company_logo: 'https://example.com/logo.png'
+                    title: 'Senior Laravel Developer'
+                    job_type: full_time
+                    work_mode: on_site
+                    city: Damascus
+                    is_active: true
+                    vacancies: 2
+                    salary_from: 500
+                    salary_to: 1000
+                    currency: USD
+                    expires_at: '2026-12-31T00:00:00.000000Z'
+                    created_at: '2026-01-15T10:00:00.000000Z'
+                    updated_at: '2026-01-15T10:00:00.000000Z'
+                    application_count: 7
       tags:
         - Endpoints
     post:
@@ -3155,8 +3932,48 @@ paths:
             application/json:
               schema:
                 type: object
-                example: {  }
-                properties: {  }
+                example:
+                  _id: 664f1a2b3c4d5e6f7a8b9c0d
+                  job_id: JOB-0001
+                  employer_id: 664f1a2b3c4d5e6f7a8b9c0e
+                  company_profile_id: 664f1a2b3c4d5e6f7a8b9c0f
+                  company_name: 'Acme Corp'
+                  company_logo: 'https://example.com/logo.png'
+                  title: 'Senior Laravel Developer'
+                  is_active: true
+                  created_at: '2026-01-15T10:00:00.000000Z'
+                  updated_at: '2026-01-15T10:00:00.000000Z'
+                properties:
+                  _id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0d
+                  job_id:
+                    type: string
+                    example: JOB-0001
+                  employer_id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0e
+                  company_profile_id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0f
+                  company_name:
+                    type: string
+                    example: 'Acme Corp'
+                  company_logo:
+                    type: string
+                    example: 'https://example.com/logo.png'
+                  title:
+                    type: string
+                    example: 'Senior Laravel Developer'
+                  is_active:
+                    type: boolean
+                    example: true
+                  created_at:
+                    type: string
+                    example: '2026-01-15T10:00:00.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2026-01-15T10:00:00.000000Z'
         404:
           description: ''
           content:
@@ -3343,6 +4160,34 @@ paths:
       description: "Updates an existing job post. `company_name` and `company_logo` are read-only\nand always sourced from the employer's company profile."
       parameters: []
       responses:
+        200:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  _id: 664f1a2b3c4d5e6f7a8b9c0d
+                  job_id: JOB-0001
+                  title: 'Updated Job Title'
+                  is_active: true
+                  updated_at: '2026-06-01T12:00:00.000000Z'
+                properties:
+                  _id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0d
+                  job_id:
+                    type: string
+                    example: JOB-0001
+                  title:
+                    type: string
+                    example: 'Updated Job Title'
+                  is_active:
+                    type: boolean
+                    example: true
+                  updated_at:
+                    type: string
+                    example: '2026-06-01T12:00:00.000000Z'
         403:
           description: ''
           content:
@@ -3488,25 +4333,174 @@ paths:
     get:
       summary: 'Get my company profile (owner view)'
       operationId: getMyCompanyProfileownerView
-      description: 'Returns the full profile including private info, for the authenticated employer.'
+      description: "Returns the full company profile for the authenticated employer, including\nprivate fields (`private_info`, `logo`, `cover_image`, rating data, etc.)\nthat are not exposed on the public company endpoint."
       parameters: []
       responses:
-        401:
-          description: ''
+        200:
+          description: Success
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  error: Unauthorized
-                  message: 'Invalid authentication token signature'
+                  _id: 664f1a2b3c4d5e6f7a8b9c0d
+                  employer_id: 664f1a2b3c4d5e6f7a8b9c0e
+                  name: 'Acme Corp'
+                  slug: acme-corp
+                  logo: 'https://example.com/logo.png'
+                  cover_image: 'https://example.com/cover.png'
+                  description: 'We build software.'
+                  industry: 'Information Technology'
+                  company_size: 10_to_50
+                  city: Damascus
+                  country: Syria
+                  phone: '0911000000'
+                  phone_visible: true
+                  email: contact@acme.com
+                  private_info:
+                    expose_to_applicants: false
+                    address: 'Mazzeh Street 12'
+                    industries:
+                      - Software
+                      - Consulting
+                    company_size: 10_to_50
+                    founded_year: 2015
+                    phone_main: '0911000000'
+                    phone_extra: null
+                    website: 'https://acme.com'
+                    social_media:
+                      linkedin: 'https://linkedin.com/company/acme'
+                      github: null
+                      twitter: null
+                      facebook: null
+                      instagram: null
+                      telegram: null
+                      behance: null
+                  rating: 4.2
+                  review_count: 10
+                  would_recommend: 85
+                  ceo_performance: 78
+                  open_positions: 3
                 properties:
-                  error:
+                  _id:
                     type: string
-                    example: Unauthorized
-                  message:
+                    example: 664f1a2b3c4d5e6f7a8b9c0d
+                  employer_id:
                     type: string
-                    example: 'Invalid authentication token signature'
+                    example: 664f1a2b3c4d5e6f7a8b9c0e
+                  name:
+                    type: string
+                    example: 'Acme Corp'
+                  slug:
+                    type: string
+                    example: acme-corp
+                  logo:
+                    type: string
+                    example: 'https://example.com/logo.png'
+                  cover_image:
+                    type: string
+                    example: 'https://example.com/cover.png'
+                  description:
+                    type: string
+                    example: 'We build software.'
+                  industry:
+                    type: string
+                    example: 'Information Technology'
+                  company_size:
+                    type: string
+                    example: 10_to_50
+                  city:
+                    type: string
+                    example: Damascus
+                  country:
+                    type: string
+                    example: Syria
+                  phone:
+                    type: string
+                    example: '0911000000'
+                  phone_visible:
+                    type: boolean
+                    example: true
+                  email:
+                    type: string
+                    example: contact@acme.com
+                  private_info:
+                    type: object
+                    properties:
+                      expose_to_applicants:
+                        type: boolean
+                        example: false
+                      address:
+                        type: string
+                        example: 'Mazzeh Street 12'
+                      industries:
+                        type: array
+                        example:
+                          - Software
+                          - Consulting
+                        items:
+                          type: string
+                      company_size:
+                        type: string
+                        example: 10_to_50
+                      founded_year:
+                        type: integer
+                        example: 2015
+                      phone_main:
+                        type: string
+                        example: '0911000000'
+                      phone_extra:
+                        type: string
+                        example: null
+                        nullable: true
+                      website:
+                        type: string
+                        example: 'https://acme.com'
+                      social_media:
+                        type: object
+                        properties:
+                          linkedin:
+                            type: string
+                            example: 'https://linkedin.com/company/acme'
+                          github:
+                            type: string
+                            example: null
+                            nullable: true
+                          twitter:
+                            type: string
+                            example: null
+                            nullable: true
+                          facebook:
+                            type: string
+                            example: null
+                            nullable: true
+                          instagram:
+                            type: string
+                            example: null
+                            nullable: true
+                          telegram:
+                            type: string
+                            example: null
+                            nullable: true
+                          behance:
+                            type: string
+                            example: null
+                            nullable: true
+                  rating:
+                    type: number
+                    example: 4.2
+                  review_count:
+                    type: integer
+                    example: 10
+                  would_recommend:
+                    type: integer
+                    example: 85
+                  ceo_performance:
+                    type: integer
+                    example: 78
+                  open_positions:
+                    type: integer
+                    example: 3
         404:
           description: ''
           content:

@@ -114,8 +114,50 @@ class CompanyProfileController extends Controller
     /**
      * Get my company profile (owner view)
      *
-     * Returns the full profile including private info, for the authenticated employer.
+     * Returns the full company profile for the authenticated employer, including
+     * private fields (`private_info`, `logo`, `cover_image`, rating data, etc.)
+     * that are not exposed on the public company endpoint.
      *
+     * @response 200 scenario="Success" {
+     *   "_id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *   "employer_id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *   "name": "Acme Corp",
+     *   "slug": "acme-corp",
+     *   "logo": "https://example.com/logo.png",
+     *   "cover_image": "https://example.com/cover.png",
+     *   "description": "We build software.",
+     *   "industry": "Information Technology",
+     *   "company_size": "10_to_50",
+     *   "city": "Damascus",
+     *   "country": "Syria",
+     *   "phone": "0911000000",
+     *   "phone_visible": true,
+     *   "email": "contact@acme.com",
+     *   "private_info": {
+     *     "expose_to_applicants": false,
+     *     "address": "Mazzeh Street 12",
+     *     "industries": ["Software", "Consulting"],
+     *     "company_size": "10_to_50",
+     *     "founded_year": 2015,
+     *     "phone_main": "0911000000",
+     *     "phone_extra": null,
+     *     "website": "https://acme.com",
+     *     "social_media": {
+     *       "linkedin": "https://linkedin.com/company/acme",
+     *       "github": null,
+     *       "twitter": null,
+     *       "facebook": null,
+     *       "instagram": null,
+     *       "telegram": null,
+     *       "behance": null
+     *     }
+     *   },
+     *   "rating": 4.2,
+     *   "review_count": 10,
+     *   "would_recommend": 85,
+     *   "ceo_performance": 78,
+     *   "open_positions": 3
+     * }
      * @response 404 { "message": "No company profile found. Create one first." }
      */
     public function myProfile()

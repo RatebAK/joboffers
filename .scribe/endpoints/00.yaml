@@ -504,16 +504,60 @@ endpoints:
     responses:
       -
         custom: []
-        status: 500
+        status: 200
         content: |-
           {
-              "message": "Server Error"
+            "data": [
+              {
+                "_id": "664f1a2b3c4d5e6f7a8b9c0d",
+                "job_id": "JOB-0001",
+                "employer_id": "664f1a2b3c4d5e6f7a8b9c0e",
+                "company_profile_id": "664f1a2b3c4d5e6f7a8b9c0f",
+                "company_name": "Acme Corp",
+                "company_logo": "https://example.com/logo.png",
+                "title": "Senior Laravel Developer",
+                "description": "We are looking for...",
+                "requirements": "3+ years Laravel experience.",
+                "roles": ["Backend", "PHP"],
+                "category": "Engineering",
+                "tags": ["Laravel", "MongoDB"],
+                "job_type": "full_time",
+                "work_mode": "on_site",
+                "job_level": "senior",
+                "education_level": "bachelor",
+                "experience_years": 3,
+                "languages": ["Arabic", "English"],
+                "vacancies": 2,
+                "city": "Damascus",
+                "address": "Mazzeh Street 12",
+                "salary_from": 500,
+                "salary_to": 1000,
+                "currency": "USD",
+                "display_salary": true,
+                "incentives": "Monthly bonuses",
+                "gender": "no_preference",
+                "age_from": null,
+                "age_to": null,
+                "portfolio_required": false,
+                "cover_letter_required": true,
+                "communication_method": "by_forsa",
+                "communication_value": null,
+                "questions": [{ "question": "Describe your last project.", "required": true }],
+                "is_active": true,
+                "expires_at": "2026-12-31T00:00:00.000000Z",
+                "created_at": "2026-01-15T10:00:00.000000Z",
+                "updated_at": "2026-01-15T10:00:00.000000Z"
+              }
+            ],
+            "current_page": 1,
+            "per_page": 15,
+            "total": 1,
+            "total_pages": 1,
+            "next_page": null,
+            "prev_page": null
           }
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        headers: []
+        description: ''
     responseFields: []
     auth: []
     controller: null
@@ -562,22 +606,58 @@ endpoints:
     responses:
       -
         custom: []
+        status: 200
+        content: |-
+          {
+            "_id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "job_id": "JOB-0001",
+            "employer_id": "664f1a2b3c4d5e6f7a8b9c0e",
+            "company_profile_id": "664f1a2b3c4d5e6f7a8b9c0f",
+            "company_name": "Acme Corp",
+            "company_logo": "https://example.com/logo.png",
+            "title": "Senior Laravel Developer",
+            "description": "We are looking for an experienced Laravel developer...",
+            "requirements": "3+ years Laravel, MongoDB experience preferred.",
+            "roles": ["Backend", "PHP"],
+            "category": "Engineering",
+            "tags": ["Laravel", "MongoDB", "PHP"],
+            "job_type": "full_time",
+            "work_mode": "on_site",
+            "job_level": "senior",
+            "education_level": "bachelor",
+            "experience_years": 3,
+            "languages": ["Arabic", "English"],
+            "vacancies": 2,
+            "city": "Damascus",
+            "address": "Mazzeh Street 12",
+            "salary_from": 500,
+            "salary_to": 1000,
+            "currency": "USD",
+            "display_salary": true,
+            "incentives": "Monthly bonuses",
+            "gender": "no_preference",
+            "age_from": null,
+            "age_to": null,
+            "portfolio_required": false,
+            "cover_letter_required": true,
+            "communication_method": "by_forsa",
+            "communication_value": null,
+            "questions": [
+              { "question": "Describe your last project.", "required": true }
+            ],
+            "is_active": true,
+            "expires_at": "2026-12-31T00:00:00.000000Z",
+            "created_at": "2026-01-15T10:00:00.000000Z",
+            "updated_at": "2026-01-15T10:00:00.000000Z"
+          }
+        headers: []
+        description: Success
+      -
+        custom: []
         status: 404
         content: '{ "message": "Job post not found" }'
         headers: []
         description: ''
-      -
-        custom: []
-        status: 500
-        content: |-
-          {
-              "message": "Server Error"
-          }
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
     responseFields: []
     auth: []
     controller: null
@@ -2178,7 +2258,7 @@ endpoints:
         name: gender
         description: ''
         required: false
-        example: other
+        example: male
         type: string
         enumValues:
           - male
@@ -2259,7 +2339,7 @@ endpoints:
         name: marital_status
         description: ''
         required: false
-        example: prefer_not_to_say
+        example: married
         type: string
         enumValues:
           - single
@@ -2297,7 +2377,7 @@ endpoints:
         name: current_job_status
         description: ''
         required: false
-        example: employed
+        example: student
         type: string
         enumValues:
           - employed
@@ -2423,7 +2503,7 @@ endpoints:
         name: is_actively_seeking
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -2725,17 +2805,17 @@ endpoints:
       last_name: 'n'
       full_name: g
       image: z
-      gender: other
+      gender: male
       nationality: m
       city: i
       location: 'y'
       address: v
       phone: dljnikhwaykcmyuw
       date_of_birth: pwlvqwrsitcpscql
-      marital_status: prefer_not_to_say
+      marital_status: married
       salary_range_from: 16
       salary_range_to: 38
-      current_job_status: employed
+      current_job_status: student
       years_of_experience: 8
       education_level: 'n'
       job_level: director
@@ -2748,7 +2828,7 @@ endpoints:
       current_job_title: u
       experience_summary: architecto
       expected_salary: 39
-      is_actively_seeking: false
+      is_actively_seeking: true
       social_links:
         linkedin: g
         github: z
@@ -3265,9 +3345,7 @@ endpoints:
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
+    queryParameters:
       keyword:
         custom: []
         name: keyword
@@ -3277,7 +3355,7 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: true
-        nullable: true
+        nullable: false
         deprecated: false
       location:
         custom: []
@@ -3288,7 +3366,7 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: true
-        nullable: true
+        nullable: false
         deprecated: false
       job_type:
         custom: []
@@ -3299,7 +3377,7 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: true
-        nullable: true
+        nullable: false
         deprecated: false
       category:
         custom: []
@@ -3310,7 +3388,7 @@ endpoints:
         type: string
         enumValues: []
         exampleWasSpecified: true
-        nullable: true
+        nullable: false
         deprecated: false
       min_salary:
         custom: []
@@ -3321,14 +3399,80 @@ endpoints:
         type: number
         enumValues: []
         exampleWasSpecified: true
-        nullable: true
+        nullable: false
         deprecated: false
-    cleanBodyParameters:
+    cleanQueryParameters:
       keyword: React
       location: Beirut
       job_type: full_time
       category: Engineering
       min_salary: 2000.0
+    bodyParameters:
+      keyword:
+        custom: []
+        name: keyword
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      location:
+        custom: []
+        name: location
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      job_type:
+        custom: []
+        name: job_type
+        description: ''
+        required: false
+        example: full_time
+        type: string
+        enumValues:
+          - full_time
+          - part_time
+          - contract
+          - freelance
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      category:
+        custom: []
+        name: category
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: g
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      min_salary:
+        custom: []
+        name: min_salary
+        description: 'Must be at least 0.'
+        required: false
+        example: 12
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      keyword: b
+      location: 'n'
+      job_type: full_time
+      category: g
+      min_salary: 12
     fileParameters: []
     responses:
       -
@@ -3750,16 +3894,60 @@ endpoints:
   -
     custom: []
     httpMethods:
-      - POST
-    uri: api/job-seeker/coach/chat
+      - GET
+    uri: api/job-seeker/coach/sessions
     metadata:
       custom: []
       groupName: Endpoints
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Chat with AI resume coach'
-      description: 'Ask the AI coach for career advice, job market insights, resume tips, and more.'
+      title: 'List all chat sessions for the authenticated job seeker.'
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "data": [{ "id": "...", "title": "Resume tips", "created_at": "..." }]
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/job-seeker/coach/sessions
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Create a new coach chat session.'
+      description: ''
       authenticated: true
       deprecated: false
     headers:
@@ -3771,19 +3959,72 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      message:
+      title:
         custom: []
-        name: message
-        description: 'Your question or message to the coach. Max 1000 chars.'
-        required: true
-        example: 'Give me advice on improving my resume'
+        name: title
+        description: 'optional Session title. Max 100 chars.'
+        required: false
+        example: 'Resume review session'
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      message: 'Give me advice on improving my resume'
+      title: 'Resume review session'
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: '{ "id": "...", "title": "Resume review session", "created_at": "..." }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/job-seeker/coach/sessions/{sessionId}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get a session with its full message history.'
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      sessionId:
+        custom: []
+        name: sessionId
+        description: 'The session ID.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      sessionId: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
     responses:
       -
@@ -3791,8 +4032,146 @@ endpoints:
         status: 200
         content: |-
           {
-            "response": "To improve your resume, focus on quantifying your achievements..."
+            "id": "...",
+            "title": "Resume tips",
+            "messages": [{ "role": "user", "content": "...", "created_at": "..." }]
           }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Session not found" }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/job-seeker/coach/sessions/{sessionId}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete a coach chat session and all its messages.'
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      sessionId:
+        custom: []
+        name: sessionId
+        description: 'The session ID.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      sessionId: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{ "message": "Session deleted" }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Session not found" }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/job-seeker/coach/sessions/{sessionId}/chat'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Send a message in a coach chat session.'
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      sessionId:
+        custom: []
+        name: sessionId
+        description: 'The session ID.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      sessionId: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      message:
+        custom: []
+        name: message
+        description: 'Your message. Max 1000 chars.'
+        required: true
+        example: 'How can I improve my resume?'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      message: 'How can I improve my resume?'
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{ "response": "Here are some tips..." }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Session not found" }'
         headers: []
         description: ''
       -
@@ -3945,7 +4324,7 @@ endpoints:
       subgroup: ''
       subgroupDescription: ''
       title: 'My job posts'
-      description: 'Returns all job posts by the authenticated employer, each with application count.'
+      description: 'Returns all job posts by the authenticated employer, each with an `application_count` field.'
       authenticated: true
       deprecated: false
     headers:
@@ -3962,13 +4341,32 @@ endpoints:
     responses:
       -
         custom: []
-        status: 401
-        content: '{"error":"Unauthorized","message":"Invalid authentication token signature"}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        status: 200
+        content: |-
+          [
+            {
+              "_id": "664f1a2b3c4d5e6f7a8b9c0d",
+              "job_id": "JOB-0001",
+              "employer_id": "664f1a2b3c4d5e6f7a8b9c0e",
+              "company_name": "Acme Corp",
+              "company_logo": "https://example.com/logo.png",
+              "title": "Senior Laravel Developer",
+              "job_type": "full_time",
+              "work_mode": "on_site",
+              "city": "Damascus",
+              "is_active": true,
+              "vacancies": 2,
+              "salary_from": 500,
+              "salary_to": 1000,
+              "currency": "USD",
+              "expires_at": "2026-12-31T00:00:00.000000Z",
+              "created_at": "2026-01-15T10:00:00.000000Z",
+              "updated_at": "2026-01-15T10:00:00.000000Z",
+              "application_count": 7
+            }
+          ]
+        headers: []
+        description: Success
     responseFields: []
     auth:
       - headers
@@ -4397,7 +4795,19 @@ endpoints:
       -
         custom: []
         status: 201
-        content: '{}'
+        content: |-
+          {
+            "_id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "job_id": "JOB-0001",
+            "employer_id": "664f1a2b3c4d5e6f7a8b9c0e",
+            "company_profile_id": "664f1a2b3c4d5e6f7a8b9c0f",
+            "company_name": "Acme Corp",
+            "company_logo": "https://example.com/logo.png",
+            "title": "Senior Laravel Developer",
+            "is_active": true,
+            "created_at": "2026-01-15T10:00:00.000000Z",
+            "updated_at": "2026-01-15T10:00:00.000000Z"
+          }
         headers: []
         description: Created
       -
@@ -4461,6 +4871,19 @@ endpoints:
     cleanBodyParameters: []
     fileParameters: []
     responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "_id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "job_id": "JOB-0001",
+            "title": "Updated Job Title",
+            "is_active": true,
+            "updated_at": "2026-06-01T12:00:00.000000Z"
+          }
+        headers: []
+        description: Updated
       -
         custom: []
         status: 403
@@ -4629,7 +5052,10 @@ endpoints:
       subgroup: ''
       subgroupDescription: ''
       title: 'Get my company profile (owner view)'
-      description: 'Returns the full profile including private info, for the authenticated employer.'
+      description: |-
+        Returns the full company profile for the authenticated employer, including
+        private fields (`private_info`, `logo`, `cover_image`, rating data, etc.)
+        that are not exposed on the public company endpoint.
       authenticated: true
       deprecated: false
     headers:
@@ -4646,13 +5072,50 @@ endpoints:
     responses:
       -
         custom: []
-        status: 401
-        content: '{"error":"Unauthorized","message":"Invalid authentication token signature"}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        status: 200
+        content: |-
+          {
+            "_id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "employer_id": "664f1a2b3c4d5e6f7a8b9c0e",
+            "name": "Acme Corp",
+            "slug": "acme-corp",
+            "logo": "https://example.com/logo.png",
+            "cover_image": "https://example.com/cover.png",
+            "description": "We build software.",
+            "industry": "Information Technology",
+            "company_size": "10_to_50",
+            "city": "Damascus",
+            "country": "Syria",
+            "phone": "0911000000",
+            "phone_visible": true,
+            "email": "contact@acme.com",
+            "private_info": {
+              "expose_to_applicants": false,
+              "address": "Mazzeh Street 12",
+              "industries": ["Software", "Consulting"],
+              "company_size": "10_to_50",
+              "founded_year": 2015,
+              "phone_main": "0911000000",
+              "phone_extra": null,
+              "website": "https://acme.com",
+              "social_media": {
+                "linkedin": "https://linkedin.com/company/acme",
+                "github": null,
+                "twitter": null,
+                "facebook": null,
+                "instagram": null,
+                "telegram": null,
+                "behance": null
+              }
+            },
+            "rating": 4.2,
+            "review_count": 10,
+            "would_recommend": 85,
+            "ceo_performance": 78,
+            "open_positions": 3
+          }
+        headers: []
+        description: Success
       -
         custom: []
         status: 404

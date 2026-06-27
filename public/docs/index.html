@@ -173,8 +173,20 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-job-seeker-match-resume-to-jobs">
                                 <a href="#endpoints-POSTapi-job-seeker-match-resume-to-jobs">Match resume to available jobs</a>
                             </li>
-                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-job-seeker-coach-chat">
-                                <a href="#endpoints-POSTapi-job-seeker-coach-chat">Chat with AI resume coach</a>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-job-seeker-coach-sessions">
+                                <a href="#endpoints-GETapi-job-seeker-coach-sessions">List all chat sessions for the authenticated job seeker.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-job-seeker-coach-sessions">
+                                <a href="#endpoints-POSTapi-job-seeker-coach-sessions">Create a new coach chat session.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-job-seeker-coach-sessions--sessionId-">
+                                <a href="#endpoints-GETapi-job-seeker-coach-sessions--sessionId-">Get a session with its full message history.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-DELETEapi-job-seeker-coach-sessions--sessionId-">
+                                <a href="#endpoints-DELETEapi-job-seeker-coach-sessions--sessionId-">Delete a coach chat session and all its messages.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-job-seeker-coach-sessions--sessionId--chat">
+                                <a href="#endpoints-POSTapi-job-seeker-coach-sessions--sessionId--chat">Send a message in a coach chat session.</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-employer-apply">
                                 <a href="#endpoints-POSTapi-employer-apply">Apply to become employer</a>
@@ -274,7 +286,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: June 24, 2026</li>
+        <li>Last updated: June 27, 2026</li>
     </ul>
 </div>
 
@@ -1167,19 +1179,73 @@ fetch(url, {
 
 <span id="example-responses-GETapi-jobs">
             <blockquote>
-            <p>Example response (500):</p>
+            <p>Example response (200):</p>
         </blockquote>
-                <details class="annotation">
-            <summary style="cursor: pointer;">
-                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
-            </summary>
-            <pre><code class="language-http">cache-control: no-cache, private
-content-type: application/json
-access-control-allow-origin: *
- </code></pre></details>         <pre>
+                <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Server Error&quot;
+    &quot;data&quot;: [
+        {
+            &quot;_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
+            &quot;job_id&quot;: &quot;JOB-0001&quot;,
+            &quot;employer_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0e&quot;,
+            &quot;company_profile_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0f&quot;,
+            &quot;company_name&quot;: &quot;Acme Corp&quot;,
+            &quot;company_logo&quot;: &quot;https://example.com/logo.png&quot;,
+            &quot;title&quot;: &quot;Senior Laravel Developer&quot;,
+            &quot;description&quot;: &quot;We are looking for...&quot;,
+            &quot;requirements&quot;: &quot;3+ years Laravel experience.&quot;,
+            &quot;roles&quot;: [
+                &quot;Backend&quot;,
+                &quot;PHP&quot;
+            ],
+            &quot;category&quot;: &quot;Engineering&quot;,
+            &quot;tags&quot;: [
+                &quot;Laravel&quot;,
+                &quot;MongoDB&quot;
+            ],
+            &quot;job_type&quot;: &quot;full_time&quot;,
+            &quot;work_mode&quot;: &quot;on_site&quot;,
+            &quot;job_level&quot;: &quot;senior&quot;,
+            &quot;education_level&quot;: &quot;bachelor&quot;,
+            &quot;experience_years&quot;: 3,
+            &quot;languages&quot;: [
+                &quot;Arabic&quot;,
+                &quot;English&quot;
+            ],
+            &quot;vacancies&quot;: 2,
+            &quot;city&quot;: &quot;Damascus&quot;,
+            &quot;address&quot;: &quot;Mazzeh Street 12&quot;,
+            &quot;salary_from&quot;: 500,
+            &quot;salary_to&quot;: 1000,
+            &quot;currency&quot;: &quot;USD&quot;,
+            &quot;display_salary&quot;: true,
+            &quot;incentives&quot;: &quot;Monthly bonuses&quot;,
+            &quot;gender&quot;: &quot;no_preference&quot;,
+            &quot;age_from&quot;: null,
+            &quot;age_to&quot;: null,
+            &quot;portfolio_required&quot;: false,
+            &quot;cover_letter_required&quot;: true,
+            &quot;communication_method&quot;: &quot;by_forsa&quot;,
+            &quot;communication_value&quot;: null,
+            &quot;questions&quot;: [
+                {
+                    &quot;question&quot;: &quot;Describe your last project.&quot;,
+                    &quot;required&quot;: true
+                }
+            ],
+            &quot;is_active&quot;: true,
+            &quot;expires_at&quot;: &quot;2026-12-31T00:00:00.000000Z&quot;,
+            &quot;created_at&quot;: &quot;2026-01-15T10:00:00.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2026-01-15T10:00:00.000000Z&quot;
+        }
+    ],
+    &quot;current_page&quot;: 1,
+    &quot;per_page&quot;: 15,
+    &quot;total&quot;: 1,
+    &quot;total_pages&quot;: 1,
+    &quot;next_page&quot;: null,
+    &quot;prev_page&quot;: null
 }</code>
  </pre>
     </span>
@@ -1453,28 +1519,73 @@ fetch(url, {
 
 <span id="example-responses-GETapi-jobs--id-">
             <blockquote>
+            <p>Example response (200, Success):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
+    &quot;job_id&quot;: &quot;JOB-0001&quot;,
+    &quot;employer_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0e&quot;,
+    &quot;company_profile_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0f&quot;,
+    &quot;company_name&quot;: &quot;Acme Corp&quot;,
+    &quot;company_logo&quot;: &quot;https://example.com/logo.png&quot;,
+    &quot;title&quot;: &quot;Senior Laravel Developer&quot;,
+    &quot;description&quot;: &quot;We are looking for an experienced Laravel developer...&quot;,
+    &quot;requirements&quot;: &quot;3+ years Laravel, MongoDB experience preferred.&quot;,
+    &quot;roles&quot;: [
+        &quot;Backend&quot;,
+        &quot;PHP&quot;
+    ],
+    &quot;category&quot;: &quot;Engineering&quot;,
+    &quot;tags&quot;: [
+        &quot;Laravel&quot;,
+        &quot;MongoDB&quot;,
+        &quot;PHP&quot;
+    ],
+    &quot;job_type&quot;: &quot;full_time&quot;,
+    &quot;work_mode&quot;: &quot;on_site&quot;,
+    &quot;job_level&quot;: &quot;senior&quot;,
+    &quot;education_level&quot;: &quot;bachelor&quot;,
+    &quot;experience_years&quot;: 3,
+    &quot;languages&quot;: [
+        &quot;Arabic&quot;,
+        &quot;English&quot;
+    ],
+    &quot;vacancies&quot;: 2,
+    &quot;city&quot;: &quot;Damascus&quot;,
+    &quot;address&quot;: &quot;Mazzeh Street 12&quot;,
+    &quot;salary_from&quot;: 500,
+    &quot;salary_to&quot;: 1000,
+    &quot;currency&quot;: &quot;USD&quot;,
+    &quot;display_salary&quot;: true,
+    &quot;incentives&quot;: &quot;Monthly bonuses&quot;,
+    &quot;gender&quot;: &quot;no_preference&quot;,
+    &quot;age_from&quot;: null,
+    &quot;age_to&quot;: null,
+    &quot;portfolio_required&quot;: false,
+    &quot;cover_letter_required&quot;: true,
+    &quot;communication_method&quot;: &quot;by_forsa&quot;,
+    &quot;communication_value&quot;: null,
+    &quot;questions&quot;: [
+        {
+            &quot;question&quot;: &quot;Describe your last project.&quot;,
+            &quot;required&quot;: true
+        }
+    ],
+    &quot;is_active&quot;: true,
+    &quot;expires_at&quot;: &quot;2026-12-31T00:00:00.000000Z&quot;,
+    &quot;created_at&quot;: &quot;2026-01-15T10:00:00.000000Z&quot;,
+    &quot;updated_at&quot;: &quot;2026-01-15T10:00:00.000000Z&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;message&quot;: &quot;Job post not found&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (500):</p>
-        </blockquote>
-                <details class="annotation">
-            <summary style="cursor: pointer;">
-                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
-            </summary>
-            <pre><code class="language-http">cache-control: no-cache, private
-content-type: application/json
-access-control-allow-origin: *
- </code></pre></details>         <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Server Error&quot;
 }</code>
  </pre>
     </span>
@@ -4662,17 +4773,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "last_name=n"\
     --form "full_name=g"\
     --form "image=z"\
-    --form "gender=other"\
+    --form "gender=male"\
     --form "nationality=m"\
     --form "city=i"\
     --form "location=y"\
     --form "address=v"\
     --form "phone=dljnikhwaykcmyuw"\
     --form "date_of_birth=pwlvqwrsitcpscql"\
-    --form "marital_status=prefer_not_to_say"\
+    --form "marital_status=married"\
     --form "salary_range_from=16"\
     --form "salary_range_to=38"\
-    --form "current_job_status=employed"\
+    --form "current_job_status=student"\
     --form "years_of_experience=8"\
     --form "education_level=n"\
     --form "job_level=director"\
@@ -4682,7 +4793,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "current_job_title=u"\
     --form "experience_summary=architecto"\
     --form "expected_salary=39"\
-    --form "is_actively_seeking="\
+    --form "is_actively_seeking=1"\
     --form "social_links[linkedin]=g"\
     --form "social_links[github]=z"\
     --form "social_links[portfolio]=m"\
@@ -4704,7 +4815,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "work_experience[][to_date]=tnnoqitpxntltcvi"\
     --form "work_experience[][is_currently_working]=1"\
     --form "work_experience[][description]=Eius et animi quos velit et."\
-    --form "resume=@/tmp/phpaXNGfz" </code></pre></div>
+    --form "resume=@/tmp/phpk2z2RF" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -4723,17 +4834,17 @@ body.append('first_name', 'b');
 body.append('last_name', 'n');
 body.append('full_name', 'g');
 body.append('image', 'z');
-body.append('gender', 'other');
+body.append('gender', 'male');
 body.append('nationality', 'm');
 body.append('city', 'i');
 body.append('location', 'y');
 body.append('address', 'v');
 body.append('phone', 'dljnikhwaykcmyuw');
 body.append('date_of_birth', 'pwlvqwrsitcpscql');
-body.append('marital_status', 'prefer_not_to_say');
+body.append('marital_status', 'married');
 body.append('salary_range_from', '16');
 body.append('salary_range_to', '38');
-body.append('current_job_status', 'employed');
+body.append('current_job_status', 'student');
 body.append('years_of_experience', '8');
 body.append('education_level', 'n');
 body.append('job_level', 'director');
@@ -4743,7 +4854,7 @@ body.append('work_cities[]', 't');
 body.append('current_job_title', 'u');
 body.append('experience_summary', 'architecto');
 body.append('expected_salary', '39');
-body.append('is_actively_seeking', '');
+body.append('is_actively_seeking', '1');
 body.append('social_links[linkedin]', 'g');
 body.append('social_links[github]', 'z');
 body.append('social_links[portfolio]', 'm');
@@ -4916,10 +5027,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="gender"                data-endpoint="PUTapi-job-seeker-profile"
-               value="other"
+               value="male"
                data-component="body">
     <br>
-<p>Example: <code>other</code></p>
+<p>Example: <code>male</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>male</code></li> <li><code>female</code></li> <li><code>other</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5002,10 +5113,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="marital_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="prefer_not_to_say"
+               value="married"
                data-component="body">
     <br>
-<p>Example: <code>prefer_not_to_say</code></p>
+<p>Example: <code>married</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>single</code></li> <li><code>married</code></li> <li><code>divorced</code></li> <li><code>widowed</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5040,10 +5151,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="current_job_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="employed"
+               value="student"
                data-component="body">
     <br>
-<p>Example: <code>employed</code></p>
+<p>Example: <code>student</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>employed</code></li> <li><code>unemployed</code></li> <li><code>freelancing</code></li> <li><code>student</code></li> <li><code>open_to_work</code></li></ul>
         </div>
@@ -5183,7 +5294,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
         <details>
@@ -5509,7 +5620,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>/tmp/phpaXNGfz</code></p>
+<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>/tmp/phpk2z2RF</code></p>
         </div>
         </form>
 
@@ -5531,7 +5642,7 @@ Must be one of:
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@/tmp/phpf41iLz" </code></pre></div>
+    --form "resume=@/tmp/phpxCpZzZ" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -5675,7 +5786,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 5 MB. Example: <code>/tmp/phpf41iLz</code></p>
+<p>PDF/DOC/DOCX file, max 5 MB. Example: <code>/tmp/phpxCpZzZ</code></p>
         </div>
         </form>
 
@@ -5697,7 +5808,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cv=@/tmp/phpYE7KIm" </code></pre></div>
+    --form "cv=@/tmp/php3w9LRv" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -5857,7 +5968,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpYE7KIm</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/php3w9LRv</code></p>
         </div>
         </form>
 
@@ -6044,7 +6155,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "positions_suited_for[]=v"\
     --form "notice_period=d"\
     --form "expected_salary=l"\
-    --form "resume=@/tmp/phphARpmD" </code></pre></div>
+    --form "resume=@/tmp/phpXqWWPI" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6232,7 +6343,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/phphARpmD</code></p>
+<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/phpXqWWPI</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>education</code></b>&nbsp;&nbsp;
@@ -6514,16 +6625,16 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/job-seeker/jobs/search" \
+    --get "http://localhost:8000/api/job-seeker/jobs/search?keyword=React&amp;location=Beirut&amp;job_type=full_time&amp;category=Engineering&amp;min_salary=2000" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"keyword\": \"React\",
-    \"location\": \"Beirut\",
+    \"keyword\": \"b\",
+    \"location\": \"n\",
     \"job_type\": \"full_time\",
-    \"category\": \"Engineering\",
-    \"min_salary\": 2000
+    \"category\": \"g\",
+    \"min_salary\": 12
 }"
 </code></pre></div>
 
@@ -6533,6 +6644,16 @@ You can check the Dev Tools console for debugging information.</code></pre>
     "http://localhost:8000/api/job-seeker/jobs/search"
 );
 
+const params = {
+    "keyword": "React",
+    "location": "Beirut",
+    "job_type": "full_time",
+    "category": "Engineering",
+    "min_salary": "2000",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
 const headers = {
     "Authorization": "Bearer {YOUR_AUTH_KEY}",
     "Content-Type": "application/json",
@@ -6540,11 +6661,11 @@ const headers = {
 };
 
 let body = {
-    "keyword": "React",
-    "location": "Beirut",
+    "keyword": "b",
+    "location": "n",
     "job_type": "full_time",
-    "category": "Engineering",
-    "min_salary": 2000
+    "category": "g",
+    "min_salary": 12
 };
 
 fetch(url, {
@@ -6663,7 +6784,68 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>keyword</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="keyword"                data-endpoint="GETapi-job-seeker-jobs-search"
+               value="React"
+               data-component="query">
+    <br>
+<p>Search in title, description, company name. Max 100 chars. Example: <code>React</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>location</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="location"                data-endpoint="GETapi-job-seeker-jobs-search"
+               value="Beirut"
+               data-component="query">
+    <br>
+<p>Partial location match. Max 100 chars. Example: <code>Beirut</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>job_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="job_type"                data-endpoint="GETapi-job-seeker-jobs-search"
+               value="full_time"
+               data-component="query">
+    <br>
+<p>One of: full_time, part_time, contract, freelance. Example: <code>full_time</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>category</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="category"                data-endpoint="GETapi-job-seeker-jobs-search"
+               value="Engineering"
+               data-component="query">
+    <br>
+<p>Example: <code>Engineering</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>min_salary</code></b>&nbsp;&nbsp;
+<small>number</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="min_salary"                data-endpoint="GETapi-job-seeker-jobs-search"
+               value="2000"
+               data-component="query">
+    <br>
+<p>Minimum salary. Example: <code>2000</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>keyword</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
@@ -6671,10 +6853,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="keyword"                data-endpoint="GETapi-job-seeker-jobs-search"
-               value="React"
+               value="b"
                data-component="body">
     <br>
-<p>Search in title, description, company name. Max 100 chars. Example: <code>React</code></p>
+<p>Must not be greater than 100 characters. Example: <code>b</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>location</code></b>&nbsp;&nbsp;
@@ -6683,10 +6865,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="location"                data-endpoint="GETapi-job-seeker-jobs-search"
-               value="Beirut"
+               value="n"
                data-component="body">
     <br>
-<p>Partial location match. Max 100 chars. Example: <code>Beirut</code></p>
+<p>Must not be greater than 100 characters. Example: <code>n</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>job_type</code></b>&nbsp;&nbsp;
@@ -6698,7 +6880,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="full_time"
                data-component="body">
     <br>
-<p>One of: full_time, part_time, contract, freelance. Example: <code>full_time</code></p>
+<p>Example: <code>full_time</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>full_time</code></li> <li><code>part_time</code></li> <li><code>contract</code></li> <li><code>freelance</code></li></ul>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>category</code></b>&nbsp;&nbsp;
@@ -6707,10 +6891,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="category"                data-endpoint="GETapi-job-seeker-jobs-search"
-               value="Engineering"
+               value="g"
                data-component="body">
     <br>
-<p>Example: <code>Engineering</code></p>
+<p>Must not be greater than 100 characters. Example: <code>g</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>min_salary</code></b>&nbsp;&nbsp;
@@ -6719,10 +6903,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="min_salary"                data-endpoint="GETapi-job-seeker-jobs-search"
-               value="2000"
+               value="12"
                data-component="body">
     <br>
-<p>Minimum salary. Example: <code>2000</code></p>
+<p>Must be at least 0. Example: <code>12</code></p>
         </div>
         </form>
 
@@ -7563,7 +7747,7 @@ Returns jobs ranked by match percentage and ATS compatibility.</p>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@/tmp/phpV8OIPt" </code></pre></div>
+    --form "resume=@/tmp/phpm9Ir5l" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -7727,37 +7911,178 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX resume file, max 10 MB. Example: <code>/tmp/phpV8OIPt</code></p>
+<p>PDF/DOC/DOCX resume file, max 10 MB. Example: <code>/tmp/phpm9Ir5l</code></p>
         </div>
         </form>
 
-                    <h2 id="endpoints-POSTapi-job-seeker-coach-chat">Chat with AI resume coach</h2>
+                    <h2 id="endpoints-GETapi-job-seeker-coach-sessions">List all chat sessions for the authenticated job seeker.</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Ask the AI coach for career advice, job market insights, resume tips, and more.</p>
 
-<span id="example-requests-POSTapi-job-seeker-coach-chat">
+
+<span id="example-requests-GETapi-job-seeker-coach-sessions">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost:8000/api/job-seeker/coach/sessions" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/job-seeker/coach/sessions"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-job-seeker-coach-sessions">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: &quot;...&quot;,
+            &quot;title&quot;: &quot;Resume tips&quot;,
+            &quot;created_at&quot;: &quot;...&quot;
+        }
+    ]
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-job-seeker-coach-sessions" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-job-seeker-coach-sessions"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-job-seeker-coach-sessions"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-job-seeker-coach-sessions" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-job-seeker-coach-sessions">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-job-seeker-coach-sessions" data-method="GET"
+      data-path="api/job-seeker/coach/sessions"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-job-seeker-coach-sessions', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-job-seeker-coach-sessions"
+                    onclick="tryItOut('GETapi-job-seeker-coach-sessions');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-job-seeker-coach-sessions"
+                    onclick="cancelTryOut('GETapi-job-seeker-coach-sessions');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-job-seeker-coach-sessions"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/job-seeker/coach/sessions</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-job-seeker-coach-sessions"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-job-seeker-coach-sessions"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-job-seeker-coach-sessions"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="endpoints-POSTapi-job-seeker-coach-sessions">Create a new coach chat session.</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-POSTapi-job-seeker-coach-sessions">
 <blockquote>Example request:</blockquote>
 
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/job-seeker/coach/chat" \
+    "http://localhost:8000/api/job-seeker/coach/sessions" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"message\": \"Give me advice on improving my resume\"
+    \"title\": \"Resume review session\"
 }"
 </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/coach/chat"
+    "http://localhost:8000/api/job-seeker/coach/sessions"
 );
 
 const headers = {
@@ -7767,7 +8092,7 @@ const headers = {
 };
 
 let body = {
-    "message": "Give me advice on improving my resume"
+    "title": "Resume review session"
 };
 
 fetch(url, {
@@ -7778,14 +8103,503 @@ fetch(url, {
 
 </span>
 
-<span id="example-responses-POSTapi-job-seeker-coach-chat">
+<span id="example-responses-POSTapi-job-seeker-coach-sessions">
+            <blockquote>
+            <p>Example response (201):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;id&quot;: &quot;...&quot;,
+    &quot;title&quot;: &quot;Resume review session&quot;,
+    &quot;created_at&quot;: &quot;...&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-job-seeker-coach-sessions" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-job-seeker-coach-sessions"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-job-seeker-coach-sessions"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-job-seeker-coach-sessions" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-job-seeker-coach-sessions">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-job-seeker-coach-sessions" data-method="POST"
+      data-path="api/job-seeker/coach/sessions"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-job-seeker-coach-sessions', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-job-seeker-coach-sessions"
+                    onclick="tryItOut('POSTapi-job-seeker-coach-sessions');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-job-seeker-coach-sessions"
+                    onclick="cancelTryOut('POSTapi-job-seeker-coach-sessions');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-job-seeker-coach-sessions"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/job-seeker/coach/sessions</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-job-seeker-coach-sessions"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-job-seeker-coach-sessions"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-job-seeker-coach-sessions"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>title</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="title"                data-endpoint="POSTapi-job-seeker-coach-sessions"
+               value="Resume review session"
+               data-component="body">
+    <br>
+<p>optional Session title. Max 100 chars. Example: <code>Resume review session</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-GETapi-job-seeker-coach-sessions--sessionId-">Get a session with its full message history.</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-GETapi-job-seeker-coach-sessions--sessionId-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost:8000/api/job-seeker/coach/sessions/architecto" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/job-seeker/coach/sessions/architecto"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-job-seeker-coach-sessions--sessionId-">
             <blockquote>
             <p>Example response (200):</p>
         </blockquote>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;response&quot;: &quot;To improve your resume, focus on quantifying your achievements...&quot;
+    &quot;id&quot;: &quot;...&quot;,
+    &quot;title&quot;: &quot;Resume tips&quot;,
+    &quot;messages&quot;: [
+        {
+            &quot;role&quot;: &quot;user&quot;,
+            &quot;content&quot;: &quot;...&quot;,
+            &quot;created_at&quot;: &quot;...&quot;
+        }
+    ]
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Session not found&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-job-seeker-coach-sessions--sessionId-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-job-seeker-coach-sessions--sessionId-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-job-seeker-coach-sessions--sessionId-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-job-seeker-coach-sessions--sessionId-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-job-seeker-coach-sessions--sessionId-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-job-seeker-coach-sessions--sessionId-" data-method="GET"
+      data-path="api/job-seeker/coach/sessions/{sessionId}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-job-seeker-coach-sessions--sessionId-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-job-seeker-coach-sessions--sessionId-"
+                    onclick="tryItOut('GETapi-job-seeker-coach-sessions--sessionId-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-job-seeker-coach-sessions--sessionId-"
+                    onclick="cancelTryOut('GETapi-job-seeker-coach-sessions--sessionId-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-job-seeker-coach-sessions--sessionId-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/job-seeker/coach/sessions/{sessionId}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-job-seeker-coach-sessions--sessionId-"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-job-seeker-coach-sessions--sessionId-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-job-seeker-coach-sessions--sessionId-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>sessionId</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sessionId"                data-endpoint="GETapi-job-seeker-coach-sessions--sessionId-"
+               value="architecto"
+               data-component="url">
+    <br>
+<p>The session ID. Example: <code>architecto</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="endpoints-DELETEapi-job-seeker-coach-sessions--sessionId-">Delete a coach chat session and all its messages.</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-DELETEapi-job-seeker-coach-sessions--sessionId-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "http://localhost:8000/api/job-seeker/coach/sessions/architecto" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/job-seeker/coach/sessions/architecto"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-job-seeker-coach-sessions--sessionId-">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Session deleted&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Session not found&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-DELETEapi-job-seeker-coach-sessions--sessionId-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-job-seeker-coach-sessions--sessionId-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-job-seeker-coach-sessions--sessionId-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-job-seeker-coach-sessions--sessionId-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-job-seeker-coach-sessions--sessionId-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-job-seeker-coach-sessions--sessionId-" data-method="DELETE"
+      data-path="api/job-seeker/coach/sessions/{sessionId}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-job-seeker-coach-sessions--sessionId-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-job-seeker-coach-sessions--sessionId-"
+                    onclick="tryItOut('DELETEapi-job-seeker-coach-sessions--sessionId-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-job-seeker-coach-sessions--sessionId-"
+                    onclick="cancelTryOut('DELETEapi-job-seeker-coach-sessions--sessionId-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-job-seeker-coach-sessions--sessionId-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/job-seeker/coach/sessions/{sessionId}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-job-seeker-coach-sessions--sessionId-"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-job-seeker-coach-sessions--sessionId-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-job-seeker-coach-sessions--sessionId-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>sessionId</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sessionId"                data-endpoint="DELETEapi-job-seeker-coach-sessions--sessionId-"
+               value="architecto"
+               data-component="url">
+    <br>
+<p>The session ID. Example: <code>architecto</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="endpoints-POSTapi-job-seeker-coach-sessions--sessionId--chat">Send a message in a coach chat session.</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-POSTapi-job-seeker-coach-sessions--sessionId--chat">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost:8000/api/job-seeker/coach/sessions/architecto/chat" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"message\": \"How can I improve my resume?\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/job-seeker/coach/sessions/architecto/chat"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "message": "How can I improve my resume?"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-job-seeker-coach-sessions--sessionId--chat">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;response&quot;: &quot;Here are some tips...&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Session not found&quot;
 }</code>
  </pre>
             <blockquote>
@@ -7811,43 +8625,43 @@ fetch(url, {
 }</code>
  </pre>
     </span>
-<span id="execution-results-POSTapi-job-seeker-coach-chat" hidden>
+<span id="execution-results-POSTapi-job-seeker-coach-sessions--sessionId--chat" hidden>
     <blockquote>Received response<span
-                id="execution-response-status-POSTapi-job-seeker-coach-chat"></span>:
+                id="execution-response-status-POSTapi-job-seeker-coach-sessions--sessionId--chat"></span>:
     </blockquote>
-    <pre class="json"><code id="execution-response-content-POSTapi-job-seeker-coach-chat"
+    <pre class="json"><code id="execution-response-content-POSTapi-job-seeker-coach-sessions--sessionId--chat"
       data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
 </span>
-<span id="execution-error-POSTapi-job-seeker-coach-chat" hidden>
+<span id="execution-error-POSTapi-job-seeker-coach-sessions--sessionId--chat" hidden>
     <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-POSTapi-job-seeker-coach-chat">
+    <pre><code id="execution-error-message-POSTapi-job-seeker-coach-sessions--sessionId--chat">
 
 Tip: Check that you&#039;re properly connected to the network.
 If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
 </span>
-<form id="form-POSTapi-job-seeker-coach-chat" data-method="POST"
-      data-path="api/job-seeker/coach/chat"
+<form id="form-POSTapi-job-seeker-coach-sessions--sessionId--chat" data-method="POST"
+      data-path="api/job-seeker/coach/sessions/{sessionId}/chat"
       data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('POSTapi-job-seeker-coach-chat', this);">
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-job-seeker-coach-sessions--sessionId--chat', this);">
     <h3>
         Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
                     style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-POSTapi-job-seeker-coach-chat"
-                    onclick="tryItOut('POSTapi-job-seeker-coach-chat');">Try it out ⚡
+                    id="btn-tryout-POSTapi-job-seeker-coach-sessions--sessionId--chat"
+                    onclick="tryItOut('POSTapi-job-seeker-coach-sessions--sessionId--chat');">Try it out ⚡
             </button>
             <button type="button"
                     style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-POSTapi-job-seeker-coach-chat"
-                    onclick="cancelTryOut('POSTapi-job-seeker-coach-chat');" hidden>Cancel 🛑
+                    id="btn-canceltryout-POSTapi-job-seeker-coach-sessions--sessionId--chat"
+                    onclick="cancelTryOut('POSTapi-job-seeker-coach-sessions--sessionId--chat');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
                     style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-POSTapi-job-seeker-coach-chat"
+                    id="btn-executetryout-POSTapi-job-seeker-coach-sessions--sessionId--chat"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
                     hidden>Send Request 💥
@@ -7855,7 +8669,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </h3>
             <p>
             <small class="badge badge-black">POST</small>
-            <b><code>api/job-seeker/coach/chat</code></b>
+            <b><code>api/job-seeker/coach/sessions/{sessionId}/chat</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
@@ -7864,7 +8678,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-job-seeker-coach-chat"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-job-seeker-coach-sessions--sessionId--chat"
                value="Bearer {YOUR_AUTH_KEY}"
                data-component="header">
     <br>
@@ -7876,7 +8690,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="POSTapi-job-seeker-coach-chat"
+                              name="Content-Type"                data-endpoint="POSTapi-job-seeker-coach-sessions--sessionId--chat"
                value="application/json"
                data-component="header">
     <br>
@@ -7888,24 +8702,37 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="POSTapi-job-seeker-coach-chat"
+                              name="Accept"                data-endpoint="POSTapi-job-seeker-coach-sessions--sessionId--chat"
                value="application/json"
                data-component="header">
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>sessionId</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sessionId"                data-endpoint="POSTapi-job-seeker-coach-sessions--sessionId--chat"
+               value="architecto"
+               data-component="url">
+    <br>
+<p>The session ID. Example: <code>architecto</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>message</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="message"                data-endpoint="POSTapi-job-seeker-coach-chat"
-               value="Give me advice on improving my resume"
+                              name="message"                data-endpoint="POSTapi-job-seeker-coach-sessions--sessionId--chat"
+               value="How can I improve my resume?"
                data-component="body">
     <br>
-<p>Your question or message to the coach. Max 1000 chars. Example: <code>Give me advice on improving my resume</code></p>
+<p>Your message. Max 1000 chars. Example: <code>How can I improve my resume?</code></p>
         </div>
         </form>
 
@@ -7927,7 +8754,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "document=@/tmp/php3a5IrQ" </code></pre></div>
+    --form "document=@/tmp/phpWieSr3" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -8076,7 +8903,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/php3a5IrQ</code></p>
+<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/phpWieSr3</code></p>
         </div>
         </form>
 
@@ -8227,7 +9054,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Returns all job posts by the authenticated employer, each with application count.</p>
+<p>Returns all job posts by the authenticated employer, each with an <code>application_count</code> field.</p>
 
 <span id="example-requests-GETapi-employer-jobs">
 <blockquote>Example request:</blockquote>
@@ -8262,21 +9089,32 @@ fetch(url, {
 
 <span id="example-responses-GETapi-employer-jobs">
             <blockquote>
-            <p>Example response (401):</p>
+            <p>Example response (200, Success):</p>
         </blockquote>
-                <details class="annotation">
-            <summary style="cursor: pointer;">
-                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
-            </summary>
-            <pre><code class="language-http">cache-control: no-cache, private
-content-type: application/json
-access-control-allow-origin: *
- </code></pre></details>         <pre>
+                <pre>
 
-<code class="language-json" style="max-height: 300px;">{
-    &quot;error&quot;: &quot;Unauthorized&quot;,
-    &quot;message&quot;: &quot;Invalid authentication token signature&quot;
-}</code>
+<code class="language-json" style="max-height: 300px;">[
+    {
+        &quot;_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
+        &quot;job_id&quot;: &quot;JOB-0001&quot;,
+        &quot;employer_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0e&quot;,
+        &quot;company_name&quot;: &quot;Acme Corp&quot;,
+        &quot;company_logo&quot;: &quot;https://example.com/logo.png&quot;,
+        &quot;title&quot;: &quot;Senior Laravel Developer&quot;,
+        &quot;job_type&quot;: &quot;full_time&quot;,
+        &quot;work_mode&quot;: &quot;on_site&quot;,
+        &quot;city&quot;: &quot;Damascus&quot;,
+        &quot;is_active&quot;: true,
+        &quot;vacancies&quot;: 2,
+        &quot;salary_from&quot;: 500,
+        &quot;salary_to&quot;: 1000,
+        &quot;currency&quot;: &quot;USD&quot;,
+        &quot;expires_at&quot;: &quot;2026-12-31T00:00:00.000000Z&quot;,
+        &quot;created_at&quot;: &quot;2026-01-15T10:00:00.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2026-01-15T10:00:00.000000Z&quot;,
+        &quot;application_count&quot;: 7
+    }
+]</code>
  </pre>
     </span>
 <span id="execution-results-GETapi-employer-jobs" hidden>
@@ -8503,7 +9341,18 @@ fetch(url, {
         </blockquote>
                 <pre>
 
-<code class="language-json" style="max-height: 300px;">{}</code>
+<code class="language-json" style="max-height: 300px;">{
+    &quot;_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
+    &quot;job_id&quot;: &quot;JOB-0001&quot;,
+    &quot;employer_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0e&quot;,
+    &quot;company_profile_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0f&quot;,
+    &quot;company_name&quot;: &quot;Acme Corp&quot;,
+    &quot;company_logo&quot;: &quot;https://example.com/logo.png&quot;,
+    &quot;title&quot;: &quot;Senior Laravel Developer&quot;,
+    &quot;is_active&quot;: true,
+    &quot;created_at&quot;: &quot;2026-01-15T10:00:00.000000Z&quot;,
+    &quot;updated_at&quot;: &quot;2026-01-15T10:00:00.000000Z&quot;
+}</code>
  </pre>
             <blockquote>
             <p>Example response (404):</p>
@@ -9060,6 +9909,19 @@ fetch(url, {
 
 <span id="example-responses-PUTapi-employer-jobs--id-">
             <blockquote>
+            <p>Example response (200, Updated):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
+    &quot;job_id&quot;: &quot;JOB-0001&quot;,
+    &quot;title&quot;: &quot;Updated Job Title&quot;,
+    &quot;is_active&quot;: true,
+    &quot;updated_at&quot;: &quot;2026-06-01T12:00:00.000000Z&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (403):</p>
         </blockquote>
                 <pre>
@@ -9521,7 +10383,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Returns the full profile including private info, for the authenticated employer.</p>
+<p>Returns the full company profile for the authenticated employer, including
+private fields (<code>private_info</code>, <code>logo</code>, <code>cover_image</code>, rating data, etc.)
+that are not exposed on the public company endpoint.</p>
 
 <span id="example-requests-GETapi-employer-company">
 <blockquote>Example request:</blockquote>
@@ -9556,20 +10420,52 @@ fetch(url, {
 
 <span id="example-responses-GETapi-employer-company">
             <blockquote>
-            <p>Example response (401):</p>
+            <p>Example response (200, Success):</p>
         </blockquote>
-                <details class="annotation">
-            <summary style="cursor: pointer;">
-                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
-            </summary>
-            <pre><code class="language-http">cache-control: no-cache, private
-content-type: application/json
-access-control-allow-origin: *
- </code></pre></details>         <pre>
+                <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;error&quot;: &quot;Unauthorized&quot;,
-    &quot;message&quot;: &quot;Invalid authentication token signature&quot;
+    &quot;_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
+    &quot;employer_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0e&quot;,
+    &quot;name&quot;: &quot;Acme Corp&quot;,
+    &quot;slug&quot;: &quot;acme-corp&quot;,
+    &quot;logo&quot;: &quot;https://example.com/logo.png&quot;,
+    &quot;cover_image&quot;: &quot;https://example.com/cover.png&quot;,
+    &quot;description&quot;: &quot;We build software.&quot;,
+    &quot;industry&quot;: &quot;Information Technology&quot;,
+    &quot;company_size&quot;: &quot;10_to_50&quot;,
+    &quot;city&quot;: &quot;Damascus&quot;,
+    &quot;country&quot;: &quot;Syria&quot;,
+    &quot;phone&quot;: &quot;0911000000&quot;,
+    &quot;phone_visible&quot;: true,
+    &quot;email&quot;: &quot;contact@acme.com&quot;,
+    &quot;private_info&quot;: {
+        &quot;expose_to_applicants&quot;: false,
+        &quot;address&quot;: &quot;Mazzeh Street 12&quot;,
+        &quot;industries&quot;: [
+            &quot;Software&quot;,
+            &quot;Consulting&quot;
+        ],
+        &quot;company_size&quot;: &quot;10_to_50&quot;,
+        &quot;founded_year&quot;: 2015,
+        &quot;phone_main&quot;: &quot;0911000000&quot;,
+        &quot;phone_extra&quot;: null,
+        &quot;website&quot;: &quot;https://acme.com&quot;,
+        &quot;social_media&quot;: {
+            &quot;linkedin&quot;: &quot;https://linkedin.com/company/acme&quot;,
+            &quot;github&quot;: null,
+            &quot;twitter&quot;: null,
+            &quot;facebook&quot;: null,
+            &quot;instagram&quot;: null,
+            &quot;telegram&quot;: null,
+            &quot;behance&quot;: null
+        }
+    },
+    &quot;rating&quot;: 4.2,
+    &quot;review_count&quot;: 10,
+    &quot;would_recommend&quot;: 85,
+    &quot;ceo_performance&quot;: 78,
+    &quot;open_positions&quot;: 3
 }</code>
  </pre>
             <blockquote>
@@ -10639,7 +11535,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "logo=@/tmp/phppnlnnU" </code></pre></div>
+    --form "logo=@/tmp/phpkcaYOw" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -10778,7 +11674,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Image file. Max 2 MB. Example: <code>/tmp/phppnlnnU</code></p>
+<p>Image file. Max 2 MB. Example: <code>/tmp/phpkcaYOw</code></p>
         </div>
         </form>
 
@@ -10800,7 +11696,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cover_image=@/tmp/php17a9JI" </code></pre></div>
+    --form "cover_image=@/tmp/php8Sdaq6" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -10939,7 +11835,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Image file. Max 4 MB. Example: <code>/tmp/php17a9JI</code></p>
+<p>Image file. Max 4 MB. Example: <code>/tmp/php8Sdaq6</code></p>
         </div>
         </form>
 

@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "f15d20b5-4ba1-4c83-a933-47e43f0131eb",
+        "_postman_id": "974dd9d1-9481-48f2-bd36-d35d404deaff",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -310,22 +310,9 @@
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
-                            "code": 500,
-                            "body": "{\n    \"message\": \"Server Error\"\n}",
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n      \"job_id\": \"JOB-0001\",\n      \"employer_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n      \"company_profile_id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n      \"company_name\": \"Acme Corp\",\n      \"company_logo\": \"https:\/\/example.com\/logo.png\",\n      \"title\": \"Senior Laravel Developer\",\n      \"description\": \"We are looking for...\",\n      \"requirements\": \"3+ years Laravel experience.\",\n      \"roles\": [\"Backend\", \"PHP\"],\n      \"category\": \"Engineering\",\n      \"tags\": [\"Laravel\", \"MongoDB\"],\n      \"job_type\": \"full_time\",\n      \"work_mode\": \"on_site\",\n      \"job_level\": \"senior\",\n      \"education_level\": \"bachelor\",\n      \"experience_years\": 3,\n      \"languages\": [\"Arabic\", \"English\"],\n      \"vacancies\": 2,\n      \"city\": \"Damascus\",\n      \"address\": \"Mazzeh Street 12\",\n      \"salary_from\": 500,\n      \"salary_to\": 1000,\n      \"currency\": \"USD\",\n      \"display_salary\": true,\n      \"incentives\": \"Monthly bonuses\",\n      \"gender\": \"no_preference\",\n      \"age_from\": null,\n      \"age_to\": null,\n      \"portfolio_required\": false,\n      \"cover_letter_required\": true,\n      \"communication_method\": \"by_forsa\",\n      \"communication_value\": null,\n      \"questions\": [{ \"question\": \"Describe your last project.\", \"required\": true }],\n      \"is_active\": true,\n      \"expires_at\": \"2026-12-31T00:00:00.000000Z\",\n      \"created_at\": \"2026-01-15T10:00:00.000000Z\",\n      \"updated_at\": \"2026-01-15T10:00:00.000000Z\"\n    }\n  ],\n  \"current_page\": 1,\n  \"per_page\": 15,\n  \"total\": 1,\n  \"total_pages\": 1,\n  \"next_page\": null,\n  \"prev_page\": null\n}",
                             "name": ""
                         }
                     ]
@@ -367,27 +354,14 @@
                     "response": [
                         {
                             "header": [],
-                            "code": 404,
-                            "body": "{ \"message\": \"Job post not found\" }",
-                            "name": ""
+                            "code": 200,
+                            "body": "{\n  \"_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"job_id\": \"JOB-0001\",\n  \"employer_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n  \"company_profile_id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n  \"company_name\": \"Acme Corp\",\n  \"company_logo\": \"https:\/\/example.com\/logo.png\",\n  \"title\": \"Senior Laravel Developer\",\n  \"description\": \"We are looking for an experienced Laravel developer...\",\n  \"requirements\": \"3+ years Laravel, MongoDB experience preferred.\",\n  \"roles\": [\"Backend\", \"PHP\"],\n  \"category\": \"Engineering\",\n  \"tags\": [\"Laravel\", \"MongoDB\", \"PHP\"],\n  \"job_type\": \"full_time\",\n  \"work_mode\": \"on_site\",\n  \"job_level\": \"senior\",\n  \"education_level\": \"bachelor\",\n  \"experience_years\": 3,\n  \"languages\": [\"Arabic\", \"English\"],\n  \"vacancies\": 2,\n  \"city\": \"Damascus\",\n  \"address\": \"Mazzeh Street 12\",\n  \"salary_from\": 500,\n  \"salary_to\": 1000,\n  \"currency\": \"USD\",\n  \"display_salary\": true,\n  \"incentives\": \"Monthly bonuses\",\n  \"gender\": \"no_preference\",\n  \"age_from\": null,\n  \"age_to\": null,\n  \"portfolio_required\": false,\n  \"cover_letter_required\": true,\n  \"communication_method\": \"by_forsa\",\n  \"communication_value\": null,\n  \"questions\": [\n    { \"question\": \"Describe your last project.\", \"required\": true }\n  ],\n  \"is_active\": true,\n  \"expires_at\": \"2026-12-31T00:00:00.000000Z\",\n  \"created_at\": \"2026-01-15T10:00:00.000000Z\",\n  \"updated_at\": \"2026-01-15T10:00:00.000000Z\"\n}",
+                            "name": "Success"
                         },
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
-                            "code": 500,
-                            "body": "{\n    \"message\": \"Server Error\"\n}",
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Job post not found\" }",
                             "name": ""
                         }
                     ]
@@ -1077,7 +1051,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "other",
+                                    "value": "male",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1119,7 +1093,7 @@
                                 },
                                 {
                                     "key": "marital_status",
-                                    "value": "prefer_not_to_say",
+                                    "value": "married",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1137,7 +1111,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "employed",
+                                    "value": "student",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1197,7 +1171,7 @@
                                 },
                                 {
                                     "key": "is_actively_seeking",
-                                    "value": "",
+                                    "value": "1",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1646,8 +1620,39 @@
                         "url": {
                             "host": "{{baseUrl}}",
                             "path": "api\/job-seeker\/jobs\/search",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/job-seeker\/jobs\/search"
+                            "query": [
+                                {
+                                    "key": "keyword",
+                                    "value": "React",
+                                    "description": "Search in title, description, company name. Max 100 chars.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "location",
+                                    "value": "Beirut",
+                                    "description": "Partial location match. Max 100 chars.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "job_type",
+                                    "value": "full_time",
+                                    "description": "One of: full_time, part_time, contract, freelance.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "category",
+                                    "value": "Engineering",
+                                    "description": "",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "min_salary",
+                                    "value": "2000",
+                                    "description": "Minimum salary.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/jobs\/search?keyword=React&location=Beirut&job_type=full_time&category=Engineering&min_salary=2000"
                         },
                         "method": "GET",
                         "header": [
@@ -1662,7 +1667,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"keyword\":\"React\",\"location\":\"Beirut\",\"job_type\":\"full_time\",\"category\":\"Engineering\",\"min_salary\":2000}"
+                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"full_time\",\"category\":\"g\",\"min_salary\":12}"
                         },
                         "description": "Paginated search of active job posts for the authenticated job seeker."
                     },
@@ -1955,13 +1960,45 @@
                     ]
                 },
                 {
-                    "name": "Chat with AI resume coach",
+                    "name": "List all chat sessions for the authenticated job seeker.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/job-seeker\/coach\/chat",
+                            "path": "api\/job-seeker\/coach\/sessions",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/job-seeker\/coach\/chat"
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/coach\/sessions"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [{ \"id\": \"...\", \"title\": \"Resume tips\", \"created_at\": \"...\" }]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new coach chat session.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/coach\/sessions",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/coach\/sessions"
                         },
                         "method": "POST",
                         "header": [
@@ -1976,15 +2013,156 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"message\":\"Give me advice on improving my resume\"}"
+                            "raw": "{\"title\":\"Resume review session\"}"
                         },
-                        "description": "Ask the AI coach for career advice, job market insights, resume tips, and more."
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{ \"id\": \"...\", \"title\": \"Resume review session\", \"created_at\": \"...\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get a session with its full message history.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/coach\/sessions\/:sessionId",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/coach\/sessions\/:sessionId",
+                            "variable": [
+                                {
+                                    "id": "sessionId",
+                                    "key": "sessionId",
+                                    "value": "architecto",
+                                    "description": "The session ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"response\": \"To improve your resume, focus on quantifying your achievements...\"\n}",
+                            "body": "{\n  \"id\": \"...\",\n  \"title\": \"Resume tips\",\n  \"messages\": [{ \"role\": \"user\", \"content\": \"...\", \"created_at\": \"...\" }]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Session not found\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a coach chat session and all its messages.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/coach\/sessions\/:sessionId",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/coach\/sessions\/:sessionId",
+                            "variable": [
+                                {
+                                    "id": "sessionId",
+                                    "key": "sessionId",
+                                    "value": "architecto",
+                                    "description": "The session ID."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"Session deleted\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Session not found\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Send a message in a coach chat session.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/coach\/sessions\/:sessionId\/chat",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/coach\/sessions\/:sessionId\/chat",
+                            "variable": [
+                                {
+                                    "id": "sessionId",
+                                    "key": "sessionId",
+                                    "value": "architecto",
+                                    "description": "The session ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"message\":\"How can I improve my resume?\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"response\": \"Here are some tips...\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Session not found\" }",
                             "name": ""
                         },
                         {
@@ -2101,27 +2279,14 @@
                             }
                         ],
                         "body": null,
-                        "description": "Returns all job posts by the authenticated employer, each with application count."
+                        "description": "Returns all job posts by the authenticated employer, each with an `application_count` field."
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
-                            "code": 401,
-                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Invalid authentication token signature\"}",
-                            "name": ""
+                            "header": [],
+                            "code": 200,
+                            "body": "[\n  {\n    \"_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"job_id\": \"JOB-0001\",\n    \"employer_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n    \"company_name\": \"Acme Corp\",\n    \"company_logo\": \"https:\/\/example.com\/logo.png\",\n    \"title\": \"Senior Laravel Developer\",\n    \"job_type\": \"full_time\",\n    \"work_mode\": \"on_site\",\n    \"city\": \"Damascus\",\n    \"is_active\": true,\n    \"vacancies\": 2,\n    \"salary_from\": 500,\n    \"salary_to\": 1000,\n    \"currency\": \"USD\",\n    \"expires_at\": \"2026-12-31T00:00:00.000000Z\",\n    \"created_at\": \"2026-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2026-01-15T10:00:00.000000Z\",\n    \"application_count\": 7\n  }\n]",
+                            "name": "Success"
                         }
                     ]
                 },
@@ -2155,7 +2320,7 @@
                         {
                             "header": [],
                             "code": 201,
-                            "body": "{}",
+                            "body": "{\n  \"_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"job_id\": \"JOB-0001\",\n  \"employer_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n  \"company_profile_id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n  \"company_name\": \"Acme Corp\",\n  \"company_logo\": \"https:\/\/example.com\/logo.png\",\n  \"title\": \"Senior Laravel Developer\",\n  \"is_active\": true,\n  \"created_at\": \"2026-01-15T10:00:00.000000Z\",\n  \"updated_at\": \"2026-01-15T10:00:00.000000Z\"\n}",
                             "name": "Created"
                         },
                         {
@@ -2204,6 +2369,12 @@
                         "description": "Updates an existing job post. `company_name` and `company_logo` are read-only\nand always sourced from the employer's company profile."
                     },
                     "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"job_id\": \"JOB-0001\",\n  \"title\": \"Updated Job Title\",\n  \"is_active\": true,\n  \"updated_at\": \"2026-06-01T12:00:00.000000Z\"\n}",
+                            "name": "Updated"
+                        },
                         {
                             "header": [],
                             "code": 403,
@@ -2349,27 +2520,14 @@
                             }
                         ],
                         "body": null,
-                        "description": "Returns the full profile including private info, for the authenticated employer."
+                        "description": "Returns the full company profile for the authenticated employer, including\nprivate fields (`private_info`, `logo`, `cover_image`, rating data, etc.)\nthat are not exposed on the public company endpoint."
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
-                            "code": 401,
-                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Invalid authentication token signature\"}",
-                            "name": ""
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"employer_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n  \"name\": \"Acme Corp\",\n  \"slug\": \"acme-corp\",\n  \"logo\": \"https:\/\/example.com\/logo.png\",\n  \"cover_image\": \"https:\/\/example.com\/cover.png\",\n  \"description\": \"We build software.\",\n  \"industry\": \"Information Technology\",\n  \"company_size\": \"10_to_50\",\n  \"city\": \"Damascus\",\n  \"country\": \"Syria\",\n  \"phone\": \"0911000000\",\n  \"phone_visible\": true,\n  \"email\": \"contact@acme.com\",\n  \"private_info\": {\n    \"expose_to_applicants\": false,\n    \"address\": \"Mazzeh Street 12\",\n    \"industries\": [\"Software\", \"Consulting\"],\n    \"company_size\": \"10_to_50\",\n    \"founded_year\": 2015,\n    \"phone_main\": \"0911000000\",\n    \"phone_extra\": null,\n    \"website\": \"https:\/\/acme.com\",\n    \"social_media\": {\n      \"linkedin\": \"https:\/\/linkedin.com\/company\/acme\",\n      \"github\": null,\n      \"twitter\": null,\n      \"facebook\": null,\n      \"instagram\": null,\n      \"telegram\": null,\n      \"behance\": null\n    }\n  },\n  \"rating\": 4.2,\n  \"review_count\": 10,\n  \"would_recommend\": 85,\n  \"ceo_performance\": 78,\n  \"open_positions\": 3\n}",
+                            "name": "Success"
                         },
                         {
                             "header": [],

@@ -8,13 +8,17 @@ use Illuminate\Support\Facades\Log;
 
 class ResumeCoachService
 {
-    public function chat(string $message): string
+    /**
+     * @param  array<int, array{role: string, content: string}>  $history  Previous messages for context
+     */
+    public function chat(string $message, array $history = []): string
     {
         $apiUrl = config('services.resume_coach.url');
 
         try {
-            $response = Http::asForm()->post($apiUrl, [
+            $response = Http::post($apiUrl, [
                 'message' => $message,
+                'history' => $history,
             ]);
         } catch (\Throwable $e) {
             Log::error('Resume coach HTTP error', ['error' => $e->getMessage()]);

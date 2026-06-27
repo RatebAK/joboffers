@@ -1,220 +1,378 @@
 <?php
 
 // ============================================================
-// Tests for AI Resume Coach chat endpoint.
-// Job seekers can ask for career advice and resume tips.
+// Tests for AI Resume Coach — sessions + chat history
 // ============================================================
 
+use App\Models\CoachMessage;
+use App\Models\CoachSession;
 use App\Models\User;
 use App\Services\ResumeCoachService;
 use App\Exceptions\CvAnalysisException;
 
-function coachUser(): array
+function makeSeeker(): array
 {
-    $seeker = User::factory()->employee()->create();
-    $token = auth('api')->login($seeker);
-
-    return [$seeker, $token];
+    $user  = User::factory()->employee()->create();
+    $token = auth('api')->login($user);
+    return [$user, $token];
 }
 
-// ── POST /api/job-seeker/coach/chat ────────────────────────────
+function makeSession(User $user, string $title = 'Test Session'): CoachSession
+{
+    return CoachSession::create(['user_id' => $user->id, 'title' => $title]);
+}
 
-test('job seeker can chat with resume coach', function () {
-    [$seeker, $token] = coachUser();
+afterEach(function () {
+    CoachSession::truncate();
+    CoachMessage::truncate();
+});
+
+// ── POST /api/job-seeker/coach/sessions ───────────────────────
+
+test('job seeker can create a coach session', function () {
+    [$user, $token] = makeSeeker();
+
+    $this->withToken($token)
+        ->postJson('/api/job-seeker/coach/sessions', ['title' => 'My coaching session'])
+        ->assertStatus(201)
+        ->assertJsonStructure(['id', 'title', 'created_at'])
+        ->assertJsonPath('title', 'My coaching session');
+
+    $user->delete();
+});
+
+test('session title defaults to New Conversation', function () {
+    [$user, $token] = makeSeeker();
+
+    $this->withToken($token)
+        ->postJson('/api/job-seeker/coach/sessions')
+        ->assertStatus(201)
+        ->assertJsonPath('title', 'New Conversation');
+
+    $user->delete();
+});
+
+test('session title cannot exceed 100 chars', function () {
+    [$user, $token] = makeSeeker();
+
+    $this->withToken($token)
+        ->postJson('/api/job-seeker/coach/sessions', ['title' => str_repeat('a', 101)])
+        ->assertStatus(422)
+        ->assertJsonStructure(['errors' => ['title']]);
+
+    $user->delete();
+});
+
+// ── GET /api/job-seeker/coach/sessions ───────────────────────
+
+test('job seeker can list their sessions', function () {
+    [$user, $token] = makeSeeker();
+    makeSession($user, 'Session A');
+    makeSession($user, 'Session B');
+
+    $this->withToken($token)
+        ->getJson('/api/job-seeker/coach/sessions')
+        ->assertStatus(200)
+        ->assertJsonStructure(['data' => [['id', 'title', 'created_at']]])
+        ->assertJsonCount(2, 'data');
+
+    $user->delete();
+});
+
+test('job seeker only sees their own sessions', function () {
+    [$userA, $tokenA] = makeSeeker();
+    [$userB]          = makeSeeker();
+    makeSession($userA, 'Mine');
+    makeSession($userB, 'Not mine');
+
+    $this->withToken($tokenA)
+        ->getJson('/api/job-seeker/coach/sessions')
+        ->assertStatus(200)
+        ->assertJsonCount(1, 'data')
+        ->assertJsonPath('data.0.title', 'Mine');
+
+    $userA->delete();
+    $userB->delete();
+});
+
+test('returns empty list when no sessions', function () {
+    [$user, $token] = makeSeeker();
+
+    $this->withToken($token)
+        ->getJson('/api/job-seeker/coach/sessions')
+        ->assertStatus(200)
+        ->assertJsonPath('data', []);
+
+    $user->delete();
+});
+
+// ── GET /api/job-seeker/coach/sessions/{id} ──────────────────
+
+test('job seeker can get a session with its messages', function () {
+    [$user, $token] = makeSeeker();
+    $session = makeSession($user);
+    CoachMessage::create(['session_id' => $session->id, 'role' => 'user',      'content' => 'Hello']);
+    CoachMessage::create(['session_id' => $session->id, 'role' => 'assistant', 'content' => 'Hi there!']);
+
+    $this->withToken($token)
+        ->getJson("/api/job-seeker/coach/sessions/{$session->id}")
+        ->assertStatus(200)
+        ->assertJsonStructure(['id', 'title', 'messages' => [['role', 'content', 'created_at']]])
+        ->assertJsonCount(2, 'messages')
+        ->assertJsonPath('messages.0.role', 'user')
+        ->assertJsonPath('messages.1.role', 'assistant');
+
+    $user->delete();
+});
+
+test('returns 404 for session not owned by user', function () {
+    [$userA, $tokenA] = makeSeeker();
+    [$userB]          = makeSeeker();
+    $session = makeSession($userB);
+
+    $this->withToken($tokenA)
+        ->getJson("/api/job-seeker/coach/sessions/{$session->id}")
+        ->assertStatus(404);
+
+    $userA->delete();
+    $userB->delete();
+});
+
+test('returns 404 for non-existent session', function () {
+    [$user, $token] = makeSeeker();
+
+    $this->withToken($token)
+        ->getJson('/api/job-seeker/coach/sessions/000000000000000000000000')
+        ->assertStatus(404);
+
+    $user->delete();
+});
+
+// ── DELETE /api/job-seeker/coach/sessions/{id} ───────────────
+
+test('job seeker can delete a session and its messages', function () {
+    [$user, $token] = makeSeeker();
+    $session = makeSession($user);
+    CoachMessage::create(['session_id' => $session->id, 'role' => 'user', 'content' => 'Hi']);
+
+    $this->withToken($token)
+        ->deleteJson("/api/job-seeker/coach/sessions/{$session->id}")
+        ->assertStatus(200)
+        ->assertJsonPath('message', 'Session deleted');
+
+    expect(CoachSession::find($session->id))->toBeNull();
+    expect(CoachMessage::where('session_id', $session->id)->count())->toBe(0);
+
+    $user->delete();
+});
+
+test('cannot delete another user\'s session', function () {
+    [$userA, $tokenA] = makeSeeker();
+    [$userB]          = makeSeeker();
+    $session = makeSession($userB);
+
+    $this->withToken($tokenA)
+        ->deleteJson("/api/job-seeker/coach/sessions/{$session->id}")
+        ->assertStatus(404);
+
+    $userA->delete();
+    $userB->delete();
+});
+
+// ── POST /api/job-seeker/coach/sessions/{id}/chat ────────────
+
+test('job seeker can chat in a session', function () {
+    [$user, $token] = makeSeeker();
+    $session = makeSession($user);
 
     $mock = $this->mock(ResumeCoachService::class);
     $mock->shouldReceive('chat')
         ->once()
-        ->with('give me advice on improving my resume')
-        ->andReturn('To improve your resume, focus on quantifying your achievements with specific metrics and numbers.');
+        ->with('How do I improve my resume?', [])
+        ->andReturn('Focus on quantifying achievements.');
 
-    $response = $this->withToken($token)->postJson('/api/job-seeker/coach/chat', [
-        'message' => 'give me advice on improving my resume',
-    ]);
+    $this->withToken($token)
+        ->postJson("/api/job-seeker/coach/sessions/{$session->id}/chat", [
+            'message' => 'How do I improve my resume?',
+        ])
+        ->assertStatus(200)
+        ->assertJsonPath('response', 'Focus on quantifying achievements.');
 
-    $response->assertStatus(200)
-        ->assertJsonStructure(['response'])
-        ->assertJsonPath('response', 'To improve your resume, focus on quantifying your achievements with specific metrics and numbers.');
+    expect(CoachMessage::where('session_id', $session->id)->count())->toBe(2);
 
-    $seeker->delete();
+    $user->delete();
 });
 
-test('coach returns job market insights', function () {
-    [$seeker, $token] = coachUser();
+test('chat persists user and assistant messages', function () {
+    [$user, $token] = makeSeeker();
+    $session = makeSession($user);
+
+    $mock = $this->mock(ResumeCoachService::class);
+    $mock->shouldReceive('chat')->once()->andReturn('Great question!');
+
+    $this->withToken($token)
+        ->postJson("/api/job-seeker/coach/sessions/{$session->id}/chat", [
+            'message' => 'Any tips?',
+        ]);
+
+    $messages = CoachMessage::where('session_id', $session->id)->orderBy('created_at')->get();
+    expect($messages[0]->role)->toBe('user');
+    expect($messages[0]->content)->toBe('Any tips?');
+    expect($messages[1]->role)->toBe('assistant');
+    expect($messages[1]->content)->toBe('Great question!');
+
+    $user->delete();
+});
+
+test('chat passes conversation history to service', function () {
+    [$user, $token] = makeSeeker();
+    $session = makeSession($user);
+
+    // Seed existing messages
+    CoachMessage::create(['session_id' => $session->id, 'role' => 'user',      'content' => 'First message']);
+    CoachMessage::create(['session_id' => $session->id, 'role' => 'assistant', 'content' => 'First reply']);
 
     $mock = $this->mock(ResumeCoachService::class);
     $mock->shouldReceive('chat')
         ->once()
-        ->with('give me a 2 sentence idea of the job market')
-        ->andReturn('The job market for Data Scientists and AI professionals is highly competitive yet rapidly expanding. Focus on showcasing your unique blend of skills and continuous learning.');
+        ->withArgs(function (string $msg, array $history) {
+            return $msg === 'Follow up'
+                && count($history) === 2
+                && $history[0]['role'] === 'user'
+                && $history[1]['role'] === 'assistant';
+        })
+        ->andReturn('Follow-up reply');
 
-    $response = $this->withToken($token)->postJson('/api/job-seeker/coach/chat', [
-        'message' => 'give me a 2 sentence idea of the job market',
-    ]);
+    $this->withToken($token)
+        ->postJson("/api/job-seeker/coach/sessions/{$session->id}/chat", [
+            'message' => 'Follow up',
+        ])
+        ->assertStatus(200);
 
-    $response->assertStatus(200);
-    expect($response->json('response'))->toContain('job market');
-
-    $seeker->delete();
+    $user->delete();
 });
 
-test('coach chat requires message', function () {
-    [, $token] = coachUser();
+test('chat auto-updates default session title from first message', function () {
+    [$user, $token] = makeSeeker();
+    $session = makeSession($user, 'New Conversation');
 
-    $this->withToken($token)->postJson('/api/job-seeker/coach/chat', [])
+    $mock = $this->mock(ResumeCoachService::class);
+    $mock->shouldReceive('chat')->once()->andReturn('Sure!');
+
+    $this->withToken($token)
+        ->postJson("/api/job-seeker/coach/sessions/{$session->id}/chat", [
+            'message' => 'How to write a cover letter?',
+        ]);
+
+    expect(CoachSession::find($session->id)->title)->toBe('How to write a cover letter?');
+
+    $user->delete();
+});
+
+test('chat does not overwrite a custom session title', function () {
+    [$user, $token] = makeSeeker();
+    $session = makeSession($user, 'My Custom Title');
+
+    $mock = $this->mock(ResumeCoachService::class);
+    $mock->shouldReceive('chat')->once()->andReturn('Reply');
+
+    $this->withToken($token)
+        ->postJson("/api/job-seeker/coach/sessions/{$session->id}/chat", [
+            'message' => 'Some message',
+        ]);
+
+    expect(CoachSession::find($session->id)->title)->toBe('My Custom Title');
+
+    $user->delete();
+});
+
+test('chat requires message field', function () {
+    [$user, $token] = makeSeeker();
+    $session = makeSession($user);
+
+    $this->withToken($token)
+        ->postJson("/api/job-seeker/coach/sessions/{$session->id}/chat", [])
         ->assertStatus(422)
         ->assertJsonStructure(['errors' => ['message']]);
+
+    $user->delete();
 });
 
-test('coach chat rejects empty message', function () {
-    [, $token] = coachUser();
+test('chat message cannot exceed 1000 chars', function () {
+    [$user, $token] = makeSeeker();
+    $session = makeSession($user);
 
-    $this->withToken($token)->postJson('/api/job-seeker/coach/chat', [
-        'message' => '',
-    ])->assertStatus(422)
-      ->assertJsonStructure(['errors' => ['message']]);
+    $this->withToken($token)
+        ->postJson("/api/job-seeker/coach/sessions/{$session->id}/chat", [
+            'message' => str_repeat('a', 1001),
+        ])
+        ->assertStatus(422)
+        ->assertJsonStructure(['errors' => ['message']]);
+
+    $user->delete();
 });
 
-test('coach chat rejects message over 1000 chars', function () {
-    [, $token] = coachUser();
+test('chat returns 404 for session not owned by user', function () {
+    [$userA, $tokenA] = makeSeeker();
+    [$userB]          = makeSeeker();
+    $session = makeSession($userB);
 
-    $this->withToken($token)->postJson('/api/job-seeker/coach/chat', [
-        'message' => str_repeat('a', 1001),
-    ])->assertStatus(422)
-      ->assertJsonStructure(['errors' => ['message']]);
+    $this->withToken($tokenA)
+        ->postJson("/api/job-seeker/coach/sessions/{$session->id}/chat", [
+            'message' => 'Hello',
+        ])
+        ->assertStatus(404);
+
+    $userA->delete();
+    $userB->delete();
 });
 
-test('coach chat accepts message up to 1000 chars', function () {
-    [$seeker, $token] = coachUser();
+test('chat returns 422 when service rejects the message', function () {
+    [$user, $token] = makeSeeker();
+    $session = makeSession($user);
 
     $mock = $this->mock(ResumeCoachService::class);
-    $mock->shouldReceive('chat')
-        ->once()
-        ->andReturn('Here is my detailed advice...');
+    $mock->shouldReceive('chat')->once()->andThrow(new CvAnalysisException('Bad input', 422));
 
-    $this->withToken($token)->postJson('/api/job-seeker/coach/chat', [
-        'message' => str_repeat('a', 1000),
-    ])->assertStatus(200);
+    $this->withToken($token)
+        ->postJson("/api/job-seeker/coach/sessions/{$session->id}/chat", [
+            'message' => 'Hello',
+        ])
+        ->assertStatus(422)
+        ->assertJsonPath('message', 'Resume coach request failed');
 
-    $seeker->delete();
+    $user->delete();
 });
 
-test('coach chat handles various question types', function () {
-    [$seeker, $token] = coachUser();
+test('chat returns 502 when service is unavailable', function () {
+    [$user, $token] = makeSeeker();
+    $session = makeSession($user);
 
     $mock = $this->mock(ResumeCoachService::class);
-    $mock->shouldReceive('chat')
-        ->once()
-        ->with('What skills should I learn?')
-        ->andReturn('Consider learning cloud technologies, AI/ML frameworks, and modern development practices.');
+    $mock->shouldReceive('chat')->once()->andThrow(new CvAnalysisException('Down', 502));
 
-    $response = $this->withToken($token)->postJson('/api/job-seeker/coach/chat', [
-        'message' => 'What skills should I learn?',
-    ]);
+    $this->withToken($token)
+        ->postJson("/api/job-seeker/coach/sessions/{$session->id}/chat", [
+            'message' => 'Hello',
+        ])
+        ->assertStatus(502)
+        ->assertJsonPath('message', 'Resume coach service unavailable');
 
-    $response->assertStatus(200)
-        ->assertJsonPath('response', 'Consider learning cloud technologies, AI/ML frameworks, and modern development practices.');
-
-    $seeker->delete();
+    $user->delete();
 });
 
-test('coach chat returns 422 when service fails', function () {
-    [$seeker, $token] = coachUser();
+// ── Auth / Role guards ────────────────────────────────────────
 
-    $mock = $this->mock(ResumeCoachService::class);
-    $mock->shouldReceive('chat')
-        ->once()
-        ->andThrow(new CvAnalysisException('Invalid message format', 422));
-
-    $this->withToken($token)->postJson('/api/job-seeker/coach/chat', [
-        'message' => 'test',
-    ])->assertStatus(422)
-      ->assertJsonPath('message', 'Resume coach request failed');
-
-    $seeker->delete();
+test('unauthenticated user cannot access coach endpoints', function () {
+    $this->getJson('/api/job-seeker/coach/sessions')->assertStatus(401);
+    $this->postJson('/api/job-seeker/coach/sessions')->assertStatus(401);
 });
 
-test('coach chat returns 502 when service unavailable', function () {
-    [$seeker, $token] = coachUser();
-
-    $mock = $this->mock(ResumeCoachService::class);
-    $mock->shouldReceive('chat')
-        ->once()
-        ->andThrow(new CvAnalysisException('Service unavailable', 502));
-
-    $this->withToken($token)->postJson('/api/job-seeker/coach/chat', [
-        'message' => 'test',
-    ])->assertStatus(502)
-      ->assertJsonPath('message', 'Resume coach service unavailable');
-
-    $seeker->delete();
-});
-
-test('unauthenticated user cannot chat with coach', function () {
-    $this->postJson('/api/job-seeker/coach/chat', [
-        'message' => 'test',
-    ])->assertStatus(401);
-});
-
-test('employer cannot use job seeker coach endpoint', function () {
+test('employer cannot access job seeker coach endpoints', function () {
     $employer = User::factory()->employer()->create();
-    $token = auth('api')->login($employer);
+    $token    = auth('api')->login($employer);
 
-    $this->withToken($token)->postJson('/api/job-seeker/coach/chat', [
-        'message' => 'test',
-    ])->assertStatus(403);
+    $this->withToken($token)->getJson('/api/job-seeker/coach/sessions')->assertStatus(403);
 
     $employer->delete();
-});
-
-test('coach provides career guidance', function () {
-    [$seeker, $token] = coachUser();
-
-    $mock = $this->mock(ResumeCoachService::class);
-    $mock->shouldReceive('chat')
-        ->once()
-        ->with('How do I negotiate salary?')
-        ->andReturn('Research market rates, know your value, and be prepared to discuss your accomplishments confidently.');
-
-    $response = $this->withToken($token)->postJson('/api/job-seeker/coach/chat', [
-        'message' => 'How do I negotiate salary?',
-    ]);
-
-    $response->assertStatus(200);
-    expect($response->json('response'))->toBeString();
-    expect($response->json('response'))->not->toBeEmpty();
-
-    $seeker->delete();
-});
-
-test('coach handles multiple questions in same session', function () {
-    [$seeker, $token] = coachUser();
-
-    $mock = $this->mock(ResumeCoachService::class);
-
-    // First question
-    $mock->shouldReceive('chat')
-        ->once()
-        ->with('What is a good resume length?')
-        ->andReturn('A resume should typically be 1-2 pages for most professionals.');
-
-    $response1 = $this->withToken($token)->postJson('/api/job-seeker/coach/chat', [
-        'message' => 'What is a good resume length?',
-    ]);
-
-    $response1->assertStatus(200);
-
-    // Second question
-    $mock->shouldReceive('chat')
-        ->once()
-        ->with('How do I write a cover letter?')
-        ->andReturn('Start with a strong opening, highlight relevant experience, and explain why you are interested in the role.');
-
-    $response2 = $this->withToken($token)->postJson('/api/job-seeker/coach/chat', [
-        'message' => 'How do I write a cover letter?',
-    ]);
-
-    $response2->assertStatus(200);
-
-    $seeker->delete();
 });

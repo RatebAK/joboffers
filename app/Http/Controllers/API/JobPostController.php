@@ -90,6 +90,56 @@ class JobPostController extends Controller
      * @queryParam communication_method string Filter: by_phone | by_forsa | by_website. Example: by_forsa
      * @queryParam per_page integer Max 100, default 15. Example: 10
      * @queryParam page integer Page number. Example: 1
+     * @response 200 {
+     *   "data": [
+     *     {
+     *       "_id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *       "job_id": "JOB-0001",
+     *       "employer_id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *       "company_profile_id": "664f1a2b3c4d5e6f7a8b9c0f",
+     *       "company_name": "Acme Corp",
+     *       "company_logo": "https://example.com/logo.png",
+     *       "title": "Senior Laravel Developer",
+     *       "description": "We are looking for...",
+     *       "requirements": "3+ years Laravel experience.",
+     *       "roles": ["Backend", "PHP"],
+     *       "category": "Engineering",
+     *       "tags": ["Laravel", "MongoDB"],
+     *       "job_type": "full_time",
+     *       "work_mode": "on_site",
+     *       "job_level": "senior",
+     *       "education_level": "bachelor",
+     *       "experience_years": 3,
+     *       "languages": ["Arabic", "English"],
+     *       "vacancies": 2,
+     *       "city": "Damascus",
+     *       "address": "Mazzeh Street 12",
+     *       "salary_from": 500,
+     *       "salary_to": 1000,
+     *       "currency": "USD",
+     *       "display_salary": true,
+     *       "incentives": "Monthly bonuses",
+     *       "gender": "no_preference",
+     *       "age_from": null,
+     *       "age_to": null,
+     *       "portfolio_required": false,
+     *       "cover_letter_required": true,
+     *       "communication_method": "by_forsa",
+     *       "communication_value": null,
+     *       "questions": [{ "question": "Describe your last project.", "required": true }],
+     *       "is_active": true,
+     *       "expires_at": "2026-12-31T00:00:00.000000Z",
+     *       "created_at": "2026-01-15T10:00:00.000000Z",
+     *       "updated_at": "2026-01-15T10:00:00.000000Z"
+     *     }
+     *   ],
+     *   "current_page": 1,
+     *   "per_page": 15,
+     *   "total": 1,
+     *   "total_pages": 1,
+     *   "next_page": null,
+     *   "prev_page": null
+     * }
      */
     public function index(Request $request)
     {
@@ -153,6 +203,48 @@ class JobPostController extends Controller
      *
      * @unauthenticated
      * @urlParam id string required Job post ID. Example: 664f1a2b3c4d5e6f7a8b9c0d
+     * @response 200 scenario="Success" {
+     *   "_id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *   "job_id": "JOB-0001",
+     *   "employer_id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *   "company_profile_id": "664f1a2b3c4d5e6f7a8b9c0f",
+     *   "company_name": "Acme Corp",
+     *   "company_logo": "https://example.com/logo.png",
+     *   "title": "Senior Laravel Developer",
+     *   "description": "We are looking for an experienced Laravel developer...",
+     *   "requirements": "3+ years Laravel, MongoDB experience preferred.",
+     *   "roles": ["Backend", "PHP"],
+     *   "category": "Engineering",
+     *   "tags": ["Laravel", "MongoDB", "PHP"],
+     *   "job_type": "full_time",
+     *   "work_mode": "on_site",
+     *   "job_level": "senior",
+     *   "education_level": "bachelor",
+     *   "experience_years": 3,
+     *   "languages": ["Arabic", "English"],
+     *   "vacancies": 2,
+     *   "city": "Damascus",
+     *   "address": "Mazzeh Street 12",
+     *   "salary_from": 500,
+     *   "salary_to": 1000,
+     *   "currency": "USD",
+     *   "display_salary": true,
+     *   "incentives": "Monthly bonuses",
+     *   "gender": "no_preference",
+     *   "age_from": null,
+     *   "age_to": null,
+     *   "portfolio_required": false,
+     *   "cover_letter_required": true,
+     *   "communication_method": "by_forsa",
+     *   "communication_value": null,
+     *   "questions": [
+     *     { "question": "Describe your last project.", "required": true }
+     *   ],
+     *   "is_active": true,
+     *   "expires_at": "2026-12-31T00:00:00.000000Z",
+     *   "created_at": "2026-01-15T10:00:00.000000Z",
+     *   "updated_at": "2026-01-15T10:00:00.000000Z"
+     * }
      * @response 404 { "message": "Job post not found" }
      */
     public function show(string $id)
@@ -210,7 +302,18 @@ class JobPostController extends Controller
      * @bodyParam category string. Example: Engineering
      * @bodyParam expires_at date ISO date for expiry. Example: 2026-12-31
      *
-     * @response 201 scenario="Created" {}
+     * @response 201 scenario="Created" {
+     *   "_id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *   "job_id": "JOB-0001",
+     *   "employer_id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *   "company_profile_id": "664f1a2b3c4d5e6f7a8b9c0f",
+     *   "company_name": "Acme Corp",
+     *   "company_logo": "https://example.com/logo.png",
+     *   "title": "Senior Laravel Developer",
+     *   "is_active": true,
+     *   "created_at": "2026-01-15T10:00:00.000000Z",
+     *   "updated_at": "2026-01-15T10:00:00.000000Z"
+     * }
      * @response 404 { "message": "You must create a company profile before posting a job." }
      * @response 422 { "errors": {} }
      */
@@ -259,6 +362,13 @@ class JobPostController extends Controller
      * and always sourced from the employer's company profile.
      *
      * @urlParam id string required Job post ID. Example: 664f1a2b3c4d5e6f7a8b9c0d
+     * @response 200 scenario="Updated" {
+     *   "_id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *   "job_id": "JOB-0001",
+     *   "title": "Updated Job Title",
+     *   "is_active": true,
+     *   "updated_at": "2026-06-01T12:00:00.000000Z"
+     * }
      * @response 403 { "message": "Forbidden" }
      * @response 404 { "message": "Job post not found" }
      * @response 422 { "errors": {} }
@@ -329,7 +439,30 @@ class JobPostController extends Controller
     /**
      * My job posts
      *
-     * Returns all job posts by the authenticated employer, each with application count.
+     * Returns all job posts by the authenticated employer, each with an `application_count` field.
+     *
+     * @response 200 scenario="Success" [
+     *   {
+     *     "_id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *     "job_id": "JOB-0001",
+     *     "employer_id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *     "company_name": "Acme Corp",
+     *     "company_logo": "https://example.com/logo.png",
+     *     "title": "Senior Laravel Developer",
+     *     "job_type": "full_time",
+     *     "work_mode": "on_site",
+     *     "city": "Damascus",
+     *     "is_active": true,
+     *     "vacancies": 2,
+     *     "salary_from": 500,
+     *     "salary_to": 1000,
+     *     "currency": "USD",
+     *     "expires_at": "2026-12-31T00:00:00.000000Z",
+     *     "created_at": "2026-01-15T10:00:00.000000Z",
+     *     "updated_at": "2026-01-15T10:00:00.000000Z",
+     *     "application_count": 7
+     *   }
+     * ]
      */
     public function myPosts()
     {
