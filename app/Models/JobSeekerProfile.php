@@ -44,8 +44,12 @@ class JobSeekerProfile extends Model
         'education_history', // [{ id, certificate_type, university, faculty, major, major_name, grade, from_date, awarded_date }]
         'work_experience', // [{ id, job_title, company_name, job_roles, from_date, to_date, is_currently_working, description }]
         // Resume / CV
-        'resume',
-        'cv_file_path',
+        'resume',          // Cloudinary URL of plain uploaded resume
+        'resume_public_id', // Cloudinary public_id for deletion
+        'cv_file_path',    // Cloudinary URL of AI-analyzed CV
+        'cv_public_id',    // Cloudinary public_id for deletion
+        // Saved default cover letter (reused across applications)
+        'default_cover_letter',
         // AI-derived fields
         'ai_full_name',
         'ai_email',

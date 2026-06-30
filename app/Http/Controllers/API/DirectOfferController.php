@@ -208,11 +208,14 @@ class DirectOfferController extends Controller
 
         $offer->update(['status' => 'accepted']);
 
+        $profile = $jobSeeker->jobSeekerProfile;
         Application::create([
-            'user_id'    => $jobSeeker->_id,
-            'job_post_id' => $offer->job_post_id,
-            'status'     => 'pending',
-            'applied_at' => now(),
+            'user_id'      => $jobSeeker->_id,
+            'job_post_id'  => $offer->job_post_id,
+            'resume'       => $profile->cv_file_path ?? $profile->resume ?? null,
+            'cover_letter' => $profile->default_cover_letter ?? null,
+            'status'       => 'pending',
+            'applied_at'   => now(),
         ]);
 
         return response()->json([

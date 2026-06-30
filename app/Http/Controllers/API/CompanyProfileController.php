@@ -306,11 +306,13 @@ class CompanyProfileController extends Controller
     /**
      * Upload company logo
      *
-     * Uploads and replaces the company logo. Accepts JPEG, PNG, WebP; max 2 MB.
+     * Uploads and replaces the company logo. The image is stored on Cloudinary.
+     * Accepts JPEG, PNG, WebP; max 2 MB. Any previously uploaded logo is automatically deleted.
      *
-     * @bodyParam logo file required Image file. Max 2 MB.
-     * @response 200 { "logo": "https://..." }
-     * @response 404 { "message": "No company profile found. Create one first." }
+     * @bodyParam logo file required The logo image file. Accepted: jpeg, png, webp. Max 2 MB.
+     * @response 200 scenario="Success" {"logo": "https://res.cloudinary.com/dd8vgoh/image/upload/company-logos/abc123.jpg"}
+     * @response 404 scenario="No profile" {"message": "No company profile found. Create one first."}
+     * @response 422 scenario="Validation error" {"logo": ["The logo field is required."]}
      */
     public function uploadLogo(Request $request)
     {
@@ -324,13 +326,16 @@ class CompanyProfileController extends Controller
             'logo' => 'required|image|mimes:jpeg,png,webp|max:2048',
         ]);
 
-        // Delete old logo
-        if ($profile->logo && Str::startsWith($profile->logo, 'company_logos/')) {
-            Storage::disk('public')->delete($profile->logo);
+        // Delete old logo from Cloudinary
+        if ($profile->logo_public_id) {
+            Storage::disk('cloudinary')->delete($profile->logo_public_id);
         }
 
-        $path = $request->file('logo')->store('company_logos', 'public');
-        $profile->update(['logo' => Storage::disk('public')->url($path)]);
+        $path = $request->file('logo')->store('company-logos', 'cloudinary');
+        $profile->update([
+            'logo' => Storage::disk('cloudinary')->url($path),
+            'logo_public_id' => $path,
+        ]);
 
         return response()->json(['logo' => $profile->fresh()->logo]);
     }
@@ -338,11 +343,13 @@ class CompanyProfileController extends Controller
     /**
      * Upload company cover image
      *
-     * Uploads and replaces the cover/banner image. Accepts JPEG, PNG, WebP; max 4 MB.
+     * Uploads and replaces the company cover/banner image. The image is stored on Cloudinary.
+     * Accepts JPEG, PNG, WebP; max 4 MB. Any previously uploaded cover image is automatically deleted.
      *
-     * @bodyParam cover_image file required Image file. Max 4 MB.
-     * @response 200 { "cover_image": "https://..." }
-     * @response 404 { "message": "No company profile found. Create one first." }
+     * @bodyParam cover_image file required The cover image file. Accepted: jpeg, png, webp. Max 4 MB.
+     * @response 200 scenario="Success" {"cover_image": "https://res.cloudinary.com/dd8vgoh/image/upload/company-covers/abc123.jpg"}
+     * @response 404 scenario="No profile" {"message": "No company profile found. Create one first."}
+     * @response 422 scenario="Validation error" {"cover_image": ["The cover image field is required."]}
      */
     public function uploadCoverImage(Request $request)
     {
@@ -356,12 +363,16 @@ class CompanyProfileController extends Controller
             'cover_image' => 'required|image|mimes:jpeg,png,webp|max:4096',
         ]);
 
-        if ($profile->cover_image && Str::startsWith($profile->cover_image, 'company_covers/')) {
-            Storage::disk('public')->delete($profile->cover_image);
+        // Delete old cover from Cloudinary
+        if ($profile->cover_image_public_id) {
+            Storage::disk('cloudinary')->delete($profile->cover_image_public_id);
         }
 
-        $path = $request->file('cover_image')->store('company_covers', 'public');
-        $profile->update(['cover_image' => Storage::disk('public')->url($path)]);
+        $path = $request->file('cover_image')->store('company-covers', 'cloudinary');
+        $profile->update([
+            'cover_image' => Storage::disk('cloudinary')->url($path),
+            'cover_image_public_id' => $path,
+        ]);
 
         return response()->json(['cover_image' => $profile->fresh()->cover_image]);
     }

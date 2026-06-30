@@ -26,7 +26,7 @@ function cvSeeker(): array
 // ── POST /api/job-seeker/resume/upload ────────────────────────
 
 test('seeker can upload a resume file', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
 
     $file = UploadedFile::fake()->create('my_resume.pdf', 200, 'application/pdf');
@@ -44,7 +44,7 @@ test('seeker can upload a resume file', function () {
 });
 
 test('resume upload stores file path on profile', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
 
     $file = UploadedFile::fake()->create('cv.pdf', 100, 'application/pdf');
@@ -60,7 +60,7 @@ test('resume upload stores file path on profile', function () {
 });
 
 test('resume upload accepts docx files', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
 
     $file = UploadedFile::fake()->create('resume.docx', 100, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
@@ -73,7 +73,7 @@ test('resume upload accepts docx files', function () {
 });
 
 test('resume upload rejects invalid file types', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
 
     $file = UploadedFile::fake()->create('resume.exe', 100, 'application/octet-stream');
@@ -94,7 +94,7 @@ test('resume upload requires a file', function () {
 });
 
 test('unauthenticated user cannot upload resume', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     $file = UploadedFile::fake()->create('cv.pdf', 100, 'application/pdf');
 
     $this->postJson('/api/job-seeker/resume/upload', ['resume' => $file])
@@ -102,7 +102,7 @@ test('unauthenticated user cannot upload resume', function () {
 });
 
 test('employer cannot upload resume to job seeker endpoint', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     $employer = User::factory()->employer()->create();
     $token    = auth('api')->login($employer);
     $file     = UploadedFile::fake()->create('cv.pdf', 100, 'application/pdf');
@@ -116,7 +116,7 @@ test('employer cannot upload resume to job seeker endpoint', function () {
 // ── POST /api/job-seeker/resume/upload-and-analyze ────────────
 
 test('upload-and-analyze succeeds and populates ai fields', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
 
     $mock = $this->mock(CvAnalysisService::class);
@@ -160,7 +160,7 @@ test('upload-and-analyze succeeds and populates ai fields', function () {
 });
 
 test('upload-and-analyze returns 422 when AI cannot parse CV', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
 
     $mock = $this->mock(CvAnalysisService::class);
@@ -180,7 +180,7 @@ test('upload-and-analyze returns 422 when AI cannot parse CV', function () {
 });
 
 test('upload-and-analyze returns 502 when AI service is unavailable', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
 
     $mock = $this->mock(CvAnalysisService::class);
@@ -208,7 +208,7 @@ test('upload-and-analyze requires a cv file', function () {
 });
 
 test('upload-and-analyze rejects non-document file types', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
 
     $file = UploadedFile::fake()->create('photo.jpg', 100, 'image/jpeg');
@@ -222,7 +222,7 @@ test('upload-and-analyze rejects non-document file types', function () {
 });
 
 test('unauthenticated user cannot upload-and-analyze', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     $file = UploadedFile::fake()->create('cv.pdf', 100, 'application/pdf');
 
     $this->postJson('/api/job-seeker/resume/upload-and-analyze', ['cv' => $file])
@@ -232,7 +232,7 @@ test('unauthenticated user cannot upload-and-analyze', function () {
 // ── New field mapping tests ───────────────────────────────────
 
 test('upload-and-analyze maps education_history correctly', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
 
     $mock = $this->mock(CvAnalysisService::class);
@@ -266,7 +266,7 @@ test('upload-and-analyze maps education_history correctly', function () {
 });
 
 test('upload-and-analyze maps languages correctly', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
 
     $mock = $this->mock(CvAnalysisService::class);
@@ -295,7 +295,7 @@ test('upload-and-analyze maps languages correctly', function () {
 });
 
 test('upload-and-analyze maps social links correctly', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
 
     $mock = $this->mock(CvAnalysisService::class);
@@ -324,7 +324,7 @@ test('upload-and-analyze maps social links correctly', function () {
 });
 
 test('upload-and-analyze maps work_history correctly', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
 
     $mock = $this->mock(CvAnalysisService::class);
@@ -365,7 +365,7 @@ test('upload-and-analyze maps work_history correctly', function () {
 });
 
 test('upload-and-analyze maps projects correctly', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
 
     $mock = $this->mock(CvAnalysisService::class);
@@ -398,7 +398,7 @@ test('upload-and-analyze maps projects correctly', function () {
 });
 
 test('upload-and-analyze handles missing optional fields gracefully', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
 
     $mock = $this->mock(CvAnalysisService::class);
@@ -429,7 +429,7 @@ test('upload-and-analyze handles missing optional fields gracefully', function (
 });
 
 test('upload-and-analyze stores ai_analyzed_at timestamp', function () {
-    Storage::fake('public');
+    Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
 
     $mock = $this->mock(CvAnalysisService::class);

@@ -8,16 +8,19 @@ use Illuminate\Support\Facades\Log;
 
 class CvAnalysisService
 {
-    public function analyze(string $filePath, string $resumeId): array
+    /**
+     * Analyze a CV from a publicly accessible URL.
+     *
+     * @param  string  $fileUrl   Cloudinary (or any public) URL of the CV file
+     * @param  string  $resumeId  Identifier sent to the AI service (user ID)
+     */
+    public function analyze(string $fileUrl, string $resumeId): array
     {
         $apiUrl = config('services.cv_analysis.url');
 
         try {
-            $response = Http::attach(
-                'file',
-                file_get_contents(storage_path('app/'.$filePath)),
-                basename($filePath)
-            )->post($apiUrl, [
+            $response = Http::post($apiUrl, [
+                'file_url'  => $fileUrl,
                 'resume_id' => $resumeId,
             ]);
         } catch (\Throwable $e) {

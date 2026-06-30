@@ -40,7 +40,7 @@ function makeEmployerWithCompany(array $privateInfo = []): array
     return [$employer, $company];
 }
 
-function makeJobPost(User $employer, CompanyProfile $company): JobPost
+function makeJobPostWithCompany(User $employer, CompanyProfile $company): JobPost
 {
     return JobPost::create([
         'job_id'             => 'JOB-TEST',
@@ -59,15 +59,15 @@ function makeJobPost(User $employer, CompanyProfile $company): JobPost
 }
 
 afterEach(function () {
-    JobPost::truncate();
-    CompanyProfile::truncate();
+    JobPost::where('job_id', 'like', 'JOB-TEST%')->orWhere('job_id', 'JOB-ORPHAN')->delete();
+    CompanyProfile::where('slug', 'acme-corp')->orWhere('slug', 'bare-corp')->delete();
 });
 
 // ── Company snippet present ───────────────────────────────────
 
 test('get job returns embedded company snippet', function () {
     [$employer, $company] = makeEmployerWithCompany();
-    $job = makeJobPost($employer, $company);
+    $job = makeJobPostWithCompany($employer, $company);
 
     $this->getJson("/api/jobs/{$job->_id}")
         ->assertStatus(200)
@@ -80,7 +80,7 @@ test('get job returns embedded company snippet', function () {
 
 test('company snippet contains correct values', function () {
     [$employer, $company] = makeEmployerWithCompany();
-    $job = makeJobPost($employer, $company);
+    $job = makeJobPostWithCompany($employer, $company);
 
     $response = $this->getJson("/api/jobs/{$job->_id}")->assertStatus(200);
 
@@ -96,7 +96,7 @@ test('company snippet contains correct values', function () {
 
 test('company snippet includes social media links', function () {
     [$employer, $company] = makeEmployerWithCompany();
-    $job = makeJobPost($employer, $company);
+    $job = makeJobPostWithCompany($employer, $company);
 
     $this->getJson("/api/jobs/{$job->_id}")
         ->assertStatus(200)
@@ -119,7 +119,7 @@ test('company snippet is null-safe when no private_info set', function () {
         // no private_info
     ]);
 
-    $job = makeJobPost($employer, $company);
+    $job = makeJobPostWithCompany($employer, $company);
 
     $this->getJson("/api/jobs/{$job->_id}")
         ->assertStatus(200)
@@ -132,7 +132,7 @@ test('company snippet is null-safe when no private_info set', function () {
 
 test('job fields are still present alongside company snippet', function () {
     [$employer, $company] = makeEmployerWithCompany();
-    $job = makeJobPost($employer, $company);
+    $job = makeJobPostWithCompany($employer, $company);
 
     $this->getJson("/api/jobs/{$job->_id}")
         ->assertStatus(200)
@@ -177,7 +177,7 @@ test('returns 404 for non-existent job', function () {
 
 test('endpoint is public — no auth required', function () {
     [$employer, $company] = makeEmployerWithCompany();
-    $job = makeJobPost($employer, $company);
+    $job = makeJobPostWithCompany($employer, $company);
 
     // No withToken() — should still work
     $this->getJson("/api/jobs/{$job->_id}")->assertStatus(200);

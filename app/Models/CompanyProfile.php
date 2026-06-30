@@ -25,7 +25,9 @@ class CompanyProfile extends Model
         'slug',               // url-friendly name, auto-generated
         // Public fields
         'logo',               // URL
+        'logo_public_id',     // Cloudinary public_id for deletion
         'cover_image',        // URL
+        'cover_image_public_id', // Cloudinary public_id for deletion
         'description',
         'industry',           // single industry string
         'company_size',       // one of self::SIZES

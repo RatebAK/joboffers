@@ -36,12 +36,17 @@ class JobSeekerController extends Controller
         $profile = $user->jobSeekerProfile;
 
         if (! $profile) {
-            // Create empty profile if it doesn't exist
             $profile = $user->jobSeekerProfile()->create([]);
         }
 
         return response()->json([
-            'profile' => $profile,
+            'profile'   => $profile,
+            'documents' => [
+                'cv_url'               => $profile->cv_file_path,
+                'cv_analyzed_at'       => $profile->ai_analyzed_at,
+                'resume_url'           => $profile->resume,
+                'default_cover_letter' => $profile->default_cover_letter,
+            ],
         ]);
     }
 
@@ -537,21 +542,21 @@ class JobSeekerController extends Controller
 
         $profile = $user->jobSeekerProfile()->firstOrCreate(['user_id' => $user->_id]);
 
-        // Delete previous CV file if it exists
-        if ($profile->cv_file_path) {
-            Storage::delete($profile->cv_file_path);
+        // Delete previous CV from Cloudinary if it exists
+        if ($profile->cv_public_id) {
+            Storage::disk('cloudinary')->delete($profile->cv_public_id);
         }
 
-        // Store new file
-        $storedPath = $request->file('cv')->store('resumes', 'public');
-        $cvFilePath = 'public/resumes/'.basename($storedPath);
+        // Upload to Cloudinary
+        $publicId = $request->file('cv')->store('job-seeker-cvs', 'cloudinary');
+        $cvUrl    = Storage::disk('cloudinary')->url($publicId);
 
         try {
-            // Use user ID as resume_id
-            $analysis = $cvAnalysisService->analyze($cvFilePath, (string) $user->_id);
+            // Pass the public Cloudinary URL to the AI service
+            $analysis = $cvAnalysisService->analyze($cvUrl, (string) $user->_id);
         } catch (CvAnalysisException $e) {
             // Remove the just-uploaded file since analysis failed
-            Storage::delete($cvFilePath);
+            Storage::disk('cloudinary')->delete($publicId);
 
             $statusCode = $e->getHttpStatusCode();
 
@@ -569,7 +574,8 @@ class JobSeekerController extends Controller
 
         // Map AI response to profile fields
         $updateData = [
-            'cv_file_path' => $cvFilePath,
+            'cv_file_path' => $cvUrl,
+            'cv_public_id' => $publicId,
             'ai_full_name' => $analysis['full_name'] ?? null,
             'ai_email' => $analysis['email'] ?? null,
             'ai_phone' => $analysis['phone'] ?? null,
@@ -636,18 +642,100 @@ class JobSeekerController extends Controller
             'user_id' => $user->_id,
         ]);
 
-        // Delete old resume if exists
-        if ($profile->resume) {
-            Storage::delete($profile->resume);
+        // Delete old resume from Cloudinary if exists
+        if ($profile->resume_public_id) {
+            Storage::disk('cloudinary')->delete($profile->resume_public_id);
         }
 
-        $resumePath = $request->file('resume')->store('resumes', 'public');
-        $profile->update(['resume' => $resumePath]);
+        $publicId   = $request->file('resume')->store('job-seeker-resumes', 'cloudinary');
+        $resumeUrl  = Storage::disk('cloudinary')->url($publicId);
+        $profile->update([
+            'resume'           => $resumeUrl,
+            'resume_public_id' => $publicId,
+        ]);
 
         return response()->json([
-            'message' => 'Resume uploaded successfully',
-            'resume_url' => Storage::url($resumePath),
+            'message'    => 'Resume uploaded successfully',
+            'resume_url' => $resumeUrl,
         ]);
+    }
+
+    /**
+     * Delete saved resume
+     *
+     * Removes the stored resume file from the job seeker's profile.
+     *
+     * @response 200 { "message": "Resume deleted successfully" }
+     * @response 404 { "message": "No resume found on your profile" }
+     */
+    public function deleteResume(Request $request)
+    {
+        $user = $request->user();
+        $profile = $user->jobSeekerProfile;
+
+        if (! $profile || ! $profile->resume) {
+            return response()->json(['message' => 'No resume found on your profile'], 404);
+        }
+
+        if ($profile->resume_public_id) {
+            Storage::disk('cloudinary')->delete($profile->resume_public_id);
+        }
+        $profile->update(['resume' => null, 'resume_public_id' => null]);
+
+        return response()->json(['message' => 'Resume deleted successfully']);
+    }
+
+    /**
+     * Save default cover letter
+     *
+     * Saves a default cover letter on the profile. It will be used automatically when applying
+     * to jobs if no per-application cover letter is provided.
+     *
+     * @bodyParam cover_letter string required The default cover letter text. Max 2000 chars.
+     *
+     * @response 200 { "message": "Default cover letter saved", "default_cover_letter": "..." }
+     */
+    public function saveDefaultCoverLetter(Request $request)
+    {
+        $user = $request->user();
+
+        $validator = Validator::make($request->all(), [
+            'cover_letter' => 'required|string|max:2000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $profile = $user->jobSeekerProfile()->firstOrCreate(['user_id' => $user->_id]);
+        $profile->update(['default_cover_letter' => $request->cover_letter]);
+
+        return response()->json([
+            'message'               => 'Default cover letter saved',
+            'default_cover_letter'  => $profile->default_cover_letter,
+        ]);
+    }
+
+    /**
+     * Delete default cover letter
+     *
+     * Removes the saved default cover letter from the job seeker's profile.
+     *
+     * @response 200 { "message": "Default cover letter deleted" }
+     * @response 404 { "message": "No default cover letter found on your profile" }
+     */
+    public function deleteDefaultCoverLetter(Request $request)
+    {
+        $user = $request->user();
+        $profile = $user->jobSeekerProfile;
+
+        if (! $profile || ! $profile->default_cover_letter) {
+            return response()->json(['message' => 'No default cover letter found on your profile'], 404);
+        }
+
+        $profile->update(['default_cover_letter' => null]);
+
+        return response()->json(['message' => 'Default cover letter deleted']);
     }
 
     /**

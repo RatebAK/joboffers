@@ -120,6 +120,12 @@ class ApplicationController extends Controller
             $data['resume'] = $profile->cv_file_path ?? null;
         }
 
+        // Resolve cover letter: request value > profile default
+        if (empty($data['cover_letter'])) {
+            $profile = $profile ?? $user->jobSeekerProfile;
+            $data['cover_letter'] = $profile->default_cover_letter ?? null;
+        }
+
         $application = Application::create([
             'user_id'               => $user->_id,
             'job_post_id'           => $data['job_post_id'],
