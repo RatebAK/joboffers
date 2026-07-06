@@ -53,4 +53,4 @@ test('debug: verify exact data flow', function () {
     
     User::truncate();
     JobSeekerProfile::truncate();
-})->only();
+});

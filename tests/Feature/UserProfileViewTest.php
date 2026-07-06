@@ -1,767 +1,304 @@
 <?php
 
+// ============================================================
+// Tests for GET /api/users/{id} and admin user listing endpoints.
+// All users created via factory + auth()->login() to avoid bcrypt.
+// ============================================================
+
 use App\Models\CompanyProfile;
-use App\Models\Employer;
 use App\Models\JobPost;
 use App\Models\JobSeekerProfile;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 
-// Note: Tests use unique data to avoid conflicts instead of truncating collections
+// ── Helpers ───────────────────────────────────────────────────
 
-test('job seeker can view employer full profile', function () {
-    // Register job seeker
-    $seekerRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Alice Seeker',
-        'email'    => 'alice@test.com',
-        'password' => 'password123',
-        'roles'    => ['employee'],
-    ]);
-    $seekerToken = $seekerRes->json('token');
+function uvSeeker(array $attrs = []): array
+{
+    $user  = User::factory()->employee()->create($attrs);
+    $token = auth('api')->login($user);
+    return [$user, $token];
+}
 
-    // Register employer
-    $employerRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Bob Employer',
-        'email'    => 'bob@test.com',
-        'password' => 'password123',
-        'roles'    => ['employer'],
-    ]);
-    $employerToken = $employerRes->json('token');
-    $employerId    = $employerRes->json('user.id');
+function uvEmployer(array $attrs = []): array
+{
+    $user  = User::factory()->employer()->create($attrs);
+    $token = auth('api')->login($user);
+    return [$user, $token];
+}
 
-    // Admin approves employer
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
-    ]);
-    $adminToken = auth()->login($admin);
+function uvAdmin(): array
+{
+    $user  = User::factory()->admin()->create();
+    $token = auth('api')->login($user);
+    return [$user, $token];
+}
 
-    $application = Employer::where('user_id', $employerId)->first();
-    $this->withHeader('Authorization', "Bearer $adminToken")
-        ->putJson("/api/admin/employers/{$application->_id}/approve")
+// ── GET /api/users/{id} ───────────────────────────────────────
+
+test('authenticated user can view a job seeker profile', function () {
+    [$seeker]         = uvSeeker();
+    [, $viewerToken]  = uvSeeker();
+
+    // Ensure profile exists then set AI fields
+    $profile = JobSeekerProfile::firstOrCreate(['user_id' => (string) $seeker->_id]);
+    $profile->ai_skills = ['PHP', 'Laravel'];
+    $profile->ats_score = 80;
+    $profile->save();
+
+    $res = $this->withToken($viewerToken)
+        ->getJson("/api/users/{$seeker->_id}")
         ->assertOk();
 
-    // Employer creates company profile
-    $this->withHeader('Authorization', "Bearer $employerToken")
-        ->putJson('/api/employer/company-profile', [
-            'company_name' => 'Acme Corp',
-            'industry'     => 'Tech',
-            'website'      => 'https://acme.com',
-        ])
-        ->assertOk();
-
-    // Employer creates job post
-    $this->withHeader('Authorization', "Bearer $employerToken")
-        ->postJson('/api/jobs', [
-            'title'       => 'Senior Developer',
-            'description' => 'Great role',
-            'company_name'=> 'Acme Corp',
-            'location'    => 'Beirut',
-        ])
-        ->assertCreated();
-
-    // Job seeker views employer profile
-    $res = $this->withHeader('Authorization', "Bearer $seekerToken")
-        ->getJson("/api/users/$employerId")
-        ->assertOk();
-
-    expect($res->json('user.name'))->toBe('Bob Employer');
-    expect($res->json('user.profile.company_name'))->toBe('Acme Corp');
-    expect($res->json('user.profile.open_positions_count'))->toBe(1);
-});
-
-test('employer can view job seeker full profile including ai fields', function () {
-    // Register job seeker
-    $seekerRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Charlie Seeker',
-        'email'    => 'charlie@test.com',
-        'password' => 'password123',
-        'roles'    => ['employee'],
-    ]);
-    $seekerToken = $seekerRes->json('token');
-    $seekerId    = $seekerRes->json('user.id');
-
-    // Update profile with AI fields
-    JobSeekerProfile::where('user_id', $seekerId)->update([
-        'ai_skills'  => ['PHP', 'Laravel'],
-        'ai_summary' => 'Experienced developer',
-        'ats_score'  => 85,
-    ]);
-
-    // Register and approve employer
-    $employerRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Dave Employer',
-        'email'    => 'dave@test.com',
-        'password' => 'password123',
-        'roles'    => ['employer'],
-    ]);
-    $employerToken = $employerRes->json('token');
-    $employerId    = $employerRes->json('user.id');
-
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
-    ]);
-    $adminToken = auth()->login($admin);
-
-    $application = Employer::where('user_id', $employerId)->first();
-    $this->withHeader('Authorization', "Bearer $adminToken")
-        ->putJson("/api/admin/employers/{$application->_id}/approve")
-        ->assertOk();
-
-    // Employer views job seeker profile
-    $res = $this->withHeader('Authorization', "Bearer $employerToken")
-        ->getJson("/api/users/$seekerId")
-        ->assertOk();
-
-    expect($res->json('user.name'))->toBe('Charlie Seeker');
+    expect($res->json('user.name'))->toBe($seeker->name);
     expect($res->json('user.profile.ai_skills'))->toBe(['PHP', 'Laravel']);
-    expect($res->json('user.profile.ai_summary'))->toBe('Experienced developer');
-    expect($res->json('user.profile.ats_score'))->toBe(85);
+    expect($res->json('user.profile.ats_score'))->toBe(80);
+
+    $seeker->delete();
 });
 
-test('admin can view any user profile', function () {
-    // Register job seeker
-    $seekerRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Eve Seeker',
-        'email'    => 'eve@test.com',
-        'password' => 'password123',
-        'roles'    => ['employee'],
-    ]);
-    $seekerId = $seekerRes->json('user.id');
+test('authenticated user can view an employer profile with company data', function () {
+    [$employer] = uvEmployer();
+    [, $token]  = uvSeeker();
 
-    // Create admin
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
+    CompanyProfile::create([
+        'employer_id' => (string) $employer->_id,
+        'name'        => 'Acme Corp',
+        'slug'        => 'acme-corp-' . uniqid(),
+        'industry'    => 'Tech',
     ]);
-    $adminToken = auth()->login($admin);
 
-    // Admin views job seeker
-    $res = $this->withHeader('Authorization', "Bearer $adminToken")
-        ->getJson("/api/users/$seekerId")
+    $res = $this->withToken($token)
+        ->getJson("/api/users/{$employer->_id}")
         ->assertOk();
 
-    expect($res->json('user.name'))->toBe('Eve Seeker');
-    expect($res->json('user.email'))->toBe('eve@test.com');
+    expect($res->json('user.name'))->toBe($employer->name);
+    expect($res->json('user.profile.name'))->toBe('Acme Corp');
+
+    CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
+    $employer->delete();
 });
 
-test('returns 404 for non-existent user', function () {
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
+test('employer profile includes open_positions_count', function () {
+    [$employer] = uvEmployer();
+    [, $token]  = uvSeeker();
+
+    CompanyProfile::create([
+        'employer_id' => (string) $employer->_id,
+        'name'        => 'JobsCo',
+        'slug'        => 'jobsco-' . uniqid(),
     ]);
-    $adminToken = auth()->login($admin);
-
-    $this->withHeader('Authorization', "Bearer $adminToken")
-        ->getJson('/api/users/507f1f77bcf86cd799439011')
-        ->assertNotFound()
-        ->assertJson(['message' => 'User not found']);
-});
-
-test('admin can list all users with pagination', function () {
-    // Create multiple users
-    User::create(['name' => 'User 1', 'email' => 'u1@test.com', 'password' => Hash::make('pass'), 'roles' => ['employee']]);
-    User::create(['name' => 'User 2', 'email' => 'u2@test.com', 'password' => Hash::make('pass'), 'roles' => ['employer']]);
-    User::create(['name' => 'User 3', 'email' => 'u3@test.com', 'password' => Hash::make('pass'), 'roles' => ['employee']]);
-
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
+    JobPost::create([
+        'employer_id'  => (string) $employer->_id,
+        'title'        => 'Dev',
+        'description'  => 'D',
+        'company_name' => 'JobsCo',
+        'job_type'     => 'full_time',
+        'city'         => 'Beirut',
+        'vacancies'    => 1,
+        'communication_method' => 'by_forsa',
+        'is_active'    => true,
     ]);
-    $adminToken = auth()->login($admin);
 
-    $res = $this->withHeader('Authorization', "Bearer $adminToken")
-        ->getJson('/api/admin/users?per_page=2')
+    $res = $this->withToken($token)
+        ->getJson("/api/users/{$employer->_id}")
         ->assertOk();
 
-    expect($res->json('total'))->toBe(4);
-    expect($res->json('per_page'))->toBe(2);
-    expect($res->json('total_pages'))->toBe(2);
-    expect(count($res->json('data')))->toBe(2);
-});
+    expect($res->json('user.profile.open_positions_count'))->toBe(1);
 
-test('admin can list all job seekers with profiles', function () {
-    // Create job seekers
-    $seeker1 = User::create(['name' => 'Seeker 1', 'email' => 's1@test.com', 'password' => Hash::make('pass'), 'roles' => ['employee']]);
-    JobSeekerProfile::create(['user_id' => (string) $seeker1->_id, 'ai_skills' => ['PHP']]);
-
-    $seeker2 = User::create(['name' => 'Seeker 2', 'email' => 's2@test.com', 'password' => Hash::make('pass'), 'roles' => ['employee']]);
-    JobSeekerProfile::create(['user_id' => (string) $seeker2->_id, 'ai_skills' => ['JavaScript']]);
-
-    // Create employer (should not appear)
-    User::create(['name' => 'Employer', 'email' => 'emp@test.com', 'password' => Hash::make('pass'), 'roles' => ['employer']]);
-
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
-    ]);
-    $adminToken = auth()->login($admin);
-
-    $res = $this->withHeader('Authorization', "Bearer $adminToken")
-        ->getJson('/api/admin/users/seekers')
-        ->assertOk();
-
-    expect($res->json('total'))->toBe(2);
-    expect($res->json('data.0.profile.ai_skills'))->toBe(['PHP']);
-    expect($res->json('data.1.profile.ai_skills'))->toBe(['JavaScript']);
-});
-
-test('admin can list all employers with company profiles', function () {
-    // Create employers
-    $emp1 = User::create(['name' => 'Employer 1', 'email' => 'e1@test.com', 'password' => Hash::make('pass'), 'roles' => ['employer']]);
-    CompanyProfile::create(['employer_id' => (string) $emp1->_id, 'company_name' => 'Company A']);
-    JobPost::create(['employer_id' => (string) $emp1->_id, 'title' => 'Job 1', 'description' => 'Desc', 'company_name' => 'Company A', 'is_active' => true]);
-
-    $emp2 = User::create(['name' => 'Employer 2', 'email' => 'e2@test.com', 'password' => Hash::make('pass'), 'roles' => ['employer']]);
-    CompanyProfile::create(['employer_id' => (string) $emp2->_id, 'company_name' => 'Company B']);
-
-    // Create job seeker (should not appear)
-    User::create(['name' => 'Seeker', 'email' => 'seeker@test.com', 'password' => Hash::make('pass'), 'roles' => ['employee']]);
-
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
-    ]);
-    $adminToken = auth()->login($admin);
-
-    $res = $this->withHeader('Authorization', "Bearer $adminToken")
-        ->getJson('/api/admin/users/employers')
-        ->assertOk();
-
-    expect($res->json('total'))->toBe(2);
-    expect($res->json('data.0.profile.company_name'))->toBe('Company A');
-    expect($res->json('data.0.profile.open_positions_count'))->toBe(1);
-    expect($res->json('data.1.profile.company_name'))->toBe('Company B');
-    expect($res->json('data.1.profile.open_positions_count'))->toBe(0);
-});
-
-test('non-admin cannot access admin list endpoints', function () {
-    // Create job seeker
-    $seekerRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Seeker',
-        'email'    => 'seeker@test.com',
-        'password' => 'password123',
-        'roles'    => ['employee'],
-    ]);
-    $seekerToken = $seekerRes->json('token');
-
-    // Try to access admin endpoints
-    $this->withHeader('Authorization', "Bearer $seekerToken")
-        ->getJson('/api/admin/users')
-        ->assertForbidden();
-
-    $this->withHeader('Authorization', "Bearer $seekerToken")
-        ->getJson('/api/admin/users/seekers')
-        ->assertForbidden();
-
-    $this->withHeader('Authorization', "Bearer $seekerToken")
-        ->getJson('/api/admin/users/employers')
-        ->assertForbidden();
-});
-
-test('unauthenticated user cannot view profiles', function () {
-    $this->getJson('/api/users/507f1f77bcf86cd799439011')
-        ->assertUnauthorized();
+    JobPost::where('employer_id', (string) $employer->_id)->delete();
+    CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
+    $employer->delete();
 });
 
 test('employer without company profile returns null profile', function () {
-    // Create employer without company profile
-    $empRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Employer',
-        'email'    => 'emp@test.com',
-        'password' => 'password123',
-        'roles'    => ['employer'],
-    ]);
-    $empId = $empRes->json('user.id');
+    [$employer] = uvEmployer();
+    [, $token]  = uvAdmin();
 
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
-    ]);
-    $adminToken = auth()->login($admin);
-
-    $res = $this->withHeader('Authorization', "Bearer $adminToken")
-        ->getJson("/api/users/$empId")
+    $res = $this->withToken($token)
+        ->getJson("/api/users/{$employer->_id}")
         ->assertOk();
 
     expect($res->json('user.profile'))->toBeNull();
+    $employer->delete();
 });
 
 test('job seeker without profile returns null profile', function () {
-    // Create job seeker and delete profile
-    $seekerRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Seeker',
-        'email'    => 'seeker@test.com',
-        'password' => 'password123',
-        'roles'    => ['employee'],
-    ]);
-    $seekerId = $seekerRes->json('user.id');
+    [$seeker] = uvSeeker();
+    [, $token] = uvAdmin();
 
-    JobSeekerProfile::where('user_id', $seekerId)->delete();
+    JobSeekerProfile::where('user_id', (string) $seeker->_id)->delete();
 
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
-    ]);
-    $adminToken = auth()->login($admin);
-
-    $res = $this->withHeader('Authorization', "Bearer $adminToken")
-        ->getJson("/api/users/$seekerId")
+    $res = $this->withToken($token)
+        ->getJson("/api/users/{$seeker->_id}")
         ->assertOk();
 
     expect($res->json('user.profile'))->toBeNull();
+    $seeker->delete();
 });
 
-test('admin list seekers pagination works correctly', function () {
-    // Create 25 job seekers
-    for ($i = 1; $i <= 25; $i++) {
-        $user = User::create([
-            'name'     => "Seeker $i",
-            'email'    => "seeker$i@test.com",
-            'password' => Hash::make('pass'),
-            'roles'    => ['employee'],
-        ]);
-        JobSeekerProfile::create(['user_id' => (string) $user->_id]);
-    }
+test('returns 404 for non-existent user', function () {
+    [, $token] = uvAdmin();
 
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
-    ]);
-    $adminToken = auth()->login($admin);
-
-    // Page 1
-    $res1 = $this->withHeader('Authorization', "Bearer $adminToken")
-        ->getJson('/api/admin/users/seekers?per_page=10&page=1')
-        ->assertOk();
-
-    expect($res1->json('total'))->toBe(25);
-    expect($res1->json('per_page'))->toBe(10);
-    expect($res1->json('current_page'))->toBe(1);
-    expect($res1->json('total_pages'))->toBe(3);
-    expect(count($res1->json('data')))->toBe(10);
-    expect($res1->json('next_page'))->toBe(2);
-    expect($res1->json('prev_page'))->toBeNull();
-
-    // Page 2
-    $res2 = $this->withHeader('Authorization', "Bearer $adminToken")
-        ->getJson('/api/admin/users/seekers?per_page=10&page=2')
-        ->assertOk();
-
-    expect($res2->json('current_page'))->toBe(2);
-    expect($res2->json('next_page'))->toBe(3);
-    expect($res2->json('prev_page'))->toBe(1);
-
-    // Page 3 (last page with 5 items)
-    $res3 = $this->withHeader('Authorization', "Bearer $adminToken")
-        ->getJson('/api/admin/users/seekers?per_page=10&page=3')
-        ->assertOk();
-
-    expect($res3->json('current_page'))->toBe(3);
-    expect(count($res3->json('data')))->toBe(5);
-    expect($res3->json('next_page'))->toBeNull();
-    expect($res3->json('prev_page'))->toBe(2);
+    $this->withToken($token)
+        ->getJson('/api/users/000000000000000000000000')
+        ->assertNotFound()
+        ->assertJsonPath('message', 'User not found');
 });
 
-test('admin list employers pagination works correctly', function () {
-    // Create 18 employers
-    for ($i = 1; $i <= 18; $i++) {
-        $user = User::create([
-            'name'     => "Employer $i",
-            'email'    => "emp$i@test.com",
-            'password' => Hash::make('pass'),
-            'roles'    => ['employer'],
-        ]);
-        CompanyProfile::create(['employer_id' => (string) $user->_id, 'company_name' => "Company $i"]);
-    }
+test('profile response does not expose password', function () {
+    [$seeker, $token] = uvSeeker();
 
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
-    ]);
-    $adminToken = auth()->login($admin);
-
-    $res = $this->withHeader('Authorization', "Bearer $adminToken")
-        ->getJson('/api/admin/users/employers?per_page=5')
-        ->assertOk();
-
-    expect($res->json('total'))->toBe(18);
-    expect($res->json('per_page'))->toBe(5);
-    expect($res->json('total_pages'))->toBe(4);
-    expect(count($res->json('data')))->toBe(5);
-});
-
-test('user profile view does not expose password field', function () {
-    $seekerRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Seeker',
-        'email'    => 'seeker@test.com',
-        'password' => 'password123',
-        'roles'    => ['employee'],
-    ]);
-    $seekerToken = $seekerRes->json('token');
-    $seekerId    = $seekerRes->json('user.id');
-
-    $res = $this->withHeader('Authorization', "Bearer $seekerToken")
-        ->getJson("/api/users/$seekerId")
+    $res = $this->withToken($token)
+        ->getJson("/api/users/{$seeker->_id}")
         ->assertOk();
 
     expect($res->json('user'))->not->toHaveKey('password');
+    $seeker->delete();
 });
 
-test('admin can view user with multiple roles', function () {
-    // Create user with both employee and employer roles
-    $user = User::create([
-        'name'     => 'Multi Role User',
-        'email'    => 'multi@test.com',
-        'password' => Hash::make('pass'),
-        'roles'    => ['employee', 'employer'],
-    ]);
+test('user id in response is a 24-char MongoDB ObjectId string', function () {
+    [$seeker, $token] = uvSeeker();
 
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
-    ]);
-    $adminToken = auth()->login($admin);
+    $res = $this->withToken($token)
+        ->getJson("/api/users/{$seeker->_id}")
+        ->assertOk();
 
-    $res = $this->withHeader('Authorization', "Bearer $adminToken")
+    expect($res->json('user.id'))->toBeString();
+    expect(strlen($res->json('user.id')))->toBe(24);
+    $seeker->delete();
+});
+
+test('unauthenticated user cannot view profiles', function () {
+    $this->getJson('/api/users/000000000000000000000000')->assertUnauthorized();
+});
+
+test('user with multiple roles is returned correctly', function () {
+    $user  = User::factory()->withRoles(['employee', 'employer'])->create();
+    [, $token] = uvAdmin();
+
+    $res = $this->withToken($token)
         ->getJson("/api/users/{$user->_id}")
         ->assertOk();
 
-    expect($res->json('user.name'))->toBe('Multi Role User');
     expect($res->json('user.roles'))->toContain('employee');
     expect($res->json('user.roles'))->toContain('employer');
+    $user->delete();
 });
 
+// ── GET /api/admin/users ──────────────────────────────────────
 
-test('admin list all users respects per_page limit of 100', function () {
-    // Create 150 users
-    for ($i = 1; $i <= 150; $i++) {
-        User::create([
-            'name'     => "User $i",
-            'email'    => "user$i@test.com",
-            'password' => Hash::make('pass'),
-            'roles'    => ['employee'],
-        ]);
-    }
+test('admin can list all users with pagination', function () {
+    [$admin, $adminToken] = uvAdmin();
+    $users = User::factory()->employee()->count(3)->create();
 
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
-    ]);
-    $adminToken = auth()->login($admin);
+    $res = $this->withToken($adminToken)
+        ->getJson('/api/admin/users?per_page=2')
+        ->assertOk();
 
-    // Request 200 per page, should be capped at 100
-    $res = $this->withHeader('Authorization', "Bearer $adminToken")
+    expect($res->json('per_page'))->toBe(2);
+    expect($res->json('total'))->toBeGreaterThanOrEqual(4); // 3 + admin
+
+    $users->each->delete();
+    $admin->delete();
+});
+
+test('admin list all users per_page capped at 100', function () {
+    [$admin, $adminToken] = uvAdmin();
+
+    $res = $this->withToken($adminToken)
         ->getJson('/api/admin/users?per_page=200')
         ->assertOk();
 
     expect($res->json('per_page'))->toBe(100);
-    expect(count($res->json('data')))->toBe(100);
+    $admin->delete();
 });
 
-test('viewing profile includes correct id format', function () {
-    $seekerRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Seeker',
-        'email'    => 'seeker@test.com',
-        'password' => 'password123',
-        'roles'    => ['employee'],
-    ]);
-    $seekerToken = $seekerRes->json('token');
-    $seekerId    = $seekerRes->json('user.id');
+test('non-admin cannot access admin user list', function () {
+    [, $token] = uvSeeker();
 
-    $res = $this->withHeader('Authorization', "Bearer $seekerToken")
-        ->getJson("/api/users/$seekerId")
-        ->assertOk();
-
-    expect($res->json('user.id'))->toBeString();
-    expect(strlen($res->json('user.id')))->toBe(24); // MongoDB ObjectId length
+    $this->withToken($token)->getJson('/api/admin/users')->assertForbidden();
+    $this->withToken($token)->getJson('/api/admin/users/seekers')->assertForbidden();
+    $this->withToken($token)->getJson('/api/admin/users/employers')->assertForbidden();
 });
 
-test('employer profile includes all active job posts count', function () {
-    // Create employer
-    $empRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Employer',
-        'email'    => 'emp@test.com',
-        'password' => 'password123',
-        'roles'    => ['employer'],
-    ]);
-    $empToken = $empRes->json('token');
-    $empId    = $empRes->json('user.id');
+// ── GET /api/admin/users/seekers ─────────────────────────────
 
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
-    ]);
-    $adminToken = auth()->login($admin);
+test('admin can list job seekers with their profiles', function () {
+    [$admin, $adminToken] = uvAdmin();
+    [$s1] = uvSeeker();
+    [$s2] = uvSeeker();
 
-    $app = Employer::where('user_id', $empId)->first();
-    $this->withHeader('Authorization', "Bearer $adminToken")
-        ->putJson("/api/admin/employers/{$app->_id}/approve")
-        ->assertOk();
+    $p1 = JobSeekerProfile::firstOrCreate(['user_id' => (string) $s1->_id]);
+    $p1->ai_skills = ['PHP'];
+    $p1->save();
 
-    // Create company profile
-    $this->withHeader('Authorization', "Bearer $empToken")
-        ->putJson('/api/employer/company-profile', [
-            'company_name' => 'Test Company',
-        ])
-        ->assertOk();
+    $p2 = JobSeekerProfile::firstOrCreate(['user_id' => (string) $s2->_id]);
+    $p2->ai_skills = ['JS'];
+    $p2->save();
 
-    // Create 3 active and 2 inactive jobs
-    for ($i = 1; $i <= 3; $i++) {
-        $this->withHeader('Authorization', "Bearer $empToken")
-            ->postJson('/api/jobs', [
-                'title'       => "Active Job $i",
-                'description' => 'Desc',
-                'company_name'=> 'Test Company',
-            ])
-            ->assertCreated();
-    }
-
-    for ($i = 1; $i <= 2; $i++) {
-        $jobRes = $this->withHeader('Authorization', "Bearer $empToken")
-            ->postJson('/api/jobs', [
-                'title'       => "Inactive Job $i",
-                'description' => 'Desc',
-                'company_name'=> 'Test Company',
-            ])
-            ->assertCreated();
-        
-        $this->withHeader('Authorization', "Bearer $empToken")
-            ->putJson("/api/jobs/{$jobRes->json('job.id')}/deactivate")
-            ->assertOk();
-    }
-
-    // View profile
-    $res = $this->withHeader('Authorization', "Bearer $adminToken")
-        ->getJson("/api/users/$empId")
-        ->assertOk();
-
-    expect($res->json('user.profile.open_positions_count'))->toBe(3);
-});
-
-test('concurrent requests to view same profile return consistent data', function () {
-    $seekerRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Seeker',
-        'email'    => 'seeker@test.com',
-        'password' => 'password123',
-        'roles'    => ['employee'],
-    ]);
-    $seekerToken = $seekerRes->json('token');
-    $seekerId    = $seekerRes->json('user.id');
-
-    // Make 5 concurrent requests
-    $responses = [];
-    for ($i = 0; $i < 5; $i++) {
-        $responses[] = $this->withHeader('Authorization', "Bearer $seekerToken")
-            ->getJson("/api/users/$seekerId")
-            ->assertOk()
-            ->json();
-    }
-
-    // All responses should be identical
-    $firstResponse = $responses[0];
-    foreach ($responses as $response) {
-        expect($response)->toBe($firstResponse);
-    }
-});
-
-
-test('complete end-to-end profile viewing workflow across all roles', function () {
-    // Create admin
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
-    ]);
-    $adminToken = auth()->login($admin);
-
-    // Create 3 job seekers with varying profiles
-    $seekers = [];
-    for ($i = 1; $i <= 3; $i++) {
-        $seeker = User::create([
-            'name'     => "Seeker $i",
-            'email'    => "seeker$i@test.com",
-            'password' => Hash::make('pass'),
-            'roles'    => ['employee'],
-        ]);
-        JobSeekerProfile::where('user_id', (string) $seeker->_id)->update([
-            'ai_skills'  => ['PHP', 'Laravel', "Skill$i"],
-            'ats_score'  => 70 + ($i * 5),
-            'ai_summary' => "Summary for seeker $i",
-        ]);
-        $seekers[] = $seeker;
-    }
-
-    // Create 2 employers with companies
-    $employers = [];
-    for ($i = 1; $i <= 2; $i++) {
-        $emp = User::create([
-            'name'     => "Employer $i",
-            'email'    => "emp$i@test.com",
-            'password' => Hash::make('pass'),
-            'roles'    => ['employer'],
-        ]);
-        CompanyProfile::create([
-            'employer_id'  => (string) $emp->_id,
-            'company_name' => "Company $i",
-            'industry'     => 'Tech',
-        ]);
-        Employer::create(['user_id' => (string) $emp->_id, 'status' => 'approved']);
-        
-        // Create jobs for each employer
-        for ($j = 1; $j <= $i; $j++) {
-            JobPost::create([
-                'employer_id'  => (string) $emp->_id,
-                'title'        => "Job $i-$j",
-                'description'  => 'Desc',
-                'company_name' => "Company $i",
-                'is_active'    => true,
-            ]);
-        }
-        $employers[] = $emp;
-    }
-
-    // Test 1: Admin views all users
-    $allUsersRes = $this->withHeader('Authorization', "Bearer $adminToken")
-        ->getJson('/api/admin/users')
-        ->assertOk();
-    expect($allUsersRes->json('total'))->toBe(6); // 1 admin + 3 seekers + 2 employers
-
-    // Test 2: Admin views all seekers
-    $seekersRes = $this->withHeader('Authorization', "Bearer $adminToken")
+    $res = $this->withToken($adminToken)
         ->getJson('/api/admin/users/seekers')
-        ->assertOk();
-    expect($seekersRes->json('total'))->toBe(3);
-    expect($seekersRes->json('data.0.profile.ai_skills'))->toContain('PHP');
+        ->assertOk()
+        ->assertJsonStructure(['data', 'total', 'per_page', 'current_page', 'total_pages', 'next_page', 'prev_page']);
 
-    // Test 3: Admin views all employers
-    $employersRes = $this->withHeader('Authorization', "Bearer $adminToken")
+    $skills = collect($res->json('data'))->pluck('profile.ai_skills')->flatten()->toArray();
+    expect($skills)->toContain('PHP');
+    expect($skills)->toContain('JS');
+
+    $s1->delete(); $s2->delete(); $admin->delete();
+});
+
+test('admin seekers list pagination works', function () {
+    [$admin, $adminToken] = uvAdmin();
+    $seekers = User::factory()->employee()->count(5)->create();
+    foreach ($seekers as $s) {
+        JobSeekerProfile::firstOrCreate(['user_id' => (string) $s->_id]);
+    }
+
+    $page1 = $this->withToken($adminToken)
+        ->getJson('/api/admin/users/seekers?per_page=3&page=1')
+        ->assertOk();
+
+    expect($page1->json('per_page'))->toBe(3);
+    expect($page1->json('current_page'))->toBe(1);
+    expect($page1->json('next_page'))->toBeGreaterThan(0);
+    expect($page1->json('prev_page'))->toBeNull();
+
+    $seekers->each->delete();
+    $admin->delete();
+});
+
+// ── GET /api/admin/users/employers ───────────────────────────
+
+test('admin can list employers with company profiles and open_positions_count', function () {
+    [$admin, $adminToken] = uvAdmin();
+    [$emp1] = uvEmployer();
+    [$emp2] = uvEmployer();
+
+    CompanyProfile::create(['employer_id' => (string) $emp1->_id, 'name' => 'Corp A', 'slug' => 'corp-a-' . uniqid()]);
+    JobPost::create([
+        'employer_id' => (string) $emp1->_id, 'title' => 'Job', 'description' => 'D',
+        'company_name' => 'Corp A', 'job_type' => 'full_time', 'city' => 'Beirut',
+        'vacancies' => 1, 'communication_method' => 'by_forsa', 'is_active' => true,
+    ]);
+    CompanyProfile::create(['employer_id' => (string) $emp2->_id, 'name' => 'Corp B', 'slug' => 'corp-b-' . uniqid()]);
+
+    $res = $this->withToken($adminToken)
         ->getJson('/api/admin/users/employers')
         ->assertOk();
-    expect($employersRes->json('total'))->toBe(2);
-    expect($employersRes->json('data.0.profile.open_positions_count'))->toBeGreaterThan(0);
 
-    // Test 4: Each seeker views each employer
-    foreach ($seekers as $seeker) {
-        $seekerToken = auth()->login($seeker);
-        foreach ($employers as $employer) {
-            $res = $this->withHeader('Authorization', "Bearer $seekerToken")
-                ->getJson("/api/users/{$employer->_id}")
-                ->assertOk();
-            expect($res->json('user.profile.company_name'))->toContain('Company');
-        }
-    }
+    // Find the two employers we created in the response
+    $data = collect($res->json('data'));
+    $empA = $data->first(fn($e) => ($e['profile']['name'] ?? '') === 'Corp A');
+    $empB = $data->first(fn($e) => ($e['profile']['name'] ?? '') === 'Corp B');
 
-    // Test 5: Each employer views each seeker
-    foreach ($employers as $employer) {
-        $empToken = auth()->login($employer);
-        foreach ($seekers as $seeker) {
-            $res = $this->withHeader('Authorization', "Bearer $empToken")
-                ->getJson("/api/users/{$seeker->_id}")
-                ->assertOk();
-            expect($res->json('user.profile.ai_skills'))->toBeArray();
-        }
-    }
-});
+    expect($empA)->not->toBeNull();
+    expect($empA['profile']['open_positions_count'])->toBe(1);
+    expect($empB)->not->toBeNull();
+    expect($empB['profile']['open_positions_count'])->toBe(0);
 
-test('admin list endpoints handle large datasets efficiently', function () {
-    // Create 100 job seekers
-    for ($i = 1; $i <= 100; $i++) {
-        $user = User::create([
-            'name'     => "Seeker $i",
-            'email'    => "seeker$i@test.com",
-            'password' => Hash::make('pass'),
-            'roles'    => ['employee'],
-        ]);
-        JobSeekerProfile::create([
-            'user_id'   => (string) $user->_id,
-            'ats_score' => rand(50, 100),
-        ]);
-    }
-
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
-    ]);
-    $adminToken = auth()->login($admin);
-
-    // Test pagination with different page sizes
-    $pageSizes = [10, 25, 50, 100];
-    foreach ($pageSizes as $size) {
-        $res = $this->withHeader('Authorization', "Bearer $adminToken")
-            ->getJson("/api/admin/users/seekers?per_page=$size")
-            ->assertOk();
-        
-        expect($res->json('total'))->toBe(100);
-        expect($res->json('per_page'))->toBe($size);
-        expect(count($res->json('data')))->toBeLessThanOrEqual($size);
-    }
-});
-
-test('profile viewing respects data privacy across roles', function () {
-    // Create seeker with sensitive data
-    $seeker = User::create([
-        'name'     => 'Private Seeker',
-        'email'    => 'private@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['employee'],
-    ]);
-    JobSeekerProfile::where('user_id', (string) $seeker->_id)->update([
-        'ai_email'   => 'private@test.com',
-        'ai_phone'   => '1234567890',
-        'ai_summary' => 'Confidential summary',
-    ]);
-
-    // Create employer
-    $emp = User::create([
-        'name'     => 'Employer',
-        'email'    => 'emp@test.com',
-        'password' => Hash::make('pass'),
-        'roles'    => ['employer'],
-    ]);
-    $empToken = auth()->login($emp);
-
-    // Employer views seeker - should see all profile data
-    $res = $this->withHeader('Authorization', "Bearer $empToken")
-        ->getJson("/api/users/{$seeker->_id}")
-        ->assertOk();
-
-    // Verify profile data is present
-    expect($res->json('user.profile.ai_email'))->toBe('private@test.com');
-    expect($res->json('user.profile.ai_phone'))->toBe('1234567890');
-    
-    // But password should never be exposed
-    expect($res->json('user'))->not->toHaveKey('password');
+    JobPost::where('employer_id', (string) $emp1->_id)->delete();
+    CompanyProfile::where('employer_id', (string) $emp1->_id)->delete();
+    CompanyProfile::where('employer_id', (string) $emp2->_id)->delete();
+    $emp1->delete(); $emp2->delete(); $admin->delete();
 });

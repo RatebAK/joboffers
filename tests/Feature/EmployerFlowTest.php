@@ -40,13 +40,25 @@ function makeJobPost(string $employerId): JobPost
     return JobPost::create([
         'title'        => 'Vue.js Developer',
         'description'  => 'Build beautiful UIs.',
-        'requirements' => 'Vue.js experience required.',
         'company_name' => 'Test Employer Co',
         'job_type'     => 'full_time',
-        'location'     => 'Beirut, Lebanon',
+        'city'         => 'Beirut',
+        'vacancies'    => 1,
+        'communication_method' => 'by_forsa',
         'employer_id'  => $employerId,
         'is_active'    => true,
     ]);
+}
+
+/** makeEmployer + ensure company profile exists for job creation. */
+function makeEmployerWithCompany(): array
+{
+    [$employer, $token] = makeEmployer();
+    \App\Models\CompanyProfile::updateOrCreate(
+        ['employer_id' => (string) $employer->_id],
+        ['name' => 'Test Employer Co', 'slug' => 'test-employer-' . uniqid()]
+    );
+    return [$employer, $token];
 }
 
 test('employer can register with employer role', function () {
@@ -63,23 +75,25 @@ test('employer can register with employer role', function () {
 });
 
 test('employer can create a job post', function () {
-    [$employer, $token] = makeEmployer();
+    [$employer, $token] = makeEmployerWithCompany();
     $response = $this->withToken($token)->postJson('/api/employer/jobs', [
-        'title'        => 'React Developer',
-        'description'  => 'Build React apps.',
-        'requirements' => '2+ years React.',
-        'company_name' => 'Test Employer Co',
-        'job_type'     => 'contract',
-        'location'     => 'Remote',
+        'title'       => 'React Developer',
+        'description' => 'Build React apps.',
+        'vacancies'   => 1,
+        'city'        => 'Beirut',
+        'job_type'    => 'contract',
+        'communication_method' => 'by_forsa',
     ]);
     $response->assertStatus(201)->assertJsonPath('is_active', true)->assertJsonPath('title', 'React Developer');
     JobPost::where('employer_id', (string) $employer->_id)->delete();
+    \App\Models\CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
     $employer->delete();
 });
 
 test('job post creation requires mandatory fields', function () {
-    [$employer, $token] = makeEmployer();
+    [$employer, $token] = makeEmployerWithCompany();
     $this->withToken($token)->postJson('/api/employer/jobs', ['title' => 'Missing Fields'])->assertStatus(422);
+    \App\Models\CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
     $employer->delete();
 });
 

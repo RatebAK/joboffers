@@ -1,279 +1,199 @@
 <?php
 
+// ============================================================
+// Tests for GET /api/job-seeker/matched-jobs
+// All users created via factory + auth()->login() to avoid bcrypt.
+// ============================================================
+
 use App\Models\Application;
-use App\Models\Employer;
 use App\Models\JobPost;
 use App\Models\JobSeekerProfile;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
 
-// Note: Tests use unique data to avoid conflicts instead of truncating collections
+// ── Helpers ───────────────────────────────────────────────────
 
-test('matched jobs returns posts with higher scores for matching skills', function () {
-    $seekerRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Seeker',
-        'email'    => 'seeker@test.com',
-        'password' => 'password123',
-        'roles'    => ['employee'],
-    ]);
-    $seekerToken = $seekerRes->json('token');
-    $seekerId    = $seekerRes->json('user.id');
+function mjSeeker(array $profileAttrs = []): array
+{
+    $user  = User::factory()->employee()->create();
+    $token = auth('api')->login($user);
 
-    Http::fake([
-        '*' => Http::response([
-            'status'   => 'success',
-            'analysis' => [
-                'full_name'          => 'Test Seeker',
-                'email'              => 'seeker@test.com',
-                'phone'              => '123456789',
-                'location'           => 'Beirut',
-                'summary'            => 'Experienced developer',
-                'skills'             => ['PHP', 'Laravel', 'JavaScript'],
-                'work_history'       => [],
-                'projects'           => [],
-                'overall_evaluation' => 'Strong candidate',
-                'ats_score'          => 85,
-                'detected_language'  => 'en',
-            ],
-        ], 200),
-    ]);
+    if (!empty($profileAttrs)) {
+        JobSeekerProfile::updateOrCreate(
+            ['user_id' => (string) $user->_id],
+            $profileAttrs
+        );
+    }
 
-    $this->withHeader('Authorization', "Bearer $seekerToken")
-        ->post('/api/job-seeker/resume/upload-and-analyze', [
-            'cv_file' => \Illuminate\Http\UploadedFile::fake()->create('resume.pdf', 100),
-        ])
-        ->assertOk();
+    return [$user, $token];
+}
 
-    $empRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Employer',
-        'email'    => 'emp@test.com',
-        'password' => 'password123',
-        'roles'    => ['employer'],
-    ]);
-    $empToken = $empRes->json('token');
-    $empId    = $empRes->json('user.id');
+function mjJob(string $employerId, array $overrides = []): JobPost
+{
+    return JobPost::create(array_merge([
+        'title'        => 'Test Job',
+        'description'  => 'D',
+        'company_name' => 'TestCo',
+        'job_type'     => 'full_time',
+        'city'         => 'Beirut',
+        'vacancies'    => 1,
+        'communication_method' => 'by_forsa',
+        'employer_id'  => $employerId,
+        'is_active'    => true,
+    ], $overrides));
+}
 
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
-    ]);
-    $adminToken = auth()->login($admin);
+afterEach(function () {
+    JobPost::truncate();
+    Application::truncate();
+});
 
-    $app = Employer::where('user_id', $empId)->first();
-    $this->withHeader('Authorization', "Bearer $adminToken")
-        ->putJson("/api/admin/employers/{$app->_id}/approve")
-        ->assertOk();
+beforeEach(function () {
+    JobPost::truncate();
+    Application::truncate();
+});
 
-    $this->withHeader('Authorization', "Bearer $empToken")
-        ->postJson('/api/jobs', [
-            'title'       => 'PHP Developer',
-            'description' => 'Desc',
-            'company_name'=> 'Company',
-            'roles'       => ['Backend', 'PHP'],
-            'tags'        => ['Laravel'],
-        ])
-        ->assertCreated();
+// ── GET /api/job-seeker/matched-jobs ─────────────────────────
 
-    $this->withHeader('Authorization', "Bearer $empToken")
-        ->postJson('/api/jobs', [
-            'title'       => 'iOS Developer',
-            'description' => 'Desc',
-            'company_name'=> 'Company',
-            'roles'       => ['Mobile', 'iOS'],
-            'tags'        => ['Swift'],
-        ])
-        ->assertCreated();
+test('returns active jobs with match_score field', function () {
+    [$seeker, $token] = mjSeeker();
+    $employer = User::factory()->employer()->create();
+    mjJob((string) $employer->_id);
 
-    $res = $this->withHeader('Authorization', "Bearer $seekerToken")
-        ->getJson('/api/job-seeker/matched-jobs')
-        ->assertOk();
+    $res = $this->withToken($token)->getJson('/api/job-seeker/matched-jobs')->assertOk();
+
+    expect($res->json('data'))->toHaveCount(1);
+    expect($res->json('data.0'))->toHaveKey('match_score');
+
+    $employer->delete(); $seeker->delete();
+});
+
+test('jobs with matching skills score higher', function () {
+    [$seeker, $token] = mjSeeker(['ai_skills' => ['PHP', 'Laravel', 'JavaScript']]);
+    $employer = User::factory()->employer()->create();
+
+    mjJob((string) $employer->_id, ['title' => 'PHP Developer', 'roles' => ['Backend', 'PHP'], 'tags' => ['Laravel']]);
+    mjJob((string) $employer->_id, ['title' => 'iOS Developer', 'roles' => ['Mobile', 'iOS'], 'tags' => ['Swift']]);
+
+    $res = $this->withToken($token)->getJson('/api/job-seeker/matched-jobs')->assertOk();
 
     $jobs = $res->json('data');
-    expect(count($jobs))->toBe(2);
+    expect($jobs)->toHaveCount(2);
     expect($jobs[0]['title'])->toBe('PHP Developer');
-    expect($jobs[0]['match_score'])->toBe(4);
+    expect($jobs[0]['match_score'])->toBe(4); // PHP +2, Laravel +2
     expect($jobs[1]['title'])->toBe('iOS Developer');
     expect($jobs[1]['match_score'])->toBe(0);
+
+    $employer->delete(); $seeker->delete();
 });
 
-test('matched jobs applies location bonus when location matches', function () {
-    $seekerRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Seeker',
-        'email'    => 'seeker@test.com',
-        'password' => 'password123',
-        'roles'    => ['employee'],
-    ]);
-    $seekerToken = $seekerRes->json('token');
-    $seekerId    = $seekerRes->json('user.id');
+test('location match adds 3 to score', function () {
+    [$seeker, $token] = mjSeeker(['ai_location' => 'Beirut, Lebanon', 'ai_skills' => []]);
+    $employer = User::factory()->employer()->create();
 
-    JobSeekerProfile::where('user_id', $seekerId)->update([
-        'ai_location' => 'Beirut, Lebanon',
-        'ai_skills'   => ['PHP'],
-    ]);
+    mjJob((string) $employer->_id, ['title' => 'Beirut Job', 'city' => 'Beirut']);
+    mjJob((string) $employer->_id, ['title' => 'Dubai Job',  'city' => 'Dubai']);
 
-    $empRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Employer',
-        'email'    => 'emp@test.com',
-        'password' => 'password123',
-        'roles'    => ['employer'],
-    ]);
-    $empToken = $empRes->json('token');
-    $empId    = $empRes->json('user.id');
-
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
-    ]);
-    $adminToken = auth()->login($admin);
-
-    $app = Employer::where('user_id', $empId)->first();
-    $this->withHeader('Authorization', "Bearer $adminToken")
-        ->putJson("/api/admin/employers/{$app->_id}/approve")
-        ->assertOk();
-
-    $this->withHeader('Authorization', "Bearer $empToken")
-        ->postJson('/api/jobs', [
-            'title'       => 'Job in Beirut',
-            'description' => 'Desc',
-            'company_name'=> 'Company',
-            'location'    => 'Beirut',
-        ])
-        ->assertCreated();
-
-    $this->withHeader('Authorization', "Bearer $empToken")
-        ->postJson('/api/jobs', [
-            'title'       => 'Job in Dubai',
-            'description' => 'Desc',
-            'company_name'=> 'Company',
-            'location'    => 'Dubai',
-        ])
-        ->assertCreated();
-
-    $res = $this->withHeader('Authorization', "Bearer $seekerToken")
-        ->getJson('/api/job-seeker/matched-jobs')
-        ->assertOk();
+    $res = $this->withToken($token)->getJson('/api/job-seeker/matched-jobs')->assertOk();
 
     $jobs = $res->json('data');
-    $beirutJob = collect($jobs)->firstWhere('title', 'Job in Beirut');
-    expect($beirutJob['match_score'])->toBe(3);
+    $beirut = collect($jobs)->firstWhere('title', 'Beirut Job');
+    $dubai  = collect($jobs)->firstWhere('title', 'Dubai Job');
 
-    $dubaiJob = collect($jobs)->firstWhere('title', 'Job in Dubai');
-    expect($dubaiJob['match_score'])->toBe(0);
+    expect($beirut['match_score'])->toBe(3);
+    expect($dubai['match_score'])->toBe(0);
+
+    $employer->delete(); $seeker->delete();
 });
 
-test('matched jobs excludes posts seeker has already applied to', function () {
-    $seekerRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Seeker',
-        'email'    => 'seeker@test.com',
-        'password' => 'password123',
-        'roles'    => ['employee'],
+test('already-applied jobs are excluded', function () {
+    [$seeker, $token] = mjSeeker();
+    $employer = User::factory()->employer()->create();
+
+    $job1 = mjJob((string) $employer->_id, ['title' => 'Job 1']);
+    $job2 = mjJob((string) $employer->_id, ['title' => 'Job 2']);
+
+    Application::create([
+        'user_id'     => (string) $seeker->_id,
+        'job_post_id' => (string) $job1->_id,
+        'status'      => 'pending',
+        'applied_at'  => now(),
     ]);
-    $seekerToken = $seekerRes->json('token');
 
-    $empRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Employer',
-        'email'    => 'emp@test.com',
-        'password' => 'password123',
-        'roles'    => ['employer'],
-    ]);
-    $empToken = $empRes->json('token');
-    $empId    = $empRes->json('user.id');
+    $res = $this->withToken($token)->getJson('/api/job-seeker/matched-jobs')->assertOk();
 
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
-    ]);
-    $adminToken = auth()->login($admin);
+    $titles = collect($res->json('data'))->pluck('title')->toArray();
+    expect($titles)->not->toContain('Job 1');
+    expect($titles)->toContain('Job 2');
 
-    $app = Employer::where('user_id', $empId)->first();
-    $this->withHeader('Authorization', "Bearer $adminToken")
-        ->putJson("/api/admin/employers/{$app->_id}/approve")
-        ->assertOk();
-
-    $job1Res = $this->withHeader('Authorization', "Bearer $empToken")
-        ->postJson('/api/jobs', [
-            'title'       => 'Job 1',
-            'description' => 'Desc',
-            'company_name'=> 'Company',
-        ])
-        ->assertCreated();
-    $job1Id = $job1Res->json('job.id');
-
-    $this->withHeader('Authorization', "Bearer $empToken")
-        ->postJson('/api/jobs', [
-            'title'       => 'Job 2',
-            'description' => 'Desc',
-            'company_name'=> 'Company',
-        ])
-        ->assertCreated();
-
-    $this->withHeader('Authorization', "Bearer $seekerToken")
-        ->postJson("/api/jobs/{$job1Id}/apply")
-        ->assertCreated();
-
-    $res = $this->withHeader('Authorization', "Bearer $seekerToken")
-        ->getJson('/api/job-seeker/matched-jobs')
-        ->assertOk();
-
-    $jobs = $res->json('data');
-    expect(count($jobs))->toBe(1);
-    expect($jobs[0]['title'])->toBe('Job 2');
+    $employer->delete(); $seeker->delete();
 });
 
-test('seeker with no profile gets active jobs with match_score zero', function () {
-    $seekerRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Seeker',
-        'email'    => 'seeker@test.com',
-        'password' => 'password123',
-        'roles'    => ['employee'],
-    ]);
-    $seekerToken = $seekerRes->json('token');
-    $seekerId    = $seekerRes->json('user.id');
+test('seeker with no profile gets all active jobs with match_score 0', function () {
+    [$seeker, $token] = mjSeeker();
+    JobSeekerProfile::where('user_id', (string) $seeker->_id)->delete();
 
-    JobSeekerProfile::where('user_id', $seekerId)->delete();
+    $employer = User::factory()->employer()->create();
+    mjJob((string) $employer->_id, ['title' => 'Active Job']);
 
-    $empRes = $this->postJson('/api/auth/register', [
-        'name'     => 'Employer',
-        'email'    => 'emp@test.com',
-        'password' => 'password123',
-        'roles'    => ['employer'],
-    ]);
-    $empToken = $empRes->json('token');
-    $empId    = $empRes->json('user.id');
+    $res = $this->withToken($token)->getJson('/api/job-seeker/matched-jobs')->assertOk();
 
-    $admin = User::create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@test.com',
-        'password' => Hash::make('password123'),
-        'roles'    => ['admin'],
-    ]);
-    $adminToken = auth()->login($admin);
+    expect($res->json('data'))->toHaveCount(1);
+    expect($res->json('data.0.match_score'))->toBe(0);
 
-    $app = Employer::where('user_id', $empId)->first();
-    $this->withHeader('Authorization', "Bearer $adminToken")
-        ->putJson("/api/admin/employers/{$app->_id}/approve")
-        ->assertOk();
+    $employer->delete(); $seeker->delete();
+});
 
-    $this->withHeader('Authorization', "Bearer $empToken")
-        ->postJson('/api/jobs', [
-            'title'       => 'Active Job',
-            'description' => 'Desc',
-            'company_name'=> 'Company',
-        ])
-        ->assertCreated();
+test('inactive jobs are not returned', function () {
+    [$seeker, $token] = mjSeeker();
+    $employer = User::factory()->employer()->create();
 
-    $res = $this->withHeader('Authorization', "Bearer $seekerToken")
-        ->getJson('/api/job-seeker/matched-jobs')
-        ->assertOk();
+    mjJob((string) $employer->_id, ['title' => 'Active',   'is_active' => true]);
+    mjJob((string) $employer->_id, ['title' => 'Inactive', 'is_active' => false]);
 
-    $jobs = $res->json('data');
-    expect(count($jobs))->toBe(1);
-    expect($jobs[0]['match_score'])->toBe(0);
+    $res = $this->withToken($token)->getJson('/api/job-seeker/matched-jobs')->assertOk();
+
+    $titles = collect($res->json('data'))->pluck('title')->toArray();
+    expect($titles)->toContain('Active');
+    expect($titles)->not->toContain('Inactive');
+
+    $employer->delete(); $seeker->delete();
+});
+
+test('returns correct pagination shape', function () {
+    [$seeker, $token] = mjSeeker();
+
+    $res = $this->withToken($token)->getJson('/api/job-seeker/matched-jobs')->assertOk();
+
+    expect($res->json())->toHaveKeys(['data', 'current_page', 'per_page', 'total', 'total_pages', 'next_page', 'prev_page']);
+
+    $seeker->delete();
+});
+
+test('unauthenticated user cannot access matched jobs', function () {
+    $this->getJson('/api/job-seeker/matched-jobs')->assertUnauthorized();
+});
+
+test('employer cannot access job seeker matched jobs', function () {
+    $employer = User::factory()->employer()->create();
+    $token    = auth('api')->login($employer);
+
+    $this->withToken($token)->getJson('/api/job-seeker/matched-jobs')->assertForbidden();
+
+    $employer->delete();
+});
+
+test('min_score filter works', function () {
+    [$seeker, $token] = mjSeeker(['ai_skills' => ['PHP', 'Laravel']]);
+    $employer = User::factory()->employer()->create();
+
+    mjJob((string) $employer->_id, ['title' => 'High Match', 'roles' => ['PHP'], 'tags' => ['Laravel']]);
+    mjJob((string) $employer->_id, ['title' => 'No Match']);
+
+    $res = $this->withToken($token)->getJson('/api/job-seeker/matched-jobs?min_score=3')->assertOk();
+
+    $titles = collect($res->json('data'))->pluck('title')->toArray();
+    expect($titles)->toContain('High Match');
+    expect($titles)->not->toContain('No Match');
+
+    $employer->delete(); $seeker->delete();
 });

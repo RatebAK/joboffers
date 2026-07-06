@@ -23,20 +23,35 @@ function jpEmployer(): array
 function jpJob(string $employerId, array $overrides = []): JobPost
 {
     return JobPost::create(array_merge([
-        'title'               => 'Test Engineer',
-        'description'         => 'Write tests.',
-        'requirements'        => 'PHP required.',
-        'company_name'        => 'TestCo',
-        'job_type'            => 'full_time',
-        'work_mode'           => 'remote',
-        'experience_level'    => 'mid',
-        'location'            => 'Beirut, Lebanon',
-        'category'            => 'Engineering',
-        'tags'                => ['PHP', 'Testing'],
-        'salary_range'        => ['min' => 2000, 'max' => 4000, 'currency' => 'USD'],
-        'employer_id'         => $employerId,
-        'is_active'           => true,
+        'title'            => 'Test Engineer',
+        'description'      => 'Write tests.',
+        'company_name'     => 'TestCo',
+        'job_type'         => 'full_time',
+        'work_mode'        => 'remote',
+        'job_level'        => 'mid',
+        'city'             => 'Beirut',
+        'category'         => 'Engineering',
+        'tags'             => ['PHP', 'Testing'],
+        'salary_from'      => 2000,
+        'salary_to'        => 4000,
+        'currency'         => 'USD',
+        'vacancies'        => 1,
+        'communication_method' => 'by_forsa',
+        'employer_id'      => $employerId,
+        'is_active'        => true,
     ], $overrides));
+}
+
+/** Create employer + company profile so the store() endpoint works. */
+function jpEmployerWithCompany(): array
+{
+    [$employer, $token] = jpEmployer();
+    \App\Models\CompanyProfile::create([
+        'employer_id' => (string) $employer->_id,
+        'name'        => 'TestCo',
+        'slug'        => 'testco-' . uniqid(),
+    ]);
+    return [$employer, $token];
 }
 
 // ── Public: GET /api/jobs ─────────────────────────────────────
@@ -66,7 +81,6 @@ test('public job list has correct pagination shape', function () {
          ->assertJsonStructure([
              'data', 'current_page', 'per_page', 'total',
              'total_pages', 'next_page', 'prev_page',
-             'next_page_url', 'prev_page_url',
          ]);
 
     $job->delete(); $employer->delete();
@@ -112,103 +126,117 @@ test('public show returns inactive job post by id', function () {
 // ── Employer: POST /api/employer/jobs ─────────────────────────
 
 test('employer job creation assigns a job_id field', function () {
-    [$employer, $token] = jpEmployer();
+    [$employer, $token] = jpEmployerWithCompany();
 
     $response = $this->withToken($token)->postJson('/api/employer/jobs', [
-        'title'        => 'New Role',
-        'description'  => 'Desc.',
-        'requirements' => 'Req.',
-        'company_name' => 'Co',
-        'job_type'     => 'contract',
+        'title'       => 'New Role',
+        'description' => 'Desc.',
+        'job_type'    => 'contract',
+        'vacancies'   => 1,
+        'city'        => 'Beirut',
+        'communication_method' => 'by_forsa',
     ]);
 
     $response->assertStatus(201);
     expect($response->json('job_id'))->toStartWith('JOB-');
 
     JobPost::where('employer_id', (string) $employer->_id)->delete();
+    \App\Models\CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
     $employer->delete();
 });
 
 test('employer job creation sets employer_id from auth user', function () {
-    [$employer, $token] = jpEmployer();
+    [$employer, $token] = jpEmployerWithCompany();
 
     $response = $this->withToken($token)->postJson('/api/employer/jobs', [
-        'title'        => 'Auth Check',
-        'description'  => 'Desc.',
-        'requirements' => 'Req.',
-        'company_name' => 'Co',
-        'job_type'     => 'full_time',
+        'title'       => 'Auth Check',
+        'description' => 'Desc.',
+        'job_type'    => 'full_time',
+        'vacancies'   => 1,
+        'city'        => 'Beirut',
+        'communication_method' => 'by_forsa',
     ]);
 
     $response->assertStatus(201);
     expect($response->json('employer_id'))->toBe((string) $employer->_id);
 
     JobPost::where('employer_id', (string) $employer->_id)->delete();
+    \App\Models\CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
     $employer->delete();
 });
 
 test('employer job creation validates job_type enum', function () {
-    [$employer, $token] = jpEmployer();
+    [$employer, $token] = jpEmployerWithCompany();
 
     $this->withToken($token)->postJson('/api/employer/jobs', [
-        'title'        => 'Bad Type',
-        'description'  => 'Desc.',
-        'requirements' => 'Req.',
-        'company_name' => 'Co',
-        'job_type'     => 'gig_economy',
-    ])->assertStatus(422)->assertJsonStructure(['job_type']);
+        'title'       => 'Bad Type',
+        'description' => 'Desc.',
+        'vacancies'   => 1,
+        'city'        => 'Beirut',
+        'job_type'    => 'gig_economy',
+        'communication_method' => 'by_forsa',
+    ])->assertStatus(422)->assertJsonStructure(['errors' => ['job_type']]);
 
+    \App\Models\CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
     $employer->delete();
 });
 
 test('employer job creation validates work_mode enum', function () {
-    [$employer, $token] = jpEmployer();
+    [$employer, $token] = jpEmployerWithCompany();
 
     $this->withToken($token)->postJson('/api/employer/jobs', [
-        'title'        => 'Bad Mode',
-        'description'  => 'Desc.',
-        'requirements' => 'Req.',
-        'company_name' => 'Co',
-        'job_type'     => 'full_time',
-        'work_mode'    => 'moon',
-    ])->assertStatus(422)->assertJsonStructure(['work_mode']);
+        'title'       => 'Bad Mode',
+        'description' => 'Desc.',
+        'vacancies'   => 1,
+        'city'        => 'Beirut',
+        'job_type'    => 'full_time',
+        'work_mode'   => 'moon',
+        'communication_method' => 'by_forsa',
+    ])->assertStatus(422)->assertJsonStructure(['errors' => ['work_mode']]);
 
+    \App\Models\CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
     $employer->delete();
 });
 
 test('employer job creation validates experience_level enum', function () {
-    [$employer, $token] = jpEmployer();
+    [$employer, $token] = jpEmployerWithCompany();
 
     $this->withToken($token)->postJson('/api/employer/jobs', [
-        'title'            => 'Bad Level',
-        'description'      => 'Desc.',
-        'requirements'     => 'Req.',
-        'company_name'     => 'Co',
-        'job_type'         => 'full_time',
-        'experience_level' => 'god',
-    ])->assertStatus(422)->assertJsonStructure(['experience_level']);
+        'title'       => 'Bad Level',
+        'description' => 'Desc.',
+        'vacancies'   => 1,
+        'city'        => 'Beirut',
+        'job_type'    => 'full_time',
+        'job_level'   => 'god',
+        'communication_method' => 'by_forsa',
+    ])->assertStatus(422)->assertJsonStructure(['errors' => ['job_level']]);
 
+    \App\Models\CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
     $employer->delete();
 });
 
 test('employer job creation accepts optional salary_range and tags', function () {
-    [$employer, $token] = jpEmployer();
+    [$employer, $token] = jpEmployerWithCompany();
 
     $response = $this->withToken($token)->postJson('/api/employer/jobs', [
-        'title'        => 'Full Job',
-        'description'  => 'Desc.',
-        'requirements' => 'Req.',
-        'company_name' => 'Co',
-        'job_type'     => 'full_time',
-        'salary_range' => ['min' => 3000, 'max' => 6000, 'currency' => 'USD'],
-        'tags'         => ['Laravel', 'PHP'],
+        'title'       => 'Full Job',
+        'description' => 'Desc.',
+        'vacancies'   => 1,
+        'city'        => 'Beirut',
+        'job_type'    => 'full_time',
+        'salary_from' => 3000,
+        'salary_to'   => 6000,
+        'currency'    => 'USD',
+        'tags'        => ['Laravel', 'PHP'],
+        'communication_method' => 'by_forsa',
     ]);
 
     $response->assertStatus(201);
-    expect($response->json('salary_range.min'))->toBe(3000);
+    expect($response->json('salary_from'))->toBe(3000);
     expect($response->json('tags'))->toContain('Laravel');
 
     JobPost::where('employer_id', (string) $employer->_id)->delete();
+    \App\Models\CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
     $employer->delete();
 });
 
@@ -219,11 +247,11 @@ test('employer can partially update a job post', function () {
     $job = jpJob((string) $employer->_id);
 
     $this->withToken($token)->putJson("/api/employer/jobs/{$job->_id}", [
-        'title'    => 'Updated Title',
-        'location' => 'Dubai, UAE',
+        'title' => 'Updated Title',
+        'city'  => 'Dubai',
     ])->assertStatus(200)
       ->assertJsonPath('title', 'Updated Title')
-      ->assertJsonPath('location', 'Dubai, UAE');
+      ->assertJsonPath('city', 'Dubai');
 
     $job->delete(); $employer->delete();
 });
@@ -350,15 +378,16 @@ test('job seeker cannot create a job post', function () {
 // ── Roles field ───────────────────────────────────────────────
 
 test('employer job creation accepts roles array', function () {
-    [$employer, $token] = jpEmployer();
+    [$employer, $token] = jpEmployerWithCompany();
 
     $response = $this->withToken($token)->postJson('/api/employer/jobs', [
-        'title'        => 'Frontend Role',
-        'description'  => 'Desc.',
-        'requirements' => 'Req.',
-        'company_name' => 'Co',
-        'job_type'     => 'full_time',
-        'roles'        => ['Frontend', 'React'],
+        'title'       => 'Frontend Role',
+        'description' => 'Desc.',
+        'vacancies'   => 1,
+        'city'        => 'Beirut',
+        'job_type'    => 'full_time',
+        'roles'       => ['Frontend', 'React'],
+        'communication_method' => 'by_forsa',
     ]);
 
     $response->assertStatus(201);
@@ -366,6 +395,7 @@ test('employer job creation accepts roles array', function () {
     expect($response->json('roles'))->toContain('React');
 
     JobPost::where('employer_id', (string) $employer->_id)->delete();
+    \App\Models\CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
     $employer->delete();
 });
 

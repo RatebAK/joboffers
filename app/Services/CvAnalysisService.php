@@ -19,12 +19,16 @@ class CvAnalysisService
         $apiUrl = config('services.cv_analysis.url');
 
         try {
-            $response = Http::post($apiUrl, [
+            $response = Http::timeout(30)->post($apiUrl, [
                 'file_url'  => $fileUrl,
                 'resume_id' => $resumeId,
             ]);
         } catch (\Throwable $e) {
-            Log::error('CV analysis HTTP error', ['error' => $e->getMessage()]);
+            Log::error('CV analysis HTTP error', [
+                'error' => $e->getMessage(),
+                'file_url' => $fileUrl,
+                'api_url' => $apiUrl
+            ]);
             throw new CvAnalysisException('CV analysis service unavailable', 502);
         }
 

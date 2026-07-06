@@ -1623,7 +1623,7 @@ paths:
                 marital_status:
                   type: string
                   description: ''
-                  example: single
+                  example: prefer_not_to_say
                   enum:
                     - single
                     - married
@@ -1644,7 +1644,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: freelancing
+                  example: unemployed
                   enum:
                     - employed
                     - unemployed
@@ -1715,7 +1715,7 @@ paths:
                 is_actively_seeking:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 social_links:
                   type: object
                   description: 'Social Links (nested object).'
@@ -1850,7 +1850,7 @@ paths:
                       is_currently_working:
                         type: boolean
                         description: ''
-                        example: true
+                        example: false
                         nullable: true
                       description:
                         type: string

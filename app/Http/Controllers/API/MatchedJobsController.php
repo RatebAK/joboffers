@@ -120,7 +120,7 @@ class MatchedJobsController extends Controller
         }
 
         // Location bonus: +3
-        $postLocation   = strtolower((string) ($post->location ?? ''));
+        $postLocation   = strtolower((string) ($post->city ?? $post->location ?? ''));
         $seekerLocation = strtolower((string) ($profile->ai_location ?? $profile->location ?? ''));
         if ($postLocation !== '' && $seekerLocation !== '') {
             if (str_contains($seekerLocation, $postLocation) || str_contains($postLocation, $seekerLocation)) {

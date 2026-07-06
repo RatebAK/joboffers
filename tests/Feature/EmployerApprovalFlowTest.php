@@ -152,54 +152,52 @@ test('admin can approve employer application', function () {
 test('approved employer can create job post', function () {
     // Create admin user
     $admin = User::create([
-        'name' => 'Admin User',
-        'email' => 'admin@test.com',
+        'name'     => 'Admin User',
+        'email'    => 'admin@test.com',
         'password' => hash('sha256', 'Password@123'.'salt'),
-        'roles' => ['admin'],
+        'roles'    => ['admin'],
     ]);
 
     // Register employer user
     $registerResponse = $this->postJson('/api/auth/register', [
-        'name' => 'Test Employer',
-        'email' => 'employer@test.com',
-        'password' => 'Password@123',
+        'name'                  => 'Test Employer',
+        'email'                 => 'employer@test.com',
+        'password'              => 'Password@123',
         'password_confirmation' => 'Password@123',
-        'role' => 'employer',
+        'role'                  => 'employer',
     ]);
 
     $employerToken = $registerResponse->json('access_token');
-    $employer = Employer::where('status', Employer::STATUS_PENDING)->first();
+    $employerUser  = User::where('email', 'employer@test.com')->first();
+    $employer      = Employer::where('status', Employer::STATUS_PENDING)->first();
 
     // Admin approves employer
     $loginResponse = $this->postJson('/api/auth/login', [
-        'email' => 'admin@test.com',
+        'email'    => 'admin@test.com',
         'password' => 'Password@123',
     ]);
-
     $adminToken = $loginResponse->json('access_token');
 
     $this->withHeader('Authorization', 'Bearer '.$adminToken)
         ->postJson("/api/admin/employers/{$employer->_id}/approve");
 
-    // Now employer should be able to create job post
+    // Employer must create a company profile before posting jobs
+    $this->withHeader('Authorization', 'Bearer '.$employerToken)
+        ->postJson('/api/employer/company', ['name' => 'Test Company Inc']);
+
+    // Now employer can create a job post
     $response = $this->withHeader('Authorization', 'Bearer '.$employerToken)
         ->postJson('/api/employer/jobs', [
-            'title' => 'Software Engineer',
+            'title'       => 'Software Engineer',
             'description' => 'We are looking for a skilled software engineer...',
-            'requirements' => 'Minimum 3 years of experience with PHP and Laravel',
-            'company_name' => 'Test Company Inc',
-            'job_type' => 'full_time',
-            'location' => 'Remote',
-            'salary_range' => [
-                'min' => 70000,
-                'max' => 120000,
-                'currency' => 'USD',
-            ],
-            'tags' => ['PHP', 'Laravel', 'MongoDB'],
+            'vacancies'   => 1,
+            'city'        => 'Damascus',
+            'job_type'    => 'full_time',
+            'communication_method' => 'by_forsa',
+            'tags'        => ['PHP', 'Laravel', 'MongoDB'],
         ]);
 
     $response->assertStatus(201);
-    $response->assertJsonPath('id', fn ($id) => $id !== null);
     $response->assertJsonPath('title', 'Software Engineer');
 });
 

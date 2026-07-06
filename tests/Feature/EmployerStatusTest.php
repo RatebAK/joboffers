@@ -70,7 +70,7 @@ test('status returns approved and is_employer true after admin approves', functi
 
     $applicationId = $applyResponse->json('employer._id');
 
-    $this->withToken($adminToken)->postJson("/api/admin/{$applicationId}/approve")
+    $this->withToken($adminToken)->postJson("/api/admin/employers/{$applicationId}/approve")
          ->assertStatus(200);
 
     // Re-login to get fresh token with updated user state
@@ -99,7 +99,7 @@ test('status returns rejected after admin rejects', function () {
 
     $applicationId = $applyResponse->json('employer._id');
 
-    $this->withToken($adminToken)->postJson("/api/admin/{$applicationId}/reject", [
+    $this->withToken($adminToken)->postJson("/api/admin/employers/{$applicationId}/reject", [
         'review_notes' => 'Docs incomplete.',
     ])->assertStatus(200);
 

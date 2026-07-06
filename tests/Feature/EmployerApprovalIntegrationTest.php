@@ -135,26 +135,29 @@ test('complete employer approval workflow - register, fetch pending, approve, cr
     $pendingAfterApproval->assertJsonCount(0); // Should be empty now
 
     // ============================================
-    // STEP 8: Employer Creates Job Post Successfully
+    // STEP 8: Employer Creates Company Profile Then Job Post
     // ============================================
+
+    // Company profile is required before posting jobs
+    $this->withHeader('Authorization', 'Bearer '.$employerToken)
+        ->postJson('/api/employer/company', ['name' => 'Test Company Inc'])
+        ->assertStatus(201);
+
     $jobPostAttempt2 = $this->withHeader('Authorization', 'Bearer '.$employerToken)
         ->postJson('/api/employer/jobs', [
-            'title' => 'Senior PHP Developer',
+            'title'       => 'Senior PHP Developer',
             'description' => 'We are seeking an experienced PHP developer to join our team.',
-            'requirements' => 'Minimum 5 years of PHP experience, Laravel expertise required',
-            'company_name' => 'Test Company Inc',
-            'company_logo' => 'https://example.com/logo.png',
-            'job_type' => 'full_time',
-            'work_mode' => 'remote',
-            'experience_level' => 'senior',
-            'location' => 'Remote',
-            'category' => 'Engineering',
-            'salary_range' => [
-                'min' => 80000,
-                'max' => 120000,
-                'currency' => 'USD',
-            ],
-            'tags' => ['PHP', 'Laravel', 'MongoDB', 'REST API'],
+            'vacancies'   => 1,
+            'city'        => 'Damascus',
+            'job_type'    => 'full_time',
+            'work_mode'   => 'remote',
+            'job_level'   => 'senior',
+            'category'    => 'Engineering',
+            'salary_from' => 80000,
+            'salary_to'   => 120000,
+            'currency'    => 'USD',
+            'tags'        => ['PHP', 'Laravel', 'MongoDB', 'REST API'],
+            'communication_method' => 'by_forsa',
         ]);
 
     $jobPostAttempt2->assertStatus(201);
@@ -163,7 +166,6 @@ test('complete employer approval workflow - register, fetch pending, approve, cr
         'job_id',
         'title',
         'description',
-        'requirements',
         'company_name',
         'employer_id',
         'is_active',
@@ -272,14 +274,19 @@ test('complete workflow with multiple employers - verify correct employer is app
 
     $approveResponse->assertStatus(200);
 
-    // Employer1 can create job post
+    // Employer1 creates company profile then job post
+    $this->withHeader('Authorization', 'Bearer '.$employer1Token)
+        ->postJson('/api/employer/company', ['name' => 'Company 1'])
+        ->assertStatus(201);
+
     $job1Response = $this->withHeader('Authorization', 'Bearer '.$employer1Token)
         ->postJson('/api/employer/jobs', [
-            'title' => 'Job by Employer 1',
+            'title'       => 'Job by Employer 1',
             'description' => 'Description',
-            'requirements' => 'Requirements',
-            'company_name' => 'Company 1',
-            'job_type' => 'full_time',
+            'vacancies'   => 1,
+            'city'        => 'Beirut',
+            'job_type'    => 'full_time',
+            'communication_method' => 'by_forsa',
         ]);
 
     $job1Response->assertStatus(201);

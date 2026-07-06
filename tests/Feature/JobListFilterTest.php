@@ -19,20 +19,24 @@ function makeFilterEmployer(): User
 function makeJob(string $employerId, array $overrides = []): JobPost
 {
     return JobPost::create(array_merge([
-        'title'               => 'Software Engineer',
-        'description'         => 'Build great software.',
-        'requirements'        => 'PHP experience.',
-        'company_name'        => 'Acme Corp',
-        'job_type'            => 'full_time',
-        'work_mode'           => 'remote',
-        'experience_level'    => 'mid',
-        'experience_required' => '3+ years',
-        'location'            => 'Beirut, Lebanon',
-        'category'            => 'Engineering',
-        'tags'                => ['PHP', 'Laravel'],
-        'salary_range'        => ['min' => 2000, 'max' => 4000, 'currency' => 'USD'],
-        'employer_id'         => $employerId,
-        'is_active'           => true,
+        'title'            => 'Software Engineer',
+        'description'      => 'Build great software.',
+        'requirements'     => 'PHP experience.',
+        'company_name'     => 'Acme Corp',
+        'job_type'         => 'full_time',
+        'work_mode'        => 'remote',
+        'job_level'        => 'mid',
+        'experience_years' => 3,
+        'city'             => 'Beirut',
+        'category'         => 'Engineering',
+        'tags'             => ['PHP', 'Laravel'],
+        'salary_from'      => 2000,
+        'salary_to'        => 4000,
+        'currency'         => 'USD',
+        'vacancies'        => 1,
+        'communication_method' => 'by_forsa',
+        'employer_id'      => $employerId,
+        'is_active'        => true,
     ], $overrides));
 }
 
@@ -44,10 +48,10 @@ function makeCompany(string $employerId, array $overrides = []): CompanyProfile
             'name'         => 'Acme Corp',
             'logo'         => 'https://example.com/logo.png',
             'description'  => 'A great tech company.',
-            'location'     => 'Beirut, Lebanon',
-            'company_size' => '100-500 employees',
+            'city'         => 'Beirut',
+            'country'      => 'Lebanon',
+            'company_size' => '10_to_50',
             'industry'     => 'Technology',
-            'website'      => 'https://acme.com',
             'rating'       => 4.5,
             'review_count' => 120,
         ], $overrides)
@@ -71,8 +75,6 @@ test('job list returns correct pagination keys', function () {
                  'total_pages',
                  'next_page',
                  'prev_page',
-                 'next_page_url',
-                 'prev_page_url',
              ]);
 
     expect($response->json('current_page'))->toBe(1);
@@ -143,13 +145,13 @@ test('filter jobs by keyword matches description', function () {
 
 test('filter jobs by location', function () {
     $employer = makeFilterEmployer();
-    $job = makeJob((string) $employer->_id, ['location' => 'Dubai, UAE']);
+    $job = makeJob((string) $employer->_id, ['city' => 'Dubai']);
 
-    $response = $this->getJson('/api/jobs?location=Dubai');
+    $response = $this->getJson('/api/jobs?city=Dubai');
 
     $response->assertStatus(200);
     foreach ($response->json('data') as $j) {
-        expect(strtolower($j['location']))->toContain('dubai');
+        expect(strtolower($j['city']))->toContain('dubai');
     }
 
     $job->delete();
@@ -188,13 +190,13 @@ test('filter jobs by work_mode', function () {
 
 test('filter jobs by experience_level', function () {
     $employer = makeFilterEmployer();
-    $job = makeJob((string) $employer->_id, ['experience_level' => 'senior']);
+    $job = makeJob((string) $employer->_id, ['job_level' => 'senior']);
 
-    $response = $this->getJson('/api/jobs?experience_level=senior');
+    $response = $this->getJson('/api/jobs?job_level=senior');
 
     $response->assertStatus(200);
     foreach ($response->json('data') as $j) {
-        expect($j['experience_level'])->toBe('senior');
+        expect($j['job_level'])->toBe('senior');
     }
 
     $job->delete();
@@ -291,8 +293,6 @@ test('company list returns correct pagination keys', function () {
                  'total_pages',
                  'next_page',
                  'prev_page',
-                 'next_page_url',
-                 'prev_page_url',
              ]);
 
     expect($response->json('current_page'))->toBe(1);
@@ -337,12 +337,12 @@ test('filter companies by search name', function () {
 
 test('filter companies by search location', function () {
     $employer = makeFilterEmployer();
-    $company = makeCompany((string) $employer->_id, ['location' => 'Tripoli, Lebanon']);
+    $company = makeCompany((string) $employer->_id, ['city' => 'Tripoli']);
 
     $response = $this->getJson('/api/companies?search=Tripoli');
 
     $response->assertStatus(200);
-    $found = collect($response->json('data'))->first(fn($c) => str_contains($c['location'] ?? '', 'Tripoli'));
+    $found = collect($response->json('data'))->first(fn($c) => str_contains($c['city'] ?? '', 'Tripoli'));
     expect($found)->not->toBeNull();
 
     $company->delete();
@@ -381,12 +381,12 @@ test('filter companies by min_rating', function () {
 
 test('filter companies by company_size', function () {
     $employer = makeFilterEmployer();
-    $company = makeCompany((string) $employer->_id, ['company_size' => '500-1000 employees']);
+    $company = makeCompany((string) $employer->_id, ['company_size' => '501_to_1000']);
 
-    $response = $this->getJson('/api/companies?company_size=500-1000');
+    $response = $this->getJson('/api/companies?company_size=501_to_1000');
 
     $response->assertStatus(200);
-    $found = collect($response->json('data'))->first(fn($c) => str_contains($c['company_size'] ?? '', '500-1000'));
+    $found = collect($response->json('data'))->first(fn($c) => ($c['company_size'] ?? '') === '501_to_1000');
     expect($found)->not->toBeNull();
 
     $company->delete();

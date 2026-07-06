@@ -2359,7 +2359,7 @@ endpoints:
         name: marital_status
         description: ''
         required: false
-        example: single
+        example: prefer_not_to_say
         type: string
         enumValues:
           - single
@@ -2397,7 +2397,7 @@ endpoints:
         name: current_job_status
         description: ''
         required: false
-        example: freelancing
+        example: unemployed
         type: string
         enumValues:
           - employed
@@ -2523,7 +2523,7 @@ endpoints:
         name: is_actively_seeking
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -2803,7 +2803,7 @@ endpoints:
         name: 'work_experience[].is_currently_working'
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -2832,10 +2832,10 @@ endpoints:
       address: v
       phone: dljnikhwaykcmyuw
       date_of_birth: pwlvqwrsitcpscql
-      marital_status: single
+      marital_status: prefer_not_to_say
       salary_range_from: 16
       salary_range_to: 38
-      current_job_status: freelancing
+      current_job_status: unemployed
       years_of_experience: 8
       education_level: 'n'
       job_level: senior
@@ -2848,7 +2848,7 @@ endpoints:
       current_job_title: u
       experience_summary: architecto
       expected_salary: 39
-      is_actively_seeking: true
+      is_actively_seeking: false
       social_links:
         linkedin: g
         github: z
@@ -2876,7 +2876,7 @@ endpoints:
             - u
           from_date: jwvlxjklqppwqbew
           to_date: tnnoqitpxntltcvi
-          is_currently_working: true
+          is_currently_working: false
           description: 'Eius et animi quos velit et.'
     fileParameters:
       resume: null

@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "3e394ffd-f708-4e50-a092-3a04d7713cd2",
+        "_postman_id": "fe4ca0df-4cfb-4e1e-a7d5-9688e42b3148",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -1093,7 +1093,7 @@
                                 },
                                 {
                                     "key": "marital_status",
-                                    "value": "single",
+                                    "value": "prefer_not_to_say",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1111,7 +1111,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "freelancing",
+                                    "value": "unemployed",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1171,7 +1171,7 @@
                                 },
                                 {
                                     "key": "is_actively_seeking",
-                                    "value": "1",
+                                    "value": "",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1291,7 +1291,7 @@
                                 },
                                 {
                                     "key": "work_experience[0][is_currently_working]",
-                                    "value": "1",
+                                    "value": "",
                                     "type": "text",
                                     "description": ""
                                 },
