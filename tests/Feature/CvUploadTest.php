@@ -29,6 +29,12 @@ test('seeker can upload a resume file', function () {
     Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
 
+    $mock = $this->mock(CvAnalysisService::class);
+    $mock->shouldReceive('analyze')->once()->andReturn([
+        'full_name' => 'Test User',
+        'ats_score' => 75,
+    ]);
+
     $file = UploadedFile::fake()->create('my_resume.pdf', 200, 'application/pdf');
 
     $response = $this->withToken($token)->postJson('/api/job-seeker/resume/upload', [
@@ -36,8 +42,8 @@ test('seeker can upload a resume file', function () {
     ]);
 
     $response->assertStatus(200)
-             ->assertJsonStructure(['message', 'resume_url'])
-             ->assertJsonPath('message', 'Resume uploaded successfully');
+             ->assertJsonStructure(['message', 'resume_url', 'profile'])
+             ->assertJsonPath('message', 'Resume uploaded and analyzed successfully');
 
     JobSeekerProfile::where('user_id', $seeker->_id)->delete();
     $seeker->delete();
@@ -47,6 +53,12 @@ test('resume upload stores file path on profile', function () {
     Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
 
+    $mock = $this->mock(CvAnalysisService::class);
+    $mock->shouldReceive('analyze')->once()->andReturn([
+        'full_name' => 'Test User',
+        'ats_score' => 75,
+    ]);
+
     $file = UploadedFile::fake()->create('cv.pdf', 100, 'application/pdf');
     $this->withToken($token)->postJson('/api/job-seeker/resume/upload', ['resume' => $file])
          ->assertStatus(200);
@@ -54,6 +66,7 @@ test('resume upload stores file path on profile', function () {
     $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
     expect($profile)->not->toBeNull();
     expect($profile->resume)->not->toBeNull();
+    expect($profile->cv_file_path)->not->toBeNull();
 
     $profile->delete();
     $seeker->delete();
@@ -62,6 +75,12 @@ test('resume upload stores file path on profile', function () {
 test('resume upload accepts docx files', function () {
     Storage::fake('cloudinary');
     [$seeker, $token] = cvSeeker();
+
+    $mock = $this->mock(CvAnalysisService::class);
+    $mock->shouldReceive('analyze')->once()->andReturn([
+        'full_name' => 'Test User',
+        'ats_score' => 75,
+    ]);
 
     $file = UploadedFile::fake()->create('resume.docx', 100, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
 

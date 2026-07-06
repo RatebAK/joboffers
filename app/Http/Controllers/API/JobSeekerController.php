@@ -509,10 +509,13 @@ class JobSeekerController extends Controller
      * Upload and analyze CV
      *
      * Uploads a CV file and sends it to the AI analysis service. On success, populates all `ai_*` profile fields and `ats_score`.
+     * This endpoint is similar to `/upload` but accepts field name `cv` instead of `resume`.
      *
      * @bodyParam cv file required PDF/DOC/DOCX file, max 10 MB.
      *
      * @response 200 {
+     *   "message": "CV uploaded and analyzed successfully",
+     *   "resume_url": "https://res.cloudinary.com/.../cv.pdf",
      *   "profile": {
      *     "id": "664f1a2b3c4d5e6f7a8b9c0d",
      *     "ats_score": 82,
@@ -542,8 +545,12 @@ class JobSeekerController extends Controller
 
         $profile = $user->jobSeekerProfile()->firstOrCreate(['user_id' => $user->_id]);
 
-        // Delete previous CV from Cloudinary if it exists
-        if ($profile->cv_public_id) {
+        // Delete previous resume/CV from Cloudinary if they exist
+        if ($profile->resume_public_id) {
+            Storage::disk('cloudinary')->delete($profile->resume_public_id);
+        }
+        // Also delete previous CV if it exists in separate field
+        if ($profile->cv_public_id && $profile->cv_public_id !== $profile->resume_public_id) {
             Storage::disk('cloudinary')->delete($profile->cv_public_id);
         }
 
@@ -574,6 +581,8 @@ class JobSeekerController extends Controller
 
         // Map AI response to profile fields
         $updateData = [
+            'resume' => $cvUrl,
+            'resume_public_id' => $publicId,
             'cv_file_path' => $cvUrl,
             'cv_public_id' => $publicId,
             'ai_full_name' => $analysis['full_name'] ?? null,
@@ -606,6 +615,8 @@ class JobSeekerController extends Controller
         $profile->update($updateData);
 
         return response()->json([
+            'message' => 'CV uploaded and analyzed successfully',
+            'resume_url' => $cvUrl,
             'profile' => $profile->fresh(),
         ], 200);
     }
@@ -613,22 +624,33 @@ class JobSeekerController extends Controller
     /**
      * Upload resume
      *
-     * Uploads a resume file to the job seeker's profile without triggering AI analysis.
+     * Uploads a resume file to the job seeker's profile and triggers AI analysis.
+     * Populates all `ai_*` profile fields and `ats_score` with extracted data.
      *
-     * @bodyParam resume file required PDF/DOC/DOCX file, max 5 MB.
+     * @bodyParam resume file required PDF/DOC/DOCX file, max 10 MB.
      *
      * @response 200 {
-     *   "message": "Resume uploaded successfully",
-     *   "resume_url": "https://example.com/storage/resumes/cv.pdf"
+     *   "message": "Resume uploaded and analyzed successfully",
+     *   "resume_url": "https://res.cloudinary.com/.../resume.pdf",
+     *   "profile": {
+     *     "id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *     "ats_score": 85,
+     *     "ai_skills": ["PHP", "Laravel", "MongoDB"],
+     *     "ai_summary": "Experienced backend developer...",
+     *     "ai_analyzed_at": "2024-01-15T00:00:00Z"
+     *   }
      * }
      * @response 422 { "errors": { "resume": ["The resume field is required."] } }
+     * @response 422 { "message": "Resume analysis failed", "reason": "Resume content could not be parsed." }
+     * @response 502 { "message": "Resume analysis service unavailable" }
      */
     // Upload resume separately
-    public function uploadResume(Request $request)
+    public function uploadResume(Request $request, CvAnalysisService $cvAnalysisService)
     {
         $user = $request->user();
+
         $validator = Validator::make($request->all(), [
-            'resume' => 'required|file|mimes:pdf,doc,docx|max:5120',
+            'resume' => 'required|file|mimes:pdf,doc,docx|max:10240', // 10 MB max
         ]);
 
         if ($validator->fails()) {
@@ -637,27 +659,82 @@ class JobSeekerController extends Controller
             ], 422);
         }
 
-        // Ensure user has a job seeker profile
-        $profile = $user->jobSeekerProfile()->firstOrCreate([
-            'user_id' => $user->_id,
-        ]);
+        $profile = $user->jobSeekerProfile()->firstOrCreate(['user_id' => $user->_id]);
 
-        // Delete old resume from Cloudinary if exists
+        // Delete previous resume/CV from Cloudinary if it exists
         if ($profile->resume_public_id) {
             Storage::disk('cloudinary')->delete($profile->resume_public_id);
         }
+        // Also delete previous CV if it exists in separate field
+        if ($profile->cv_public_id && $profile->cv_public_id !== $profile->resume_public_id) {
+            Storage::disk('cloudinary')->delete($profile->cv_public_id);
+        }
 
-        $publicId   = $request->file('resume')->store('job-seeker-resumes', 'cloudinary');
-        $resumeUrl  = Storage::disk('cloudinary')->url($publicId);
-        $profile->update([
-            'resume'           => $resumeUrl,
+        // Upload to Cloudinary
+        $publicId = $request->file('resume')->store('job-seeker-resumes', 'cloudinary');
+        $resumeUrl = Storage::disk('cloudinary')->url($publicId);
+
+        try {
+            // Pass the public Cloudinary URL to the AI service
+            $analysis = $cvAnalysisService->analyze($resumeUrl, (string) $user->_id);
+        } catch (CvAnalysisException $e) {
+            // Remove the just-uploaded file since analysis failed
+            Storage::disk('cloudinary')->delete($publicId);
+
+            $statusCode = $e->getHttpStatusCode();
+
+            if ($statusCode === 422) {
+                return response()->json([
+                    'message' => 'Resume analysis failed',
+                    'reason' => $e->getMessage(),
+                ], 422);
+            }
+
+            return response()->json([
+                'message' => 'Resume analysis service unavailable',
+            ], 502);
+        }
+
+        // Map AI response to profile fields
+        $updateData = [
+            'resume' => $resumeUrl,
             'resume_public_id' => $publicId,
-        ]);
+            'cv_file_path' => $resumeUrl,
+            'cv_public_id' => $publicId,
+            'ai_full_name' => $analysis['full_name'] ?? null,
+            'ai_email' => $analysis['email'] ?? null,
+            'ai_phone' => $analysis['phone'] ?? null,
+            'ai_location' => $analysis['location'] ?? null,
+            'ai_summary' => $analysis['summary'] ?? null,
+            'ai_skills' => $analysis['skills'] ?? [],
+            'ai_work_history' => $analysis['work_history'] ?? [],
+            'ai_education_history' => $analysis['education_history'] ?? [],
+            'ai_projects' => $analysis['projects'] ?? [],
+            'ai_languages' => $analysis['languages'] ?? [],
+            'ai_overall_evaluation' => $analysis['ai_overall_evaluation'] ?? null,
+            'ats_score' => $analysis['ats_score'] ?? null,
+            'ai_analyzed_at' => now(),
+        ];
+
+        // Extract social links if provided by AI
+        if (! empty($analysis['linkedin']) || ! empty($analysis['github'])) {
+            $socialLinks = [];
+            if (! empty($analysis['linkedin'])) {
+                $socialLinks['linkedin'] = $analysis['linkedin'];
+            }
+            if (! empty($analysis['github'])) {
+                $socialLinks['github'] = $analysis['github'];
+            }
+            $updateData['ai_social_links'] = $socialLinks;
+        }
+
+        $profile->update($updateData);
 
         return response()->json([
-            'message'    => 'Resume uploaded successfully',
+            'message' => 'Resume uploaded and analyzed successfully',
             'resume_url' => $resumeUrl,
-        ]);
+            'profile' => $profile->fresh(),
+        ], 200);
     }
 
     /**
@@ -673,14 +750,25 @@ class JobSeekerController extends Controller
         $user = $request->user();
         $profile = $user->jobSeekerProfile;
 
-        if (! $profile || ! $profile->resume) {
+        if (! $profile || (! $profile->resume && ! $profile->cv_file_path)) {
             return response()->json(['message' => 'No resume found on your profile'], 404);
         }
 
+        // Delete from Cloudinary if public IDs exist
         if ($profile->resume_public_id) {
             Storage::disk('cloudinary')->delete($profile->resume_public_id);
         }
-        $profile->update(['resume' => null, 'resume_public_id' => null]);
+        if ($profile->cv_public_id && $profile->cv_public_id !== $profile->resume_public_id) {
+            Storage::disk('cloudinary')->delete($profile->cv_public_id);
+        }
+
+        // Clear all resume/CV related fields
+        $profile->update([
+            'resume' => null,
+            'resume_public_id' => null,
+            'cv_file_path' => null,
+            'cv_public_id' => null,
+        ]);
 
         return response()->json(['message' => 'Resume deleted successfully']);
     }

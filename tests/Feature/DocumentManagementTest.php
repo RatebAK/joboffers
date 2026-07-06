@@ -12,6 +12,7 @@ use App\Models\DirectOffer;
 use App\Models\JobPost;
 use App\Models\JobSeekerProfile;
 use App\Models\User;
+use App\Services\CvAnalysisService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -80,6 +81,13 @@ test('seeker can delete their saved resume', function () {
     Storage::fake('cloudinary');
     [$seeker, $token] = docSeeker();
 
+    // Mock the AI analysis service
+    $mock = $this->mock(CvAnalysisService::class);
+    $mock->shouldReceive('analyze')->once()->andReturn([
+        'full_name' => 'Test User',
+        'ats_score' => 75,
+    ]);
+
     // Upload first
     $file = UploadedFile::fake()->create('cv.pdf', 100, 'application/pdf');
     $this->withToken($token)->postJson('/api/job-seeker/resume/upload', ['resume' => $file])
@@ -93,6 +101,8 @@ test('seeker can delete their saved resume', function () {
     $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
     expect($profile->resume)->toBeNull();
     expect($profile->resume_public_id)->toBeNull();
+    expect($profile->cv_file_path)->toBeNull();
+    expect($profile->cv_public_id)->toBeNull();
 
     $profile->delete();
     $seeker->delete();
