@@ -19,9 +19,8 @@ class CvAnalysisService
         $apiUrl = config('services.cv_analysis.url');
 
         try {
-            $response = Http::timeout(30)->post($apiUrl, [
-                'file_url'  => $fileUrl,
-                'resume_id' => $resumeId,
+            $response = Http::timeout(60)->asForm()->post($apiUrl, [
+                'file_url' => $fileUrl,
             ]);
         } catch (\Throwable $e) {
             Log::error('CV analysis HTTP error', [
