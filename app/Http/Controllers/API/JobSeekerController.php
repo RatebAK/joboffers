@@ -532,6 +532,10 @@ class JobSeekerController extends Controller
     // Upload CV and trigger AI analysis
     public function uploadAndAnalyze(Request $request, CvAnalysisService $cvAnalysisService)
     {
+        // Force PHP to allow up to 2 minutes for this specific execution thread
+        set_time_limit(240); //EDITED BY RATEBBBBB
+
+        
         $user = $request->user();
 
         $validator = Validator::make($request->all(), [
