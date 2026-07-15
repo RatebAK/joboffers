@@ -5,12 +5,12 @@
             "key": "baseUrl",
             "type": "string",
             "name": "string",
-            "value": "http:\/\/localhost:8000"
+            "value": "https:\/\/joboffers-main-uj2ehj.free.laravel.cloud"
         }
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "fe4ca0df-4cfb-4e1e-a7d5-9688e42b3148",
+        "_postman_id": "bbef6123-119a-491e-9d55-6650b5b809ba",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -1051,7 +1051,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "male",
+                                    "value": "other",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1111,7 +1111,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "unemployed",
+                                    "value": "student",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1129,7 +1129,7 @@
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "senior",
+                                    "value": "junior",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1171,7 +1171,7 @@
                                 },
                                 {
                                     "key": "is_actively_seeking",
-                                    "value": "",
+                                    "value": "1",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1207,7 +1207,7 @@
                                 },
                                 {
                                     "key": "skills[0][level]",
-                                    "value": "intermediate",
+                                    "value": "expert",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1291,7 +1291,7 @@
                                 },
                                 {
                                     "key": "work_experience[0][is_currently_working]",
-                                    "value": "",
+                                    "value": "1",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1347,19 +1347,31 @@
                                 }
                             ]
                         },
-                        "description": "Uploads a resume file to the job seeker's profile without triggering AI analysis."
+                        "description": "Uploads a resume file to the job seeker's profile and triggers AI analysis.\nPopulates all `ai_*` profile fields and `ats_score` with extracted data."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"message\": \"Resume uploaded successfully\",\n  \"resume_url\": \"https:\/\/example.com\/storage\/resumes\/cv.pdf\"\n}",
+                            "body": "{\n  \"message\": \"Resume uploaded and analyzed successfully\",\n  \"resume_url\": \"https:\/\/res.cloudinary.com\/...\/resume.pdf\",\n  \"profile\": {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"ats_score\": 85,\n    \"ai_skills\": [\"PHP\", \"Laravel\", \"MongoDB\"],\n    \"ai_summary\": \"Experienced backend developer...\",\n    \"ai_analyzed_at\": \"2024-01-15T00:00:00Z\"\n  }\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 422,
                             "body": "{ \"errors\": { \"resume\": [\"The resume field is required.\"] } }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"message\": \"Resume analysis failed\", \"reason\": \"Resume content could not be parsed.\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 502,
+                            "body": "{ \"message\": \"Resume analysis service unavailable\" }",
                             "name": ""
                         }
                     ]
@@ -1432,13 +1444,13 @@
                                 }
                             ]
                         },
-                        "description": "Uploads a CV file and sends it to the AI analysis service. On success, populates all `ai_*` profile fields and `ats_score`."
+                        "description": "Uploads a CV file and sends it to the AI analysis service. On success, populates all `ai_*` profile fields and `ats_score`.\nThis endpoint is similar to `\/upload` but accepts field name `cv` instead of `resume`."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"profile\": {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"ats_score\": 82,\n    \"ai_skills\": [\"React\", \"TypeScript\", \"Node.js\"],\n    \"ai_summary\": \"Experienced frontend developer...\",\n    \"ai_work_history\": [],\n    \"ai_analyzed_at\": \"2024-01-15T00:00:00Z\"\n  }\n}",
+                            "body": "{\n  \"message\": \"CV uploaded and analyzed successfully\",\n  \"resume_url\": \"https:\/\/res.cloudinary.com\/...\/cv.pdf\",\n  \"profile\": {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"ats_score\": 82,\n    \"ai_skills\": [\"React\", \"TypeScript\", \"Node.js\"],\n    \"ai_summary\": \"Experienced frontend developer...\",\n    \"ai_work_history\": [],\n    \"ai_analyzed_at\": \"2024-01-15T00:00:00Z\"\n  }\n}",
                             "name": ""
                         },
                         {
@@ -1859,27 +1871,7 @@
                         "body": null,
                         "description": ""
                     },
-                    "response": [
-                        {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
-                            "code": 401,
-                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Invalid authentication token signature\"}",
-                            "name": ""
-                        }
-                    ]
+                    "response": []
                 },
                 {
                     "name": "Received offers",
@@ -3083,27 +3075,7 @@
                         "body": null,
                         "description": ""
                     },
-                    "response": [
-                        {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
-                            "code": 401,
-                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Invalid authentication token signature\"}",
-                            "name": ""
-                        }
-                    ]
+                    "response": []
                 },
                 {
                     "name": "List pending employer applications",
@@ -3255,27 +3227,7 @@
                         "body": null,
                         "description": ""
                     },
-                    "response": [
-                        {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
-                            "code": 401,
-                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Invalid authentication token signature\"}",
-                            "name": ""
-                        }
-                    ]
+                    "response": []
                 },
                 {
                     "name": "List all users (admin)",

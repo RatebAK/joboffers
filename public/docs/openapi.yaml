@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 servers:
   -
-    url: 'http://localhost:8000'
+    url: 'https://joboffers-main-uj2ehj.free.laravel.cloud'
 tags:
   -
     name: Endpoints
@@ -1583,7 +1583,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: male
+                  example: other
                   enum:
                     - male
                     - female
@@ -1644,7 +1644,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: unemployed
+                  example: student
                   enum:
                     - employed
                     - unemployed
@@ -1665,7 +1665,7 @@ paths:
                 job_level:
                   type: string
                   description: ''
-                  example: senior
+                  example: junior
                   enum:
                     - entry
                     - junior
@@ -1715,7 +1715,7 @@ paths:
                 is_actively_seeking:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 social_links:
                   type: object
                   description: 'Social Links (nested object).'
@@ -1757,7 +1757,7 @@ paths:
                       level:
                         type: string
                         description: ''
-                        example: intermediate
+                        example: expert
                         enum:
                           - beginner
                           - intermediate
@@ -1850,7 +1850,7 @@ paths:
                       is_currently_working:
                         type: boolean
                         description: ''
-                        example: false
+                        example: true
                         nullable: true
                       description:
                         type: string
@@ -2476,7 +2476,7 @@ paths:
     post:
       summary: 'Upload resume'
       operationId: uploadResume
-      description: "Uploads a resume file to the job seeker's profile without triggering AI analysis."
+      description: "Uploads a resume file to the job seeker's profile and triggers AI analysis.\nPopulates all `ai_*` profile fields and `ats_score` with extracted data."
       parameters: []
       responses:
         200:
@@ -2486,35 +2486,95 @@ paths:
               schema:
                 type: object
                 example:
-                  message: 'Resume uploaded successfully'
-                  resume_url: 'https://example.com/storage/resumes/cv.pdf'
+                  message: 'Resume uploaded and analyzed successfully'
+                  resume_url: 'https://res.cloudinary.com/.../resume.pdf'
+                  profile:
+                    id: 664f1a2b3c4d5e6f7a8b9c0d
+                    ats_score: 85
+                    ai_skills:
+                      - PHP
+                      - Laravel
+                      - MongoDB
+                    ai_summary: 'Experienced backend developer...'
+                    ai_analyzed_at: '2024-01-15T00:00:00Z'
                 properties:
                   message:
                     type: string
-                    example: 'Resume uploaded successfully'
+                    example: 'Resume uploaded and analyzed successfully'
                   resume_url:
                     type: string
-                    example: 'https://example.com/storage/resumes/cv.pdf'
+                    example: 'https://res.cloudinary.com/.../resume.pdf'
+                  profile:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 664f1a2b3c4d5e6f7a8b9c0d
+                      ats_score:
+                        type: integer
+                        example: 85
+                      ai_skills:
+                        type: array
+                        example:
+                          - PHP
+                          - Laravel
+                          - MongoDB
+                        items:
+                          type: string
+                      ai_summary:
+                        type: string
+                        example: 'Experienced backend developer...'
+                      ai_analyzed_at:
+                        type: string
+                        example: '2024-01-15T00:00:00Z'
         422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      errors:
+                        resume:
+                          - 'The resume field is required.'
+                    properties:
+                      errors:
+                        type: object
+                        properties:
+                          resume:
+                            type: array
+                            example:
+                              - 'The resume field is required.'
+                            items:
+                              type: string
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Resume analysis failed'
+                      reason: 'Resume content could not be parsed.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Resume analysis failed'
+                      reason:
+                        type: string
+                        example: 'Resume content could not be parsed.'
+        502:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  errors:
-                    resume:
-                      - 'The resume field is required.'
+                  message: 'Resume analysis service unavailable'
                 properties:
-                  errors:
-                    type: object
-                    properties:
-                      resume:
-                        type: array
-                        example:
-                          - 'The resume field is required.'
-                        items:
-                          type: string
+                  message:
+                    type: string
+                    example: 'Resume analysis service unavailable'
       tags:
         - Endpoints
       requestBody:
@@ -2527,7 +2587,7 @@ paths:
                 resume:
                   type: string
                   format: binary
-                  description: 'PDF/DOC/DOCX file, max 5 MB.'
+                  description: 'PDF/DOC/DOCX file, max 10 MB.'
               required:
                 - resume
   /api/job-seeker/resume:
@@ -2567,7 +2627,7 @@ paths:
     post:
       summary: 'Upload and analyze CV'
       operationId: uploadAndAnalyzeCV
-      description: 'Uploads a CV file and sends it to the AI analysis service. On success, populates all `ai_*` profile fields and `ats_score`.'
+      description: "Uploads a CV file and sends it to the AI analysis service. On success, populates all `ai_*` profile fields and `ats_score`.\nThis endpoint is similar to `/upload` but accepts field name `cv` instead of `resume`."
       parameters: []
       responses:
         200:
@@ -2577,6 +2637,8 @@ paths:
               schema:
                 type: object
                 example:
+                  message: 'CV uploaded and analyzed successfully'
+                  resume_url: 'https://res.cloudinary.com/.../cv.pdf'
                   profile:
                     id: 664f1a2b3c4d5e6f7a8b9c0d
                     ats_score: 82
@@ -2588,6 +2650,12 @@ paths:
                     ai_work_history: []
                     ai_analyzed_at: '2024-01-15T00:00:00Z'
                 properties:
+                  message:
+                    type: string
+                    example: 'CV uploaded and analyzed successfully'
+                  resume_url:
+                    type: string
+                    example: 'https://res.cloudinary.com/.../cv.pdf'
                   profile:
                     type: object
                     properties:
@@ -3273,23 +3341,7 @@ paths:
       operationId: jobSeekerAnalyticsPersonalStatistics
       description: ''
       parameters: []
-      responses:
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  error: Unauthorized
-                  message: 'Invalid authentication token signature'
-                properties:
-                  error:
-                    type: string
-                    example: Unauthorized
-                  message:
-                    type: string
-                    example: 'Invalid authentication token signature'
+      responses: {  }
       tags:
         - Endpoints
   /api/job-seeker/offers:
@@ -5677,23 +5729,7 @@ paths:
       operationId: employerAnalyticsScopedToEmployersJobs
       description: ''
       parameters: []
-      responses:
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  error: Unauthorized
-                  message: 'Invalid authentication token signature'
-                properties:
-                  error:
-                    type: string
-                    example: Unauthorized
-                  message:
-                    type: string
-                    example: 'Invalid authentication token signature'
+      responses: {  }
       tags:
         - Endpoints
   /api/admin/employers:
@@ -5877,23 +5913,7 @@ paths:
       operationId: adminAnalyticsPlatformWideStatistics
       description: ''
       parameters: []
-      responses:
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  error: Unauthorized
-                  message: 'Invalid authentication token signature'
-                properties:
-                  error:
-                    type: string
-                    example: Unauthorized
-                  message:
-                    type: string
-                    example: 'Invalid authentication token signature'
+      responses: {  }
       tags:
         - Endpoints
   /api/admin/users:
