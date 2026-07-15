@@ -4807,20 +4807,20 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "last_name=n"\
     --form "full_name=g"\
     --form "image=z"\
-    --form "gender=other"\
+    --form "gender=prefer_not_to_say"\
     --form "nationality=m"\
     --form "city=i"\
     --form "location=y"\
     --form "address=v"\
     --form "phone=dljnikhwaykcmyuw"\
     --form "date_of_birth=pwlvqwrsitcpscql"\
-    --form "marital_status=prefer_not_to_say"\
+    --form "marital_status=single"\
     --form "salary_range_from=16"\
     --form "salary_range_to=38"\
-    --form "current_job_status=student"\
+    --form "current_job_status=unemployed"\
     --form "years_of_experience=8"\
     --form "education_level=n"\
-    --form "job_level=junior"\
+    --form "job_level=mid"\
     --form "job_types[]=r"\
     --form "job_roles[]=w"\
     --form "work_cities[]=t"\
@@ -4847,9 +4847,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "work_experience[][job_roles][]=u"\
     --form "work_experience[][from_date]=jwvlxjklqppwqbew"\
     --form "work_experience[][to_date]=tnnoqitpxntltcvi"\
-    --form "work_experience[][is_currently_working]=1"\
+    --form "work_experience[][is_currently_working]="\
     --form "work_experience[][description]=Eius et animi quos velit et."\
-    --form "resume=@C:\Users\MaginaPro\AppData\Local\Temp\php8D6E.tmp" </code></pre></div>
+    --form "resume=@C:\Users\MaginaPro\AppData\Local\Temp\phpCBEA.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -4868,20 +4868,20 @@ body.append('first_name', 'b');
 body.append('last_name', 'n');
 body.append('full_name', 'g');
 body.append('image', 'z');
-body.append('gender', 'other');
+body.append('gender', 'prefer_not_to_say');
 body.append('nationality', 'm');
 body.append('city', 'i');
 body.append('location', 'y');
 body.append('address', 'v');
 body.append('phone', 'dljnikhwaykcmyuw');
 body.append('date_of_birth', 'pwlvqwrsitcpscql');
-body.append('marital_status', 'prefer_not_to_say');
+body.append('marital_status', 'single');
 body.append('salary_range_from', '16');
 body.append('salary_range_to', '38');
-body.append('current_job_status', 'student');
+body.append('current_job_status', 'unemployed');
 body.append('years_of_experience', '8');
 body.append('education_level', 'n');
-body.append('job_level', 'junior');
+body.append('job_level', 'mid');
 body.append('job_types[]', 'r');
 body.append('job_roles[]', 'w');
 body.append('work_cities[]', 't');
@@ -4908,7 +4908,7 @@ body.append('work_experience[][company_name]', 't');
 body.append('work_experience[][job_roles][]', 'u');
 body.append('work_experience[][from_date]', 'jwvlxjklqppwqbew');
 body.append('work_experience[][to_date]', 'tnnoqitpxntltcvi');
-body.append('work_experience[][is_currently_working]', '1');
+body.append('work_experience[][is_currently_working]', '');
 body.append('work_experience[][description]', 'Eius et animi quos velit et.');
 body.append('resume', document.querySelector('input[name="resume"]').files[0]);
 
@@ -5061,10 +5061,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="gender"                data-endpoint="PUTapi-job-seeker-profile"
-               value="other"
+               value="prefer_not_to_say"
                data-component="body">
     <br>
-<p>Example: <code>other</code></p>
+<p>Example: <code>prefer_not_to_say</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>male</code></li> <li><code>female</code></li> <li><code>other</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5147,10 +5147,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="marital_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="prefer_not_to_say"
+               value="single"
                data-component="body">
     <br>
-<p>Example: <code>prefer_not_to_say</code></p>
+<p>Example: <code>single</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>single</code></li> <li><code>married</code></li> <li><code>divorced</code></li> <li><code>widowed</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5185,10 +5185,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="current_job_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="student"
+               value="unemployed"
                data-component="body">
     <br>
-<p>Example: <code>student</code></p>
+<p>Example: <code>unemployed</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>employed</code></li> <li><code>unemployed</code></li> <li><code>freelancing</code></li> <li><code>student</code></li> <li><code>open_to_work</code></li></ul>
         </div>
@@ -5223,10 +5223,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="junior"
+               value="mid"
                data-component="body">
     <br>
-<p>Example: <code>junior</code></p>
+<p>Example: <code>mid</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>entry</code></li> <li><code>junior</code></li> <li><code>mid</code></li> <li><code>senior</code></li> <li><code>lead</code></li> <li><code>manager</code></li> <li><code>director</code></li> <li><code>executive</code></li></ul>
         </div>
@@ -5628,7 +5628,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -5654,7 +5654,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\MaginaPro\AppData\Local\Temp\php8D6E.tmp</code></p>
+<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\MaginaPro\AppData\Local\Temp\phpCBEA.tmp</code></p>
         </div>
         </form>
 
@@ -5677,7 +5677,7 @@ Populates all <code>ai_*</code> profile fields and <code>ats_score</code> with e
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@C:\Users\MaginaPro\AppData\Local\Temp\php8DFD.tmp" </code></pre></div>
+    --form "resume=@C:\Users\MaginaPro\AppData\Local\Temp\phpCC3A.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -5851,7 +5851,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\MaginaPro\AppData\Local\Temp\php8DFD.tmp</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\MaginaPro\AppData\Local\Temp\phpCC3A.tmp</code></p>
         </div>
         </form>
 
@@ -6018,7 +6018,7 @@ This endpoint is similar to <code>/upload</code> but accepts field name <code>cv
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cv=@C:\Users\MaginaPro\AppData\Local\Temp\php8ECB.tmp" </code></pre></div>
+    --form "cv=@C:\Users\MaginaPro\AppData\Local\Temp\phpCC9B.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6180,7 +6180,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\MaginaPro\AppData\Local\Temp\php8ECB.tmp</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\MaginaPro\AppData\Local\Temp\phpCC9B.tmp</code></p>
         </div>
         </form>
 
@@ -6669,7 +6669,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "positions_suited_for[]=v"\
     --form "notice_period=d"\
     --form "expected_salary=l"\
-    --form "resume=@C:\Users\MaginaPro\AppData\Local\Temp\php9074.tmp" </code></pre></div>
+    --form "resume=@C:\Users\MaginaPro\AppData\Local\Temp\phpCD59.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6857,7 +6857,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>C:\Users\MaginaPro\AppData\Local\Temp\php9074.tmp</code></p>
+<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>C:\Users\MaginaPro\AppData\Local\Temp\phpCD59.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>education</code></b>&nbsp;&nbsp;
@@ -7146,7 +7146,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"keyword\": \"b\",
     \"location\": \"n\",
-    \"job_type\": \"contract\",
+    \"job_type\": \"part_time\",
     \"category\": \"g\",
     \"min_salary\": 12
 }"
@@ -7177,7 +7177,7 @@ const headers = {
 let body = {
     "keyword": "b",
     "location": "n",
-    "job_type": "contract",
+    "job_type": "part_time",
     "category": "g",
     "min_salary": 12
 };
@@ -7391,10 +7391,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_type"                data-endpoint="GETapi-job-seeker-jobs-search"
-               value="contract"
+               value="part_time"
                data-component="body">
     <br>
-<p>Example: <code>contract</code></p>
+<p>Example: <code>part_time</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>full_time</code></li> <li><code>part_time</code></li> <li><code>contract</code></li> <li><code>freelance</code></li></ul>
         </div>
@@ -8244,7 +8244,7 @@ Returns jobs ranked by match percentage and ATS compatibility.</p>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@C:\Users\MaginaPro\AppData\Local\Temp\php945E.tmp" </code></pre></div>
+    --form "resume=@C:\Users\MaginaPro\AppData\Local\Temp\phpCF30.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -8408,7 +8408,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX resume file, max 10 MB. Example: <code>C:\Users\MaginaPro\AppData\Local\Temp\php945E.tmp</code></p>
+<p>PDF/DOC/DOCX resume file, max 10 MB. Example: <code>C:\Users\MaginaPro\AppData\Local\Temp\phpCF30.tmp</code></p>
         </div>
         </form>
 
@@ -8430,7 +8430,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "document=@C:\Users\MaginaPro\AppData\Local\Temp\php9684.tmp" </code></pre></div>
+    --form "document=@C:\Users\MaginaPro\AppData\Local\Temp\phpD03D.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -8579,7 +8579,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>C:\Users\MaginaPro\AppData\Local\Temp\php9684.tmp</code></p>
+<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>C:\Users\MaginaPro\AppData\Local\Temp\phpD03D.tmp</code></p>
         </div>
         </form>
 
@@ -11212,7 +11212,7 @@ Accepts JPEG, PNG, WebP; max 2 MB. Any previously uploaded logo is automatically
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "logo=@C:\Users\MaginaPro\AppData\Local\Temp\php9C63.tmp" </code></pre></div>
+    --form "logo=@C:\Users\MaginaPro\AppData\Local\Temp\phpD2E0.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -11362,7 +11362,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>The logo image file. Accepted: jpeg, png, webp. Max 2 MB. Example: <code>C:\Users\MaginaPro\AppData\Local\Temp\php9C63.tmp</code></p>
+<p>The logo image file. Accepted: jpeg, png, webp. Max 2 MB. Example: <code>C:\Users\MaginaPro\AppData\Local\Temp\phpD2E0.tmp</code></p>
         </div>
         </form>
 
@@ -11385,7 +11385,7 @@ Accepts JPEG, PNG, WebP; max 4 MB. Any previously uploaded cover image is automa
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cover_image=@C:\Users\MaginaPro\AppData\Local\Temp\php9CD3.tmp" </code></pre></div>
+    --form "cover_image=@C:\Users\MaginaPro\AppData\Local\Temp\phpD312.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -11535,7 +11535,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>The cover image file. Accepted: jpeg, png, webp. Max 4 MB. Example: <code>C:\Users\MaginaPro\AppData\Local\Temp\php9CD3.tmp</code></p>
+<p>The cover image file. Accepted: jpeg, png, webp. Max 4 MB. Example: <code>C:\Users\MaginaPro\AppData\Local\Temp\phpD312.tmp</code></p>
         </div>
         </form>
 

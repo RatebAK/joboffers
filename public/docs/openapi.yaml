@@ -1583,7 +1583,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: other
+                  example: prefer_not_to_say
                   enum:
                     - male
                     - female
@@ -1623,7 +1623,7 @@ paths:
                 marital_status:
                   type: string
                   description: ''
-                  example: prefer_not_to_say
+                  example: single
                   enum:
                     - single
                     - married
@@ -1644,7 +1644,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: student
+                  example: unemployed
                   enum:
                     - employed
                     - unemployed
@@ -1665,7 +1665,7 @@ paths:
                 job_level:
                   type: string
                   description: ''
-                  example: junior
+                  example: mid
                   enum:
                     - entry
                     - junior
@@ -1850,7 +1850,7 @@ paths:
                       is_currently_working:
                         type: boolean
                         description: ''
-                        example: true
+                        example: false
                         nullable: true
                       description:
                         type: string
@@ -3216,7 +3216,7 @@ paths:
                 job_type:
                   type: string
                   description: ''
-                  example: contract
+                  example: part_time
                   enum:
                     - full_time
                     - part_time

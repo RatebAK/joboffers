@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "bbef6123-119a-491e-9d55-6650b5b809ba",
+        "_postman_id": "33591442-012b-45fe-9fbf-6366b7ca7407",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -1051,7 +1051,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "other",
+                                    "value": "prefer_not_to_say",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1093,7 +1093,7 @@
                                 },
                                 {
                                     "key": "marital_status",
-                                    "value": "prefer_not_to_say",
+                                    "value": "single",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1111,7 +1111,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "student",
+                                    "value": "unemployed",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1129,7 +1129,7 @@
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "junior",
+                                    "value": "mid",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1291,7 +1291,7 @@
                                 },
                                 {
                                     "key": "work_experience[0][is_currently_working]",
-                                    "value": "1",
+                                    "value": "",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1790,7 +1790,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"contract\",\"category\":\"g\",\"min_salary\":12}"
+                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"part_time\",\"category\":\"g\",\"min_salary\":12}"
                         },
                         "description": "Paginated search of active job posts for the authenticated job seeker."
                     },
