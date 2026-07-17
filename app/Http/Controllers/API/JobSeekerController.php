@@ -518,18 +518,35 @@ class JobSeekerController extends Controller
      * Uploads a CV file and sends it to the AI analysis service. On success, populates all `ai_*` profile fields and `ats_score`.
      * This endpoint is similar to `/upload` but accepts field name `cv` instead of `resume`.
      *
+     * ## How Uploaded CVs Benefit Job Applications:
+     *
+     * Uploading a CV enables automatic job applications and provides these advantages:
+     *
+     * 1. **Automatic Application Attachments**: Your CV is automatically attached when you apply to jobs
+     * 2. **ATS Score Generation**: Get an ATS score that employers use to filter candidates (65+ is recommended)
+     * 3. **AI-Powered Profile**: Skills, work history, education are automatically extracted
+     * 4. **Better Visibility**: Employers see your complete AI-analyzed profile with extracted data
+     * 5. **Job Matching**: Enables AI-powered job matching services
+     * 6. **Resume Coach**: Get AI-powered resume improvement suggestions
+     *
+     * ## Workflow for Job Applications:
+     * 1. Upload CV → Get AI analysis → ATS score generated
+     * 2. Apply to jobs → Your CV automatically attached
+     * 3. Employers see → Your ATS score + AI-extracted skills
+     *
      * @bodyParam cv file required PDF/DOC/DOCX file, max 10 MB.
      *
      * @response 200 {
-     *   "message": "CV uploaded and analyzed successfully",
+     *   "message": "CV uploaded successfully. Analysis is being processed.",
      *   "resume_url": "https://res.cloudinary.com/.../cv.pdf",
+     *   "analysis_status": "pending",
      *   "profile": {
      *     "id": "664f1a2b3c4d5e6f7a8b9c0d",
-     *     "ats_score": 82,
-     *     "ai_skills": ["React", "TypeScript", "Node.js"],
-     *     "ai_summary": "Experienced frontend developer...",
+     *     "ats_score": null,
+     *     "ai_skills": [],
      *     "ai_work_history": [],
-     *     "ai_analyzed_at": "2024-01-15T00:00:00Z"
+     *     "ai_analyzed_at": null,
+     *     "analysis_status": "pending"
      *   }
      * }
      * @response 422 { "message": "CV analysis failed", "reason": "CV content could not be parsed." }
@@ -717,17 +734,37 @@ class JobSeekerController extends Controller
      * Uploads a resume file to the job seeker's profile and triggers AI analysis.
      * Populates all `ai_*` profile fields and `ats_score` with extracted data.
      *
+     * ## How Uploaded Resumes Benefit Job Applications:
+     *
+     * Uploading a resume enables automatic job applications and provides these advantages:
+     *
+     * 1. **Automatic Application Attachments**: Your resume is automatically attached when you apply to jobs
+     * 2. **ATS Score Generation**: Get an ATS score that employers use to filter candidates
+     * 3. **AI-Powered Profile**: Skills, work history, education are automatically extracted
+     * 4. **Better Visibility**: Employers see your complete AI-analyzed profile
+     * 5. **Job Matching**: Enables AI-powered job matching services
+     *
+     * ## Analysis Status Tracking:
+     * - `pending`: Uploaded, analysis not started
+     * - `processing`: Analysis in progress
+     * - `completed`: Analysis successful, profile updated
+     * - `error`: Analysis failed, resume still saved
+     *
+     * Check status: `GET /job-seeker/resume/analysis-status`
+     * Retry failed: `POST /job-seeker/resume/retry-analysis`
+     *
      * @bodyParam resume file required PDF/DOC/DOCX file, max 10 MB.
      *
      * @response 200 {
-     *   "message": "Resume uploaded and analyzed successfully",
+     *   "message": "Resume uploaded successfully. Analysis is being processed.",
      *   "resume_url": "https://res.cloudinary.com/.../resume.pdf",
+     *   "analysis_status": "pending",
      *   "profile": {
      *     "id": "664f1a2b3c4d5e6f7a8b9c0d",
-     *     "ats_score": 85,
-     *     "ai_skills": ["PHP", "Laravel", "MongoDB"],
-     *     "ai_summary": "Experienced backend developer...",
-     *     "ai_analyzed_at": "2024-01-15T00:00:00Z"
+     *     "ats_score": null,
+     *     "ai_skills": [],
+     *     "ai_analyzed_at": null,
+     *     "analysis_status": "pending"
      *   }
      * }
      * @response 422 { "errors": { "resume": ["The resume field is required."] } }

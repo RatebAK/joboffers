@@ -52,9 +52,32 @@ class ApplicationController extends Controller
      *
      * Submit an application for an active job post. If no resume file is uploaded, the profile's stored CV is used automatically.
      *
+     * ## How Uploaded CVs Benefit Your Application
+     *
+     * When you have an uploaded and AI-analyzed CV in your profile, your application gains several advantages:
+     *
+     * 1. **Automatic Resume Attachment**: Your stored CV is automatically attached to applications if you don't provide a separate resume file
+     * 2. **ATS Score Visibility**: Employers see your ATS (Applicant Tracking System) score when reviewing applications
+     * 3. **AI-Extracted Profile Data**: Employers can see your AI-extracted skills, work history, and education
+     * 4. **Better Job Matching**: AI-analyzed profiles get better matches through the matching services
+     * 5. **Default Cover Letter**: Set a default cover letter that's automatically used if you don't provide one
+     *
+     * ## Steps to Apply with Uploaded CV:
+     * 1. Upload CV: `POST /job-seeker/resume/upload-and-analyze` or `POST /job-seeker/resume/upload`
+     * 2. Apply to job: `POST /job-seeker/apply` with `job_post_id`
+     * 3. Your stored CV will be automatically attached
+     *
      * @bodyParam job_post_id string required The ID of the job post to apply to. Example: 664f1a2b3c4d5e6f7a8b9c0d
      * @bodyParam cover_letter string Optional cover letter. Max 1000 chars. Example: I am very interested in this position.
      * @bodyParam resume file Optional PDF/DOC resume file (max 5 MB). Overrides profile CV.
+     * @bodyParam education string Optional education summary. Max 255 chars.
+     * @bodyParam last_work string Optional last work experience. Max 255 chars.
+     * @bodyParam years_of_experience integer Optional years of experience. Min 0, max 60.
+     * @bodyParam why_join string Optional motivation for joining. Max 2000 chars.
+     * @bodyParam what_to_add string Optional skills/contributions you can add. Max 2000 chars.
+     * @bodyParam positions_suited_for array Optional array of suitable positions.
+     * @bodyParam notice_period string Optional notice period. Max 100 chars.
+     * @bodyParam expected_salary string Optional expected salary. Max 100 chars.
      *
      * @response 201 {
      *   "message": "Application submitted successfully",
@@ -62,7 +85,8 @@ class ApplicationController extends Controller
      *     "id": "664f1a2b3c4d5e6f7a8b9c0f",
      *     "job_post_id": "664f1a2b3c4d5e6f7a8b9c0d",
      *     "status": "pending",
-     *     "applied_at": "2024-01-15T00:00:00Z"
+     *     "applied_at": "2024-01-15T00:00:00Z",
+     *     "resume": "https://res.cloudinary.com/.../cv.pdf"
      *   }
      * }
      * @response 404 { "message": "Job post not found or is not active" }
