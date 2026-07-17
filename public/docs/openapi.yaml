@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 servers:
   -
-    url: 'https://joboffers-main-uj2ehj.free.laravel.cloud'
+    url: 'http://localhost:8000'
 tags:
   -
     name: Endpoints
@@ -1119,18 +1119,44 @@ paths:
             description: 'Page number.'
             example: 1
       responses:
-        500:
+        200:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  message: 'Server Error'
+                  data: []
+                  current_page: 1
+                  per_page: 10
+                  total: 0
+                  total_pages: 1
+                  next_page: null
+                  prev_page: null
                 properties:
-                  message:
+                  data:
+                    type: array
+                    example: []
+                  current_page:
+                    type: integer
+                    example: 1
+                  per_page:
+                    type: integer
+                    example: 10
+                  total:
+                    type: integer
+                    example: 0
+                  total_pages:
+                    type: integer
+                    example: 1
+                  next_page:
                     type: string
-                    example: 'Server Error'
+                    example: null
+                    nullable: true
+                  prev_page:
+                    type: string
+                    example: null
+                    nullable: true
       tags:
         - Endpoints
       security: []
@@ -1146,25 +1172,25 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                example:
-                  message: 'Company profile not found'
-                properties:
-                  message:
-                    type: string
-                    example: 'Company profile not found'
-        500:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Server Error'
-                properties:
-                  message:
-                    type: string
-                    example: 'Server Error'
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Company profile not found'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Company profile not found'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Company profile not found'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Company profile not found'
       tags:
         - Endpoints
       security: []
@@ -1583,7 +1609,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: prefer_not_to_say
+                  example: male
                   enum:
                     - male
                     - female
@@ -1644,7 +1670,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: unemployed
+                  example: employed
                   enum:
                     - employed
                     - unemployed
@@ -1665,7 +1691,7 @@ paths:
                 job_level:
                   type: string
                   description: ''
-                  example: mid
+                  example: lead
                   enum:
                     - entry
                     - junior
@@ -1850,7 +1876,7 @@ paths:
                       is_currently_working:
                         type: boolean
                         description: ''
-                        example: false
+                        example: true
                         nullable: true
                       description:
                         type: string
@@ -2725,6 +2751,158 @@ paths:
                   description: 'PDF/DOC/DOCX file, max 10 MB.'
               required:
                 - cv
+  /api/job-seeker/resume/analysis-status:
+    get:
+      summary: 'Check resume analysis status'
+      operationId: checkResumeAnalysisStatus
+      description: 'Returns the current analysis status of the uploaded resume/CV.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      analysis_status: completed
+                      analysis_error: null
+                      analysis_started_at: '2024-01-15T10:30:00Z'
+                      analysis_completed_at: '2024-01-15T10:31:00Z'
+                      resume_url: 'https://res.cloudinary.com/.../resume.pdf'
+                      has_ai_data: true
+                      profile:
+                        id: 664f1a2b3c4d5e6f7a8b9c0d
+                        ats_score: 85
+                    properties:
+                      analysis_status:
+                        type: string
+                        example: completed
+                      analysis_error:
+                        type: string
+                        example: null
+                        nullable: true
+                      analysis_started_at:
+                        type: string
+                        example: '2024-01-15T10:30:00Z'
+                      analysis_completed_at:
+                        type: string
+                        example: '2024-01-15T10:31:00Z'
+                      resume_url:
+                        type: string
+                        example: 'https://res.cloudinary.com/.../resume.pdf'
+                      has_ai_data:
+                        type: boolean
+                        example: true
+                      profile:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 664f1a2b3c4d5e6f7a8b9c0d
+                          ats_score:
+                            type: integer
+                            example: 85
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      analysis_status: error
+                      analysis_error: 'Could not extract any valid text from the provided file URL.'
+                      analysis_started_at: '2024-01-15T10:30:00Z'
+                      analysis_completed_at: '2024-01-15T10:30:05Z'
+                      resume_url: 'https://res.cloudinary.com/.../resume.docx'
+                      has_ai_data: false
+                      profile:
+                        id: 664f1a2b3c4d5e6f7a8b9c0d
+                        ats_score: null
+                    properties:
+                      analysis_status:
+                        type: string
+                        example: error
+                      analysis_error:
+                        type: string
+                        example: 'Could not extract any valid text from the provided file URL.'
+                      analysis_started_at:
+                        type: string
+                        example: '2024-01-15T10:30:00Z'
+                      analysis_completed_at:
+                        type: string
+                        example: '2024-01-15T10:30:05Z'
+                      resume_url:
+                        type: string
+                        example: 'https://res.cloudinary.com/.../resume.docx'
+                      has_ai_data:
+                        type: boolean
+                        example: false
+                      profile:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 664f1a2b3c4d5e6f7a8b9c0d
+                          ats_score:
+                            type: string
+                            example: null
+                            nullable: true
+      tags:
+        - Endpoints
+  /api/job-seeker/resume/retry-analysis:
+    post:
+      summary: 'Retry failed resume analysis'
+      operationId: retryFailedResumeAnalysis
+      description: "Retries the AI analysis for a previously uploaded resume that failed analysis.\nRequires that a resume is already uploaded and analysis status is 'error'."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Analysis retry started successfully'
+                  analysis_status: processing
+                  resume_url: 'https://res.cloudinary.com/.../resume.pdf'
+                properties:
+                  message:
+                    type: string
+                    example: 'Analysis retry started successfully'
+                  analysis_status:
+                    type: string
+                    example: processing
+                  resume_url:
+                    type: string
+                    example: 'https://res.cloudinary.com/.../resume.pdf'
+        400:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No resume found or analysis is not in error state'
+                properties:
+                  message:
+                    type: string
+                    example: 'No resume found or analysis is not in error state'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No profile or resume found'
+                properties:
+                  message:
+                    type: string
+                    example: 'No profile or resume found'
+      tags:
+        - Endpoints
   /api/job-seeker/cover-letter:
     put:
       summary: 'Save default cover letter'
@@ -3216,7 +3394,7 @@ paths:
                 job_type:
                   type: string
                   description: ''
-                  example: part_time
+                  example: contract
                   enum:
                     - full_time
                     - part_time
@@ -3341,7 +3519,23 @@ paths:
       operationId: jobSeekerAnalyticsPersonalStatistics
       description: ''
       parameters: []
-      responses: {  }
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: Unauthorized
+                  message: 'Invalid authentication token signature'
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+                  message:
+                    type: string
+                    example: 'Invalid authentication token signature'
       tags:
         - Endpoints
   /api/job-seeker/offers:
@@ -5729,7 +5923,23 @@ paths:
       operationId: employerAnalyticsScopedToEmployersJobs
       description: ''
       parameters: []
-      responses: {  }
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: Unauthorized
+                  message: 'Invalid authentication token signature'
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+                  message:
+                    type: string
+                    example: 'Invalid authentication token signature'
       tags:
         - Endpoints
   /api/admin/employers:
@@ -5913,7 +6123,23 @@ paths:
       operationId: adminAnalyticsPlatformWideStatistics
       description: ''
       parameters: []
-      responses: {  }
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: Unauthorized
+                  message: 'Invalid authentication token signature'
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+                  message:
+                    type: string
+                    example: 'Invalid authentication token signature'
       tags:
         - Endpoints
   /api/admin/users:

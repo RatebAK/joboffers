@@ -66,6 +66,11 @@ class JobSeekerProfile extends Model
         'ats_score',
         'ai_detected_language',
         'ai_analyzed_at',
+        // Analysis status tracking
+        'analysis_status', // pending, processing, completed, error
+        'analysis_error',  // Error message if analysis failed
+        'analysis_started_at', // When analysis started
+        'analysis_completed_at', // When analysis completed/failed
     ];
 
     protected $casts = [
@@ -89,6 +94,8 @@ class JobSeekerProfile extends Model
         'ai_social_links' => 'array',
         'ats_score' => 'integer',
         'ai_analyzed_at' => 'datetime',
+        'analysis_started_at' => 'datetime',
+        'analysis_completed_at' => 'datetime',
     ];
 
     public function user()

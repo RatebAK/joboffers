@@ -5,12 +5,12 @@
             "key": "baseUrl",
             "type": "string",
             "name": "string",
-            "value": "https:\/\/joboffers-main-uj2ehj.free.laravel.cloud"
+            "value": "http:\/\/localhost:8000"
         }
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "33591442-012b-45fe-9fbf-6366b7ca7407",
+        "_postman_id": "af9845a1-f7cb-491b-83c7-8ff25befdccc",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -451,8 +451,8 @@
                                     "value": "*"
                                 }
                             ],
-                            "code": 500,
-                            "body": "{\n    \"message\": \"Server Error\"\n}",
+                            "code": 200,
+                            "body": "{\"data\":[],\"current_page\":1,\"per_page\":10,\"total\":0,\"total_pages\":1,\"next_page\":null,\"prev_page\":null}",
                             "name": ""
                         }
                     ]
@@ -513,8 +513,8 @@
                                     "value": "*"
                                 }
                             ],
-                            "code": 500,
-                            "body": "{\n    \"message\": \"Server Error\"\n}",
+                            "code": 404,
+                            "body": "{\"message\":\"Company profile not found\"}",
                             "name": ""
                         }
                     ]
@@ -1051,7 +1051,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "prefer_not_to_say",
+                                    "value": "male",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1111,7 +1111,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "unemployed",
+                                    "value": "employed",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1129,7 +1129,7 @@
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "mid",
+                                    "value": "lead",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1291,7 +1291,7 @@
                                 },
                                 {
                                     "key": "work_experience[0][is_currently_working]",
-                                    "value": "",
+                                    "value": "1",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1463,6 +1463,88 @@
                             "header": [],
                             "code": 502,
                             "body": "{ \"message\": \"CV analysis service unavailable\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Check resume analysis status",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/resume\/analysis-status",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/resume\/analysis-status"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns the current analysis status of the uploaded resume\/CV."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"analysis_status\": \"completed\",\n  \"analysis_error\": null,\n  \"analysis_started_at\": \"2024-01-15T10:30:00Z\",\n  \"analysis_completed_at\": \"2024-01-15T10:31:00Z\",\n  \"resume_url\": \"https:\/\/res.cloudinary.com\/...\/resume.pdf\",\n  \"has_ai_data\": true,\n  \"profile\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"ats_score\": 85 }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"analysis_status\": \"error\",\n  \"analysis_error\": \"Could not extract any valid text from the provided file URL.\",\n  \"analysis_started_at\": \"2024-01-15T10:30:00Z\",\n  \"analysis_completed_at\": \"2024-01-15T10:30:05Z\",\n  \"resume_url\": \"https:\/\/res.cloudinary.com\/...\/resume.docx\",\n  \"has_ai_data\": false,\n  \"profile\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"ats_score\": null }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Retry failed resume analysis",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/resume\/retry-analysis",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/resume\/retry-analysis"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retries the AI analysis for a previously uploaded resume that failed analysis.\nRequires that a resume is already uploaded and analysis status is 'error'."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Analysis retry started successfully\",\n  \"analysis_status\": \"processing\",\n  \"resume_url\": \"https:\/\/res.cloudinary.com\/...\/resume.pdf\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"message\": \"No resume found or analysis is not in error state\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No profile or resume found\"\n}",
                             "name": ""
                         }
                     ]
@@ -1790,7 +1872,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"part_time\",\"category\":\"g\",\"min_salary\":12}"
+                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"contract\",\"category\":\"g\",\"min_salary\":12}"
                         },
                         "description": "Paginated search of active job posts for the authenticated job seeker."
                     },
@@ -1871,7 +1953,27 @@
                         "body": null,
                         "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Invalid authentication token signature\"}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
                     "name": "Received offers",
@@ -3075,7 +3177,27 @@
                         "body": null,
                         "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Invalid authentication token signature\"}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
                     "name": "List pending employer applications",
@@ -3227,7 +3349,27 @@
                         "body": null,
                         "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Invalid authentication token signature\"}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
                     "name": "List all users (admin)",

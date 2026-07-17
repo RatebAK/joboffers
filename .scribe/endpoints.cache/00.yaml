@@ -230,7 +230,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -271,7 +271,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -318,7 +318,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -795,11 +795,8 @@ endpoints:
     responses:
       -
         custom: []
-        status: 500
-        content: |-
-          {
-              "message": "Server Error"
-          }
+        status: 200
+        content: '{"data":[],"current_page":1,"per_page":10,"total":0,"total_pages":1,"next_page":null,"prev_page":null}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -856,11 +853,8 @@ endpoints:
         description: ''
       -
         custom: []
-        status: 500
-        content: |-
-          {
-              "message": "Server Error"
-          }
+        status: 404
+        content: '{"message":"Company profile not found"}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -1063,7 +1057,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -1133,7 +1127,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -1186,7 +1180,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -1375,7 +1369,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -1588,7 +1582,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -1693,7 +1687,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -1776,7 +1770,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -1817,7 +1811,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -1972,7 +1966,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -2013,7 +2007,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -2160,7 +2154,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -2201,7 +2195,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -2278,7 +2272,7 @@ endpoints:
         name: gender
         description: ''
         required: false
-        example: other
+        example: male
         type: string
         enumValues:
           - male
@@ -2359,7 +2353,7 @@ endpoints:
         name: marital_status
         description: ''
         required: false
-        example: prefer_not_to_say
+        example: single
         type: string
         enumValues:
           - single
@@ -2397,7 +2391,7 @@ endpoints:
         name: current_job_status
         description: ''
         required: false
-        example: student
+        example: employed
         type: string
         enumValues:
           - employed
@@ -2435,7 +2429,7 @@ endpoints:
         name: job_level
         description: ''
         required: false
-        example: junior
+        example: lead
         type: string
         enumValues:
           - entry
@@ -2825,20 +2819,20 @@ endpoints:
       last_name: 'n'
       full_name: g
       image: z
-      gender: other
+      gender: male
       nationality: m
       city: i
       location: 'y'
       address: v
       phone: dljnikhwaykcmyuw
       date_of_birth: pwlvqwrsitcpscql
-      marital_status: prefer_not_to_say
+      marital_status: single
       salary_range_from: 16
       salary_range_to: 38
-      current_job_status: student
+      current_job_status: employed
       years_of_experience: 8
       education_level: 'n'
-      job_level: junior
+      job_level: lead
       job_types:
         - r
       job_roles:
@@ -2885,7 +2879,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -2969,7 +2963,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -3016,7 +3010,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -3095,7 +3089,138 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/job-seeker/resume/analysis-status
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Check resume analysis status'
+      description: 'Returns the current analysis status of the uploaded resume/CV.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "analysis_status": "completed",
+            "analysis_error": null,
+            "analysis_started_at": "2024-01-15T10:30:00Z",
+            "analysis_completed_at": "2024-01-15T10:31:00Z",
+            "resume_url": "https://res.cloudinary.com/.../resume.pdf",
+            "has_ai_data": true,
+            "profile": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "ats_score": 85 }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "analysis_status": "error",
+            "analysis_error": "Could not extract any valid text from the provided file URL.",
+            "analysis_started_at": "2024-01-15T10:30:00Z",
+            "analysis_completed_at": "2024-01-15T10:30:05Z",
+            "resume_url": "https://res.cloudinary.com/.../resume.docx",
+            "has_ai_data": false,
+            "profile": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "ats_score": null }
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/job-seeker/resume/retry-analysis
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Retry failed resume analysis'
+      description: |-
+        Retries the AI analysis for a previously uploaded resume that failed analysis.
+        Requires that a resume is already uploaded and analysis status is 'error'.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Analysis retry started successfully",
+            "analysis_status": "processing",
+            "resume_url": "https://res.cloudinary.com/.../resume.pdf"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 400
+        content: |-
+          {
+            "message": "No resume found or analysis is not in error state"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "No profile or resume found"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -3150,7 +3275,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -3197,7 +3322,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -3253,7 +3378,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -3449,7 +3574,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -3514,7 +3639,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -3685,7 +3810,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -3762,7 +3887,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -3792,12 +3917,21 @@ endpoints:
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"error":"Unauthorized","message":"Invalid authentication token signature"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -3852,7 +3986,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -3921,7 +4055,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -3990,7 +4124,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -4072,7 +4206,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -4140,7 +4274,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -4190,7 +4324,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -4253,7 +4387,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -4708,7 +4842,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -4788,7 +4922,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -4853,7 +4987,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -4918,7 +5052,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -5008,7 +5142,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -5158,7 +5292,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -5308,7 +5442,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -5551,7 +5685,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -5618,7 +5752,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -5685,7 +5819,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -5766,7 +5900,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -5859,7 +5993,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -5988,7 +6122,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -6060,7 +6194,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -6166,7 +6300,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -6221,7 +6355,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -6313,7 +6447,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -6409,7 +6543,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -6439,12 +6573,21 @@ endpoints:
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"error":"Unauthorized","message":"Invalid authentication token signature"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -6494,7 +6637,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -6560,7 +6703,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -6638,7 +6781,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -6668,12 +6811,21 @@ endpoints:
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"error":"Unauthorized","message":"Invalid authentication token signature"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -6742,7 +6894,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -6799,7 +6951,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -6856,7 +7008,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null

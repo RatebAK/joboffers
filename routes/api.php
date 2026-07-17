@@ -69,6 +69,8 @@ Route::middleware(['jwt.auth', 'role:employee'])->prefix('job-seeker')->group(fu
     Route::post('resume/upload', [JobSeekerController::class, 'uploadResume']);
     Route::delete('resume', [JobSeekerController::class, 'deleteResume']);
     Route::post('resume/upload-and-analyze', [JobSeekerController::class, 'uploadAndAnalyze']);
+    Route::get('resume/analysis-status', [JobSeekerController::class, 'checkAnalysisStatus']);
+    Route::post('resume/retry-analysis', [JobSeekerController::class, 'retryAnalysis']);
     Route::put('cover-letter', [JobSeekerController::class, 'saveDefaultCoverLetter']);
     Route::delete('cover-letter', [JobSeekerController::class, 'deleteDefaultCoverLetter']);
     Route::get('applications', [ApplicationController::class, 'index']);
