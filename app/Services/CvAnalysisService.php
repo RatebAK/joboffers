@@ -14,23 +14,29 @@ class CvAnalysisService
      * @param  string  $fileUrl   Cloudinary (or any public) URL of the CV file
      * @param  string  $resumeId  Identifier sent to the AI service (user ID)
      */
-    public function analyze(string $fileUrl, string $resumeId): array
+    public function analyze(string $fileUrl, string $resumeId, ?string $mimeType = null): array
     {
         $apiUrl = config('services.cv_analysis.url');
 
         // Log file type for debugging
         $fileExtension = pathinfo(parse_url($fileUrl, PHP_URL_PATH), PATHINFO_EXTENSION);
         Log::info('CV analysis request', [
-            'file_url' => $fileUrl,
+            'file_url'       => $fileUrl,
             'file_extension' => $fileExtension,
-            'resume_id' => $resumeId,
-            'api_url' => $apiUrl
+            'mime_type'      => $mimeType,
+            'resume_id'      => $resumeId,
+            'api_url'        => $apiUrl,
         ]);
 
+        $payload = ['file_url' => $fileUrl];
+
+        // Pass MIME type to the AI service so it knows how to parse the file
+        if ($mimeType) {
+            $payload['file_type'] = $mimeType;
+        }
+
         try {
-            $response = Http::timeout(120)->asForm()->post($apiUrl, [
-                'file_url' => $fileUrl,
-            ]);
+            $response = Http::timeout(120)->asForm()->post($apiUrl, $payload);
         } catch (\Throwable $e) {
             Log::error('CV analysis HTTP error', [
                 'error' => $e->getMessage(),

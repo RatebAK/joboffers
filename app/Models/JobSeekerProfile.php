@@ -48,6 +48,10 @@ class JobSeekerProfile extends Model
         'resume_public_id', // Cloudinary public_id for deletion
         'cv_file_path',    // Cloudinary URL of AI-analyzed CV
         'cv_public_id',    // Cloudinary public_id for deletion
+        // Profile image
+        'image_public_id', // Cloudinary public_id for profile photo deletion
+        // Resume file metadata
+        'resume_file_type', // Original MIME type of uploaded resume (e.g. application/pdf)
         // Saved default cover letter (reused across applications)
         'default_cover_letter',
         // AI-derived fields

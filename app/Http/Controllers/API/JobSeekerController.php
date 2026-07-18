@@ -61,11 +61,13 @@ class JobSeekerController extends Controller
      * Update personal information
      *
      * Updates the authenticated job seeker's personal information fields.
+     * Send `image` as a file upload (JPEG/PNG/WEBP, max 2MB) to upload a profile photo to Cloudinary.
+     * All other fields are sent as regular form fields.
      *
      * @bodyParam first_name string Example: Jane
      * @bodyParam last_name string Example: Smith
      * @bodyParam full_name string Example: Jane Smith
-     * @bodyParam image string URL to profile photo. Example: https://example.com/photo.jpg
+     * @bodyParam image file JPEG/PNG/WEBP profile photo, max 2MB.
      * @bodyParam gender string One of: male, female, other, prefer_not_to_say. Example: female
      * @bodyParam nationality string Example: Lebanese
      * @bodyParam city string Example: Beirut
@@ -76,24 +78,24 @@ class JobSeekerController extends Controller
      *
      * @response 200 {
      *   "message": "Personal information updated successfully",
-     *   "profile": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "full_name": "Jane Smith" }
+     *   "profile": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "full_name": "Jane Smith", "image": "https://res.cloudinary.com/.../photo.jpg" }
      * }
      */
     public function updatePersonalInfo(Request $request)
     {
         $user = $request->user();
         $validator = Validator::make($request->all(), [
-            'first_name' => 'nullable|string|max:50',
-            'last_name' => 'nullable|string|max:50',
-            'full_name' => 'nullable|string|max:100',
-            'image' => 'nullable|url|max:500',
-            'gender' => 'nullable|string|in:male,female,other,prefer_not_to_say',
-            'nationality' => 'nullable|string|max:100',
-            'city' => 'nullable|string|max:100',
-            'location' => 'nullable|string|max:255',
-            'address' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'date_of_birth' => 'nullable|string|max:20',
+            'first_name'     => 'nullable|string|max:50',
+            'last_name'      => 'nullable|string|max:50',
+            'full_name'      => 'nullable|string|max:100',
+            'image'          => 'nullable|image|mimes:jpeg,png,webp|max:2048',
+            'gender'         => 'nullable|string|in:male,female,other,prefer_not_to_say',
+            'nationality'    => 'nullable|string|max:100',
+            'city'           => 'nullable|string|max:100',
+            'location'       => 'nullable|string|max:255',
+            'address'        => 'nullable|string|max:255',
+            'phone'          => 'nullable|string|max:20',
+            'date_of_birth'  => 'nullable|string|max:20',
             'marital_status' => 'nullable|string|in:single,married,divorced,widowed,prefer_not_to_say',
         ]);
 
@@ -101,9 +103,23 @@ class JobSeekerController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+        $data = $validator->validated();
+
+        // Handle profile image upload
+        if ($request->hasFile('image')) {
+            $profile = $user->jobSeekerProfile;
+            // Delete old image from Cloudinary if exists
+            if ($profile && $profile->image_public_id) {
+                Storage::disk('cloudinary')->delete($profile->image_public_id);
+            }
+            $path = $request->file('image')->store('job-seeker-photos', 'cloudinary');
+            $data['image'] = Storage::disk('cloudinary')->url($path);
+            $data['image_public_id'] = $path;
+        }
+
         $profile = $user->jobSeekerProfile()->updateOrCreate(
             ['user_id' => $user->_id],
-            $validator->validated()
+            $data
         );
 
         return response()->json([
@@ -608,8 +624,24 @@ class JobSeekerController extends Controller
             'cloudinary_folder' => 'job-seeker-cvs',
         ]);
         
-        $publicId = $request->file('cv')->store('job-seeker-cvs', 'cloudinary');
-        $cvUrl    = Storage::disk('cloudinary')->url($publicId);
+        $file = $request->file('cv');
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $extension    = $file->getClientOriginalExtension();
+        $mimeType     = $file->getMimeType();
+
+        // Upload directly via Cloudinary SDK so we can preserve filename + extension
+        $cloudinary = app(\Cloudinary\Cloudinary::class);
+        $result = $cloudinary->uploadApi()->upload($file->getRealPath(), [
+            'folder'          => 'job-seeker-cvs',
+            'public_id'       => $originalName . '_' . uniqid(),
+            'resource_type'   => 'raw',
+            'use_filename'    => true,
+            'unique_filename' => true,
+            'format'          => $extension,
+        ]);
+
+        $publicId = $result['public_id'];
+        $cvUrl    = $result['secure_url'];
         
         Log::info('CV uploaded to Cloudinary successfully', [
             'user_id' => $user->_id,
@@ -623,6 +655,7 @@ class JobSeekerController extends Controller
             'resume_public_id' => $publicId,
             'cv_file_path' => $cvUrl,
             'cv_public_id' => $publicId,
+            'resume_file_type' => $mimeType,
             // Reset AI fields since we're starting fresh
             'ai_full_name' => null,
             'ai_email' => null,
@@ -657,7 +690,7 @@ class JobSeekerController extends Controller
             // Update status to processing
             $profile->update(['analysis_status' => 'processing']);
             
-            $analysis = $cvAnalysisService->analyze($cvUrl, (string) $user->_id);
+            $analysis = $cvAnalysisService->analyze($cvUrl, (string) $user->_id, $mimeType);
             
             Log::info('AI analysis completed successfully (upload-and-analyze)', [
                 'user_id' => $user->_id,
@@ -821,8 +854,24 @@ class JobSeekerController extends Controller
             'file_type' => $request->file('resume')->getMimeType(),
         ]);
         
-        $publicId = $request->file('resume')->store('job-seeker-resumes', 'cloudinary');
-        $resumeUrl = Storage::disk('cloudinary')->url($publicId);
+        $file = $request->file('resume');
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $extension    = $file->getClientOriginalExtension();
+        $mimeType     = $file->getMimeType();
+
+        // Upload directly via Cloudinary SDK so we can preserve filename + extension
+        $cloudinary = app(\Cloudinary\Cloudinary::class);
+        $result = $cloudinary->uploadApi()->upload($file->getRealPath(), [
+            'folder'          => 'job-seeker-resumes',
+            'public_id'       => $originalName . '_' . uniqid(),
+            'resource_type'   => 'raw',
+            'use_filename'    => true,
+            'unique_filename' => true,
+            'format'          => $extension, // tells Cloudinary to append the extension to the URL
+        ]);
+
+        $publicId  = $result['public_id'];
+        $resumeUrl = $result['secure_url'];
         
         Log::info('Resume uploaded to Cloudinary successfully', [
             'user_id' => $user->_id,
@@ -837,6 +886,7 @@ class JobSeekerController extends Controller
             'resume_public_id' => $publicId,
             'cv_file_path' => $resumeUrl,
             'cv_public_id' => $publicId,
+            'resume_file_type' => $mimeType,
             // Reset AI fields since we're starting fresh
             'ai_full_name' => null,
             'ai_email' => null,
@@ -872,7 +922,7 @@ class JobSeekerController extends Controller
             $profile->update(['analysis_status' => 'processing']);
             
             // Call AI service - this will still be synchronous but the user gets response immediately
-            $analysis = $cvAnalysisService->analyze($resumeUrl, (string) $user->_id);
+            $analysis = $cvAnalysisService->analyze($resumeUrl, (string) $user->_id, $mimeType);
             
             Log::info('AI analysis completed successfully', [
                 'user_id' => $user->_id,
@@ -1163,6 +1213,66 @@ class JobSeekerController extends Controller
     }
 
     /**
+     * Get resume and AI analysis
+     *
+     * Returns the authenticated job seeker's stored resume URL and full AI analysis results.
+     *
+     * @response 200 {
+     *   "resume_url": "https://res.cloudinary.com/.../resume.pdf",
+     *   "analysis_status": "completed",
+     *   "analysis_error": null,
+     *   "analysis_started_at": "2026-07-18T09:31:00Z",
+     *   "analysis_completed_at": "2026-07-18T09:31:18Z",
+     *   "ats_score": 65,
+     *   "ai_full_name": "John Smith",
+     *   "ai_email": "john@example.com",
+     *   "ai_phone": "+1 555 0100",
+     *   "ai_location": "New York, NY",
+     *   "ai_summary": "Experienced developer...",
+     *   "ai_skills": ["PHP", "Laravel", "MongoDB"],
+     *   "ai_work_history": [{ "company": "Acme", "role": "Developer", "duration": "2020-2023", "description": "..." }],
+     *   "ai_education_history": [{ "institution": "MIT", "degree": "BSc Computer Science", "year": "2020" }],
+     *   "ai_projects": [],
+     *   "ai_languages": ["English", "Arabic"],
+     *   "ai_overall_evaluation": "Strong profile with relevant experience...",
+     *   "ai_analyzed_at": "2026-07-18T09:31:18Z"
+     * }
+     * @response 404 { "message": "No resume found. Please upload a resume first." }
+     */
+    public function getResume(Request $request)
+    {
+        $user = $request->user();
+        $profile = $user->jobSeekerProfile;
+
+        if (! $profile || ! $profile->resume) {
+            return response()->json(['message' => 'No resume found. Please upload a resume first.'], 404);
+        }
+
+        return response()->json([
+            'resume_url'             => $profile->resume,
+            'resume_file_type'       => $profile->resume_file_type,
+            'analysis_status'        => $profile->analysis_status,
+            'analysis_error'         => $profile->analysis_error,
+            'analysis_started_at'    => $profile->analysis_started_at,
+            'analysis_completed_at'  => $profile->analysis_completed_at,
+            'ats_score'              => $profile->ats_score,
+            'ai_full_name'           => $profile->ai_full_name,
+            'ai_email'               => $profile->ai_email,
+            'ai_phone'               => $profile->ai_phone,
+            'ai_location'            => $profile->ai_location,
+            'ai_summary'             => $profile->ai_summary,
+            'ai_skills'              => $profile->ai_skills ?? [],
+            'ai_work_history'        => $profile->ai_work_history ?? [],
+            'ai_education_history'   => $profile->ai_education_history ?? [],
+            'ai_projects'            => $profile->ai_projects ?? [],
+            'ai_languages'           => $profile->ai_languages ?? [],
+            'ai_social_links'        => $profile->ai_social_links ?? [],
+            'ai_overall_evaluation'  => $profile->ai_overall_evaluation,
+            'ai_analyzed_at'         => $profile->ai_analyzed_at,
+        ]);
+    }
+
+    /**
      * Check resume analysis status
      *
      * Returns the current analysis status of the uploaded resume/CV.
@@ -1259,7 +1369,7 @@ class JobSeekerController extends Controller
 
         // Retry analysis in background
         try {
-            $analysis = $cvAnalysisService->analyze($profile->resume, (string) $user->_id);
+            $analysis = $cvAnalysisService->analyze($profile->resume, (string) $user->_id, $profile->resume_file_type);
             
             Log::info('Retry analysis completed successfully', [
                 'user_id' => $user->_id,
