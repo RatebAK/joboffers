@@ -545,4 +545,33 @@ class JobPostController extends Controller
 
         return response()->json($post->fresh());
     }
+
+    /**
+     * Activate job post
+     *
+     * Sets `is_active` to true, making the post visible in public listings again.
+     *
+     * @urlParam id string required Job post ID. Example: 664f1a2b3c4d5e6f7a8b9c0d
+     * @response 200 {}
+     * @response 403 { "message": "Forbidden" }
+     * @response 404 { "message": "Job post not found" }
+     */
+    public function activate(string $id)
+    {
+        $post = JobPost::find($id);
+
+        if (!$post) {
+            return response()->json(['message' => 'Job post not found'], 404);
+        }
+
+        $user = Auth::user();
+
+        if ((string) $post->employer_id !== (string) $user->_id) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        $post->update(['is_active' => true]);
+
+        return response()->json($post->fresh());
+    }
 }

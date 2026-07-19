@@ -16,9 +16,9 @@ class ResumeCoachService
         $apiUrl = config('services.resume_coach.url');
 
         try {
-            $response = Http::post($apiUrl, [
+            $response = Http::timeout(60)->asForm()->post($apiUrl, [
                 'message' => $message,
-                'history' => $history,
+                'history' => json_encode($history),
             ]);
         } catch (\Throwable $e) {
             Log::error('Resume coach HTTP error', ['error' => $e->getMessage()]);

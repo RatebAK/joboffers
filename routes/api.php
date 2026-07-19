@@ -117,6 +117,7 @@ Route::middleware(['jwt.auth', 'role:employer'])->prefix('employer')->group(func
     Route::put('jobs/{id}', [JobPostController::class, 'update']);
     Route::delete('jobs/{id}', [JobPostController::class, 'destroy']);
     Route::post('jobs/{id}/deactivate', [JobPostController::class, 'deactivate']);
+    Route::post('jobs/{id}/activate', [JobPostController::class, 'activate']);
 
     // Company Profile
     Route::get('company', [CompanyProfileController::class, 'myProfile']);
