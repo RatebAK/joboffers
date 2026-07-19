@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "af9845a1-f7cb-491b-83c7-8ff25befdccc",
+        "_postman_id": "7bfed046-bc43-4291-aaad-75dcbba17936",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -451,8 +451,8 @@
                                     "value": "*"
                                 }
                             ],
-                            "code": 200,
-                            "body": "{\"data\":[],\"current_page\":1,\"per_page\":10,\"total\":0,\"total_pages\":1,\"next_page\":null,\"prev_page\":null}",
+                            "code": 500,
+                            "body": "{\n    \"message\": \"Server Error\"\n}",
                             "name": ""
                         }
                     ]
@@ -513,8 +513,8 @@
                                     "value": "*"
                                 }
                             ],
-                            "code": 404,
-                            "body": "{\"message\":\"Company profile not found\"}",
+                            "code": 500,
+                            "body": "{\n    \"message\": \"Server Error\"\n}",
                             "name": ""
                         }
                     ]
@@ -705,11 +705,11 @@
                             "query": [],
                             "raw": "{{baseUrl}}\/api\/job-seeker\/profile\/personal-info"
                         },
-                        "method": "PUT",
+                        "method": "POST",
                         "header": [
                             {
                                 "key": "Content-Type",
-                                "value": "application\/json"
+                                "value": "multipart\/form-data"
                             },
                             {
                                 "key": "Accept",
@@ -717,16 +717,93 @@
                             }
                         ],
                         "body": {
-                            "mode": "raw",
-                            "raw": "{\"first_name\":\"Jane\",\"last_name\":\"Smith\",\"full_name\":\"Jane Smith\",\"image\":\"https:\\\/\\\/example.com\\\/photo.jpg\",\"gender\":\"female\",\"nationality\":\"Lebanese\",\"city\":\"Beirut\",\"location\":\"Beirut, Lebanon\",\"address\":\"v\",\"phone\":\"+961 70 123456\",\"date_of_birth\":\"1995-06-15\",\"marital_status\":\"architecto\"}"
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "first_name",
+                                    "value": "Jane",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "last_name",
+                                    "value": "Smith",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "full_name",
+                                    "value": "Jane Smith",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "gender",
+                                    "value": "female",
+                                    "type": "text",
+                                    "description": "One of: male, female, other, prefer_not_to_say."
+                                },
+                                {
+                                    "key": "nationality",
+                                    "value": "Lebanese",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "city",
+                                    "value": "Beirut",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "location",
+                                    "value": "Beirut, Lebanon",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "address",
+                                    "value": "y",
+                                    "type": "text",
+                                    "description": "Must not be greater than 255 characters."
+                                },
+                                {
+                                    "key": "phone",
+                                    "value": "+961 70 123456",
+                                    "type": "text",
+                                    "description": "Max 20 chars."
+                                },
+                                {
+                                    "key": "date_of_birth",
+                                    "value": "1995-06-15",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "marital_status",
+                                    "value": "architecto",
+                                    "type": "text",
+                                    "description": "One of: single, married, divorced, widowed, prefer_not_to_say."
+                                },
+                                {
+                                    "key": "image",
+                                    "src": [],
+                                    "type": "file"
+                                },
+                                {
+                                    "key": "_method",
+                                    "value": "PUT",
+                                    "type": "text"
+                                }
+                            ]
                         },
-                        "description": "Updates the authenticated job seeker's personal information fields."
+                        "description": "Updates the authenticated job seeker's personal information fields.\nSend `image` as a file upload (JPEG\/PNG\/WEBP, max 2MB) to upload a profile photo to Cloudinary.\nAll other fields are sent as regular form fields."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"message\": \"Personal information updated successfully\",\n  \"profile\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"full_name\": \"Jane Smith\" }\n}",
+                            "body": "{\n  \"message\": \"Personal information updated successfully\",\n  \"profile\": { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"full_name\": \"Jane Smith\", \"image\": \"https:\/\/res.cloudinary.com\/...\/photo.jpg\" }\n}",
                             "name": ""
                         }
                     ]
@@ -1051,7 +1128,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "male",
+                                    "value": "female",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1093,7 +1170,7 @@
                                 },
                                 {
                                     "key": "marital_status",
-                                    "value": "single",
+                                    "value": "widowed",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1111,7 +1188,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "employed",
+                                    "value": "student",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1129,7 +1206,7 @@
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "lead",
+                                    "value": "senior",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1171,7 +1248,7 @@
                                 },
                                 {
                                     "key": "is_actively_seeking",
-                                    "value": "1",
+                                    "value": "",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1207,7 +1284,7 @@
                                 },
                                 {
                                     "key": "skills[0][level]",
-                                    "value": "expert",
+                                    "value": "advanced",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1291,7 +1368,7 @@
                                 },
                                 {
                                     "key": "work_experience[0][is_currently_working]",
-                                    "value": "1",
+                                    "value": "",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1347,13 +1424,13 @@
                                 }
                             ]
                         },
-                        "description": "Uploads a resume file to the job seeker's profile and triggers AI analysis.\nPopulates all `ai_*` profile fields and `ats_score` with extracted data."
+                        "description": "Uploads a resume file to the job seeker's profile and triggers AI analysis.\nPopulates all `ai_*` profile fields and `ats_score` with extracted data.\n\n## How Uploaded Resumes Benefit Job Applications:\n\nUploading a resume enables automatic job applications and provides these advantages:\n\n1. **Automatic Application Attachments**: Your resume is automatically attached when you apply to jobs\n2. **ATS Score Generation**: Get an ATS score that employers use to filter candidates\n3. **AI-Powered Profile**: Skills, work history, education are automatically extracted\n4. **Better Visibility**: Employers see your complete AI-analyzed profile\n5. **Job Matching**: Enables AI-powered job matching services\n\n## Analysis Status Tracking:\n- `pending`: Uploaded, analysis not started\n- `processing`: Analysis in progress\n- `completed`: Analysis successful, profile updated\n- `error`: Analysis failed, resume still saved\n\nCheck status: `GET \/job-seeker\/resume\/analysis-status`\nRetry failed: `POST \/job-seeker\/resume\/retry-analysis`"
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"message\": \"Resume uploaded and analyzed successfully\",\n  \"resume_url\": \"https:\/\/res.cloudinary.com\/...\/resume.pdf\",\n  \"profile\": {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"ats_score\": 85,\n    \"ai_skills\": [\"PHP\", \"Laravel\", \"MongoDB\"],\n    \"ai_summary\": \"Experienced backend developer...\",\n    \"ai_analyzed_at\": \"2024-01-15T00:00:00Z\"\n  }\n}",
+                            "body": "{\n  \"message\": \"Resume uploaded successfully. Analysis is being processed.\",\n  \"resume_url\": \"https:\/\/res.cloudinary.com\/...\/resume.pdf\",\n  \"analysis_status\": \"pending\",\n  \"profile\": {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"ats_score\": null,\n    \"ai_skills\": [],\n    \"ai_analyzed_at\": null,\n    \"analysis_status\": \"pending\"\n  }\n}",
                             "name": ""
                         },
                         {
@@ -1415,6 +1492,44 @@
                     ]
                 },
                 {
+                    "name": "Get resume and AI analysis",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/resume",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/resume"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns the authenticated job seeker's stored resume URL and full AI analysis results."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"resume_url\": \"https:\/\/res.cloudinary.com\/...\/resume.pdf\",\n  \"analysis_status\": \"completed\",\n  \"analysis_error\": null,\n  \"analysis_started_at\": \"2026-07-18T09:31:00Z\",\n  \"analysis_completed_at\": \"2026-07-18T09:31:18Z\",\n  \"ats_score\": 65,\n  \"ai_full_name\": \"John Smith\",\n  \"ai_email\": \"john@example.com\",\n  \"ai_phone\": \"+1 555 0100\",\n  \"ai_location\": \"New York, NY\",\n  \"ai_summary\": \"Experienced developer...\",\n  \"ai_skills\": [\"PHP\", \"Laravel\", \"MongoDB\"],\n  \"ai_work_history\": [{ \"company\": \"Acme\", \"role\": \"Developer\", \"duration\": \"2020-2023\", \"description\": \"...\" }],\n  \"ai_education_history\": [{ \"institution\": \"MIT\", \"degree\": \"BSc Computer Science\", \"year\": \"2020\" }],\n  \"ai_projects\": [],\n  \"ai_languages\": [\"English\", \"Arabic\"],\n  \"ai_overall_evaluation\": \"Strong profile with relevant experience...\",\n  \"ai_analyzed_at\": \"2026-07-18T09:31:18Z\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"No resume found. Please upload a resume first.\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "Upload and analyze CV",
                     "request": {
                         "url": {
@@ -1444,13 +1559,13 @@
                                 }
                             ]
                         },
-                        "description": "Uploads a CV file and sends it to the AI analysis service. On success, populates all `ai_*` profile fields and `ats_score`.\nThis endpoint is similar to `\/upload` but accepts field name `cv` instead of `resume`."
+                        "description": "Uploads a CV file and sends it to the AI analysis service. On success, populates all `ai_*` profile fields and `ats_score`.\nThis endpoint is similar to `\/upload` but accepts field name `cv` instead of `resume`.\n\n## How Uploaded CVs Benefit Job Applications:\n\nUploading a CV enables automatic job applications and provides these advantages:\n\n1. **Automatic Application Attachments**: Your CV is automatically attached when you apply to jobs\n2. **ATS Score Generation**: Get an ATS score that employers use to filter candidates (65+ is recommended)\n3. **AI-Powered Profile**: Skills, work history, education are automatically extracted\n4. **Better Visibility**: Employers see your complete AI-analyzed profile with extracted data\n5. **Job Matching**: Enables AI-powered job matching services\n6. **Resume Coach**: Get AI-powered resume improvement suggestions\n\n## Workflow for Job Applications:\n1. Upload CV \u2192 Get AI analysis \u2192 ATS score generated\n2. Apply to jobs \u2192 Your CV automatically attached\n3. Employers see \u2192 Your ATS score + AI-extracted skills"
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"message\": \"CV uploaded and analyzed successfully\",\n  \"resume_url\": \"https:\/\/res.cloudinary.com\/...\/cv.pdf\",\n  \"profile\": {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"ats_score\": 82,\n    \"ai_skills\": [\"React\", \"TypeScript\", \"Node.js\"],\n    \"ai_summary\": \"Experienced frontend developer...\",\n    \"ai_work_history\": [],\n    \"ai_analyzed_at\": \"2024-01-15T00:00:00Z\"\n  }\n}",
+                            "body": "{\n  \"message\": \"CV uploaded successfully. Analysis is being processed.\",\n  \"resume_url\": \"https:\/\/res.cloudinary.com\/...\/cv.pdf\",\n  \"analysis_status\": \"pending\",\n  \"profile\": {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"ats_score\": null,\n    \"ai_skills\": [],\n    \"ai_work_history\": [],\n    \"ai_analyzed_at\": null,\n    \"analysis_status\": \"pending\"\n  }\n}",
                             "name": ""
                         },
                         {
@@ -1691,51 +1806,51 @@
                                 },
                                 {
                                     "key": "education",
-                                    "value": "g",
+                                    "value": "architecto",
                                     "type": "text",
-                                    "description": "Eager applicant profile fields. Must not be greater than 255 characters."
+                                    "description": "Optional education summary. Max 255 chars."
                                 },
                                 {
                                     "key": "last_work",
-                                    "value": "z",
+                                    "value": "architecto",
                                     "type": "text",
-                                    "description": "Must not be greater than 255 characters."
+                                    "description": "Optional last work experience. Max 255 chars."
                                 },
                                 {
                                     "key": "years_of_experience",
-                                    "value": "17",
+                                    "value": "16",
                                     "type": "text",
-                                    "description": "Must be at least 0. Must not be greater than 60."
+                                    "description": "Optional years of experience. Min 0, max 60."
                                 },
                                 {
                                     "key": "why_join",
-                                    "value": "i",
+                                    "value": "architecto",
                                     "type": "text",
-                                    "description": "Must not be greater than 2000 characters."
+                                    "description": "Optional motivation for joining. Max 2000 chars."
                                 },
                                 {
                                     "key": "what_to_add",
-                                    "value": "y",
+                                    "value": "architecto",
                                     "type": "text",
-                                    "description": "Must not be greater than 2000 characters."
+                                    "description": "Optional skills\/contributions you can add. Max 2000 chars."
                                 },
                                 {
                                     "key": "positions_suited_for[0]",
-                                    "value": "v",
+                                    "value": "architecto",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "notice_period",
-                                    "value": "d",
+                                    "value": "architecto",
                                     "type": "text",
-                                    "description": "Must not be greater than 100 characters."
+                                    "description": "Optional notice period. Max 100 chars."
                                 },
                                 {
                                     "key": "expected_salary",
-                                    "value": "l",
+                                    "value": "architecto",
                                     "type": "text",
-                                    "description": "Must not be greater than 100 characters."
+                                    "description": "Optional expected salary. Max 100 chars."
                                 },
                                 {
                                     "key": "resume",
@@ -1744,13 +1859,13 @@
                                 }
                             ]
                         },
-                        "description": "Submit an application for an active job post. If no resume file is uploaded, the profile's stored CV is used automatically."
+                        "description": "Submit an application for an active job post. If no resume file is uploaded, the profile's stored CV is used automatically.\n\n## How Uploaded CVs Benefit Your Application\n\nWhen you have an uploaded and AI-analyzed CV in your profile, your application gains several advantages:\n\n1. **Automatic Resume Attachment**: Your stored CV is automatically attached to applications if you don't provide a separate resume file\n2. **ATS Score Visibility**: Employers see your ATS (Applicant Tracking System) score when reviewing applications\n3. **AI-Extracted Profile Data**: Employers can see your AI-extracted skills, work history, and education\n4. **Better Job Matching**: AI-analyzed profiles get better matches through the matching services\n5. **Default Cover Letter**: Set a default cover letter that's automatically used if you don't provide one\n\n## Steps to Apply with Uploaded CV:\n1. Upload CV: `POST \/job-seeker\/resume\/upload-and-analyze` or `POST \/job-seeker\/resume\/upload`\n2. Apply to job: `POST \/job-seeker\/apply` with `job_post_id`\n3. Your stored CV will be automatically attached"
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 201,
-                            "body": "{\n  \"message\": \"Application submitted successfully\",\n  \"application\": {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n    \"job_post_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"status\": \"pending\",\n    \"applied_at\": \"2024-01-15T00:00:00Z\"\n  }\n}",
+                            "body": "{\n  \"message\": \"Application submitted successfully\",\n  \"application\": {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n    \"job_post_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"status\": \"pending\",\n    \"applied_at\": \"2024-01-15T00:00:00Z\",\n    \"resume\": \"https:\/\/res.cloudinary.com\/...\/cv.pdf\"\n  }\n}",
                             "name": ""
                         },
                         {
@@ -1872,7 +1987,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"contract\",\"category\":\"g\",\"min_salary\":12}"
+                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"part_time\",\"category\":\"g\",\"min_salary\":12}"
                         },
                         "description": "Paginated search of active job posts for the authenticated job seeker."
                     },
@@ -2120,40 +2235,31 @@
                             "query": [],
                             "raw": "{{baseUrl}}\/api\/job-seeker\/match-resume-to-jobs"
                         },
-                        "method": "POST",
+                        "method": "GET",
                         "header": [
                             {
                                 "key": "Content-Type",
-                                "value": "multipart\/form-data"
+                                "value": "application\/json"
                             },
                             {
                                 "key": "Accept",
                                 "value": "application\/json"
                             }
                         ],
-                        "body": {
-                            "mode": "formdata",
-                            "formdata": [
-                                {
-                                    "key": "resume",
-                                    "src": [],
-                                    "type": "file"
-                                }
-                            ]
-                        },
-                        "description": "Upload a resume and get AI-matched job recommendations from the database.\nReturns jobs ranked by match percentage and ATS compatibility."
+                        "body": null,
+                        "description": "Uses the job seeker's uploaded CV (from their profile) to find AI-matched job\nrecommendations from the database, ranked by match percentage and ATS compatibility.\n\nRequires the seeker to have an uploaded and analyzed CV on their profile."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"matches_found\": 25,\n  \"recommended_jobs\": [\n    {\n      \"job_id\": \"job_001\",\n      \"title\": \"Backend Python Developer\",\n      \"company\": \"TechStream Solutions\",\n      \"location\": \"Remote\",\n      \"matched_skills_count\": 4,\n      \"match_percentage\": \"66%\",\n      \"ats_compatibility_score\": \"69%\",\n      \"job_url\": \"\/api\/jobs\/job_001\"\n    }\n  ]\n}",
+                            "body": "{\n  \"matches_found\": 25,\n  \"recommended_jobs\": [\n    {\n      \"job_id\": \"job_001\",\n      \"title\": \"Backend Python Developer\",\n      \"company\": \"TechStream Solutions\",\n      \"location\": \"Remote\",\n      \"matched_skills_count\": 4,\n      \"match_percentage\": \"66%\",\n      \"ats_compatibility_score\": \"69%\",\n      \"job_url\": \"\/api\/jobs\/job_001\",\n      \"exists_in_db\": true\n    }\n  ]\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 422,
-                            "body": "{ \"errors\": { \"resume\": [\"The resume field is required.\"] } }",
+                            "body": "{ \"message\": \"No CV found on your profile. Please upload and analyze your CV first.\" }",
                             "name": ""
                         },
                         {
@@ -2462,6 +2568,58 @@
                         ],
                         "body": null,
                         "description": "Sets `is_active` to false, hiding the post from public listings."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Forbidden\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Job post not found\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Activate job post",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/employer\/jobs\/:id\/activate",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/employer\/jobs\/:id\/activate",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "Job post ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Sets `is_active` to true, making the post visible in public listings again."
                     },
                     "response": [
                         {

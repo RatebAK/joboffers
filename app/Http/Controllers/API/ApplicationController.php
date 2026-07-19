@@ -7,7 +7,6 @@ use App\Models\Application;
 use App\Models\JobPost;
 use App\Models\JobSeekerProfile;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ApplicationController extends Controller
@@ -138,7 +137,21 @@ class ApplicationController extends Controller
 
         // Resolve resume: uploaded file > profile cv_file_path
         if ($request->hasFile('resume')) {
-            $data['resume'] = $request->file('resume')->store('application_resumes', 'public');
+            $file      = $request->file('resume');
+            $extension = $file->getClientOriginalExtension();
+            $baseName  = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+
+            $cloudinary = app(\Cloudinary\Cloudinary::class);
+            $result = $cloudinary->uploadApi()->upload($file->getRealPath(), [
+                'folder'          => 'application-resumes',
+                'public_id'       => $baseName . '_' . uniqid(),
+                'resource_type'   => 'raw',
+                'use_filename'    => true,
+                'unique_filename' => true,
+                'format'          => $extension,
+            ]);
+
+            $data['resume'] = $result['secure_url'];
         } else {
             $profile = $user->jobSeekerProfile;
             $data['resume'] = $profile->cv_file_path ?? null;

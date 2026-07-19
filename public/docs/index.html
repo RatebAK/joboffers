@@ -143,6 +143,9 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-DELETEapi-job-seeker-resume">
                                 <a href="#endpoints-DELETEapi-job-seeker-resume">Delete saved resume</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-job-seeker-resume">
+                                <a href="#endpoints-GETapi-job-seeker-resume">Get resume and AI analysis</a>
+                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-job-seeker-resume-upload-and-analyze">
                                 <a href="#endpoints-POSTapi-job-seeker-resume-upload-and-analyze">Upload and analyze CV</a>
                             </li>
@@ -185,8 +188,8 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-job-seeker-offers--id--decline">
                                 <a href="#endpoints-POSTapi-job-seeker-offers--id--decline">Decline offer</a>
                             </li>
-                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-job-seeker-match-resume-to-jobs">
-                                <a href="#endpoints-POSTapi-job-seeker-match-resume-to-jobs">Match resume to available jobs</a>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-job-seeker-match-resume-to-jobs">
+                                <a href="#endpoints-GETapi-job-seeker-match-resume-to-jobs">Match resume to available jobs</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-employer-apply">
                                 <a href="#endpoints-POSTapi-employer-apply">Apply to become employer</a>
@@ -208,6 +211,9 @@
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-employer-jobs--id--deactivate">
                                 <a href="#endpoints-POSTapi-employer-jobs--id--deactivate">Deactivate job post</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-employer-jobs--id--activate">
+                                <a href="#endpoints-POSTapi-employer-jobs--id--activate">Activate job post</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-employer-company">
                                 <a href="#endpoints-GETapi-employer-company">Get my company profile (owner view)</a>
@@ -308,7 +314,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: July 17, 2026</li>
+        <li>Last updated: July 19, 2026</li>
     </ul>
 </div>
 
@@ -1765,7 +1771,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-companies">
             <blockquote>
-            <p>Example response (200):</p>
+            <p>Example response (500):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -1777,13 +1783,7 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;data&quot;: [],
-    &quot;current_page&quot;: 1,
-    &quot;per_page&quot;: 10,
-    &quot;total&quot;: 0,
-    &quot;total_pages&quot;: 1,
-    &quot;next_page&quot;: null,
-    &quot;prev_page&quot;: null
+    &quot;message&quot;: &quot;Server Error&quot;
 }</code>
  </pre>
     </span>
@@ -1992,7 +1992,7 @@ fetch(url, {
 }</code>
  </pre>
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (500):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -2004,7 +2004,7 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Company profile not found&quot;
+    &quot;message&quot;: &quot;Server Error&quot;
 }</code>
  </pre>
     </span>
@@ -2736,7 +2736,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Updates the authenticated job seeker's personal information fields.</p>
+<p>Updates the authenticated job seeker's personal information fields.
+Send <code>image</code> as a file upload (JPEG/PNG/WEBP, max 2MB) to upload a profile photo to Cloudinary.
+All other fields are sent as regular form fields.</p>
 
 <span id="example-requests-PUTapi-job-seeker-profile-personal-info">
 <blockquote>Example request:</blockquote>
@@ -2746,23 +2748,20 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <pre><code class="language-bash">curl --request PUT \
     "http://localhost:8000/api/job-seeker/profile/personal-info" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
-    --header "Content-Type: application/json" \
+    --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --data "{
-    \"first_name\": \"Jane\",
-    \"last_name\": \"Smith\",
-    \"full_name\": \"Jane Smith\",
-    \"image\": \"https:\\/\\/example.com\\/photo.jpg\",
-    \"gender\": \"female\",
-    \"nationality\": \"Lebanese\",
-    \"city\": \"Beirut\",
-    \"location\": \"Beirut, Lebanon\",
-    \"address\": \"v\",
-    \"phone\": \"+961 70 123456\",
-    \"date_of_birth\": \"1995-06-15\",
-    \"marital_status\": \"architecto\"
-}"
-</code></pre></div>
+    --form "first_name=Jane"\
+    --form "last_name=Smith"\
+    --form "full_name=Jane Smith"\
+    --form "gender=female"\
+    --form "nationality=Lebanese"\
+    --form "city=Beirut"\
+    --form "location=Beirut, Lebanon"\
+    --form "address=y"\
+    --form "phone=+961 70 123456"\
+    --form "date_of_birth=1995-06-15"\
+    --form "marital_status=architecto"\
+    --form "image=@/tmp/phpbirMx3" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -2772,29 +2771,28 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 const headers = {
     "Authorization": "Bearer {YOUR_AUTH_KEY}",
-    "Content-Type": "application/json",
+    "Content-Type": "multipart/form-data",
     "Accept": "application/json",
 };
 
-let body = {
-    "first_name": "Jane",
-    "last_name": "Smith",
-    "full_name": "Jane Smith",
-    "image": "https:\/\/example.com\/photo.jpg",
-    "gender": "female",
-    "nationality": "Lebanese",
-    "city": "Beirut",
-    "location": "Beirut, Lebanon",
-    "address": "v",
-    "phone": "+961 70 123456",
-    "date_of_birth": "1995-06-15",
-    "marital_status": "architecto"
-};
+const body = new FormData();
+body.append('first_name', 'Jane');
+body.append('last_name', 'Smith');
+body.append('full_name', 'Jane Smith');
+body.append('gender', 'female');
+body.append('nationality', 'Lebanese');
+body.append('city', 'Beirut');
+body.append('location', 'Beirut, Lebanon');
+body.append('address', 'y');
+body.append('phone', '+961 70 123456');
+body.append('date_of_birth', '1995-06-15');
+body.append('marital_status', 'architecto');
+body.append('image', document.querySelector('input[name="image"]').files[0]);
 
 fetch(url, {
     method: "PUT",
     headers,
-    body: JSON.stringify(body),
+    body,
 }).then(response =&gt; response.json());</code></pre></div>
 
 </span>
@@ -2809,7 +2807,8 @@ fetch(url, {
     &quot;message&quot;: &quot;Personal information updated successfully&quot;,
     &quot;profile&quot;: {
         &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
-        &quot;full_name&quot;: &quot;Jane Smith&quot;
+        &quot;full_name&quot;: &quot;Jane Smith&quot;,
+        &quot;image&quot;: &quot;https://res.cloudinary.com/.../photo.jpg&quot;
     }
 }</code>
  </pre>
@@ -2832,7 +2831,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <form id="form-PUTapi-job-seeker-profile-personal-info" data-method="PUT"
       data-path="api/job-seeker/profile/personal-info"
       data-authed="1"
-      data-hasfiles="0"
+      data-hasfiles="1"
       data-isarraybody="0"
       autocomplete="off"
       onsubmit="event.preventDefault(); executeTryOut('PUTapi-job-seeker-profile-personal-info', this);">
@@ -2880,10 +2879,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="Content-Type"                data-endpoint="PUTapi-job-seeker-profile-personal-info"
-               value="application/json"
+               value="multipart/form-data"
                data-component="header">
     <br>
-<p>Example: <code>application/json</code></p>
+<p>Example: <code>multipart/form-data</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
@@ -2936,15 +2935,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>image</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>file</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
+                <input type="file" style="display: none"
                               name="image"                data-endpoint="PUTapi-job-seeker-profile-personal-info"
-               value="https://example.com/photo.jpg"
+               value=""
                data-component="body">
     <br>
-<p>URL to profile photo. Example: <code>https://example.com/photo.jpg</code></p>
+<p>JPEG/PNG/WEBP profile photo, max 2MB. Example: <code>/tmp/phpbirMx3</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>gender</code></b>&nbsp;&nbsp;
@@ -3001,10 +3000,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="address"                data-endpoint="PUTapi-job-seeker-profile-personal-info"
-               value="v"
+               value="y"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>v</code></p>
+<p>Must not be greater than 255 characters. Example: <code>y</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>phone</code></b>&nbsp;&nbsp;
@@ -4819,33 +4818,33 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "last_name=n"\
     --form "full_name=g"\
     --form "image=z"\
-    --form "gender=male"\
+    --form "gender=female"\
     --form "nationality=m"\
     --form "city=i"\
     --form "location=y"\
     --form "address=v"\
     --form "phone=dljnikhwaykcmyuw"\
     --form "date_of_birth=pwlvqwrsitcpscql"\
-    --form "marital_status=single"\
+    --form "marital_status=widowed"\
     --form "salary_range_from=16"\
     --form "salary_range_to=38"\
-    --form "current_job_status=employed"\
+    --form "current_job_status=student"\
     --form "years_of_experience=8"\
     --form "education_level=n"\
-    --form "job_level=lead"\
+    --form "job_level=senior"\
     --form "job_types[]=r"\
     --form "job_roles[]=w"\
     --form "work_cities[]=t"\
     --form "current_job_title=u"\
     --form "experience_summary=architecto"\
     --form "expected_salary=39"\
-    --form "is_actively_seeking=1"\
+    --form "is_actively_seeking="\
     --form "social_links[linkedin]=g"\
     --form "social_links[github]=z"\
     --form "social_links[portfolio]=m"\
     --form "social_links[twitter]=i"\
     --form "skills[][name]=y"\
-    --form "skills[][level]=expert"\
+    --form "skills[][level]=advanced"\
     --form "education_history[][certificate_type]=v"\
     --form "education_history[][university]=d"\
     --form "education_history[][faculty]=l"\
@@ -4859,9 +4858,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "work_experience[][job_roles][]=u"\
     --form "work_experience[][from_date]=jwvlxjklqppwqbew"\
     --form "work_experience[][to_date]=tnnoqitpxntltcvi"\
-    --form "work_experience[][is_currently_working]=1"\
+    --form "work_experience[][is_currently_working]="\
     --form "work_experience[][description]=Eius et animi quos velit et."\
-    --form "resume=@/tmp/phpcBekEv" </code></pre></div>
+    --form "resume=@/tmp/phpU7wSzh" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -4880,33 +4879,33 @@ body.append('first_name', 'b');
 body.append('last_name', 'n');
 body.append('full_name', 'g');
 body.append('image', 'z');
-body.append('gender', 'male');
+body.append('gender', 'female');
 body.append('nationality', 'm');
 body.append('city', 'i');
 body.append('location', 'y');
 body.append('address', 'v');
 body.append('phone', 'dljnikhwaykcmyuw');
 body.append('date_of_birth', 'pwlvqwrsitcpscql');
-body.append('marital_status', 'single');
+body.append('marital_status', 'widowed');
 body.append('salary_range_from', '16');
 body.append('salary_range_to', '38');
-body.append('current_job_status', 'employed');
+body.append('current_job_status', 'student');
 body.append('years_of_experience', '8');
 body.append('education_level', 'n');
-body.append('job_level', 'lead');
+body.append('job_level', 'senior');
 body.append('job_types[]', 'r');
 body.append('job_roles[]', 'w');
 body.append('work_cities[]', 't');
 body.append('current_job_title', 'u');
 body.append('experience_summary', 'architecto');
 body.append('expected_salary', '39');
-body.append('is_actively_seeking', '1');
+body.append('is_actively_seeking', '');
 body.append('social_links[linkedin]', 'g');
 body.append('social_links[github]', 'z');
 body.append('social_links[portfolio]', 'm');
 body.append('social_links[twitter]', 'i');
 body.append('skills[][name]', 'y');
-body.append('skills[][level]', 'expert');
+body.append('skills[][level]', 'advanced');
 body.append('education_history[][certificate_type]', 'v');
 body.append('education_history[][university]', 'd');
 body.append('education_history[][faculty]', 'l');
@@ -4920,7 +4919,7 @@ body.append('work_experience[][company_name]', 't');
 body.append('work_experience[][job_roles][]', 'u');
 body.append('work_experience[][from_date]', 'jwvlxjklqppwqbew');
 body.append('work_experience[][to_date]', 'tnnoqitpxntltcvi');
-body.append('work_experience[][is_currently_working]', '1');
+body.append('work_experience[][is_currently_working]', '');
 body.append('work_experience[][description]', 'Eius et animi quos velit et.');
 body.append('resume', document.querySelector('input[name="resume"]').files[0]);
 
@@ -5073,10 +5072,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="gender"                data-endpoint="PUTapi-job-seeker-profile"
-               value="male"
+               value="female"
                data-component="body">
     <br>
-<p>Example: <code>male</code></p>
+<p>Example: <code>female</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>male</code></li> <li><code>female</code></li> <li><code>other</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5159,10 +5158,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="marital_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="single"
+               value="widowed"
                data-component="body">
     <br>
-<p>Example: <code>single</code></p>
+<p>Example: <code>widowed</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>single</code></li> <li><code>married</code></li> <li><code>divorced</code></li> <li><code>widowed</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5197,10 +5196,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="current_job_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="employed"
+               value="student"
                data-component="body">
     <br>
-<p>Example: <code>employed</code></p>
+<p>Example: <code>student</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>employed</code></li> <li><code>unemployed</code></li> <li><code>freelancing</code></li> <li><code>student</code></li> <li><code>open_to_work</code></li></ul>
         </div>
@@ -5235,10 +5234,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="lead"
+               value="senior"
                data-component="body">
     <br>
-<p>Example: <code>lead</code></p>
+<p>Example: <code>senior</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>entry</code></li> <li><code>junior</code></li> <li><code>mid</code></li> <li><code>senior</code></li> <li><code>lead</code></li> <li><code>manager</code></li> <li><code>director</code></li> <li><code>executive</code></li></ul>
         </div>
@@ -5340,7 +5339,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
         <details>
@@ -5431,10 +5430,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="skills.0.level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="expert"
+               value="advanced"
                data-component="body">
     <br>
-<p>Example: <code>expert</code></p>
+<p>Example: <code>advanced</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>beginner</code></li> <li><code>intermediate</code></li> <li><code>advanced</code></li> <li><code>expert</code></li></ul>
                     </div>
@@ -5640,7 +5639,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -5666,7 +5665,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>/tmp/phpcBekEv</code></p>
+<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>/tmp/phpU7wSzh</code></p>
         </div>
         </form>
 
@@ -5678,6 +5677,24 @@ Must be one of:
 
 <p>Uploads a resume file to the job seeker's profile and triggers AI analysis.
 Populates all <code>ai_*</code> profile fields and <code>ats_score</code> with extracted data.</p>
+<h2>How Uploaded Resumes Benefit Job Applications:</h2>
+<p>Uploading a resume enables automatic job applications and provides these advantages:</p>
+<ol>
+<li><strong>Automatic Application Attachments</strong>: Your resume is automatically attached when you apply to jobs</li>
+<li><strong>ATS Score Generation</strong>: Get an ATS score that employers use to filter candidates</li>
+<li><strong>AI-Powered Profile</strong>: Skills, work history, education are automatically extracted</li>
+<li><strong>Better Visibility</strong>: Employers see your complete AI-analyzed profile</li>
+<li><strong>Job Matching</strong>: Enables AI-powered job matching services</li>
+</ol>
+<h2>Analysis Status Tracking:</h2>
+<ul>
+<li><code>pending</code>: Uploaded, analysis not started</li>
+<li><code>processing</code>: Analysis in progress</li>
+<li><code>completed</code>: Analysis successful, profile updated</li>
+<li><code>error</code>: Analysis failed, resume still saved</li>
+</ul>
+<p>Check status: <code>GET /job-seeker/resume/analysis-status</code>
+Retry failed: <code>POST /job-seeker/resume/retry-analysis</code></p>
 
 <span id="example-requests-POSTapi-job-seeker-resume-upload">
 <blockquote>Example request:</blockquote>
@@ -5689,7 +5706,7 @@ Populates all <code>ai_*</code> profile fields and <code>ats_score</code> with e
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@/tmp/phpo5XrAc" </code></pre></div>
+    --form "resume=@/tmp/phpkLRH1H" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -5721,18 +5738,15 @@ fetch(url, {
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Resume uploaded and analyzed successfully&quot;,
+    &quot;message&quot;: &quot;Resume uploaded successfully. Analysis is being processed.&quot;,
     &quot;resume_url&quot;: &quot;https://res.cloudinary.com/.../resume.pdf&quot;,
+    &quot;analysis_status&quot;: &quot;pending&quot;,
     &quot;profile&quot;: {
         &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
-        &quot;ats_score&quot;: 85,
-        &quot;ai_skills&quot;: [
-            &quot;PHP&quot;,
-            &quot;Laravel&quot;,
-            &quot;MongoDB&quot;
-        ],
-        &quot;ai_summary&quot;: &quot;Experienced backend developer...&quot;,
-        &quot;ai_analyzed_at&quot;: &quot;2024-01-15T00:00:00Z&quot;
+        &quot;ats_score&quot;: null,
+        &quot;ai_skills&quot;: [],
+        &quot;ai_analyzed_at&quot;: null,
+        &quot;analysis_status&quot;: &quot;pending&quot;
     }
 }</code>
  </pre>
@@ -5863,7 +5877,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpo5XrAc</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpkLRH1H</code></p>
         </div>
         </form>
 
@@ -6011,6 +6025,187 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                         </form>
 
+                    <h2 id="endpoints-GETapi-job-seeker-resume">Get resume and AI analysis</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Returns the authenticated job seeker's stored resume URL and full AI analysis results.</p>
+
+<span id="example-requests-GETapi-job-seeker-resume">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost:8000/api/job-seeker/resume" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/job-seeker/resume"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-job-seeker-resume">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;resume_url&quot;: &quot;https://res.cloudinary.com/.../resume.pdf&quot;,
+    &quot;analysis_status&quot;: &quot;completed&quot;,
+    &quot;analysis_error&quot;: null,
+    &quot;analysis_started_at&quot;: &quot;2026-07-18T09:31:00Z&quot;,
+    &quot;analysis_completed_at&quot;: &quot;2026-07-18T09:31:18Z&quot;,
+    &quot;ats_score&quot;: 65,
+    &quot;ai_full_name&quot;: &quot;John Smith&quot;,
+    &quot;ai_email&quot;: &quot;john@example.com&quot;,
+    &quot;ai_phone&quot;: &quot;+1 555 0100&quot;,
+    &quot;ai_location&quot;: &quot;New York, NY&quot;,
+    &quot;ai_summary&quot;: &quot;Experienced developer...&quot;,
+    &quot;ai_skills&quot;: [
+        &quot;PHP&quot;,
+        &quot;Laravel&quot;,
+        &quot;MongoDB&quot;
+    ],
+    &quot;ai_work_history&quot;: [
+        {
+            &quot;company&quot;: &quot;Acme&quot;,
+            &quot;role&quot;: &quot;Developer&quot;,
+            &quot;duration&quot;: &quot;2020-2023&quot;,
+            &quot;description&quot;: &quot;...&quot;
+        }
+    ],
+    &quot;ai_education_history&quot;: [
+        {
+            &quot;institution&quot;: &quot;MIT&quot;,
+            &quot;degree&quot;: &quot;BSc Computer Science&quot;,
+            &quot;year&quot;: &quot;2020&quot;
+        }
+    ],
+    &quot;ai_projects&quot;: [],
+    &quot;ai_languages&quot;: [
+        &quot;English&quot;,
+        &quot;Arabic&quot;
+    ],
+    &quot;ai_overall_evaluation&quot;: &quot;Strong profile with relevant experience...&quot;,
+    &quot;ai_analyzed_at&quot;: &quot;2026-07-18T09:31:18Z&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;No resume found. Please upload a resume first.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-job-seeker-resume" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-job-seeker-resume"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-job-seeker-resume"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-job-seeker-resume" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-job-seeker-resume">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-job-seeker-resume" data-method="GET"
+      data-path="api/job-seeker/resume"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-job-seeker-resume', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-job-seeker-resume"
+                    onclick="tryItOut('GETapi-job-seeker-resume');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-job-seeker-resume"
+                    onclick="cancelTryOut('GETapi-job-seeker-resume');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-job-seeker-resume"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/job-seeker/resume</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-job-seeker-resume"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-job-seeker-resume"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-job-seeker-resume"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
                     <h2 id="endpoints-POSTapi-job-seeker-resume-upload-and-analyze">Upload and analyze CV</h2>
 
 <p>
@@ -6019,6 +6214,22 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <p>Uploads a CV file and sends it to the AI analysis service. On success, populates all <code>ai_*</code> profile fields and <code>ats_score</code>.
 This endpoint is similar to <code>/upload</code> but accepts field name <code>cv</code> instead of <code>resume</code>.</p>
+<h2>How Uploaded CVs Benefit Job Applications:</h2>
+<p>Uploading a CV enables automatic job applications and provides these advantages:</p>
+<ol>
+<li><strong>Automatic Application Attachments</strong>: Your CV is automatically attached when you apply to jobs</li>
+<li><strong>ATS Score Generation</strong>: Get an ATS score that employers use to filter candidates (65+ is recommended)</li>
+<li><strong>AI-Powered Profile</strong>: Skills, work history, education are automatically extracted</li>
+<li><strong>Better Visibility</strong>: Employers see your complete AI-analyzed profile with extracted data</li>
+<li><strong>Job Matching</strong>: Enables AI-powered job matching services</li>
+<li><strong>Resume Coach</strong>: Get AI-powered resume improvement suggestions</li>
+</ol>
+<h2>Workflow for Job Applications:</h2>
+<ol>
+<li>Upload CV → Get AI analysis → ATS score generated</li>
+<li>Apply to jobs → Your CV automatically attached</li>
+<li>Employers see → Your ATS score + AI-extracted skills</li>
+</ol>
 
 <span id="example-requests-POSTapi-job-seeker-resume-upload-and-analyze">
 <blockquote>Example request:</blockquote>
@@ -6030,7 +6241,7 @@ This endpoint is similar to <code>/upload</code> but accepts field name <code>cv
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cv=@/tmp/phpqTAGzK" </code></pre></div>
+    --form "cv=@/tmp/phpNJrf0Q" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6062,19 +6273,16 @@ fetch(url, {
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;CV uploaded and analyzed successfully&quot;,
+    &quot;message&quot;: &quot;CV uploaded successfully. Analysis is being processed.&quot;,
     &quot;resume_url&quot;: &quot;https://res.cloudinary.com/.../cv.pdf&quot;,
+    &quot;analysis_status&quot;: &quot;pending&quot;,
     &quot;profile&quot;: {
         &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
-        &quot;ats_score&quot;: 82,
-        &quot;ai_skills&quot;: [
-            &quot;React&quot;,
-            &quot;TypeScript&quot;,
-            &quot;Node.js&quot;
-        ],
-        &quot;ai_summary&quot;: &quot;Experienced frontend developer...&quot;,
+        &quot;ats_score&quot;: null,
+        &quot;ai_skills&quot;: [],
         &quot;ai_work_history&quot;: [],
-        &quot;ai_analyzed_at&quot;: &quot;2024-01-15T00:00:00Z&quot;
+        &quot;ai_analyzed_at&quot;: null,
+        &quot;analysis_status&quot;: &quot;pending&quot;
     }
 }</code>
  </pre>
@@ -6192,7 +6400,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpqTAGzK</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpNJrf0Q</code></p>
         </div>
         </form>
 
@@ -6978,6 +7186,21 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </p>
 
 <p>Submit an application for an active job post. If no resume file is uploaded, the profile's stored CV is used automatically.</p>
+<h2>How Uploaded CVs Benefit Your Application</h2>
+<p>When you have an uploaded and AI-analyzed CV in your profile, your application gains several advantages:</p>
+<ol>
+<li><strong>Automatic Resume Attachment</strong>: Your stored CV is automatically attached to applications if you don't provide a separate resume file</li>
+<li><strong>ATS Score Visibility</strong>: Employers see your ATS (Applicant Tracking System) score when reviewing applications</li>
+<li><strong>AI-Extracted Profile Data</strong>: Employers can see your AI-extracted skills, work history, and education</li>
+<li><strong>Better Job Matching</strong>: AI-analyzed profiles get better matches through the matching services</li>
+<li><strong>Default Cover Letter</strong>: Set a default cover letter that's automatically used if you don't provide one</li>
+</ol>
+<h2>Steps to Apply with Uploaded CV:</h2>
+<ol>
+<li>Upload CV: <code>POST /job-seeker/resume/upload-and-analyze</code> or <code>POST /job-seeker/resume/upload</code></li>
+<li>Apply to job: <code>POST /job-seeker/apply</code> with <code>job_post_id</code></li>
+<li>Your stored CV will be automatically attached</li>
+</ol>
 
 <span id="example-requests-POSTapi-job-seeker-apply">
 <blockquote>Example request:</blockquote>
@@ -6991,15 +7214,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "job_post_id=664f1a2b3c4d5e6f7a8b9c0d"\
     --form "cover_letter=I am very interested in this position."\
-    --form "education=g"\
-    --form "last_work=z"\
-    --form "years_of_experience=17"\
-    --form "why_join=i"\
-    --form "what_to_add=y"\
-    --form "positions_suited_for[]=v"\
-    --form "notice_period=d"\
-    --form "expected_salary=l"\
-    --form "resume=@/tmp/php9dJhje" </code></pre></div>
+    --form "education=architecto"\
+    --form "last_work=architecto"\
+    --form "years_of_experience=16"\
+    --form "why_join=architecto"\
+    --form "what_to_add=architecto"\
+    --form "positions_suited_for[]=architecto"\
+    --form "notice_period=architecto"\
+    --form "expected_salary=architecto"\
+    --form "resume=@/tmp/phpWmoNu4" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -7016,14 +7239,14 @@ const headers = {
 const body = new FormData();
 body.append('job_post_id', '664f1a2b3c4d5e6f7a8b9c0d');
 body.append('cover_letter', 'I am very interested in this position.');
-body.append('education', 'g');
-body.append('last_work', 'z');
-body.append('years_of_experience', '17');
-body.append('why_join', 'i');
-body.append('what_to_add', 'y');
-body.append('positions_suited_for[]', 'v');
-body.append('notice_period', 'd');
-body.append('expected_salary', 'l');
+body.append('education', 'architecto');
+body.append('last_work', 'architecto');
+body.append('years_of_experience', '16');
+body.append('why_join', 'architecto');
+body.append('what_to_add', 'architecto');
+body.append('positions_suited_for[]', 'architecto');
+body.append('notice_period', 'architecto');
+body.append('expected_salary', 'architecto');
 body.append('resume', document.querySelector('input[name="resume"]').files[0]);
 
 fetch(url, {
@@ -7046,7 +7269,8 @@ fetch(url, {
         &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0f&quot;,
         &quot;job_post_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
         &quot;status&quot;: &quot;pending&quot;,
-        &quot;applied_at&quot;: &quot;2024-01-15T00:00:00Z&quot;
+        &quot;applied_at&quot;: &quot;2024-01-15T00:00:00Z&quot;,
+        &quot;resume&quot;: &quot;https://res.cloudinary.com/.../cv.pdf&quot;
     }
 }</code>
  </pre>
@@ -7187,7 +7411,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/php9dJhje</code></p>
+<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/phpWmoNu4</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>education</code></b>&nbsp;&nbsp;
@@ -7196,10 +7420,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="education"                data-endpoint="POSTapi-job-seeker-apply"
-               value="g"
+               value="architecto"
                data-component="body">
     <br>
-<p>Eager applicant profile fields. Must not be greater than 255 characters. Example: <code>g</code></p>
+<p>Optional education summary. Max 255 chars. Example: <code>architecto</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>last_work</code></b>&nbsp;&nbsp;
@@ -7208,10 +7432,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="last_work"                data-endpoint="POSTapi-job-seeker-apply"
-               value="z"
+               value="architecto"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>z</code></p>
+<p>Optional last work experience. Max 255 chars. Example: <code>architecto</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>years_of_experience</code></b>&nbsp;&nbsp;
@@ -7220,10 +7444,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="years_of_experience"                data-endpoint="POSTapi-job-seeker-apply"
-               value="17"
+               value="16"
                data-component="body">
     <br>
-<p>Must be at least 0. Must not be greater than 60. Example: <code>17</code></p>
+<p>Optional years of experience. Min 0, max 60. Example: <code>16</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>why_join</code></b>&nbsp;&nbsp;
@@ -7232,10 +7456,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="why_join"                data-endpoint="POSTapi-job-seeker-apply"
-               value="i"
+               value="architecto"
                data-component="body">
     <br>
-<p>Must not be greater than 2000 characters. Example: <code>i</code></p>
+<p>Optional motivation for joining. Max 2000 chars. Example: <code>architecto</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>what_to_add</code></b>&nbsp;&nbsp;
@@ -7244,10 +7468,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="what_to_add"                data-endpoint="POSTapi-job-seeker-apply"
-               value="y"
+               value="architecto"
                data-component="body">
     <br>
-<p>Must not be greater than 2000 characters. Example: <code>y</code></p>
+<p>Optional skills/contributions you can add. Max 2000 chars. Example: <code>architecto</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>positions_suited_for</code></b>&nbsp;&nbsp;
@@ -7261,7 +7485,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                name="positions_suited_for[1]"                data-endpoint="POSTapi-job-seeker-apply"
                data-component="body">
     <br>
-<p>Must not be greater than 100 characters.</p>
+<p>Optional array of suitable positions.</p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>notice_period</code></b>&nbsp;&nbsp;
@@ -7270,10 +7494,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="notice_period"                data-endpoint="POSTapi-job-seeker-apply"
-               value="d"
+               value="architecto"
                data-component="body">
     <br>
-<p>Must not be greater than 100 characters. Example: <code>d</code></p>
+<p>Optional notice period. Max 100 chars. Example: <code>architecto</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>expected_salary</code></b>&nbsp;&nbsp;
@@ -7282,10 +7506,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="expected_salary"                data-endpoint="POSTapi-job-seeker-apply"
-               value="l"
+               value="architecto"
                data-component="body">
     <br>
-<p>Must not be greater than 100 characters. Example: <code>l</code></p>
+<p>Optional expected salary. Max 100 chars. Example: <code>architecto</code></p>
         </div>
         </form>
 
@@ -7476,7 +7700,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"keyword\": \"b\",
     \"location\": \"n\",
-    \"job_type\": \"contract\",
+    \"job_type\": \"part_time\",
     \"category\": \"g\",
     \"min_salary\": 12
 }"
@@ -7507,7 +7731,7 @@ const headers = {
 let body = {
     "keyword": "b",
     "location": "n",
-    "job_type": "contract",
+    "job_type": "part_time",
     "category": "g",
     "min_salary": 12
 };
@@ -7721,10 +7945,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_type"                data-endpoint="GETapi-job-seeker-jobs-search"
-               value="contract"
+               value="part_time"
                data-component="body">
     <br>
-<p>Example: <code>contract</code></p>
+<p>Example: <code>part_time</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>full_time</code></li> <li><code>part_time</code></li> <li><code>contract</code></li> <li><code>freelance</code></li></ul>
         </div>
@@ -8572,26 +8796,26 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                     </form>
 
-                    <h2 id="endpoints-POSTapi-job-seeker-match-resume-to-jobs">Match resume to available jobs</h2>
+                    <h2 id="endpoints-GETapi-job-seeker-match-resume-to-jobs">Match resume to available jobs</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Upload a resume and get AI-matched job recommendations from the database.
-Returns jobs ranked by match percentage and ATS compatibility.</p>
+<p>Uses the job seeker's uploaded CV (from their profile) to find AI-matched job
+recommendations from the database, ranked by match percentage and ATS compatibility.</p>
+<p>Requires the seeker to have an uploaded and analyzed CV on their profile.</p>
 
-<span id="example-requests-POSTapi-job-seeker-match-resume-to-jobs">
+<span id="example-requests-GETapi-job-seeker-match-resume-to-jobs">
 <blockquote>Example request:</blockquote>
 
 
 <div class="bash-example">
-    <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/job-seeker/match-resume-to-jobs" \
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost:8000/api/job-seeker/match-resume-to-jobs" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
-    --header "Content-Type: multipart/form-data" \
-    --header "Accept: application/json" \
-    --form "resume=@/tmp/phpmOCS41" </code></pre></div>
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
@@ -8601,22 +8825,19 @@ Returns jobs ranked by match percentage and ATS compatibility.</p>
 
 const headers = {
     "Authorization": "Bearer {YOUR_AUTH_KEY}",
-    "Content-Type": "multipart/form-data",
+    "Content-Type": "application/json",
     "Accept": "application/json",
 };
 
-const body = new FormData();
-body.append('resume', document.querySelector('input[name="resume"]').files[0]);
 
 fetch(url, {
-    method: "POST",
+    method: "GET",
     headers,
-    body,
 }).then(response =&gt; response.json());</code></pre></div>
 
 </span>
 
-<span id="example-responses-POSTapi-job-seeker-match-resume-to-jobs">
+<span id="example-responses-GETapi-job-seeker-match-resume-to-jobs">
             <blockquote>
             <p>Example response (200):</p>
         </blockquote>
@@ -8633,7 +8854,8 @@ fetch(url, {
             &quot;matched_skills_count&quot;: 4,
             &quot;match_percentage&quot;: &quot;66%&quot;,
             &quot;ats_compatibility_score&quot;: &quot;69%&quot;,
-            &quot;job_url&quot;: &quot;/api/jobs/job_001&quot;
+            &quot;job_url&quot;: &quot;/api/jobs/job_001&quot;,
+            &quot;exists_in_db&quot;: true
         }
     ]
 }</code>
@@ -8644,11 +8866,7 @@ fetch(url, {
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;errors&quot;: {
-        &quot;resume&quot;: [
-            &quot;The resume field is required.&quot;
-        ]
-    }
+    &quot;message&quot;: &quot;No CV found on your profile. Please upload and analyze your CV first.&quot;
 }</code>
  </pre>
             <blockquote>
@@ -8661,50 +8879,50 @@ fetch(url, {
 }</code>
  </pre>
     </span>
-<span id="execution-results-POSTapi-job-seeker-match-resume-to-jobs" hidden>
+<span id="execution-results-GETapi-job-seeker-match-resume-to-jobs" hidden>
     <blockquote>Received response<span
-                id="execution-response-status-POSTapi-job-seeker-match-resume-to-jobs"></span>:
+                id="execution-response-status-GETapi-job-seeker-match-resume-to-jobs"></span>:
     </blockquote>
-    <pre class="json"><code id="execution-response-content-POSTapi-job-seeker-match-resume-to-jobs"
+    <pre class="json"><code id="execution-response-content-GETapi-job-seeker-match-resume-to-jobs"
       data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
 </span>
-<span id="execution-error-POSTapi-job-seeker-match-resume-to-jobs" hidden>
+<span id="execution-error-GETapi-job-seeker-match-resume-to-jobs" hidden>
     <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-POSTapi-job-seeker-match-resume-to-jobs">
+    <pre><code id="execution-error-message-GETapi-job-seeker-match-resume-to-jobs">
 
 Tip: Check that you&#039;re properly connected to the network.
 If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
 </span>
-<form id="form-POSTapi-job-seeker-match-resume-to-jobs" data-method="POST"
+<form id="form-GETapi-job-seeker-match-resume-to-jobs" data-method="GET"
       data-path="api/job-seeker/match-resume-to-jobs"
       data-authed="1"
-      data-hasfiles="1"
+      data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('POSTapi-job-seeker-match-resume-to-jobs', this);">
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-job-seeker-match-resume-to-jobs', this);">
     <h3>
         Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
                     style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-POSTapi-job-seeker-match-resume-to-jobs"
-                    onclick="tryItOut('POSTapi-job-seeker-match-resume-to-jobs');">Try it out ⚡
+                    id="btn-tryout-GETapi-job-seeker-match-resume-to-jobs"
+                    onclick="tryItOut('GETapi-job-seeker-match-resume-to-jobs');">Try it out ⚡
             </button>
             <button type="button"
                     style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-POSTapi-job-seeker-match-resume-to-jobs"
-                    onclick="cancelTryOut('POSTapi-job-seeker-match-resume-to-jobs');" hidden>Cancel 🛑
+                    id="btn-canceltryout-GETapi-job-seeker-match-resume-to-jobs"
+                    onclick="cancelTryOut('GETapi-job-seeker-match-resume-to-jobs');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
                     style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-POSTapi-job-seeker-match-resume-to-jobs"
+                    id="btn-executetryout-GETapi-job-seeker-match-resume-to-jobs"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
                     hidden>Send Request 💥
             </button>
             </h3>
             <p>
-            <small class="badge badge-black">POST</small>
+            <small class="badge badge-green">GET</small>
             <b><code>api/job-seeker/match-resume-to-jobs</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -8714,7 +8932,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-job-seeker-match-resume-to-jobs"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-job-seeker-match-resume-to-jobs"
                value="Bearer {YOUR_AUTH_KEY}"
                data-component="header">
     <br>
@@ -8726,11 +8944,11 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="POSTapi-job-seeker-match-resume-to-jobs"
-               value="multipart/form-data"
+                              name="Content-Type"                data-endpoint="GETapi-job-seeker-match-resume-to-jobs"
+               value="application/json"
                data-component="header">
     <br>
-<p>Example: <code>multipart/form-data</code></p>
+<p>Example: <code>application/json</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
@@ -8738,26 +8956,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="POSTapi-job-seeker-match-resume-to-jobs"
+                              name="Accept"                data-endpoint="GETapi-job-seeker-match-resume-to-jobs"
                value="application/json"
                data-component="header">
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-        <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>resume</code></b>&nbsp;&nbsp;
-<small>file</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="file" style="display: none"
-                              name="resume"                data-endpoint="POSTapi-job-seeker-match-resume-to-jobs"
-               value=""
-               data-component="body">
-    <br>
-<p>PDF/DOC/DOCX resume file, max 10 MB. Example: <code>/tmp/phpmOCS41</code></p>
-        </div>
-        </form>
+                        </form>
 
                     <h2 id="endpoints-POSTapi-employer-apply">Apply to become employer</h2>
 
@@ -8777,7 +8982,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "document=@/tmp/phpgW8nvg" </code></pre></div>
+    --form "document=@/tmp/phpXKMgor" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -8926,7 +9131,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/phpgW8nvg</code></p>
+<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/phpXKMgor</code></p>
         </div>
         </form>
 
@@ -10400,6 +10605,170 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                     </form>
 
+                    <h2 id="endpoints-POSTapi-employer-jobs--id--activate">Activate job post</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Sets <code>is_active</code> to true, making the post visible in public listings again.</p>
+
+<span id="example-requests-POSTapi-employer-jobs--id--activate">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost:8000/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d/activate" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d/activate"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "POST",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-employer-jobs--id--activate">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Forbidden&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Job post not found&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-employer-jobs--id--activate" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-employer-jobs--id--activate"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-employer-jobs--id--activate"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-employer-jobs--id--activate" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-employer-jobs--id--activate">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-employer-jobs--id--activate" data-method="POST"
+      data-path="api/employer/jobs/{id}/activate"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-employer-jobs--id--activate', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-employer-jobs--id--activate"
+                    onclick="tryItOut('POSTapi-employer-jobs--id--activate');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-employer-jobs--id--activate"
+                    onclick="cancelTryOut('POSTapi-employer-jobs--id--activate');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-employer-jobs--id--activate"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/employer/jobs/{id}/activate</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-employer-jobs--id--activate"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-employer-jobs--id--activate"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-employer-jobs--id--activate"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="id"                data-endpoint="POSTapi-employer-jobs--id--activate"
+               value="664f1a2b3c4d5e6f7a8b9c0d"
+               data-component="url">
+    <br>
+<p>Job post ID. Example: <code>664f1a2b3c4d5e6f7a8b9c0d</code></p>
+            </div>
+                    </form>
+
                     <h2 id="endpoints-GETapi-employer-company">Get my company profile (owner view)</h2>
 
 <p>
@@ -11559,7 +11928,7 @@ Accepts JPEG, PNG, WebP; max 2 MB. Any previously uploaded logo is automatically
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "logo=@/tmp/php3wbsT1" </code></pre></div>
+    --form "logo=@/tmp/phpn8XGPa" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -11709,7 +12078,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>The logo image file. Accepted: jpeg, png, webp. Max 2 MB. Example: <code>/tmp/php3wbsT1</code></p>
+<p>The logo image file. Accepted: jpeg, png, webp. Max 2 MB. Example: <code>/tmp/phpn8XGPa</code></p>
         </div>
         </form>
 
@@ -11732,7 +12101,7 @@ Accepts JPEG, PNG, WebP; max 4 MB. Any previously uploaded cover image is automa
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cover_image=@/tmp/phpKWfpaB" </code></pre></div>
+    --form "cover_image=@/tmp/php1CJaPP" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -11882,7 +12251,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>The cover image file. Accepted: jpeg, png, webp. Max 4 MB. Example: <code>/tmp/phpKWfpaB</code></p>
+<p>The cover image file. Accepted: jpeg, png, webp. Max 4 MB. Example: <code>/tmp/php1CJaPP</code></p>
         </div>
         </form>
 

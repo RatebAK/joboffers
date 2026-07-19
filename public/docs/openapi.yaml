@@ -1119,44 +1119,18 @@ paths:
             description: 'Page number.'
             example: 1
       responses:
-        200:
+        500:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  data: []
-                  current_page: 1
-                  per_page: 10
-                  total: 0
-                  total_pages: 1
-                  next_page: null
-                  prev_page: null
+                  message: 'Server Error'
                 properties:
-                  data:
-                    type: array
-                    example: []
-                  current_page:
-                    type: integer
-                    example: 1
-                  per_page:
-                    type: integer
-                    example: 10
-                  total:
-                    type: integer
-                    example: 0
-                  total_pages:
-                    type: integer
-                    example: 1
-                  next_page:
+                  message:
                     type: string
-                    example: null
-                    nullable: true
-                  prev_page:
-                    type: string
-                    example: null
-                    nullable: true
+                    example: 'Server Error'
       tags:
         - Endpoints
       security: []
@@ -1172,25 +1146,25 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  -
-                    description: ''
-                    type: object
-                    example:
-                      message: 'Company profile not found'
-                    properties:
-                      message:
-                        type: string
-                        example: 'Company profile not found'
-                  -
-                    description: ''
-                    type: object
-                    example:
-                      message: 'Company profile not found'
-                    properties:
-                      message:
-                        type: string
-                        example: 'Company profile not found'
+                type: object
+                example:
+                  message: 'Company profile not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Company profile not found'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Server Error'
+                properties:
+                  message:
+                    type: string
+                    example: 'Server Error'
       tags:
         - Endpoints
       security: []
@@ -1609,7 +1583,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: male
+                  example: female
                   enum:
                     - male
                     - female
@@ -1649,7 +1623,7 @@ paths:
                 marital_status:
                   type: string
                   description: ''
-                  example: single
+                  example: widowed
                   enum:
                     - single
                     - married
@@ -1670,7 +1644,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: employed
+                  example: student
                   enum:
                     - employed
                     - unemployed
@@ -1691,7 +1665,7 @@ paths:
                 job_level:
                   type: string
                   description: ''
-                  example: lead
+                  example: senior
                   enum:
                     - entry
                     - junior
@@ -1741,7 +1715,7 @@ paths:
                 is_actively_seeking:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 social_links:
                   type: object
                   description: 'Social Links (nested object).'
@@ -1783,7 +1757,7 @@ paths:
                       level:
                         type: string
                         description: ''
-                        example: expert
+                        example: advanced
                         enum:
                           - beginner
                           - intermediate
@@ -1876,7 +1850,7 @@ paths:
                       is_currently_working:
                         type: boolean
                         description: ''
-                        example: true
+                        example: false
                         nullable: true
                       description:
                         type: string
@@ -1892,7 +1866,7 @@ paths:
     put:
       summary: 'Update personal information'
       operationId: updatePersonalInformation
-      description: "Updates the authenticated job seeker's personal information fields."
+      description: "Updates the authenticated job seeker's personal information fields.\nSend `image` as a file upload (JPEG/PNG/WEBP, max 2MB) to upload a profile photo to Cloudinary.\nAll other fields are sent as regular form fields."
       parameters: []
       responses:
         200:
@@ -1906,6 +1880,7 @@ paths:
                   profile:
                     id: 664f1a2b3c4d5e6f7a8b9c0d
                     full_name: 'Jane Smith'
+                    image: 'https://res.cloudinary.com/.../photo.jpg'
                 properties:
                   message:
                     type: string
@@ -1919,12 +1894,15 @@ paths:
                       full_name:
                         type: string
                         example: 'Jane Smith'
+                      image:
+                        type: string
+                        example: 'https://res.cloudinary.com/.../photo.jpg'
       tags:
         - Endpoints
       requestBody:
         required: false
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -1945,8 +1923,8 @@ paths:
                   nullable: true
                 image:
                   type: string
-                  description: 'URL to profile photo.'
-                  example: 'https://example.com/photo.jpg'
+                  format: binary
+                  description: 'JPEG/PNG/WEBP profile photo, max 2MB.'
                   nullable: true
                 gender:
                   type: string
@@ -1971,7 +1949,7 @@ paths:
                 address:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: v
+                  example: 'y'
                   nullable: true
                 phone:
                   type: string
@@ -2502,7 +2480,7 @@ paths:
     post:
       summary: 'Upload resume'
       operationId: uploadResume
-      description: "Uploads a resume file to the job seeker's profile and triggers AI analysis.\nPopulates all `ai_*` profile fields and `ats_score` with extracted data."
+      description: "Uploads a resume file to the job seeker's profile and triggers AI analysis.\nPopulates all `ai_*` profile fields and `ats_score` with extracted data.\n\n## How Uploaded Resumes Benefit Job Applications:\n\nUploading a resume enables automatic job applications and provides these advantages:\n\n1. **Automatic Application Attachments**: Your resume is automatically attached when you apply to jobs\n2. **ATS Score Generation**: Get an ATS score that employers use to filter candidates\n3. **AI-Powered Profile**: Skills, work history, education are automatically extracted\n4. **Better Visibility**: Employers see your complete AI-analyzed profile\n5. **Job Matching**: Enables AI-powered job matching services\n\n## Analysis Status Tracking:\n- `pending`: Uploaded, analysis not started\n- `processing`: Analysis in progress\n- `completed`: Analysis successful, profile updated\n- `error`: Analysis failed, resume still saved\n\nCheck status: `GET /job-seeker/resume/analysis-status`\nRetry failed: `POST /job-seeker/resume/retry-analysis`"
       parameters: []
       responses:
         200:
@@ -2512,24 +2490,25 @@ paths:
               schema:
                 type: object
                 example:
-                  message: 'Resume uploaded and analyzed successfully'
+                  message: 'Resume uploaded successfully. Analysis is being processed.'
                   resume_url: 'https://res.cloudinary.com/.../resume.pdf'
+                  analysis_status: pending
                   profile:
                     id: 664f1a2b3c4d5e6f7a8b9c0d
-                    ats_score: 85
-                    ai_skills:
-                      - PHP
-                      - Laravel
-                      - MongoDB
-                    ai_summary: 'Experienced backend developer...'
-                    ai_analyzed_at: '2024-01-15T00:00:00Z'
+                    ats_score: null
+                    ai_skills: []
+                    ai_analyzed_at: null
+                    analysis_status: pending
                 properties:
                   message:
                     type: string
-                    example: 'Resume uploaded and analyzed successfully'
+                    example: 'Resume uploaded successfully. Analysis is being processed.'
                   resume_url:
                     type: string
                     example: 'https://res.cloudinary.com/.../resume.pdf'
+                  analysis_status:
+                    type: string
+                    example: pending
                   profile:
                     type: object
                     properties:
@@ -2537,22 +2516,19 @@ paths:
                         type: string
                         example: 664f1a2b3c4d5e6f7a8b9c0d
                       ats_score:
-                        type: integer
-                        example: 85
+                        type: string
+                        example: null
+                        nullable: true
                       ai_skills:
                         type: array
-                        example:
-                          - PHP
-                          - Laravel
-                          - MongoDB
-                        items:
-                          type: string
-                      ai_summary:
-                        type: string
-                        example: 'Experienced backend developer...'
+                        example: []
                       ai_analyzed_at:
                         type: string
-                        example: '2024-01-15T00:00:00Z'
+                        example: null
+                        nullable: true
+                      analysis_status:
+                        type: string
+                        example: pending
         422:
           description: ''
           content:
@@ -2649,11 +2625,10 @@ paths:
                     example: 'No resume found on your profile'
       tags:
         - Endpoints
-  /api/job-seeker/resume/upload-and-analyze:
-    post:
-      summary: 'Upload and analyze CV'
-      operationId: uploadAndAnalyzeCV
-      description: "Uploads a CV file and sends it to the AI analysis service. On success, populates all `ai_*` profile fields and `ats_score`.\nThis endpoint is similar to `/upload` but accepts field name `cv` instead of `resume`."
+    get:
+      summary: 'Get resume and AI analysis'
+      operationId: getResumeAndAIAnalysis
+      description: "Returns the authenticated job seeker's stored resume URL and full AI analysis results."
       parameters: []
       responses:
         200:
@@ -2663,25 +2638,187 @@ paths:
               schema:
                 type: object
                 example:
-                  message: 'CV uploaded and analyzed successfully'
-                  resume_url: 'https://res.cloudinary.com/.../cv.pdf'
-                  profile:
-                    id: 664f1a2b3c4d5e6f7a8b9c0d
-                    ats_score: 82
-                    ai_skills:
-                      - React
-                      - TypeScript
-                      - Node.js
-                    ai_summary: 'Experienced frontend developer...'
-                    ai_work_history: []
-                    ai_analyzed_at: '2024-01-15T00:00:00Z'
+                  resume_url: 'https://res.cloudinary.com/.../resume.pdf'
+                  analysis_status: completed
+                  analysis_error: null
+                  analysis_started_at: '2026-07-18T09:31:00Z'
+                  analysis_completed_at: '2026-07-18T09:31:18Z'
+                  ats_score: 65
+                  ai_full_name: 'John Smith'
+                  ai_email: john@example.com
+                  ai_phone: '+1 555 0100'
+                  ai_location: 'New York, NY'
+                  ai_summary: 'Experienced developer...'
+                  ai_skills:
+                    - PHP
+                    - Laravel
+                    - MongoDB
+                  ai_work_history:
+                    -
+                      company: Acme
+                      role: Developer
+                      duration: 2020-2023
+                      description: ...
+                  ai_education_history:
+                    -
+                      institution: MIT
+                      degree: 'BSc Computer Science'
+                      year: '2020'
+                  ai_projects: []
+                  ai_languages:
+                    - English
+                    - Arabic
+                  ai_overall_evaluation: 'Strong profile with relevant experience...'
+                  ai_analyzed_at: '2026-07-18T09:31:18Z'
+                properties:
+                  resume_url:
+                    type: string
+                    example: 'https://res.cloudinary.com/.../resume.pdf'
+                  analysis_status:
+                    type: string
+                    example: completed
+                  analysis_error:
+                    type: string
+                    example: null
+                    nullable: true
+                  analysis_started_at:
+                    type: string
+                    example: '2026-07-18T09:31:00Z'
+                  analysis_completed_at:
+                    type: string
+                    example: '2026-07-18T09:31:18Z'
+                  ats_score:
+                    type: integer
+                    example: 65
+                  ai_full_name:
+                    type: string
+                    example: 'John Smith'
+                  ai_email:
+                    type: string
+                    example: john@example.com
+                  ai_phone:
+                    type: string
+                    example: '+1 555 0100'
+                  ai_location:
+                    type: string
+                    example: 'New York, NY'
+                  ai_summary:
+                    type: string
+                    example: 'Experienced developer...'
+                  ai_skills:
+                    type: array
+                    example:
+                      - PHP
+                      - Laravel
+                      - MongoDB
+                    items:
+                      type: string
+                  ai_work_history:
+                    type: array
+                    example:
+                      -
+                        company: Acme
+                        role: Developer
+                        duration: 2020-2023
+                        description: ...
+                    items:
+                      type: object
+                      properties:
+                        company:
+                          type: string
+                          example: Acme
+                        role:
+                          type: string
+                          example: Developer
+                        duration:
+                          type: string
+                          example: 2020-2023
+                        description:
+                          type: string
+                          example: ...
+                  ai_education_history:
+                    type: array
+                    example:
+                      -
+                        institution: MIT
+                        degree: 'BSc Computer Science'
+                        year: '2020'
+                    items:
+                      type: object
+                      properties:
+                        institution:
+                          type: string
+                          example: MIT
+                        degree:
+                          type: string
+                          example: 'BSc Computer Science'
+                        year:
+                          type: string
+                          example: '2020'
+                  ai_projects:
+                    type: array
+                    example: []
+                  ai_languages:
+                    type: array
+                    example:
+                      - English
+                      - Arabic
+                    items:
+                      type: string
+                  ai_overall_evaluation:
+                    type: string
+                    example: 'Strong profile with relevant experience...'
+                  ai_analyzed_at:
+                    type: string
+                    example: '2026-07-18T09:31:18Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No resume found. Please upload a resume first.'
                 properties:
                   message:
                     type: string
-                    example: 'CV uploaded and analyzed successfully'
+                    example: 'No resume found. Please upload a resume first.'
+      tags:
+        - Endpoints
+  /api/job-seeker/resume/upload-and-analyze:
+    post:
+      summary: 'Upload and analyze CV'
+      operationId: uploadAndAnalyzeCV
+      description: "Uploads a CV file and sends it to the AI analysis service. On success, populates all `ai_*` profile fields and `ats_score`.\nThis endpoint is similar to `/upload` but accepts field name `cv` instead of `resume`.\n\n## How Uploaded CVs Benefit Job Applications:\n\nUploading a CV enables automatic job applications and provides these advantages:\n\n1. **Automatic Application Attachments**: Your CV is automatically attached when you apply to jobs\n2. **ATS Score Generation**: Get an ATS score that employers use to filter candidates (65+ is recommended)\n3. **AI-Powered Profile**: Skills, work history, education are automatically extracted\n4. **Better Visibility**: Employers see your complete AI-analyzed profile with extracted data\n5. **Job Matching**: Enables AI-powered job matching services\n6. **Resume Coach**: Get AI-powered resume improvement suggestions\n\n## Workflow for Job Applications:\n1. Upload CV → Get AI analysis → ATS score generated\n2. Apply to jobs → Your CV automatically attached\n3. Employers see → Your ATS score + AI-extracted skills"
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'CV uploaded successfully. Analysis is being processed.'
+                  resume_url: 'https://res.cloudinary.com/.../cv.pdf'
+                  analysis_status: pending
+                  profile:
+                    id: 664f1a2b3c4d5e6f7a8b9c0d
+                    ats_score: null
+                    ai_skills: []
+                    ai_work_history: []
+                    ai_analyzed_at: null
+                    analysis_status: pending
+                properties:
+                  message:
+                    type: string
+                    example: 'CV uploaded successfully. Analysis is being processed.'
                   resume_url:
                     type: string
                     example: 'https://res.cloudinary.com/.../cv.pdf'
+                  analysis_status:
+                    type: string
+                    example: pending
                   profile:
                     type: object
                     properties:
@@ -2689,25 +2826,22 @@ paths:
                         type: string
                         example: 664f1a2b3c4d5e6f7a8b9c0d
                       ats_score:
-                        type: integer
-                        example: 82
+                        type: string
+                        example: null
+                        nullable: true
                       ai_skills:
                         type: array
-                        example:
-                          - React
-                          - TypeScript
-                          - Node.js
-                        items:
-                          type: string
-                      ai_summary:
-                        type: string
-                        example: 'Experienced frontend developer...'
+                        example: []
                       ai_work_history:
                         type: array
                         example: []
                       ai_analyzed_at:
                         type: string
-                        example: '2024-01-15T00:00:00Z'
+                        example: null
+                        nullable: true
+                      analysis_status:
+                        type: string
+                        example: pending
         422:
           description: ''
           content:
@@ -3073,7 +3207,7 @@ paths:
     post:
       summary: 'Apply to job'
       operationId: applyToJob
-      description: "Submit an application for an active job post. If no resume file is uploaded, the profile's stored CV is used automatically."
+      description: "Submit an application for an active job post. If no resume file is uploaded, the profile's stored CV is used automatically.\n\n## How Uploaded CVs Benefit Your Application\n\nWhen you have an uploaded and AI-analyzed CV in your profile, your application gains several advantages:\n\n1. **Automatic Resume Attachment**: Your stored CV is automatically attached to applications if you don't provide a separate resume file\n2. **ATS Score Visibility**: Employers see your ATS (Applicant Tracking System) score when reviewing applications\n3. **AI-Extracted Profile Data**: Employers can see your AI-extracted skills, work history, and education\n4. **Better Job Matching**: AI-analyzed profiles get better matches through the matching services\n5. **Default Cover Letter**: Set a default cover letter that's automatically used if you don't provide one\n\n## Steps to Apply with Uploaded CV:\n1. Upload CV: `POST /job-seeker/resume/upload-and-analyze` or `POST /job-seeker/resume/upload`\n2. Apply to job: `POST /job-seeker/apply` with `job_post_id`\n3. Your stored CV will be automatically attached"
       parameters: []
       responses:
         201:
@@ -3089,6 +3223,7 @@ paths:
                     job_post_id: 664f1a2b3c4d5e6f7a8b9c0d
                     status: pending
                     applied_at: '2024-01-15T00:00:00Z'
+                    resume: 'https://res.cloudinary.com/.../cv.pdf'
                 properties:
                   message:
                     type: string
@@ -3108,6 +3243,9 @@ paths:
                       applied_at:
                         type: string
                         example: '2024-01-15T00:00:00Z'
+                      resume:
+                        type: string
+                        example: 'https://res.cloudinary.com/.../cv.pdf'
         404:
           description: ''
           content:
@@ -3157,45 +3295,45 @@ paths:
                   nullable: true
                 education:
                   type: string
-                  description: 'Eager applicant profile fields. Must not be greater than 255 characters.'
-                  example: g
+                  description: 'Optional education summary. Max 255 chars.'
+                  example: architecto
                   nullable: true
                 last_work:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
-                  example: z
+                  description: 'Optional last work experience. Max 255 chars.'
+                  example: architecto
                   nullable: true
                 years_of_experience:
                   type: integer
-                  description: 'Must be at least 0. Must not be greater than 60.'
-                  example: 17
+                  description: 'Optional years of experience. Min 0, max 60.'
+                  example: 16
                   nullable: true
                 why_join:
                   type: string
-                  description: 'Must not be greater than 2000 characters.'
-                  example: i
+                  description: 'Optional motivation for joining. Max 2000 chars.'
+                  example: architecto
                   nullable: true
                 what_to_add:
                   type: string
-                  description: 'Must not be greater than 2000 characters.'
-                  example: 'y'
+                  description: 'Optional skills/contributions you can add. Max 2000 chars.'
+                  example: architecto
                   nullable: true
                 positions_suited_for:
                   type: array
-                  description: 'Must not be greater than 100 characters.'
+                  description: 'Optional array of suitable positions.'
                   example:
-                    - v
+                    - architecto
                   items:
                     type: string
                 notice_period:
                   type: string
-                  description: 'Must not be greater than 100 characters.'
-                  example: d
+                  description: 'Optional notice period. Max 100 chars.'
+                  example: architecto
                   nullable: true
                 expected_salary:
                   type: string
-                  description: 'Must not be greater than 100 characters.'
-                  example: l
+                  description: 'Optional expected salary. Max 100 chars.'
+                  example: architecto
                   nullable: true
               required:
                 - job_post_id
@@ -3394,7 +3532,7 @@ paths:
                 job_type:
                   type: string
                   description: ''
-                  example: contract
+                  example: part_time
                   enum:
                     - full_time
                     - part_time
@@ -3752,10 +3890,10 @@ paths:
         schema:
           type: string
   /api/job-seeker/match-resume-to-jobs:
-    post:
+    get:
       summary: 'Match resume to available jobs'
       operationId: matchResumeToAvailableJobs
-      description: "Upload a resume and get AI-matched job recommendations from the database.\nReturns jobs ranked by match percentage and ATS compatibility."
+      description: "Uses the job seeker's uploaded CV (from their profile) to find AI-matched job\nrecommendations from the database, ranked by match percentage and ATS compatibility.\n\nRequires the seeker to have an uploaded and analyzed CV on their profile."
       parameters: []
       responses:
         200:
@@ -3776,6 +3914,7 @@ paths:
                       match_percentage: 66%
                       ats_compatibility_score: 69%
                       job_url: /api/jobs/job_001
+                      exists_in_db: true
                 properties:
                   matches_found:
                     type: integer
@@ -3792,6 +3931,7 @@ paths:
                         match_percentage: 66%
                         ats_compatibility_score: 69%
                         job_url: /api/jobs/job_001
+                        exists_in_db: true
                     items:
                       type: object
                       properties:
@@ -3819,6 +3959,9 @@ paths:
                         job_url:
                           type: string
                           example: /api/jobs/job_001
+                        exists_in_db:
+                          type: boolean
+                          example: true
         422:
           description: ''
           content:
@@ -3826,19 +3969,11 @@ paths:
               schema:
                 type: object
                 example:
-                  errors:
-                    resume:
-                      - 'The resume field is required.'
+                  message: 'No CV found on your profile. Please upload and analyze your CV first.'
                 properties:
-                  errors:
-                    type: object
-                    properties:
-                      resume:
-                        type: array
-                        example:
-                          - 'The resume field is required.'
-                        items:
-                          type: string
+                  message:
+                    type: string
+                    example: 'No CV found on your profile. Please upload and analyze your CV first.'
         502:
           description: ''
           content:
@@ -3853,19 +3988,6 @@ paths:
                     example: 'Resume matching service unavailable'
       tags:
         - Endpoints
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                resume:
-                  type: string
-                  format: binary
-                  description: 'PDF/DOC/DOCX resume file, max 10 MB.'
-              required:
-                - resume
   /api/employer/apply:
     post:
       summary: 'Apply to become employer'
@@ -4437,6 +4559,56 @@ paths:
       summary: 'Deactivate job post'
       operationId: deactivateJobPost
       description: 'Sets `is_active` to false, hiding the post from public listings.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {  }
+                properties: {  }
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Forbidden
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Job post not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Job post not found'
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'Job post ID.'
+        example: 664f1a2b3c4d5e6f7a8b9c0d
+        required: true
+        schema:
+          type: string
+  '/api/employer/jobs/{id}/activate':
+    post:
+      summary: 'Activate job post'
+      operationId: activateJobPost
+      description: 'Sets `is_active` to true, making the post visible in public listings again.'
       parameters: []
       responses:
         200:

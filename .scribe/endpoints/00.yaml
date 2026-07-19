@@ -793,8 +793,11 @@ endpoints:
     responses:
       -
         custom: []
-        status: 200
-        content: '{"data":[],"current_page":1,"per_page":10,"total":0,"total_pages":1,"next_page":null,"prev_page":null}'
+        status: 500
+        content: |-
+          {
+              "message": "Server Error"
+          }
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -851,8 +854,11 @@ endpoints:
         description: ''
       -
         custom: []
-        status: 404
-        content: '{"message":"Company profile not found"}'
+        status: 500
+        content: |-
+          {
+              "message": "Server Error"
+          }
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -1194,12 +1200,15 @@ endpoints:
       subgroup: ''
       subgroupDescription: ''
       title: 'Update personal information'
-      description: "Updates the authenticated job seeker's personal information fields."
+      description: |-
+        Updates the authenticated job seeker's personal information fields.
+        Send `image` as a file upload (JPEG/PNG/WEBP, max 2MB) to upload a profile photo to Cloudinary.
+        All other fields are sent as regular form fields.
       authenticated: true
       deprecated: false
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
+      Content-Type: multipart/form-data
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
@@ -1242,12 +1251,12 @@ endpoints:
       image:
         custom: []
         name: image
-        description: 'URL to profile photo.'
+        description: 'JPEG/PNG/WEBP profile photo, max 2MB.'
         required: false
-        example: 'https://example.com/photo.jpg'
-        type: string
+        example: null
+        type: file
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: true
         deprecated: false
       gender:
@@ -1299,7 +1308,7 @@ endpoints:
         name: address
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: v
+        example: 'y'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -1342,16 +1351,16 @@ endpoints:
       first_name: Jane
       last_name: Smith
       full_name: 'Jane Smith'
-      image: 'https://example.com/photo.jpg'
       gender: female
       nationality: Lebanese
       city: Beirut
       location: 'Beirut, Lebanon'
-      address: v
+      address: 'y'
       phone: '+961 70 123456'
       date_of_birth: '1995-06-15'
       marital_status: architecto
-    fileParameters: []
+    fileParameters:
+      image: null
     responses:
       -
         custom: []
@@ -1359,7 +1368,7 @@ endpoints:
         content: |-
           {
             "message": "Personal information updated successfully",
-            "profile": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "full_name": "Jane Smith" }
+            "profile": { "id": "664f1a2b3c4d5e6f7a8b9c0d", "full_name": "Jane Smith", "image": "https://res.cloudinary.com/.../photo.jpg" }
           }
         headers: []
         description: ''
@@ -2270,7 +2279,7 @@ endpoints:
         name: gender
         description: ''
         required: false
-        example: male
+        example: female
         type: string
         enumValues:
           - male
@@ -2351,7 +2360,7 @@ endpoints:
         name: marital_status
         description: ''
         required: false
-        example: single
+        example: widowed
         type: string
         enumValues:
           - single
@@ -2389,7 +2398,7 @@ endpoints:
         name: current_job_status
         description: ''
         required: false
-        example: employed
+        example: student
         type: string
         enumValues:
           - employed
@@ -2427,7 +2436,7 @@ endpoints:
         name: job_level
         description: ''
         required: false
-        example: lead
+        example: senior
         type: string
         enumValues:
           - entry
@@ -2515,7 +2524,7 @@ endpoints:
         name: is_actively_seeking
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -2636,7 +2645,7 @@ endpoints:
         name: 'skills[].level'
         description: ''
         required: false
-        example: expert
+        example: advanced
         type: string
         enumValues:
           - beginner
@@ -2795,7 +2804,7 @@ endpoints:
         name: 'work_experience[].is_currently_working'
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -2817,20 +2826,20 @@ endpoints:
       last_name: 'n'
       full_name: g
       image: z
-      gender: male
+      gender: female
       nationality: m
       city: i
       location: 'y'
       address: v
       phone: dljnikhwaykcmyuw
       date_of_birth: pwlvqwrsitcpscql
-      marital_status: single
+      marital_status: widowed
       salary_range_from: 16
       salary_range_to: 38
-      current_job_status: employed
+      current_job_status: student
       years_of_experience: 8
       education_level: 'n'
-      job_level: lead
+      job_level: senior
       job_types:
         - r
       job_roles:
@@ -2840,7 +2849,7 @@ endpoints:
       current_job_title: u
       experience_summary: architecto
       expected_salary: 39
-      is_actively_seeking: true
+      is_actively_seeking: false
       social_links:
         linkedin: g
         github: z
@@ -2849,7 +2858,7 @@ endpoints:
       skills:
         -
           name: 'y'
-          level: expert
+          level: advanced
       education_history:
         -
           certificate_type: v
@@ -2868,7 +2877,7 @@ endpoints:
             - u
           from_date: jwvlxjklqppwqbew
           to_date: tnnoqitpxntltcvi
-          is_currently_working: true
+          is_currently_working: false
           description: 'Eius et animi quos velit et.'
     fileParameters:
       resume: null
@@ -2896,6 +2905,25 @@ endpoints:
       description: |-
         Uploads a resume file to the job seeker's profile and triggers AI analysis.
         Populates all `ai_*` profile fields and `ats_score` with extracted data.
+
+        ## How Uploaded Resumes Benefit Job Applications:
+
+        Uploading a resume enables automatic job applications and provides these advantages:
+
+        1. **Automatic Application Attachments**: Your resume is automatically attached when you apply to jobs
+        2. **ATS Score Generation**: Get an ATS score that employers use to filter candidates
+        3. **AI-Powered Profile**: Skills, work history, education are automatically extracted
+        4. **Better Visibility**: Employers see your complete AI-analyzed profile
+        5. **Job Matching**: Enables AI-powered job matching services
+
+        ## Analysis Status Tracking:
+        - `pending`: Uploaded, analysis not started
+        - `processing`: Analysis in progress
+        - `completed`: Analysis successful, profile updated
+        - `error`: Analysis failed, resume still saved
+
+        Check status: `GET /job-seeker/resume/analysis-status`
+        Retry failed: `POST /job-seeker/resume/retry-analysis`
       authenticated: true
       deprecated: false
     headers:
@@ -2927,14 +2955,15 @@ endpoints:
         status: 200
         content: |-
           {
-            "message": "Resume uploaded and analyzed successfully",
+            "message": "Resume uploaded successfully. Analysis is being processed.",
             "resume_url": "https://res.cloudinary.com/.../resume.pdf",
+            "analysis_status": "pending",
             "profile": {
               "id": "664f1a2b3c4d5e6f7a8b9c0d",
-              "ats_score": 85,
-              "ai_skills": ["PHP", "Laravel", "MongoDB"],
-              "ai_summary": "Experienced backend developer...",
-              "ai_analyzed_at": "2024-01-15T00:00:00Z"
+              "ats_score": null,
+              "ai_skills": [],
+              "ai_analyzed_at": null,
+              "analysis_status": "pending"
             }
           }
         headers: []
@@ -3015,6 +3044,73 @@ endpoints:
   -
     custom: []
     httpMethods:
+      - GET
+    uri: api/job-seeker/resume
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get resume and AI analysis'
+      description: "Returns the authenticated job seeker's stored resume URL and full AI analysis results."
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "resume_url": "https://res.cloudinary.com/.../resume.pdf",
+            "analysis_status": "completed",
+            "analysis_error": null,
+            "analysis_started_at": "2026-07-18T09:31:00Z",
+            "analysis_completed_at": "2026-07-18T09:31:18Z",
+            "ats_score": 65,
+            "ai_full_name": "John Smith",
+            "ai_email": "john@example.com",
+            "ai_phone": "+1 555 0100",
+            "ai_location": "New York, NY",
+            "ai_summary": "Experienced developer...",
+            "ai_skills": ["PHP", "Laravel", "MongoDB"],
+            "ai_work_history": [{ "company": "Acme", "role": "Developer", "duration": "2020-2023", "description": "..." }],
+            "ai_education_history": [{ "institution": "MIT", "degree": "BSc Computer Science", "year": "2020" }],
+            "ai_projects": [],
+            "ai_languages": ["English", "Arabic"],
+            "ai_overall_evaluation": "Strong profile with relevant experience...",
+            "ai_analyzed_at": "2026-07-18T09:31:18Z"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "No resume found. Please upload a resume first." }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
       - POST
     uri: api/job-seeker/resume/upload-and-analyze
     metadata:
@@ -3027,6 +3123,22 @@ endpoints:
       description: |-
         Uploads a CV file and sends it to the AI analysis service. On success, populates all `ai_*` profile fields and `ats_score`.
         This endpoint is similar to `/upload` but accepts field name `cv` instead of `resume`.
+
+        ## How Uploaded CVs Benefit Job Applications:
+
+        Uploading a CV enables automatic job applications and provides these advantages:
+
+        1. **Automatic Application Attachments**: Your CV is automatically attached when you apply to jobs
+        2. **ATS Score Generation**: Get an ATS score that employers use to filter candidates (65+ is recommended)
+        3. **AI-Powered Profile**: Skills, work history, education are automatically extracted
+        4. **Better Visibility**: Employers see your complete AI-analyzed profile with extracted data
+        5. **Job Matching**: Enables AI-powered job matching services
+        6. **Resume Coach**: Get AI-powered resume improvement suggestions
+
+        ## Workflow for Job Applications:
+        1. Upload CV → Get AI analysis → ATS score generated
+        2. Apply to jobs → Your CV automatically attached
+        3. Employers see → Your ATS score + AI-extracted skills
       authenticated: true
       deprecated: false
     headers:
@@ -3058,15 +3170,16 @@ endpoints:
         status: 200
         content: |-
           {
-            "message": "CV uploaded and analyzed successfully",
+            "message": "CV uploaded successfully. Analysis is being processed.",
             "resume_url": "https://res.cloudinary.com/.../cv.pdf",
+            "analysis_status": "pending",
             "profile": {
               "id": "664f1a2b3c4d5e6f7a8b9c0d",
-              "ats_score": 82,
-              "ai_skills": ["React", "TypeScript", "Node.js"],
-              "ai_summary": "Experienced frontend developer...",
+              "ats_score": null,
+              "ai_skills": [],
               "ai_work_history": [],
-              "ai_analyzed_at": "2024-01-15T00:00:00Z"
+              "ai_analyzed_at": null,
+              "analysis_status": "pending"
             }
           }
         headers: []
@@ -3392,7 +3505,23 @@ endpoints:
       subgroup: ''
       subgroupDescription: ''
       title: 'Apply to job'
-      description: "Submit an application for an active job post. If no resume file is uploaded, the profile's stored CV is used automatically."
+      description: |-
+        Submit an application for an active job post. If no resume file is uploaded, the profile's stored CV is used automatically.
+
+        ## How Uploaded CVs Benefit Your Application
+
+        When you have an uploaded and AI-analyzed CV in your profile, your application gains several advantages:
+
+        1. **Automatic Resume Attachment**: Your stored CV is automatically attached to applications if you don't provide a separate resume file
+        2. **ATS Score Visibility**: Employers see your ATS (Applicant Tracking System) score when reviewing applications
+        3. **AI-Extracted Profile Data**: Employers can see your AI-extracted skills, work history, and education
+        4. **Better Job Matching**: AI-analyzed profiles get better matches through the matching services
+        5. **Default Cover Letter**: Set a default cover letter that's automatically used if you don't provide one
+
+        ## Steps to Apply with Uploaded CV:
+        1. Upload CV: `POST /job-seeker/resume/upload-and-analyze` or `POST /job-seeker/resume/upload`
+        2. Apply to job: `POST /job-seeker/apply` with `job_post_id`
+        3. Your stored CV will be automatically attached
       authenticated: true
       deprecated: false
     headers:
@@ -3440,9 +3569,9 @@ endpoints:
       education:
         custom: []
         name: education
-        description: 'Eager applicant profile fields. Must not be greater than 255 characters.'
+        description: 'Optional education summary. Max 255 chars.'
         required: false
-        example: g
+        example: architecto
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -3451,9 +3580,9 @@ endpoints:
       last_work:
         custom: []
         name: last_work
-        description: 'Must not be greater than 255 characters.'
+        description: 'Optional last work experience. Max 255 chars.'
         required: false
-        example: z
+        example: architecto
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -3462,9 +3591,9 @@ endpoints:
       years_of_experience:
         custom: []
         name: years_of_experience
-        description: 'Must be at least 0. Must not be greater than 60.'
+        description: 'Optional years of experience. Min 0, max 60.'
         required: false
-        example: 17
+        example: 16
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -3473,9 +3602,9 @@ endpoints:
       why_join:
         custom: []
         name: why_join
-        description: 'Must not be greater than 2000 characters.'
+        description: 'Optional motivation for joining. Max 2000 chars.'
         required: false
-        example: i
+        example: architecto
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -3484,9 +3613,9 @@ endpoints:
       what_to_add:
         custom: []
         name: what_to_add
-        description: 'Must not be greater than 2000 characters.'
+        description: 'Optional skills/contributions you can add. Max 2000 chars.'
         required: false
-        example: 'y'
+        example: architecto
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -3495,10 +3624,10 @@ endpoints:
       positions_suited_for:
         custom: []
         name: positions_suited_for
-        description: 'Must not be greater than 100 characters.'
+        description: 'Optional array of suitable positions.'
         required: false
         example:
-          - v
+          - architecto
         type: 'string[]'
         enumValues: []
         exampleWasSpecified: false
@@ -3507,9 +3636,9 @@ endpoints:
       notice_period:
         custom: []
         name: notice_period
-        description: 'Must not be greater than 100 characters.'
+        description: 'Optional notice period. Max 100 chars.'
         required: false
-        example: d
+        example: architecto
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -3518,9 +3647,9 @@ endpoints:
       expected_salary:
         custom: []
         name: expected_salary
-        description: 'Must not be greater than 100 characters.'
+        description: 'Optional expected salary. Max 100 chars.'
         required: false
-        example: l
+        example: architecto
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -3529,15 +3658,15 @@ endpoints:
     cleanBodyParameters:
       job_post_id: 664f1a2b3c4d5e6f7a8b9c0d
       cover_letter: 'I am very interested in this position.'
-      education: g
-      last_work: z
-      years_of_experience: 17
-      why_join: i
-      what_to_add: 'y'
+      education: architecto
+      last_work: architecto
+      years_of_experience: 16
+      why_join: architecto
+      what_to_add: architecto
       positions_suited_for:
-        - v
-      notice_period: d
-      expected_salary: l
+        - architecto
+      notice_period: architecto
+      expected_salary: architecto
     fileParameters:
       resume: null
     responses:
@@ -3551,7 +3680,8 @@ endpoints:
               "id": "664f1a2b3c4d5e6f7a8b9c0f",
               "job_post_id": "664f1a2b3c4d5e6f7a8b9c0d",
               "status": "pending",
-              "applied_at": "2024-01-15T00:00:00Z"
+              "applied_at": "2024-01-15T00:00:00Z",
+              "resume": "https://res.cloudinary.com/.../cv.pdf"
             }
           }
         headers: []
@@ -3752,7 +3882,7 @@ endpoints:
         name: job_type
         description: ''
         required: false
-        example: contract
+        example: part_time
         type: string
         enumValues:
           - full_time
@@ -3787,7 +3917,7 @@ endpoints:
     cleanBodyParameters:
       keyword: b
       location: 'n'
-      job_type: contract
+      job_type: part_time
       category: g
       min_salary: 12
     fileParameters: []
@@ -4129,7 +4259,7 @@ endpoints:
   -
     custom: []
     httpMethods:
-      - POST
+      - GET
     uri: api/job-seeker/match-resume-to-jobs
     metadata:
       custom: []
@@ -4139,33 +4269,23 @@ endpoints:
       subgroupDescription: ''
       title: 'Match resume to available jobs'
       description: |-
-        Upload a resume and get AI-matched job recommendations from the database.
-        Returns jobs ranked by match percentage and ATS compatibility.
+        Uses the job seeker's uploaded CV (from their profile) to find AI-matched job
+        recommendations from the database, ranked by match percentage and ATS compatibility.
+
+        Requires the seeker to have an uploaded and analyzed CV on their profile.
       authenticated: true
       deprecated: false
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: multipart/form-data
+      Content-Type: application/json
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
     queryParameters: []
     cleanQueryParameters: []
-    bodyParameters:
-      resume:
-        custom: []
-        name: resume
-        description: 'PDF/DOC/DOCX resume file, max 10 MB.'
-        required: true
-        example: null
-        type: file
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
+    bodyParameters: []
     cleanBodyParameters: []
-    fileParameters:
-      resume: null
+    fileParameters: []
     responses:
       -
         custom: []
@@ -4182,7 +4302,8 @@ endpoints:
                 "matched_skills_count": 4,
                 "match_percentage": "66%",
                 "ats_compatibility_score": "69%",
-                "job_url": "/api/jobs/job_001"
+                "job_url": "/api/jobs/job_001",
+                "exists_in_db": true
               }
             ]
           }
@@ -4191,7 +4312,7 @@ endpoints:
       -
         custom: []
         status: 422
-        content: '{ "errors": { "resume": ["The resume field is required."] } }'
+        content: '{ "message": "No CV found on your profile. Please upload and analyze your CV first." }'
         headers: []
         description: ''
       -
@@ -5002,6 +5123,71 @@ endpoints:
       subgroupDescription: ''
       title: 'Deactivate job post'
       description: 'Sets `is_active` to false, hiding the post from public listings.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'Job post ID.'
+        required: true
+        example: 664f1a2b3c4d5e6f7a8b9c0d
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 664f1a2b3c4d5e6f7a8b9c0d
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{}'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: '{ "message": "Forbidden" }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Job post not found" }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/employer/jobs/{id}/activate'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Activate job post'
+      description: 'Sets `is_active` to true, making the post visible in public listings again.'
       authenticated: true
       deprecated: false
     headers:

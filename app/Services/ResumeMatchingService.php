@@ -8,16 +8,14 @@ use Illuminate\Support\Facades\Log;
 
 class ResumeMatchingService
 {
-    public function matchResumeToJobs(string $filePath): array
+    public function matchResumeToJobs(string $fileUrl): array
     {
         $apiUrl = config('services.resume_matching.url');
 
         try {
-            $response = Http::attach(
-                'file',
-                file_get_contents(storage_path('app/'.$filePath)),
-                basename($filePath)
-            )->post($apiUrl);
+            $response = Http::asForm()->post($apiUrl, [
+                'file_url' => $fileUrl,
+            ]);
         } catch (\Throwable $e) {
             Log::error('Resume matching HTTP error', ['error' => $e->getMessage()]);
             throw new CvAnalysisException('Resume matching service unavailable', 502);

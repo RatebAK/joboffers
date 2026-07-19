@@ -91,7 +91,7 @@ Route::middleware(['jwt.auth', 'role:employee'])->prefix('job-seeker')->group(fu
     Route::post('offers/{id}/decline', [DirectOfferController::class, 'decline']);
 
     // Resume Matching AI
-    Route::post('match-resume-to-jobs', [ResumeMatchingController::class, 'matchResume']);
+    Route::get('match-resume-to-jobs', [ResumeMatchingController::class, 'matchResume']);
 
     // Resume Coach AI — sessions + chat history
     Route::get('coach/sessions', [ResumeCoachController::class, 'listSessions']);

@@ -7,18 +7,16 @@ use App\Http\Controllers\Controller;
 use App\Models\JobPost;
 use App\Services\ResumeMatchingService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 class ResumeMatchingController extends Controller
 {
     /**
      * Match resume to available jobs
      *
-     * Upload a resume and get AI-matched job recommendations from the database.
-     * Returns jobs ranked by match percentage and ATS compatibility.
+     * Uses the job seeker's uploaded CV (from their profile) to find AI-matched job
+     * recommendations from the database, ranked by match percentage and ATS compatibility.
      *
-     * @bodyParam resume file required PDF/DOC/DOCX resume file, max 10 MB.
+     * Requires the seeker to have an uploaded and analyzed CV on their profile.
      *
      * @response 200 {
      *   "matches_found": 25,
@@ -31,41 +29,34 @@ class ResumeMatchingController extends Controller
      *       "matched_skills_count": 4,
      *       "match_percentage": "66%",
      *       "ats_compatibility_score": "69%",
-     *       "job_url": "/api/jobs/job_001"
+     *       "job_url": "/api/jobs/job_001",
+     *       "exists_in_db": true
      *     }
      *   ]
      * }
-     * @response 422 { "errors": { "resume": ["The resume field is required."] } }
+     * @response 422 { "message": "No CV found on your profile. Please upload and analyze your CV first." }
      * @response 502 { "message": "Resume matching service unavailable" }
      */
     public function matchResume(Request $request, ResumeMatchingService $matchingService)
     {
-        $validator = Validator::make($request->all(), [
-            'resume' => 'required|file|mimes:pdf,doc,docx|max:10240',
-        ]);
+        $user    = $request->user();
+        $profile = $user->jobSeekerProfile;
 
-        if ($validator->fails()) {
+        $cvUrl = $profile->cv_file_path ?? null;
+
+        if (! $cvUrl) {
             return response()->json([
-                'errors' => $validator->errors(),
+                'message' => 'No CV found on your profile. Please upload and analyze your CV first.',
             ], 422);
         }
 
-        // Store file temporarily
-        $storedPath = $request->file('resume')->store('temp_resumes', 'public');
-        $resumeFilePath = 'public/temp_resumes/'.basename($storedPath);
-
         try {
-            $result = $matchingService->matchResumeToJobs($resumeFilePath);
+            $result = $matchingService->matchResumeToJobs($cvUrl);
         } catch (CvAnalysisException $e) {
-            // Clean up temp file
-            Storage::delete($resumeFilePath);
-
-            $statusCode = $e->getHttpStatusCode();
-
-            if ($statusCode === 422) {
+            if ($e->getHttpStatusCode() === 422) {
                 return response()->json([
                     'message' => 'Resume matching failed',
-                    'reason' => $e->getMessage(),
+                    'reason'  => $e->getMessage(),
                 ], 422);
             }
 
@@ -74,30 +65,25 @@ class ResumeMatchingController extends Controller
             ], 502);
         }
 
-        // Clean up temp file after successful processing
-        Storage::delete($resumeFilePath);
-
-        // Enrich jobs with URLs to our database
         $enrichedJobs = collect($result['recommended_jobs'])->map(function ($job) {
-            // Try to find job in our database
             $dbJob = JobPost::find($job['job_id']);
 
             return [
-                'job_id' => $job['job_id'],
-                'title' => $job['title'] ?? null,
-                'company' => $job['company'] ?? null,
-                'location' => $job['location'] ?? null,
-                'matched_skills_count' => $job['matched_skills_count'] ?? 0,
-                'match_percentage' => $job['match_percentage'] ?? '0%',
-                'ats_compatibility_score' => $job['ats_compatibility_score'] ?? '0%',
-                'job_url' => $dbJob ? "/api/jobs/{$job['job_id']}" : null,
-                'exists_in_db' => (bool) $dbJob,
+                'job_id'                 => $job['job_id'],
+                'title'                  => $job['title'] ?? null,
+                'company'                => $job['company'] ?? null,
+                'location'               => $job['location'] ?? null,
+                'matched_skills_count'   => $job['matched_skills_count'] ?? 0,
+                'match_percentage'       => $job['match_percentage'] ?? '0%',
+                'ats_compatibility_score'=> $job['ats_compatibility_score'] ?? '0%',
+                'job_url'                => $dbJob ? "/api/jobs/{$job['job_id']}" : null,
+                'exists_in_db'           => (bool) $dbJob,
             ];
         })->toArray();
 
         return response()->json([
-            'matches_found' => $result['matches_found'],
+            'matches_found'    => $result['matches_found'],
             'recommended_jobs' => $enrichedJobs,
-        ], 200);
+        ]);
     }
 }
