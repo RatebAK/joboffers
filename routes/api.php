@@ -93,12 +93,11 @@ Route::middleware(['jwt.auth', 'role:employee'])->prefix('job-seeker')->group(fu
     // Resume Matching AI
     Route::get('match-resume-to-jobs', [ResumeMatchingController::class, 'matchResume']);
 
-    // Resume Coach AI — sessions + chat history
+    // Resume Coach AI
     Route::get('coach/sessions', [ResumeCoachController::class, 'listSessions']);
-    Route::post('coach/sessions', [ResumeCoachController::class, 'createSession']);
     Route::get('coach/sessions/{sessionId}', [ResumeCoachController::class, 'getSession']);
     Route::delete('coach/sessions/{sessionId}', [ResumeCoachController::class, 'deleteSession']);
-    Route::post('coach/sessions/{sessionId}/chat', [ResumeCoachController::class, 'chat']);
+    Route::post('coach/chat', [ResumeCoachController::class, 'chat']);
 });
 
 // Employer application — any authenticated user can apply to become an employer
