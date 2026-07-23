@@ -133,7 +133,7 @@ Route::middleware(['jwt.auth', 'role:employer'])->prefix('employer')->group(func
 
     // Job Seeker Search
     Route::get('seekers', [EmployerSearchController::class, 'index']);
-    Route::get('seekers/{userId}', [EmployerSearchController::class, 'show']);
+    Route::get('seekers/{userId}', [EmployerSearchController::class, 'showJobSeeker']);
 
     // Direct Offers
     Route::post('offers', [DirectOfferController::class, 'store']);

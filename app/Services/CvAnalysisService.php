@@ -28,12 +28,10 @@ class CvAnalysisService
             'api_url'        => $apiUrl,
         ]);
 
-        $payload = ['file_url' => $fileUrl];
-
-        // Pass MIME type to the AI service so it knows how to parse the file
-        if ($mimeType) {
-            $payload['file_type'] = $mimeType;
-        }
+        $payload = [
+            'file_url' => $fileUrl,
+            'user_id'  => $resumeId,
+        ];
 
         try {
             $response = Http::timeout(120)->asForm()->post($apiUrl, $payload);

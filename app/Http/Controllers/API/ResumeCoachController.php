@@ -175,16 +175,10 @@ class ResumeCoachController extends Controller
         }
 
         $userMessage = $request->input('message');
-
-        // Build history from previous messages
-        $history = $session->messages()
-            ->orderBy('created_at')
-            ->get(['role', 'content'])
-            ->map(fn ($m) => ['role' => $m->role, 'content' => $m->content])
-            ->toArray();
+        $userId      = (string) $request->user()->_id;
 
         try {
-            $aiResponse = $coachService->chat($userMessage, $history);
+            $result = $coachService->chat($userId, $userMessage);
         } catch (CvAnalysisException $e) {
             if ($e->getHttpStatusCode() === 422) {
                 return response()->json([
@@ -196,7 +190,9 @@ class ResumeCoachController extends Controller
             return response()->json(['message' => 'Resume coach service unavailable'], 502);
         }
 
-        // Persist both turns
+        $aiResponse = $result['response'];
+
+        // Persist both turns locally
         CoachMessage::create(['session_id' => $session->id, 'role' => 'user',      'content' => $userMessage]);
         CoachMessage::create(['session_id' => $session->id, 'role' => 'assistant', 'content' => $aiResponse]);
 

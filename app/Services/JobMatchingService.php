@@ -8,14 +8,13 @@ use Illuminate\Support\Facades\Log;
 
 class JobMatchingService
 {
-    public function matchJobToCandidates(string $jobDescription, int $limit = 10): array
+    public function matchJobToCandidates(string $jobDescription): array
     {
         $apiUrl = config('services.job_matching.url');
 
         try {
             $response = Http::asForm()->post($apiUrl, [
                 'job_description' => $jobDescription,
-                'limit' => $limit,
             ]);
         } catch (\Throwable $e) {
             Log::error('Job matching HTTP error', ['error' => $e->getMessage()]);

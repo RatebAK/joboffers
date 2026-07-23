@@ -85,48 +85,77 @@ class EmployerSearchController extends Controller
     /**
      * Get job seeker profile (employer view)
      *
-     * Returns a specific job seeker's public profile by their user ID. Sensitive fields (`ai_email`, `ai_phone`) are excluded.
+     * Returns a specific job seeker's full profile by their user ID, with sensitive
+     * personal fields excluded. Intended for employers reviewing candidates.
      *
      * @urlParam userId string required The job seeker's user ID. Example: 664f1a2b3c4d5e6f7a8b9c0e
      *
      * @response 200 {
-     *   "seeker": {
-     *     "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
-     *     "name": "Jane Smith",
-     *     "profile": {
-     *       "current_job_title": "Frontend Developer",
-     *       "ats_score": 82,
-     *       "ai_skills": ["React", "TypeScript"],
-     *       "ai_summary": "Experienced frontend developer...",
-     *       "is_actively_seeking": true
-     *     }
-     *   }
+     *   "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *   "name": "Jane Smith",
+     *   "image": "https://res.cloudinary.com/.../photo.jpg",
+     *   "current_job_title": "Frontend Developer",
+     *   "current_job_status": "employed",
+     *   "job_level": "senior",
+     *   "job_types": ["full_time", "remote"],
+     *   "job_roles": ["frontend", "fullstack"],
+     *   "years_of_experience": 5,
+     *   "education_level": "bachelor",
+     *   "expected_salary": 3000,
+     *   "salary_range_from": 2500,
+     *   "salary_range_to": 4000,
+     *   "is_actively_seeking": true,
+     *   "work_cities": ["Damascus", "Remote"],
+     *   "city": "Damascus",
+     *   "social_links": { "linkedin": "https://linkedin.com/in/jane", "github": null },
+     *   "skills": [],
+     *   "education_history": [],
+     *   "work_experience": [],
+     *   "ats_score": 82,
+     *   "ai_skills": ["React", "TypeScript"],
+     *   "ai_summary": "Experienced frontend developer...",
+     *   "ai_work_history": [],
+     *   "ai_education_history": [],
+     *   "ai_languages": ["Arabic", "English"],
+     *   "ai_projects": [],
+     *   "ai_overall_evaluation": "Strong candidate"
      * }
      * @response 404 { "message": "Job seeker not found" }
      */
-    public function show($userId)
+    public function showJobSeeker($userId)
     {
         $user = User::find($userId);
 
-        if (!$user || !$user->isJobSeeker()) {
+        if (! $user || ! $user->isJobSeeker()) {
             return response()->json(['message' => 'Job seeker not found'], 404);
         }
 
         $profile = JobSeekerProfile::where('user_id', $userId)->first();
 
-        if (!$profile) {
+        if (! $profile) {
             return response()->json(['message' => 'Job seeker not found'], 404);
         }
 
-        $profileData = $profile->toArray();
-        unset($profileData['ai_email'], $profileData['ai_phone']);
+        $allowed = [
+            // Career
+            'current_job_title', 'current_job_status', 'job_level', 'job_types', 'job_roles',
+            'years_of_experience', 'education_level', 'expected_salary', 'salary_range_from',
+            'salary_range_to', 'is_actively_seeking', 'work_cities', 'city',
+            'experience_summary', 'social_links',
+            // Structured profile data
+            'skills', 'education_history', 'work_experience',
+            // AI-derived
+            'ats_score', 'ai_skills', 'ai_summary', 'ai_work_history', 'ai_education_history',
+            'ai_languages', 'ai_projects', 'ai_social_links', 'ai_overall_evaluation',
+            'ai_detected_language', 'ai_analyzed_at',
+        ];
 
-        return response()->json([
-            'seeker' => [
-                'user_id' => $user->_id,
-                'name'    => $user->name,
-                'profile' => $profileData,
-            ],
-        ]);
+        $profileData = collect($profile->toArray())->only($allowed)->toArray();
+
+        return response()->json(array_merge([
+            'user_id' => (string) $user->_id,
+            'name'    => $user->name,
+            'image'   => $profile->image,
+        ], $profileData));
     }
 }
