@@ -10,13 +10,13 @@ COPY . .
 # 2. Build frontend assets
 RUN npm ci --audit false && npm run build
 
-# 3. Hardcode the production URL for the Scribe compiler
-ENV APP_URL=https://joboffers-emoj.onrender.com
+# 3. Install composer dependencies
+RUN composer install --no-dev --optimize-autoloader
 
-# 4. Install composer dependencies and immediately compile Scribe
-RUN composer install --no-dev --optimize-autoloader \
-    && php artisan config:clear \
-    && php artisan scribe:generate
+# 4. Copy startup script — richarvey/nginx-php-fpm runs all scripts/xx-*.sh at boot,
+#    by which point Render has already injected the real APP_URL env var.
+COPY scripts/00-scribe-generate.sh /var/www/html/scripts/00-scribe-generate.sh
+RUN chmod +x /var/www/html/scripts/00-scribe-generate.sh
 
 # Image config
 ENV SKIP_COMPOSER 0
