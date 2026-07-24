@@ -10,13 +10,17 @@ COPY . .
 # 2. Build frontend assets
 RUN npm ci --audit false && npm run build
 
-# 3. Install composer dependencies during build
-RUN composer install --no-dev --optimize-autoloader
+# 3. Hardcode the production URL for the Scribe compiler
+ENV APP_URL=https://joboffers-emoj.onrender.com
+
+# 4. Install composer dependencies and immediately compile Scribe
+RUN composer install --no-dev --optimize-autoloader \
+    && php artisan config:clear \
+    && php artisan scribe:generate
 
 # Image config
 ENV SKIP_COMPOSER 0
 ENV WEBROOT /var/www/html/public
-# ADD THIS LINE: Tells Nginx to route all traffic to Laravel's index.php
 ENV PHP_CATCHALL 1
 ENV PHP_ERRORS_STDERR 1
 ENV RUN_SCRIPTS 1
