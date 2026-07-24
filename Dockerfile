@@ -1,11 +1,14 @@
 FROM richarvey/nginx-php-fpm:3.1.6
 
-# Install MongoDB extension for PHP
-RUN apk add --no-cache $PHPIZE_DEPS openssl-dev \
+# 1. Install Node.js, NPM, and MongoDB extension
+RUN apk add --no-cache $PHPIZE_DEPS openssl-dev nodejs npm \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb
 
 COPY . .
+
+# 2. Build your frontend assets right inside the container
+RUN npm ci --audit false && npm run build
 
 # Image config
 ENV SKIP_COMPOSER 1
