@@ -16,6 +16,8 @@ RUN composer install --no-dev --optimize-autoloader
 # Image config
 ENV SKIP_COMPOSER 0
 ENV WEBROOT /var/www/html/public
+# ADD THIS LINE: Tells Nginx to route all traffic to Laravel's index.php
+ENV PHP_CATCHALL 1
 ENV PHP_ERRORS_STDERR 1
 ENV RUN_SCRIPTS 1
 ENV REAL_IP_HEADER 1
