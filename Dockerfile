@@ -7,11 +7,14 @@ RUN apk add --no-cache $PHPIZE_DEPS openssl-dev nodejs npm \
 
 COPY . .
 
-# 2. Build your frontend assets right inside the container
+# 2. Build frontend assets
 RUN npm ci --audit false && npm run build
 
+# 3. Install composer dependencies during build
+RUN composer install --no-dev --optimize-autoloader
+
 # Image config
-ENV SKIP_COMPOSER 1
+ENV SKIP_COMPOSER 0
 ENV WEBROOT /var/www/html/public
 ENV PHP_ERRORS_STDERR 1
 ENV RUN_SCRIPTS 1
