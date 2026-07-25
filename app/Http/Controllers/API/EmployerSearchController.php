@@ -152,6 +152,8 @@ class EmployerSearchController extends Controller
             'ats_score', 'ai_skills', 'ai_summary', 'ai_work_history', 'ai_education_history',
             'ai_languages', 'ai_projects', 'ai_social_links', 'ai_overall_evaluation',
             'ai_detected_language', 'ai_analyzed_at',
+            // Timestamps
+            'created_at', 'updated_at',
         ];
 
         $profileData = collect($profile->toArray())->only($allowed)->toArray();

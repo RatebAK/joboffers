@@ -2279,7 +2279,7 @@ endpoints:
         name: gender
         description: ''
         required: false
-        example: female
+        example: other
         type: string
         enumValues:
           - male
@@ -2360,7 +2360,7 @@ endpoints:
         name: marital_status
         description: ''
         required: false
-        example: widowed
+        example: prefer_not_to_say
         type: string
         enumValues:
           - single
@@ -2398,7 +2398,7 @@ endpoints:
         name: current_job_status
         description: ''
         required: false
-        example: student
+        example: unemployed
         type: string
         enumValues:
           - employed
@@ -2436,7 +2436,7 @@ endpoints:
         name: job_level
         description: ''
         required: false
-        example: senior
+        example: manager
         type: string
         enumValues:
           - entry
@@ -2524,7 +2524,7 @@ endpoints:
         name: is_actively_seeking
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -2645,7 +2645,7 @@ endpoints:
         name: 'skills[].level'
         description: ''
         required: false
-        example: advanced
+        example: intermediate
         type: string
         enumValues:
           - beginner
@@ -2804,7 +2804,7 @@ endpoints:
         name: 'work_experience[].is_currently_working'
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -2826,20 +2826,20 @@ endpoints:
       last_name: 'n'
       full_name: g
       image: z
-      gender: female
+      gender: other
       nationality: m
       city: i
       location: 'y'
       address: v
       phone: dljnikhwaykcmyuw
       date_of_birth: pwlvqwrsitcpscql
-      marital_status: widowed
+      marital_status: prefer_not_to_say
       salary_range_from: 16
       salary_range_to: 38
-      current_job_status: student
+      current_job_status: unemployed
       years_of_experience: 8
       education_level: 'n'
-      job_level: senior
+      job_level: manager
       job_types:
         - r
       job_roles:
@@ -2849,7 +2849,7 @@ endpoints:
       current_job_title: u
       experience_summary: architecto
       expected_salary: 39
-      is_actively_seeking: false
+      is_actively_seeking: true
       social_links:
         linkedin: g
         github: z
@@ -2858,7 +2858,7 @@ endpoints:
       skills:
         -
           name: 'y'
-          level: advanced
+          level: intermediate
       education_history:
         -
           certificate_type: v
@@ -2877,7 +2877,7 @@ endpoints:
             - u
           from_date: jwvlxjklqppwqbew
           to_date: tnnoqitpxntltcvi
-          is_currently_working: false
+          is_currently_working: true
           description: 'Eius et animi quos velit et.'
     fileParameters:
       resume: null
@@ -3882,7 +3882,7 @@ endpoints:
         name: job_type
         description: ''
         required: false
-        example: part_time
+        example: contract
         type: string
         enumValues:
           - full_time
@@ -3917,7 +3917,7 @@ endpoints:
     cleanBodyParameters:
       keyword: b
       location: 'n'
-      job_type: part_time
+      job_type: contract
       category: g
       min_salary: 12
     fileParameters: []
@@ -6322,7 +6322,9 @@ endpoints:
       subgroup: ''
       subgroupDescription: ''
       title: 'Get job seeker profile (employer view)'
-      description: "Returns a specific job seeker's public profile by their user ID. Sensitive fields (`ai_email`, `ai_phone`) are excluded."
+      description: |-
+        Returns a specific job seeker's full profile by their user ID, with sensitive
+        personal fields excluded. Intended for employers reviewing candidates.
       authenticated: true
       deprecated: false
     headers:
@@ -6354,17 +6356,34 @@ endpoints:
         status: 200
         content: |-
           {
-            "seeker": {
-              "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
-              "name": "Jane Smith",
-              "profile": {
-                "current_job_title": "Frontend Developer",
-                "ats_score": 82,
-                "ai_skills": ["React", "TypeScript"],
-                "ai_summary": "Experienced frontend developer...",
-                "is_actively_seeking": true
-              }
-            }
+            "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+            "name": "Jane Smith",
+            "image": "https://res.cloudinary.com/.../photo.jpg",
+            "current_job_title": "Frontend Developer",
+            "current_job_status": "employed",
+            "job_level": "senior",
+            "job_types": ["full_time", "remote"],
+            "job_roles": ["frontend", "fullstack"],
+            "years_of_experience": 5,
+            "education_level": "bachelor",
+            "expected_salary": 3000,
+            "salary_range_from": 2500,
+            "salary_range_to": 4000,
+            "is_actively_seeking": true,
+            "work_cities": ["Damascus", "Remote"],
+            "city": "Damascus",
+            "social_links": { "linkedin": "https://linkedin.com/in/jane", "github": null },
+            "skills": [],
+            "education_history": [],
+            "work_experience": [],
+            "ats_score": 82,
+            "ai_skills": ["React", "TypeScript"],
+            "ai_summary": "Experienced frontend developer...",
+            "ai_work_history": [],
+            "ai_education_history": [],
+            "ai_languages": ["Arabic", "English"],
+            "ai_projects": [],
+            "ai_overall_evaluation": "Strong candidate"
           }
         headers: []
         description: ''

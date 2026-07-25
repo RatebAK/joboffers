@@ -1583,7 +1583,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: female
+                  example: other
                   enum:
                     - male
                     - female
@@ -1623,7 +1623,7 @@ paths:
                 marital_status:
                   type: string
                   description: ''
-                  example: widowed
+                  example: prefer_not_to_say
                   enum:
                     - single
                     - married
@@ -1644,7 +1644,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: student
+                  example: unemployed
                   enum:
                     - employed
                     - unemployed
@@ -1665,7 +1665,7 @@ paths:
                 job_level:
                   type: string
                   description: ''
-                  example: senior
+                  example: manager
                   enum:
                     - entry
                     - junior
@@ -1715,7 +1715,7 @@ paths:
                 is_actively_seeking:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 social_links:
                   type: object
                   description: 'Social Links (nested object).'
@@ -1757,7 +1757,7 @@ paths:
                       level:
                         type: string
                         description: ''
-                        example: advanced
+                        example: intermediate
                         enum:
                           - beginner
                           - intermediate
@@ -1850,7 +1850,7 @@ paths:
                       is_currently_working:
                         type: boolean
                         description: ''
-                        example: false
+                        example: true
                         nullable: true
                       description:
                         type: string
@@ -3532,7 +3532,7 @@ paths:
                 job_type:
                   type: string
                   description: ''
-                  example: part_time
+                  example: contract
                   enum:
                     - full_time
                     - part_time
@@ -5604,7 +5604,7 @@ paths:
     get:
       summary: 'Get job seeker profile (employer view)'
       operationId: getJobSeekerProfileemployerView
-      description: "Returns a specific job seeker's public profile by their user ID. Sensitive fields (`ai_email`, `ai_phone`) are excluded."
+      description: "Returns a specific job seeker's full profile by their user ID, with sensitive\npersonal fields excluded. Intended for employers reviewing candidates."
       parameters: []
       responses:
         200:
@@ -5614,49 +5614,158 @@ paths:
               schema:
                 type: object
                 example:
-                  seeker:
-                    user_id: 664f1a2b3c4d5e6f7a8b9c0e
-                    name: 'Jane Smith'
-                    profile:
-                      current_job_title: 'Frontend Developer'
-                      ats_score: 82
-                      ai_skills:
-                        - React
-                        - TypeScript
-                      ai_summary: 'Experienced frontend developer...'
-                      is_actively_seeking: true
+                  user_id: 664f1a2b3c4d5e6f7a8b9c0e
+                  name: 'Jane Smith'
+                  image: 'https://res.cloudinary.com/.../photo.jpg'
+                  current_job_title: 'Frontend Developer'
+                  current_job_status: employed
+                  job_level: senior
+                  job_types:
+                    - full_time
+                    - remote
+                  job_roles:
+                    - frontend
+                    - fullstack
+                  years_of_experience: 5
+                  education_level: bachelor
+                  expected_salary: 3000
+                  salary_range_from: 2500
+                  salary_range_to: 4000
+                  is_actively_seeking: true
+                  work_cities:
+                    - Damascus
+                    - Remote
+                  city: Damascus
+                  social_links:
+                    linkedin: 'https://linkedin.com/in/jane'
+                    github: null
+                  skills: []
+                  education_history: []
+                  work_experience: []
+                  ats_score: 82
+                  ai_skills:
+                    - React
+                    - TypeScript
+                  ai_summary: 'Experienced frontend developer...'
+                  ai_work_history: []
+                  ai_education_history: []
+                  ai_languages:
+                    - Arabic
+                    - English
+                  ai_projects: []
+                  ai_overall_evaluation: 'Strong candidate'
                 properties:
-                  seeker:
+                  user_id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0e
+                  name:
+                    type: string
+                    example: 'Jane Smith'
+                  image:
+                    type: string
+                    example: 'https://res.cloudinary.com/.../photo.jpg'
+                  current_job_title:
+                    type: string
+                    example: 'Frontend Developer'
+                  current_job_status:
+                    type: string
+                    example: employed
+                  job_level:
+                    type: string
+                    example: senior
+                  job_types:
+                    type: array
+                    example:
+                      - full_time
+                      - remote
+                    items:
+                      type: string
+                  job_roles:
+                    type: array
+                    example:
+                      - frontend
+                      - fullstack
+                    items:
+                      type: string
+                  years_of_experience:
+                    type: integer
+                    example: 5
+                  education_level:
+                    type: string
+                    example: bachelor
+                  expected_salary:
+                    type: integer
+                    example: 3000
+                  salary_range_from:
+                    type: integer
+                    example: 2500
+                  salary_range_to:
+                    type: integer
+                    example: 4000
+                  is_actively_seeking:
+                    type: boolean
+                    example: true
+                  work_cities:
+                    type: array
+                    example:
+                      - Damascus
+                      - Remote
+                    items:
+                      type: string
+                  city:
+                    type: string
+                    example: Damascus
+                  social_links:
                     type: object
                     properties:
-                      user_id:
+                      linkedin:
                         type: string
-                        example: 664f1a2b3c4d5e6f7a8b9c0e
-                      name:
+                        example: 'https://linkedin.com/in/jane'
+                      github:
                         type: string
-                        example: 'Jane Smith'
-                      profile:
-                        type: object
-                        properties:
-                          current_job_title:
-                            type: string
-                            example: 'Frontend Developer'
-                          ats_score:
-                            type: integer
-                            example: 82
-                          ai_skills:
-                            type: array
-                            example:
-                              - React
-                              - TypeScript
-                            items:
-                              type: string
-                          ai_summary:
-                            type: string
-                            example: 'Experienced frontend developer...'
-                          is_actively_seeking:
-                            type: boolean
-                            example: true
+                        example: null
+                        nullable: true
+                  skills:
+                    type: array
+                    example: []
+                  education_history:
+                    type: array
+                    example: []
+                  work_experience:
+                    type: array
+                    example: []
+                  ats_score:
+                    type: integer
+                    example: 82
+                  ai_skills:
+                    type: array
+                    example:
+                      - React
+                      - TypeScript
+                    items:
+                      type: string
+                  ai_summary:
+                    type: string
+                    example: 'Experienced frontend developer...'
+                  ai_work_history:
+                    type: array
+                    example: []
+                  ai_education_history:
+                    type: array
+                    example: []
+                  ai_languages:
+                    type: array
+                    example:
+                      - Arabic
+                      - English
+                    items:
+                      type: string
+                  ai_projects:
+                    type: array
+                    example: []
+                  ai_overall_evaluation:
+                    type: string
+                    example: 'Strong candidate'
         404:
           description: ''
           content:
@@ -6611,192 +6720,11 @@ paths:
                           example: ...
       tags:
         - 'Resume Coach'
-    post:
-      summary: 'Create a coach session'
-      operationId: createACoachSession
-      description: "Creates a new resume coach chat session. The title defaults to \"New Conversation\"\nand will be automatically updated to the first 60 characters of the first message sent."
-      parameters: []
-      responses:
-        201:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  id: ...
-                  title: 'Resume review session'
-                  created_at: ...
-                  updated_at: ...
-                properties:
-                  id:
-                    type: string
-                    example: ...
-                  title:
-                    type: string
-                    example: 'Resume review session'
-                  created_at:
-                    type: string
-                    example: ...
-                  updated_at:
-                    type: string
-                    example: ...
-        422:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  errors:
-                    title:
-                      - 'The title may not be greater than 100 characters.'
-                properties:
-                  errors:
-                    type: object
-                    properties:
-                      title:
-                        type: array
-                        example:
-                          - 'The title may not be greater than 100 characters.'
-                        items:
-                          type: string
-      tags:
-        - 'Resume Coach'
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                  description: 'optional Session title. Max 100 chars.'
-                  example: 'Resume review session'
-  '/api/job-seeker/coach/sessions/{sessionId}':
-    get:
-      summary: 'Get a coach session'
-      operationId: getACoachSession
-      description: 'Returns the session details along with its full message history in chronological order.'
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  id: ...
-                  title: 'Resume tips'
-                  messages:
-                    -
-                      role: user
-                      content: 'How do I improve my CV?'
-                      created_at: ...
-                    -
-                      role: assistant
-                      content: 'Focus on quantifying achievements...'
-                      created_at: ...
-                  created_at: ...
-                  updated_at: ...
-                properties:
-                  id:
-                    type: string
-                    example: ...
-                  title:
-                    type: string
-                    example: 'Resume tips'
-                  messages:
-                    type: array
-                    example:
-                      -
-                        role: user
-                        content: 'How do I improve my CV?'
-                        created_at: ...
-                      -
-                        role: assistant
-                        content: 'Focus on quantifying achievements...'
-                        created_at: ...
-                    items:
-                      type: object
-                      properties:
-                        role:
-                          type: string
-                          example: user
-                        content:
-                          type: string
-                          example: 'How do I improve my CV?'
-                        created_at:
-                          type: string
-                          example: ...
-                  created_at:
-                    type: string
-                    example: ...
-                  updated_at:
-                    type: string
-                    example: ...
-        404:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Session not found'
-                properties:
-                  message:
-                    type: string
-                    example: 'Session not found'
-      tags:
-        - 'Resume Coach'
-    delete:
-      summary: 'Delete a coach session'
-      operationId: deleteACoachSession
-      description: 'Permanently deletes the session and all of its messages.'
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Session deleted'
-                properties:
-                  message:
-                    type: string
-                    example: 'Session deleted'
-        404:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Session not found'
-                properties:
-                  message:
-                    type: string
-                    example: 'Session not found'
-      tags:
-        - 'Resume Coach'
-    parameters:
-      -
-        in: path
-        name: sessionId
-        description: 'The session ID.'
-        example: 64a1b2c3d4e5f6a7b8c9d0e1
-        required: true
-        schema:
-          type: string
-  '/api/job-seeker/coach/sessions/{sessionId}/chat':
+  /api/job-seeker/coach/chat:
     post:
       summary: 'Chat with resume coach'
       operationId: chatWithResumeCoach
-      description: "Sends a message to the AI resume coach within a session. The full conversation\nhistory is automatically passed to the AI for context. Both the user message and\nthe AI response are persisted and will appear in subsequent `GET /sessions/{id}` calls."
+      description: "Sends a message to the AI resume coach. The AI automatically creates or continues\na session for the user. Both the user message and the AI response are persisted\nin the shared database and will appear in subsequent session/message list calls."
       parameters: []
       responses:
         200:
@@ -6807,22 +6735,14 @@ paths:
                 type: object
                 example:
                   response: 'Here are some tips to improve your resume...'
+                  session_id: 64a1b2c3d4e5f6a7b8c9d0e1
                 properties:
                   response:
                     type: string
                     example: 'Here are some tips to improve your resume...'
-        404:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Session not found'
-                properties:
-                  message:
+                  session_id:
                     type: string
-                    example: 'Session not found'
+                    example: 64a1b2c3d4e5f6a7b8c9d0e1
         422:
           description: ''
           content:
@@ -6851,14 +6771,14 @@ paths:
                     type: object
                     example:
                       message: 'Resume coach request failed'
-                      reason: 'Message contains unsupported content'
+                      reason: ...
                     properties:
                       message:
                         type: string
                         example: 'Resume coach request failed'
                       reason:
                         type: string
-                        example: 'Message contains unsupported content'
+                        example: ...
         502:
           description: ''
           content:
@@ -6886,12 +6806,3 @@ paths:
                   example: 'How can I improve my resume?'
               required:
                 - message
-    parameters:
-      -
-        in: path
-        name: sessionId
-        description: 'The session ID.'
-        example: 64a1b2c3d4e5f6a7b8c9d0e1
-        required: true
-        schema:
-          type: string
