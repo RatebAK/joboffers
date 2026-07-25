@@ -137,10 +137,14 @@ class EmployerSearchController extends Controller
         }
 
         $allowed = [
+            // Identity
+            'user_id', 'first_name', 'last_name', 'full_name', 'image',
+            'phone', 'date_of_birth', 'gender', 'marital_status', 'nationality',
+            'address', 'location', 'city',
             // Career
             'current_job_title', 'current_job_status', 'job_level', 'job_types', 'job_roles',
             'years_of_experience', 'education_level', 'expected_salary', 'salary_range_from',
-            'salary_range_to', 'is_actively_seeking', 'work_cities', 'city',
+            'salary_range_to', 'is_actively_seeking', 'work_cities',
             'experience_summary', 'social_links',
             // Structured profile data
             'skills', 'education_history', 'work_experience',
@@ -153,9 +157,10 @@ class EmployerSearchController extends Controller
         $profileData = collect($profile->toArray())->only($allowed)->toArray();
 
         return response()->json(array_merge([
+            'id'      => (string) $profile->_id,
             'user_id' => (string) $user->_id,
             'name'    => $user->name,
-            'image'   => $profile->image,
+            'email'   => $user->email,
         ], $profileData));
     }
 }
