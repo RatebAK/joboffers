@@ -736,27 +736,31 @@ class JobSeekerController extends Controller
             $profile->update($updateData);
 
         } catch (CvAnalysisException $e) {
-            // Analysis failed, but we KEEP the file (unlike before)
-            Log::error('AI analysis failed, but keeping uploaded CV file', [
+            Log::error('AI analysis failed (upload-and-analyze)', [
                 'user_id' => $user->_id,
                 'error_message' => $e->getMessage(),
                 'http_status' => $e->getHttpStatusCode(),
-                'public_id' => $publicId,
-                'cv_url' => $cvUrl,
             ]);
-            
-            // Update analysis status to error
+
             $profile->update([
                 'analysis_status' => 'error',
                 'analysis_error' => $e->getMessage(),
                 'analysis_completed_at' => now(),
             ]);
+
+            $httpStatus = $e->getHttpStatusCode();
+
+            if ($httpStatus === 422) {
+                return response()->json(['message' => 'CV analysis failed', 'error' => $e->getMessage()], 422);
+            }
+
+            return response()->json(['message' => 'CV analysis service unavailable', 'error' => $e->getMessage()], 502);
         }
 
         return response()->json([
-            'message' => 'CV uploaded successfully. Analysis is being processed.',
+            'message' => 'CV uploaded and analyzed successfully.',
             'resume_url' => $cvUrl,
-            'analysis_status' => $profile->fresh()->analysis_status,
+            'analysis_status' => 'completed',
             'profile' => $profile->fresh(),
         ], 200);
     }
