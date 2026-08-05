@@ -630,14 +630,14 @@ class JobSeekerController extends Controller
         $mimeType     = $file->getMimeType();
 
         // Upload directly via Cloudinary SDK so we can preserve filename + extension
+        // public_id must include the extension for raw uploads so the URL is correct
+        // Do NOT pass 'format' on raw resources — Cloudinary ignores it and it causes double extensions
         $cloudinary = app(\Cloudinary\Cloudinary::class);
         $result = $cloudinary->uploadApi()->upload($file->getRealPath(), [
-            'folder'          => 'job-seeker-cvs',
-            'public_id'       => $originalName . '_' . uniqid(),
-            'resource_type'   => 'raw',
-            'use_filename'    => true,
-            'unique_filename' => true,
-            'format'          => $extension,
+            'folder'        => 'job-seeker-cvs',
+            'public_id'     => $originalName . '_' . uniqid(),
+            'resource_type' => 'raw',
+            'access_mode'   => 'public',
         ]);
 
         $publicId = $result['public_id'];
@@ -864,14 +864,14 @@ class JobSeekerController extends Controller
         $mimeType     = $file->getMimeType();
 
         // Upload directly via Cloudinary SDK so we can preserve filename + extension
+        // public_id must include the extension for raw uploads so the URL is correct
+        // Do NOT pass 'format' on raw resources — Cloudinary ignores it and it causes double extensions
         $cloudinary = app(\Cloudinary\Cloudinary::class);
         $result = $cloudinary->uploadApi()->upload($file->getRealPath(), [
-            'folder'          => 'job-seeker-resumes',
-            'public_id'       => $originalName . '_' . uniqid(),
-            'resource_type'   => 'raw',
-            'use_filename'    => true,
-            'unique_filename' => true,
-            'format'          => $extension, // tells Cloudinary to append the extension to the URL
+            'folder'        => 'job-seeker-resumes',
+            'public_id'     => $originalName . '_' . uniqid(),
+            'resource_type' => 'raw',
+            'access_mode'   => 'public',
         ]);
 
         $publicId  = $result['public_id'];

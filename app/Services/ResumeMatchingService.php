@@ -13,7 +13,7 @@ class ResumeMatchingService
         $apiUrl = config('services.resume_matching.url');
 
         try {
-            $response = Http::asForm()->post($apiUrl, [
+            $response = Http::timeout(300)->connectTimeout(120)->asForm()->post($apiUrl, [
                 'file_url' => $fileUrl,
             ]);
         } catch (\Throwable $e) {
