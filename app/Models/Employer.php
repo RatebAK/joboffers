@@ -17,6 +17,7 @@ class Employer extends Model
         'reviewed_by',
         'review_notes',
         'reviewed_at',
+        'partner_type',  // agency | university | enterprise | null
     ];
 
     const STATUS_PENDING = 'pending';

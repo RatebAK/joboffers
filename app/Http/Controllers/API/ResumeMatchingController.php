@@ -19,18 +19,18 @@ class ResumeMatchingController extends Controller
      * Requires the seeker to have an uploaded and analyzed CV on their profile.
      *
      * @response 200 {
-     *   "matches_found": 25,
-     *   "recommended_jobs": [
+     *   "matches_found": 5,
+     *   "jobs": [
      *     {
-     *       "job_id": "job_001",
-     *       "title": "Backend Python Developer",
-     *       "company": "TechStream Solutions",
-     *       "location": "Remote",
-     *       "matched_skills_count": 4,
-     *       "match_percentage": "66%",
-     *       "ats_compatibility_score": "69%",
-     *       "job_url": "/api/jobs/job_001",
-     *       "exists_in_db": true
+     *       "_id": "664f1a2b3c4d5e6f7a8b9c0d",
+     *       "job_id": "JOB-0001",
+     *       "title": "Senior Laravel Developer",
+     *       "company_name": "Acme Corp",
+     *       "city": "Damascus",
+     *       "job_type": "full_time",
+     *       "is_active": true,
+     *       "matched_skills": ["php", "laravel"],
+     *       "matched_skills_score": 3
      *     }
      *   ]
      * }
@@ -65,25 +65,23 @@ class ResumeMatchingController extends Controller
             ], 502);
         }
 
-        $enrichedJobs = collect($result['recommended_jobs'])->map(function ($job) {
-            $dbJob = JobPost::find($job['job_id']);
+        $jobs = collect($result['jobs'])->map(function ($job) {
+            // Look up the job post by job_id field (not MongoDB _id)
+            $dbJob = JobPost::where('job_id', $job['job_id'])->first();
 
-            return [
-                'job_id'                 => $job['job_id'],
-                'title'                  => $job['title'] ?? null,
-                'company'                => $job['company'] ?? null,
-                'location'               => $job['location'] ?? null,
-                'matched_skills_count'   => $job['matched_skills_count'] ?? 0,
-                'match_percentage'       => $job['match_percentage'] ?? '0%',
-                'ats_compatibility_score'=> $job['ats_compatibility_score'] ?? '0%',
-                'job_url'                => $dbJob ? "/api/jobs/{$job['job_id']}" : null,
-                'exists_in_db'           => (bool) $dbJob,
-            ];
-        })->toArray();
+            if (! $dbJob) {
+                return null;
+            }
+
+            return array_merge($dbJob->toArray(), [
+                'matched_skills'       => $job['matched_skills'] ?? [],
+                'matched_skills_score' => $job['matched_skills_score'] ?? 0,
+            ]);
+        })->filter()->values()->toArray();
 
         return response()->json([
-            'matches_found'    => $result['matches_found'],
-            'recommended_jobs' => $enrichedJobs,
+            'matches_found' => $result['matches_found'],
+            'jobs'          => $jobs,
         ]);
     }
 }

@@ -1,8 +1,13 @@
 <?php
 
+use App\Http\Controllers\API\AdminReanalysisController;
+use App\Http\Controllers\API\AdminReportingController;
 use App\Http\Controllers\API\AnalyticsController;
 use App\Http\Controllers\API\ApplicationController;
+use App\Http\Controllers\API\AuditLogController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\BroadcastController;
+use App\Http\Controllers\API\BulkOnboardingController;
 use App\Http\Controllers\API\CompanyProfileController;
 use App\Http\Controllers\API\DirectOfferController;
 use App\Http\Controllers\API\EmployerController;
@@ -11,8 +16,10 @@ use App\Http\Controllers\API\JobMatchingController;
 use App\Http\Controllers\API\JobPostController;
 use App\Http\Controllers\API\JobSeekerController;
 use App\Http\Controllers\API\MatchedJobsController;
+use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\ResumeCoachController;
 use App\Http\Controllers\API\ResumeMatchingController;
+use App\Http\Controllers\API\TalentReportController;
 use App\Http\Controllers\API\UserProfileController;
 use App\Http\Controllers\API\UserSearchController;
 use Illuminate\Support\Facades\Route;
@@ -159,4 +166,33 @@ Route::middleware(['jwt.auth', 'role:admin'])->prefix('admin')->group(function (
     Route::get('users', [UserProfileController::class, 'adminListAll']);
     Route::get('users/seekers', [UserProfileController::class, 'adminListSeekers']);
     Route::get('users/employers', [UserProfileController::class, 'adminListEmployers']);
+
+    // ── Business Intelligence Reports ───────────────────────────────
+    Route::get('reports/churn',      [AdminReportingController::class, 'churn']);
+    Route::get('reports/funnel',     [AdminReportingController::class, 'funnel']);
+    Route::get('reports/pipeline',   [AdminReportingController::class, 'pipeline']);
+    Route::get('reports/categories', [AdminReportingController::class, 'categories']);
+
+    // Talent market report
+    Route::get('reports/talent', [TalentReportController::class, 'index']);
+
+    // Bulk B2B onboarding
+    Route::post('onboarding/bulk', [BulkOnboardingController::class, 'store']);
+
+    // Platform broadcast
+    Route::post('broadcast', [BroadcastController::class, 'send']);
+
+    // Manual CV re-analysis
+    Route::post('users/{userId}/reanalyze', [AdminReanalysisController::class, 'reanalyze']);
+
+    // Audit log viewer
+    Route::get('audit-log', [AuditLogController::class, 'index']);
+});
+
+// Notifications — available to all authenticated users (no role restriction)
+Route::middleware('jwt.auth')->prefix('notifications')->group(function () {
+    Route::get('/',           [NotificationController::class, 'index']);
+    Route::get('/unread-count', [NotificationController::class, 'unreadCount']);
+    Route::post('/read-all',  [NotificationController::class, 'markAllRead']);
+    Route::post('/{id}/read', [NotificationController::class, 'markRead']);
 });

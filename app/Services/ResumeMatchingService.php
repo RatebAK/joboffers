@@ -39,7 +39,7 @@ class ResumeMatchingService
 
         return [
             'matches_found' => $data['matches_found'] ?? 0,
-            'recommended_jobs' => $data['recommended_jobs'] ?? [],
+            'jobs'          => $data['jobs'] ?? $data['recommended_jobs'] ?? [],
         ];
     }
 }
