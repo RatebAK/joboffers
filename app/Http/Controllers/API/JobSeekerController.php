@@ -632,11 +632,16 @@ class JobSeekerController extends Controller
         // Upload directly via Cloudinary SDK so we can preserve filename + extension
         // public_id must include the extension for raw uploads so the URL is correct
         // Do NOT pass 'format' on raw resources — Cloudinary ignores it and it causes double extensions
+        // PDF → resource_type 'image' (Cloudinary handles PDFs natively; no extension in public_id)
+        // DOCX/DOC → resource_type 'raw' with extension in public_id so the URL includes it
+        $isPdf = strtolower($extension) === 'pdf';
         $cloudinary = app(\Cloudinary\Cloudinary::class);
         $result = $cloudinary->uploadApi()->upload($file->getRealPath(), [
             'folder'        => 'job-seeker-cvs',
-            'public_id'     => $originalName . '_' . uniqid(),
-            'resource_type' => 'raw',
+            'public_id'     => $isPdf
+                                ? $originalName . '_' . uniqid()
+                                : $originalName . '_' . uniqid() . '.' . $extension,
+            'resource_type' => $isPdf ? 'image' : 'raw',
             'access_mode'   => 'public',
         ]);
 
@@ -863,14 +868,16 @@ class JobSeekerController extends Controller
         $extension    = $file->getClientOriginalExtension();
         $mimeType     = $file->getMimeType();
 
-        // Upload directly via Cloudinary SDK so we can preserve filename + extension
-        // public_id must include the extension for raw uploads so the URL is correct
-        // Do NOT pass 'format' on raw resources — Cloudinary ignores it and it causes double extensions
+        // PDF → resource_type 'image' (Cloudinary handles PDFs natively; no extension in public_id)
+        // DOCX/DOC → resource_type 'raw' with extension in public_id so the URL includes it
+        $isPdf = strtolower($extension) === 'pdf';
         $cloudinary = app(\Cloudinary\Cloudinary::class);
         $result = $cloudinary->uploadApi()->upload($file->getRealPath(), [
             'folder'        => 'job-seeker-resumes',
-            'public_id'     => $originalName . '_' . uniqid(),
-            'resource_type' => 'raw',
+            'public_id'     => $isPdf
+                                ? $originalName . '_' . uniqid()
+                                : $originalName . '_' . uniqid() . '.' . $extension,
+            'resource_type' => $isPdf ? 'image' : 'raw',
             'access_mode'   => 'public',
         ]);
 
