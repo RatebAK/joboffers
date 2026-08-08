@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "afd6f744-1174-41dc-94ea-9e79ba08c317",
+        "_postman_id": "a6ddced5-1476-42a1-995b-8934696495e5",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -1170,7 +1170,7 @@
                                 },
                                 {
                                     "key": "marital_status",
-                                    "value": "prefer_not_to_say",
+                                    "value": "divorced",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1188,7 +1188,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "unemployed",
+                                    "value": "employed",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1206,7 +1206,7 @@
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "manager",
+                                    "value": "senior",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1248,7 +1248,7 @@
                                 },
                                 {
                                     "key": "is_actively_seeking",
-                                    "value": "1",
+                                    "value": "",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1284,7 +1284,7 @@
                                 },
                                 {
                                     "key": "skills[0][level]",
-                                    "value": "intermediate",
+                                    "value": "advanced",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1368,7 +1368,7 @@
                                 },
                                 {
                                     "key": "work_experience[0][is_currently_working]",
-                                    "value": "1",
+                                    "value": "",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1987,7 +1987,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"contract\",\"category\":\"g\",\"min_salary\":12}"
+                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"full_time\",\"category\":\"g\",\"min_salary\":12}"
                         },
                         "description": "Paginated search of active job posts for the authenticated job seeker."
                     },
@@ -2253,7 +2253,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"matches_found\": 25,\n  \"recommended_jobs\": [\n    {\n      \"job_id\": \"job_001\",\n      \"title\": \"Backend Python Developer\",\n      \"company\": \"TechStream Solutions\",\n      \"location\": \"Remote\",\n      \"matched_skills_count\": 4,\n      \"match_percentage\": \"66%\",\n      \"ats_compatibility_score\": \"69%\",\n      \"job_url\": \"\/api\/jobs\/job_001\",\n      \"exists_in_db\": true\n    }\n  ]\n}",
+                            "body": "{\n  \"matches_found\": 5,\n  \"jobs\": [\n    {\n      \"_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n      \"job_id\": \"JOB-0001\",\n      \"title\": \"Senior Laravel Developer\",\n      \"company_name\": \"Acme Corp\",\n      \"city\": \"Damascus\",\n      \"job_type\": \"full_time\",\n      \"is_active\": true,\n      \"matched_skills\": [\"php\", \"laravel\"],\n      \"matched_skills_score\": 3\n    }\n  ]\n}",
                             "name": ""
                         },
                         {
@@ -3648,6 +3648,582 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n  \"data\": [{ \"id\": \"...\", \"name\": \"...\", \"profile\": {} }],\n  \"current_page\": 1, \"per_page\": 15, \"total\": 3, \"total_pages\": 1, \"next_page\": null, \"prev_page\": null\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Churn & re-engagement report",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/reports\/churn",
+                            "query": [
+                                {
+                                    "key": "window_days",
+                                    "value": "30",
+                                    "description": "Days to look back for employer inactivity. Valid: 30, 60, 90 (default: 30).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "format",
+                                    "value": "csv",
+                                    "description": "Set to `csv` to download as CSV.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/reports\/churn?window_days=30&format=csv"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "[NEW API] Returns inactive employers (no posts within window_days) and job seekers who have a\nCV on file but have never applied. Use `format=csv` to download a CSV for email campaigns."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"window_days\": 30,\n  \"employers\": [\n    { \"user_id\": \"abc\", \"name\": \"Acme Corp\", \"email\": \"hr@acme.com\", \"registered_at\": \"2024-01-01T00:00:00Z\", \"last_post_date\": null, \"total_posts\": 0 }\n  ],\n  \"seekers\": [\n    { \"user_id\": \"xyz\", \"name\": \"Jane Smith\", \"email\": \"jane@email.com\", \"registered_at\": \"2024-01-01T00:00:00Z\", \"cv_uploaded_at\": \"2024-02-01T00:00:00Z\", \"ats_score\": 72 }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Conversion funnel metrics",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/reports\/funnel",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/reports\/funnel"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "[NEW API] Shows how job seekers progress through the registration \u2192 CV upload \u2192 application \u2192 hired funnel,\nincluding drop-off percentages at each stage."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"stages\": [\n    { \"stage\": \"registered\",  \"count\": 500, \"drop_off_pct\": null },\n    { \"stage\": \"cv_uploaded\", \"count\": 320, \"drop_off_pct\": 36.0 },\n    { \"stage\": \"applied\",     \"count\": 180, \"drop_off_pct\": 43.75 },\n    { \"stage\": \"hired\",       \"count\": 42,  \"drop_off_pct\": 76.67 }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Employer approval pipeline report",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/reports\/pipeline",
+                            "query": [
+                                {
+                                    "key": "daily_revenue_per_employer",
+                                    "value": "10",
+                                    "description": "Daily revenue estimate per unapproved employer (default: 10).",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/reports\/pipeline?daily_revenue_per_employer=10"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "[NEW API] Shows all pending employer applications with wait times and an estimated lost revenue figure.\nUseful for prioritising the approval queue."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"pending_count\": 5,\n  \"avg_wait_days\": 3.2,\n  \"daily_revenue_per_employer\": 10,\n  \"estimated_lost_revenue\": 160.0,\n  \"employers\": [\n    { \"user_id\": \"abc\", \"name\": \"John Doe\", \"email\": \"john@corp.com\", \"submitted_at\": \"2024-01-10T00:00:00Z\", \"days_waiting\": 4 }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Top performing job categories",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/reports\/categories",
+                            "query": [
+                                {
+                                    "key": "sort_by",
+                                    "value": "applications",
+                                    "description": "Sort by `applications` (default) or `posts`.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10",
+                                    "description": "Number of categories to return (1-50, default: 10).",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/reports\/categories?sort_by=applications&limit=10"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "[NEW API] Returns job categories ranked by application count (default) or post count.\nUseful for identifying where to focus sales outreach."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"sort_by\": \"applications\",\n  \"categories\": [\n    { \"category\": \"Technology\", \"post_count\": 42, \"application_count\": 310 }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Anonymized talent market report",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/reports\/talent",
+                            "query": [
+                                {
+                                    "key": "limit",
+                                    "value": "20",
+                                    "description": "Top N skills to return (default: 20, max: 100).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "industry",
+                                    "value": "Technology",
+                                    "description": "Filter by job_roles value e.g. \"Technology\".",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "format",
+                                    "value": "csv",
+                                    "description": "Set to `csv` to download as CSV file.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/reports\/talent?limit=20&industry=Technology&format=csv"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "[NEW API] Aggregates skills demand and ATS score statistics across all job seeker profiles.\nAll PII (name, email, phone, user_id, ai_contact fields) is excluded \u2014 safe to share externally.\n\nRequires at least 5 profiles matching the filter; returns 422 otherwise."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"profile_count\": 142,\n  \"top_skills\": [\n    { \"skill\": \"PHP\", \"count\": 87 },\n    { \"skill\": \"Laravel\", \"count\": 64 }\n  ],\n  \"ats_stats\": {\n    \"average\": 71.4,\n    \"median\": 73.0,\n    \"minimum\": 12,\n    \"maximum\": 98\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"message\": \"Insufficient data for anonymized report\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Bulk employer onboarding via CSV upload",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/onboarding\/bulk",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/onboarding\/bulk"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "file",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "[NEW API] Accepts a CSV file of employer accounts and creates pending User + Employer records for each\nvalid row, dispatching invite emails asynchronously.\n\n## CSV Format\nRequired columns: `name`, `email`, `company_name`\nOptional column: `partner_type` (values: `agency`, `university`, `enterprise`)\n\nExample CSV:\n```\nname,email,company_name,partner_type\nAcme HR,hr@acme.com,Acme Corp,agency\nState University,careers@university.edu,State University,university\n```\n\nRows missing required columns or with duplicate emails are skipped and reported in the response."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"total_rows\": 5,\n  \"created\": 4,\n  \"skipped\": 1,\n  \"skipped_rows\": [\n    { \"email\": \"existing@example.com\", \"reason\": \"email_exists\" }\n  ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"file\": [\"File must be a valid CSV.\"] } }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Send a platform-wide broadcast",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/broadcast",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/broadcast"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"subject\":\"New feature launch\",\"body\":\"We just launched job matching AI!\",\"audience\":\"employees\",\"user_ids\":[\"architecto\"]}"
+                        },
+                        "description": "[NEW API] Dispatches an email and in-app notification to a defined audience. Email delivery and\nin-app notification creation are processed asynchronously via Laravel queues.\n\nAudience values: `employees` (all job seekers), `employers` (all approved employers),\n`all` (everyone except admins). Alternatively, provide `user_ids` to target specific users."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"queued\",\n  \"recipient_count\": 142\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"subject\": [\"The subject field is required.\"] } }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Trigger manual CV re-analysis for a job seeker",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/users\/:userId\/reanalyze",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/users\/:userId\/reanalyze",
+                            "variable": [
+                                {
+                                    "id": "userId",
+                                    "key": "userId",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "The job seeker's user ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "[NEW API] Forces a fresh CV re-analysis for a specific job seeker. Useful for fixing stale AI data\nor offering as a paid support action. Sets `analysis_status` to `processing` immediately, then\nruns the analysis synchronously.\n\nThe target user must have the `employee` role and must have a CV on file."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"CV re-analysis triggered successfully.\",\n  \"user_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"analysis_status\": \"processing\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"User not found\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"message\": \"No CV file found for this user\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "View audit log",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/audit-log",
+                            "query": [
+                                {
+                                    "key": "action_type",
+                                    "value": "broadcast_sent",
+                                    "description": "Filter by action type.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "date_from",
+                                    "value": "2024-01-01",
+                                    "description": "ISO date \u2014 return entries on or after this date.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "date_to",
+                                    "value": "2024-12-31",
+                                    "description": "ISO date \u2014 return entries on or before this date.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "Results per page (default: 20).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/audit-log?action_type=broadcast_sent&date_from=2024-01-01&date_to=2024-12-31&per_page=20&page=1"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "[NEW API] Returns a paginated, read-only list of sensitive admin actions. Supports filtering by\naction type and date range.\n\nValid `action_type` values:\n- `employer_approved`\n- `employer_rejected`\n- `broadcast_sent`\n- `cv_reanalysis_triggered`\n- `bulk_employer_onboarded`"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n      \"action\": \"employer_approved\",\n      \"actor_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n      \"actor_name\": \"Admin User\",\n      \"target_id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n      \"target_type\": \"Employer\",\n      \"metadata\": {},\n      \"created_at\": \"2024-01-15T10:00:00Z\"\n    }\n  ],\n  \"current_page\": 1, \"per_page\": 20, \"total\": 42, \"total_pages\": 3, \"next_page\": 2, \"prev_page\": null\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "List notifications for the authenticated user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/notifications",
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "15",
+                                    "description": "Number of results per page (default: 15).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/notifications?per_page=15&page=1"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "[NEW API] Returns a paginated list of in-app notifications for the currently authenticated user,\nordered newest first. Available to all authenticated users (employee, employer, admin)."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n      \"type\": \"application_status_changed\",\n      \"message\": \"Your application status has been updated to: reviewed.\",\n      \"read_at\": null,\n      \"related_entity_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n      \"related_entity_type\": \"Application\",\n      \"created_at\": \"2024-01-15T10:00:00Z\"\n    }\n  ],\n  \"current_page\": 1,\n  \"per_page\": 15,\n  \"total\": 42,\n  \"total_pages\": 3,\n  \"next_page\": 2,\n  \"prev_page\": null\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get unread notification count",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/notifications\/unread-count",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/notifications\/unread-count"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "[NEW API] Returns the count of unread notifications for the authenticated user."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"unread_count\": 3 }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Mark all notifications as read",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/notifications\/read-all",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/notifications\/read-all"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "[NEW API] Bulk-updates all unread notifications for the authenticated user, setting `read_at` to now."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"All notifications marked as read.\", \"updated\": 5 }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Mark a notification as read",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/notifications\/:id\/read",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/notifications\/:id\/read",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "The notification ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "[NEW API] Sets the `read_at` timestamp on a specific notification owned by the authenticated user."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"type\": \"application_status_changed\",\n  \"message\": \"Your application status has been updated to: reviewed.\",\n  \"read_at\": \"2024-01-15T11:00:00Z\",\n  \"related_entity_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n  \"related_entity_type\": \"Application\",\n  \"created_at\": \"2024-01-15T10:00:00Z\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Notification not found.\" }",
                             "name": ""
                         }
                     ]

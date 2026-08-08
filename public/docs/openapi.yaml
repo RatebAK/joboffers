@@ -1623,7 +1623,7 @@ paths:
                 marital_status:
                   type: string
                   description: ''
-                  example: prefer_not_to_say
+                  example: divorced
                   enum:
                     - single
                     - married
@@ -1644,7 +1644,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: unemployed
+                  example: employed
                   enum:
                     - employed
                     - unemployed
@@ -1665,7 +1665,7 @@ paths:
                 job_level:
                   type: string
                   description: ''
-                  example: manager
+                  example: senior
                   enum:
                     - entry
                     - junior
@@ -1715,7 +1715,7 @@ paths:
                 is_actively_seeking:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 social_links:
                   type: object
                   description: 'Social Links (nested object).'
@@ -1757,7 +1757,7 @@ paths:
                       level:
                         type: string
                         description: ''
-                        example: intermediate
+                        example: advanced
                         enum:
                           - beginner
                           - intermediate
@@ -1850,7 +1850,7 @@ paths:
                       is_currently_working:
                         type: boolean
                         description: ''
-                        example: true
+                        example: false
                         nullable: true
                       description:
                         type: string
@@ -3532,7 +3532,7 @@ paths:
                 job_type:
                   type: string
                   description: ''
-                  example: contract
+                  example: full_time
                   enum:
                     - full_time
                     - part_time
@@ -3903,65 +3903,73 @@ paths:
               schema:
                 type: object
                 example:
-                  matches_found: 25
-                  recommended_jobs:
+                  matches_found: 5
+                  jobs:
                     -
-                      job_id: job_001
-                      title: 'Backend Python Developer'
-                      company: 'TechStream Solutions'
-                      location: Remote
-                      matched_skills_count: 4
-                      match_percentage: 66%
-                      ats_compatibility_score: 69%
-                      job_url: /api/jobs/job_001
-                      exists_in_db: true
+                      _id: 664f1a2b3c4d5e6f7a8b9c0d
+                      job_id: JOB-0001
+                      title: 'Senior Laravel Developer'
+                      company_name: 'Acme Corp'
+                      city: Damascus
+                      job_type: full_time
+                      is_active: true
+                      matched_skills:
+                        - php
+                        - laravel
+                      matched_skills_score: 3
                 properties:
                   matches_found:
                     type: integer
-                    example: 25
-                  recommended_jobs:
+                    example: 5
+                  jobs:
                     type: array
                     example:
                       -
-                        job_id: job_001
-                        title: 'Backend Python Developer'
-                        company: 'TechStream Solutions'
-                        location: Remote
-                        matched_skills_count: 4
-                        match_percentage: 66%
-                        ats_compatibility_score: 69%
-                        job_url: /api/jobs/job_001
-                        exists_in_db: true
+                        _id: 664f1a2b3c4d5e6f7a8b9c0d
+                        job_id: JOB-0001
+                        title: 'Senior Laravel Developer'
+                        company_name: 'Acme Corp'
+                        city: Damascus
+                        job_type: full_time
+                        is_active: true
+                        matched_skills:
+                          - php
+                          - laravel
+                        matched_skills_score: 3
                     items:
                       type: object
                       properties:
+                        _id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0d
                         job_id:
                           type: string
-                          example: job_001
+                          example: JOB-0001
                         title:
                           type: string
-                          example: 'Backend Python Developer'
-                        company:
+                          example: 'Senior Laravel Developer'
+                        company_name:
                           type: string
-                          example: 'TechStream Solutions'
-                        location:
+                          example: 'Acme Corp'
+                        city:
                           type: string
-                          example: Remote
-                        matched_skills_count:
-                          type: integer
-                          example: 4
-                        match_percentage:
+                          example: Damascus
+                        job_type:
                           type: string
-                          example: 66%
-                        ats_compatibility_score:
-                          type: string
-                          example: 69%
-                        job_url:
-                          type: string
-                          example: /api/jobs/job_001
-                        exists_in_db:
+                          example: full_time
+                        is_active:
                           type: boolean
                           example: true
+                        matched_skills:
+                          type: array
+                          example:
+                            - php
+                            - laravel
+                          items:
+                            type: string
+                        matched_skills_score:
+                          type: integer
+                          example: 3
         422:
           description: ''
           content:
@@ -6674,6 +6682,1021 @@ paths:
                     nullable: true
       tags:
         - Endpoints
+  /api/admin/reports/churn:
+    get:
+      summary: 'Churn & re-engagement report'
+      operationId: churnReEngagementReport
+      description: "[NEW API] Returns inactive employers (no posts within window_days) and job seekers who have a\nCV on file but have never applied. Use `format=csv` to download a CSV for email campaigns."
+      parameters:
+        -
+          in: query
+          name: window_days
+          description: 'Days to look back for employer inactivity. Valid: 30, 60, 90 (default: 30).'
+          example: 30
+          required: false
+          schema:
+            type: integer
+            description: 'Days to look back for employer inactivity. Valid: 30, 60, 90 (default: 30).'
+            example: 30
+        -
+          in: query
+          name: format
+          description: 'Set to `csv` to download as CSV.'
+          example: csv
+          required: false
+          schema:
+            type: string
+            description: 'Set to `csv` to download as CSV.'
+            example: csv
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  window_days: 30
+                  employers:
+                    -
+                      user_id: abc
+                      name: 'Acme Corp'
+                      email: hr@acme.com
+                      registered_at: '2024-01-01T00:00:00Z'
+                      last_post_date: null
+                      total_posts: 0
+                  seekers:
+                    -
+                      user_id: xyz
+                      name: 'Jane Smith'
+                      email: jane@email.com
+                      registered_at: '2024-01-01T00:00:00Z'
+                      cv_uploaded_at: '2024-02-01T00:00:00Z'
+                      ats_score: 72
+                properties:
+                  window_days:
+                    type: integer
+                    example: 30
+                  employers:
+                    type: array
+                    example:
+                      -
+                        user_id: abc
+                        name: 'Acme Corp'
+                        email: hr@acme.com
+                        registered_at: '2024-01-01T00:00:00Z'
+                        last_post_date: null
+                        total_posts: 0
+                    items:
+                      type: object
+                      properties:
+                        user_id:
+                          type: string
+                          example: abc
+                        name:
+                          type: string
+                          example: 'Acme Corp'
+                        email:
+                          type: string
+                          example: hr@acme.com
+                        registered_at:
+                          type: string
+                          example: '2024-01-01T00:00:00Z'
+                        last_post_date:
+                          type: string
+                          example: null
+                          nullable: true
+                        total_posts:
+                          type: integer
+                          example: 0
+                  seekers:
+                    type: array
+                    example:
+                      -
+                        user_id: xyz
+                        name: 'Jane Smith'
+                        email: jane@email.com
+                        registered_at: '2024-01-01T00:00:00Z'
+                        cv_uploaded_at: '2024-02-01T00:00:00Z'
+                        ats_score: 72
+                    items:
+                      type: object
+                      properties:
+                        user_id:
+                          type: string
+                          example: xyz
+                        name:
+                          type: string
+                          example: 'Jane Smith'
+                        email:
+                          type: string
+                          example: jane@email.com
+                        registered_at:
+                          type: string
+                          example: '2024-01-01T00:00:00Z'
+                        cv_uploaded_at:
+                          type: string
+                          example: '2024-02-01T00:00:00Z'
+                        ats_score:
+                          type: integer
+                          example: 72
+      tags:
+        - Endpoints
+  /api/admin/reports/funnel:
+    get:
+      summary: 'Conversion funnel metrics'
+      operationId: conversionFunnelMetrics
+      description: "[NEW API] Shows how job seekers progress through the registration → CV upload → application → hired funnel,\nincluding drop-off percentages at each stage."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  stages:
+                    -
+                      stage: registered
+                      count: 500
+                      drop_off_pct: null
+                    -
+                      stage: cv_uploaded
+                      count: 320
+                      drop_off_pct: 36.0
+                    -
+                      stage: applied
+                      count: 180
+                      drop_off_pct: 43.75
+                    -
+                      stage: hired
+                      count: 42
+                      drop_off_pct: 76.67
+                properties:
+                  stages:
+                    type: array
+                    example:
+                      -
+                        stage: registered
+                        count: 500
+                        drop_off_pct: null
+                      -
+                        stage: cv_uploaded
+                        count: 320
+                        drop_off_pct: 36
+                      -
+                        stage: applied
+                        count: 180
+                        drop_off_pct: 43.75
+                      -
+                        stage: hired
+                        count: 42
+                        drop_off_pct: 76.67
+                    items:
+                      type: object
+                      properties:
+                        stage:
+                          type: string
+                          example: registered
+                        count:
+                          type: integer
+                          example: 500
+                        drop_off_pct:
+                          type: string
+                          example: null
+                          nullable: true
+      tags:
+        - Endpoints
+  /api/admin/reports/pipeline:
+    get:
+      summary: 'Employer approval pipeline report'
+      operationId: employerApprovalPipelineReport
+      description: "[NEW API] Shows all pending employer applications with wait times and an estimated lost revenue figure.\nUseful for prioritising the approval queue."
+      parameters:
+        -
+          in: query
+          name: daily_revenue_per_employer
+          description: 'Daily revenue estimate per unapproved employer (default: 10).'
+          example: 10.0
+          required: false
+          schema:
+            type: number
+            description: 'Daily revenue estimate per unapproved employer (default: 10).'
+            example: 10.0
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  pending_count: 5
+                  avg_wait_days: 3.2
+                  daily_revenue_per_employer: 10
+                  estimated_lost_revenue: 160.0
+                  employers:
+                    -
+                      user_id: abc
+                      name: 'John Doe'
+                      email: john@corp.com
+                      submitted_at: '2024-01-10T00:00:00Z'
+                      days_waiting: 4
+                properties:
+                  pending_count:
+                    type: integer
+                    example: 5
+                  avg_wait_days:
+                    type: number
+                    example: 3.2
+                  daily_revenue_per_employer:
+                    type: integer
+                    example: 10
+                  estimated_lost_revenue:
+                    type: number
+                    example: 160.0
+                  employers:
+                    type: array
+                    example:
+                      -
+                        user_id: abc
+                        name: 'John Doe'
+                        email: john@corp.com
+                        submitted_at: '2024-01-10T00:00:00Z'
+                        days_waiting: 4
+                    items:
+                      type: object
+                      properties:
+                        user_id:
+                          type: string
+                          example: abc
+                        name:
+                          type: string
+                          example: 'John Doe'
+                        email:
+                          type: string
+                          example: john@corp.com
+                        submitted_at:
+                          type: string
+                          example: '2024-01-10T00:00:00Z'
+                        days_waiting:
+                          type: integer
+                          example: 4
+      tags:
+        - Endpoints
+  /api/admin/reports/categories:
+    get:
+      summary: 'Top performing job categories'
+      operationId: topPerformingJobCategories
+      description: "[NEW API] Returns job categories ranked by application count (default) or post count.\nUseful for identifying where to focus sales outreach."
+      parameters:
+        -
+          in: query
+          name: sort_by
+          description: 'Sort by `applications` (default) or `posts`.'
+          example: applications
+          required: false
+          schema:
+            type: string
+            description: 'Sort by `applications` (default) or `posts`.'
+            example: applications
+        -
+          in: query
+          name: limit
+          description: 'Number of categories to return (1-50, default: 10).'
+          example: 10
+          required: false
+          schema:
+            type: integer
+            description: 'Number of categories to return (1-50, default: 10).'
+            example: 10
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  sort_by: applications
+                  categories:
+                    -
+                      category: Technology
+                      post_count: 42
+                      application_count: 310
+                properties:
+                  sort_by:
+                    type: string
+                    example: applications
+                  categories:
+                    type: array
+                    example:
+                      -
+                        category: Technology
+                        post_count: 42
+                        application_count: 310
+                    items:
+                      type: object
+                      properties:
+                        category:
+                          type: string
+                          example: Technology
+                        post_count:
+                          type: integer
+                          example: 42
+                        application_count:
+                          type: integer
+                          example: 310
+      tags:
+        - Endpoints
+  /api/admin/reports/talent:
+    get:
+      summary: 'Anonymized talent market report'
+      operationId: anonymizedTalentMarketReport
+      description: "[NEW API] Aggregates skills demand and ATS score statistics across all job seeker profiles.\nAll PII (name, email, phone, user_id, ai_contact fields) is excluded — safe to share externally.\n\nRequires at least 5 profiles matching the filter; returns 422 otherwise."
+      parameters:
+        -
+          in: query
+          name: limit
+          description: 'Top N skills to return (default: 20, max: 100).'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Top N skills to return (default: 20, max: 100).'
+            example: 20
+        -
+          in: query
+          name: industry
+          description: 'Filter by job_roles value e.g. "Technology".'
+          example: Technology
+          required: false
+          schema:
+            type: string
+            description: 'Filter by job_roles value e.g. "Technology".'
+            example: Technology
+        -
+          in: query
+          name: format
+          description: 'Set to `csv` to download as CSV file.'
+          example: csv
+          required: false
+          schema:
+            type: string
+            description: 'Set to `csv` to download as CSV file.'
+            example: csv
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  profile_count: 142
+                  top_skills:
+                    -
+                      skill: PHP
+                      count: 87
+                    -
+                      skill: Laravel
+                      count: 64
+                  ats_stats:
+                    average: 71.4
+                    median: 73.0
+                    minimum: 12
+                    maximum: 98
+                properties:
+                  profile_count:
+                    type: integer
+                    example: 142
+                  top_skills:
+                    type: array
+                    example:
+                      -
+                        skill: PHP
+                        count: 87
+                      -
+                        skill: Laravel
+                        count: 64
+                    items:
+                      type: object
+                      properties:
+                        skill:
+                          type: string
+                          example: PHP
+                        count:
+                          type: integer
+                          example: 87
+                  ats_stats:
+                    type: object
+                    properties:
+                      average:
+                        type: number
+                        example: 71.4
+                      median:
+                        type: number
+                        example: 73.0
+                      minimum:
+                        type: integer
+                        example: 12
+                      maximum:
+                        type: integer
+                        example: 98
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Insufficient data for anonymized report'
+                properties:
+                  message:
+                    type: string
+                    example: 'Insufficient data for anonymized report'
+      tags:
+        - Endpoints
+  /api/admin/onboarding/bulk:
+    post:
+      summary: 'Bulk employer onboarding via CSV upload'
+      operationId: bulkEmployerOnboardingViaCSVUpload
+      description: "[NEW API] Accepts a CSV file of employer accounts and creates pending User + Employer records for each\nvalid row, dispatching invite emails asynchronously.\n\n## CSV Format\nRequired columns: `name`, `email`, `company_name`\nOptional column: `partner_type` (values: `agency`, `university`, `enterprise`)\n\nExample CSV:\n```\nname,email,company_name,partner_type\nAcme HR,hr@acme.com,Acme Corp,agency\nState University,careers@university.edu,State University,university\n```\n\nRows missing required columns or with duplicate emails are skipped and reported in the response."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  total_rows: 5
+                  created: 4
+                  skipped: 1
+                  skipped_rows:
+                    -
+                      email: existing@example.com
+                      reason: email_exists
+                properties:
+                  total_rows:
+                    type: integer
+                    example: 5
+                  created:
+                    type: integer
+                    example: 4
+                  skipped:
+                    type: integer
+                    example: 1
+                  skipped_rows:
+                    type: array
+                    example:
+                      -
+                        email: existing@example.com
+                        reason: email_exists
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          example: existing@example.com
+                        reason:
+                          type: string
+                          example: email_exists
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    file:
+                      - 'File must be a valid CSV.'
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      file:
+                        type: array
+                        example:
+                          - 'File must be a valid CSV.'
+                        items:
+                          type: string
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: 'CSV file, max 2 MB. Required columns: name, email, company_name.'
+              required:
+                - file
+  /api/admin/broadcast:
+    post:
+      summary: 'Send a platform-wide broadcast'
+      operationId: sendAPlatformWideBroadcast
+      description: "[NEW API] Dispatches an email and in-app notification to a defined audience. Email delivery and\nin-app notification creation are processed asynchronously via Laravel queues.\n\nAudience values: `employees` (all job seekers), `employers` (all approved employers),\n`all` (everyone except admins). Alternatively, provide `user_ids` to target specific users."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: queued
+                  recipient_count: 142
+                properties:
+                  status:
+                    type: string
+                    example: queued
+                  recipient_count:
+                    type: integer
+                    example: 142
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    subject:
+                      - 'The subject field is required.'
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      subject:
+                        type: array
+                        example:
+                          - 'The subject field is required.'
+                        items:
+                          type: string
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subject:
+                  type: string
+                  description: 'Notification subject line.'
+                  example: 'New feature launch'
+                body:
+                  type: string
+                  description: 'Notification body text.'
+                  example: 'We just launched job matching AI!'
+                audience:
+                  type: string
+                  description: 'when user_ids not provided. One of: employees, employers, all.'
+                  example: employees
+                  nullable: true
+                user_ids:
+                  type: array
+                  description: 'Optional array of specific user IDs to target (overrides audience).'
+                  example:
+                    - architecto
+                  items:
+                    type: string
+              required:
+                - subject
+                - body
+                - audience
+  '/api/admin/users/{userId}/reanalyze':
+    post:
+      summary: 'Trigger manual CV re-analysis for a job seeker'
+      operationId: triggerManualCVReAnalysisForAJobSeeker
+      description: "[NEW API] Forces a fresh CV re-analysis for a specific job seeker. Useful for fixing stale AI data\nor offering as a paid support action. Sets `analysis_status` to `processing` immediately, then\nruns the analysis synchronously.\n\nThe target user must have the `employee` role and must have a CV on file."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'CV re-analysis triggered successfully.'
+                  user_id: 664f1a2b3c4d5e6f7a8b9c0d
+                  analysis_status: processing
+                properties:
+                  message:
+                    type: string
+                    example: 'CV re-analysis triggered successfully.'
+                  user_id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0d
+                  analysis_status:
+                    type: string
+                    example: processing
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'User not found'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No CV file found for this user'
+                properties:
+                  message:
+                    type: string
+                    example: 'No CV file found for this user'
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: userId
+        description: "The job seeker's user ID."
+        example: 664f1a2b3c4d5e6f7a8b9c0d
+        required: true
+        schema:
+          type: string
+  /api/admin/audit-log:
+    get:
+      summary: 'View audit log'
+      operationId: viewAuditLog
+      description: "[NEW API] Returns a paginated, read-only list of sensitive admin actions. Supports filtering by\naction type and date range.\n\nValid `action_type` values:\n- `employer_approved`\n- `employer_rejected`\n- `broadcast_sent`\n- `cv_reanalysis_triggered`\n- `bulk_employer_onboarded`"
+      parameters:
+        -
+          in: query
+          name: action_type
+          description: 'Filter by action type.'
+          example: broadcast_sent
+          required: false
+          schema:
+            type: string
+            description: 'Filter by action type.'
+            example: broadcast_sent
+        -
+          in: query
+          name: date_from
+          description: 'ISO date — return entries on or after this date.'
+          example: '2024-01-01'
+          required: false
+          schema:
+            type: string
+            description: 'ISO date — return entries on or after this date.'
+            example: '2024-01-01'
+        -
+          in: query
+          name: date_to
+          description: 'ISO date — return entries on or before this date.'
+          example: '2024-12-31'
+          required: false
+          schema:
+            type: string
+            description: 'ISO date — return entries on or before this date.'
+            example: '2024-12-31'
+        -
+          in: query
+          name: per_page
+          description: 'Results per page (default: 20).'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Results per page (default: 20).'
+            example: 20
+        -
+          in: query
+          name: page
+          description: 'Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number.'
+            example: 1
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 664f1a2b3c4d5e6f7a8b9c0d
+                      action: employer_approved
+                      actor_id: 664f1a2b3c4d5e6f7a8b9c0e
+                      actor_name: 'Admin User'
+                      target_id: 664f1a2b3c4d5e6f7a8b9c0f
+                      target_type: Employer
+                      metadata: {  }
+                      created_at: '2024-01-15T10:00:00Z'
+                  current_page: 1
+                  per_page: 20
+                  total: 42
+                  total_pages: 3
+                  next_page: 2
+                  prev_page: null
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 664f1a2b3c4d5e6f7a8b9c0d
+                        action: employer_approved
+                        actor_id: 664f1a2b3c4d5e6f7a8b9c0e
+                        actor_name: 'Admin User'
+                        target_id: 664f1a2b3c4d5e6f7a8b9c0f
+                        target_type: Employer
+                        metadata: []
+                        created_at: '2024-01-15T10:00:00Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0d
+                        action:
+                          type: string
+                          example: employer_approved
+                        actor_id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0e
+                        actor_name:
+                          type: string
+                          example: 'Admin User'
+                        target_id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0f
+                        target_type:
+                          type: string
+                          example: Employer
+                        metadata:
+                          type: object
+                          properties: {  }
+                        created_at:
+                          type: string
+                          example: '2024-01-15T10:00:00Z'
+                  current_page:
+                    type: integer
+                    example: 1
+                  per_page:
+                    type: integer
+                    example: 20
+                  total:
+                    type: integer
+                    example: 42
+                  total_pages:
+                    type: integer
+                    example: 3
+                  next_page:
+                    type: integer
+                    example: 2
+                  prev_page:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Endpoints
+  /api/notifications:
+    get:
+      summary: 'List notifications for the authenticated user'
+      operationId: listNotificationsForTheAuthenticatedUser
+      description: "[NEW API] Returns a paginated list of in-app notifications for the currently authenticated user,\nordered newest first. Available to all authenticated users (employee, employer, admin)."
+      parameters:
+        -
+          in: query
+          name: per_page
+          description: 'Number of results per page (default: 15).'
+          example: 15
+          required: false
+          schema:
+            type: integer
+            description: 'Number of results per page (default: 15).'
+            example: 15
+        -
+          in: query
+          name: page
+          description: 'Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number.'
+            example: 1
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 664f1a2b3c4d5e6f7a8b9c0d
+                      type: application_status_changed
+                      message: 'Your application status has been updated to: reviewed.'
+                      read_at: null
+                      related_entity_id: 664f1a2b3c4d5e6f7a8b9c0e
+                      related_entity_type: Application
+                      created_at: '2024-01-15T10:00:00Z'
+                  current_page: 1
+                  per_page: 15
+                  total: 42
+                  total_pages: 3
+                  next_page: 2
+                  prev_page: null
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 664f1a2b3c4d5e6f7a8b9c0d
+                        type: application_status_changed
+                        message: 'Your application status has been updated to: reviewed.'
+                        read_at: null
+                        related_entity_id: 664f1a2b3c4d5e6f7a8b9c0e
+                        related_entity_type: Application
+                        created_at: '2024-01-15T10:00:00Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0d
+                        type:
+                          type: string
+                          example: application_status_changed
+                        message:
+                          type: string
+                          example: 'Your application status has been updated to: reviewed.'
+                        read_at:
+                          type: string
+                          example: null
+                          nullable: true
+                        related_entity_id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0e
+                        related_entity_type:
+                          type: string
+                          example: Application
+                        created_at:
+                          type: string
+                          example: '2024-01-15T10:00:00Z'
+                  current_page:
+                    type: integer
+                    example: 1
+                  per_page:
+                    type: integer
+                    example: 15
+                  total:
+                    type: integer
+                    example: 42
+                  total_pages:
+                    type: integer
+                    example: 3
+                  next_page:
+                    type: integer
+                    example: 2
+                  prev_page:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Endpoints
+  /api/notifications/unread-count:
+    get:
+      summary: 'Get unread notification count'
+      operationId: getUnreadNotificationCount
+      description: '[NEW API] Returns the count of unread notifications for the authenticated user.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  unread_count: 3
+                properties:
+                  unread_count:
+                    type: integer
+                    example: 3
+      tags:
+        - Endpoints
+  /api/notifications/read-all:
+    post:
+      summary: 'Mark all notifications as read'
+      operationId: markAllNotificationsAsRead
+      description: '[NEW API] Bulk-updates all unread notifications for the authenticated user, setting `read_at` to now.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'All notifications marked as read.'
+                  updated: 5
+                properties:
+                  message:
+                    type: string
+                    example: 'All notifications marked as read.'
+                  updated:
+                    type: integer
+                    example: 5
+      tags:
+        - Endpoints
+  '/api/notifications/{id}/read':
+    post:
+      summary: 'Mark a notification as read'
+      operationId: markANotificationAsRead
+      description: '[NEW API] Sets the `read_at` timestamp on a specific notification owned by the authenticated user.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 664f1a2b3c4d5e6f7a8b9c0d
+                  type: application_status_changed
+                  message: 'Your application status has been updated to: reviewed.'
+                  read_at: '2024-01-15T11:00:00Z'
+                  related_entity_id: 664f1a2b3c4d5e6f7a8b9c0e
+                  related_entity_type: Application
+                  created_at: '2024-01-15T10:00:00Z'
+                properties:
+                  id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0d
+                  type:
+                    type: string
+                    example: application_status_changed
+                  message:
+                    type: string
+                    example: 'Your application status has been updated to: reviewed.'
+                  read_at:
+                    type: string
+                    example: '2024-01-15T11:00:00Z'
+                  related_entity_id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0e
+                  related_entity_type:
+                    type: string
+                    example: Application
+                  created_at:
+                    type: string
+                    example: '2024-01-15T10:00:00Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Notification not found.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Notification not found.'
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The notification ID.'
+        example: 664f1a2b3c4d5e6f7a8b9c0d
+        required: true
+        schema:
+          type: string
   /api/job-seeker/coach/sessions:
     get:
       summary: 'List coach sessions'

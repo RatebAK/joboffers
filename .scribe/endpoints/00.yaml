@@ -2360,7 +2360,7 @@ endpoints:
         name: marital_status
         description: ''
         required: false
-        example: prefer_not_to_say
+        example: divorced
         type: string
         enumValues:
           - single
@@ -2398,7 +2398,7 @@ endpoints:
         name: current_job_status
         description: ''
         required: false
-        example: unemployed
+        example: employed
         type: string
         enumValues:
           - employed
@@ -2436,7 +2436,7 @@ endpoints:
         name: job_level
         description: ''
         required: false
-        example: manager
+        example: senior
         type: string
         enumValues:
           - entry
@@ -2524,7 +2524,7 @@ endpoints:
         name: is_actively_seeking
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -2645,7 +2645,7 @@ endpoints:
         name: 'skills[].level'
         description: ''
         required: false
-        example: intermediate
+        example: advanced
         type: string
         enumValues:
           - beginner
@@ -2804,7 +2804,7 @@ endpoints:
         name: 'work_experience[].is_currently_working'
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -2833,13 +2833,13 @@ endpoints:
       address: v
       phone: dljnikhwaykcmyuw
       date_of_birth: pwlvqwrsitcpscql
-      marital_status: prefer_not_to_say
+      marital_status: divorced
       salary_range_from: 16
       salary_range_to: 38
-      current_job_status: unemployed
+      current_job_status: employed
       years_of_experience: 8
       education_level: 'n'
-      job_level: manager
+      job_level: senior
       job_types:
         - r
       job_roles:
@@ -2849,7 +2849,7 @@ endpoints:
       current_job_title: u
       experience_summary: architecto
       expected_salary: 39
-      is_actively_seeking: true
+      is_actively_seeking: false
       social_links:
         linkedin: g
         github: z
@@ -2858,7 +2858,7 @@ endpoints:
       skills:
         -
           name: 'y'
-          level: intermediate
+          level: advanced
       education_history:
         -
           certificate_type: v
@@ -2877,7 +2877,7 @@ endpoints:
             - u
           from_date: jwvlxjklqppwqbew
           to_date: tnnoqitpxntltcvi
-          is_currently_working: true
+          is_currently_working: false
           description: 'Eius et animi quos velit et.'
     fileParameters:
       resume: null
@@ -3882,7 +3882,7 @@ endpoints:
         name: job_type
         description: ''
         required: false
-        example: contract
+        example: full_time
         type: string
         enumValues:
           - full_time
@@ -3917,7 +3917,7 @@ endpoints:
     cleanBodyParameters:
       keyword: b
       location: 'n'
-      job_type: contract
+      job_type: full_time
       category: g
       min_salary: 12
     fileParameters: []
@@ -4292,18 +4292,18 @@ endpoints:
         status: 200
         content: |-
           {
-            "matches_found": 25,
-            "recommended_jobs": [
+            "matches_found": 5,
+            "jobs": [
               {
-                "job_id": "job_001",
-                "title": "Backend Python Developer",
-                "company": "TechStream Solutions",
-                "location": "Remote",
-                "matched_skills_count": 4,
-                "match_percentage": "66%",
-                "ats_compatibility_score": "69%",
-                "job_url": "/api/jobs/job_001",
-                "exists_in_db": true
+                "_id": "664f1a2b3c4d5e6f7a8b9c0d",
+                "job_id": "JOB-0001",
+                "title": "Senior Laravel Developer",
+                "company_name": "Acme Corp",
+                "city": "Damascus",
+                "job_type": "full_time",
+                "is_active": true,
+                "matched_skills": ["php", "laravel"],
+                "matched_skills_score": 3
               }
             ]
           }
@@ -7205,6 +7205,994 @@ endpoints:
             "data": [{ "id": "...", "name": "...", "profile": {} }],
             "current_page": 1, "per_page": 15, "total": 3, "total_pages": 1, "next_page": null, "prev_page": null
           }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/admin/reports/churn
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Churn & re-engagement report'
+      description: |-
+        [NEW API] Returns inactive employers (no posts within window_days) and job seekers who have a
+        CV on file but have never applied. Use `format=csv` to download a CSV for email campaigns.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      window_days:
+        custom: []
+        name: window_days
+        description: 'Days to look back for employer inactivity. Valid: 30, 60, 90 (default: 30).'
+        required: false
+        example: 30
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      format:
+        custom: []
+        name: format
+        description: 'Set to `csv` to download as CSV.'
+        required: false
+        example: csv
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      window_days: 30
+      format: csv
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "window_days": 30,
+            "employers": [
+              { "user_id": "abc", "name": "Acme Corp", "email": "hr@acme.com", "registered_at": "2024-01-01T00:00:00Z", "last_post_date": null, "total_posts": 0 }
+            ],
+            "seekers": [
+              { "user_id": "xyz", "name": "Jane Smith", "email": "jane@email.com", "registered_at": "2024-01-01T00:00:00Z", "cv_uploaded_at": "2024-02-01T00:00:00Z", "ats_score": 72 }
+            ]
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/admin/reports/funnel
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Conversion funnel metrics'
+      description: |-
+        [NEW API] Shows how job seekers progress through the registration → CV upload → application → hired funnel,
+        including drop-off percentages at each stage.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "stages": [
+              { "stage": "registered",  "count": 500, "drop_off_pct": null },
+              { "stage": "cv_uploaded", "count": 320, "drop_off_pct": 36.0 },
+              { "stage": "applied",     "count": 180, "drop_off_pct": 43.75 },
+              { "stage": "hired",       "count": 42,  "drop_off_pct": 76.67 }
+            ]
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/admin/reports/pipeline
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Employer approval pipeline report'
+      description: |-
+        [NEW API] Shows all pending employer applications with wait times and an estimated lost revenue figure.
+        Useful for prioritising the approval queue.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      daily_revenue_per_employer:
+        custom: []
+        name: daily_revenue_per_employer
+        description: 'Daily revenue estimate per unapproved employer (default: 10).'
+        required: false
+        example: 10.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      daily_revenue_per_employer: 10.0
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "pending_count": 5,
+            "avg_wait_days": 3.2,
+            "daily_revenue_per_employer": 10,
+            "estimated_lost_revenue": 160.0,
+            "employers": [
+              { "user_id": "abc", "name": "John Doe", "email": "john@corp.com", "submitted_at": "2024-01-10T00:00:00Z", "days_waiting": 4 }
+            ]
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/admin/reports/categories
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Top performing job categories'
+      description: |-
+        [NEW API] Returns job categories ranked by application count (default) or post count.
+        Useful for identifying where to focus sales outreach.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      sort_by:
+        custom: []
+        name: sort_by
+        description: 'Sort by `applications` (default) or `posts`.'
+        required: false
+        example: applications
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      limit:
+        custom: []
+        name: limit
+        description: 'Number of categories to return (1-50, default: 10).'
+        required: false
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      sort_by: applications
+      limit: 10
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "sort_by": "applications",
+            "categories": [
+              { "category": "Technology", "post_count": 42, "application_count": 310 }
+            ]
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/admin/reports/talent
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Anonymized talent market report'
+      description: |-
+        [NEW API] Aggregates skills demand and ATS score statistics across all job seeker profiles.
+        All PII (name, email, phone, user_id, ai_contact fields) is excluded — safe to share externally.
+
+        Requires at least 5 profiles matching the filter; returns 422 otherwise.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      limit:
+        custom: []
+        name: limit
+        description: 'Top N skills to return (default: 20, max: 100).'
+        required: false
+        example: 20
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      industry:
+        custom: []
+        name: industry
+        description: 'Filter by job_roles value e.g. "Technology".'
+        required: false
+        example: Technology
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      format:
+        custom: []
+        name: format
+        description: 'Set to `csv` to download as CSV file.'
+        required: false
+        example: csv
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      limit: 20
+      industry: Technology
+      format: csv
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "profile_count": 142,
+            "top_skills": [
+              { "skill": "PHP", "count": 87 },
+              { "skill": "Laravel", "count": 64 }
+            ],
+            "ats_stats": {
+              "average": 71.4,
+              "median": 73.0,
+              "minimum": 12,
+              "maximum": 98
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{ "message": "Insufficient data for anonymized report" }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/admin/onboarding/bulk
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Bulk employer onboarding via CSV upload'
+      description: |-
+        [NEW API] Accepts a CSV file of employer accounts and creates pending User + Employer records for each
+        valid row, dispatching invite emails asynchronously.
+
+        ## CSV Format
+        Required columns: `name`, `email`, `company_name`
+        Optional column: `partner_type` (values: `agency`, `university`, `enterprise`)
+
+        Example CSV:
+        ```
+        name,email,company_name,partner_type
+        Acme HR,hr@acme.com,Acme Corp,agency
+        State University,careers@university.edu,State University,university
+        ```
+
+        Rows missing required columns or with duplicate emails are skipped and reported in the response.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: multipart/form-data
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      file:
+        custom: []
+        name: file
+        description: 'CSV file, max 2 MB. Required columns: name, email, company_name.'
+        required: true
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters: []
+    fileParameters:
+      file: null
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "total_rows": 5,
+            "created": 4,
+            "skipped": 1,
+            "skipped_rows": [
+              { "email": "existing@example.com", "reason": "email_exists" }
+            ]
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{ "errors": { "file": ["File must be a valid CSV."] } }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/admin/broadcast
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Send a platform-wide broadcast'
+      description: |-
+        [NEW API] Dispatches an email and in-app notification to a defined audience. Email delivery and
+        in-app notification creation are processed asynchronously via Laravel queues.
+
+        Audience values: `employees` (all job seekers), `employers` (all approved employers),
+        `all` (everyone except admins). Alternatively, provide `user_ids` to target specific users.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      subject:
+        custom: []
+        name: subject
+        description: 'Notification subject line.'
+        required: true
+        example: 'New feature launch'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      body:
+        custom: []
+        name: body
+        description: 'Notification body text.'
+        required: true
+        example: 'We just launched job matching AI!'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      audience:
+        custom: []
+        name: audience
+        description: 'when user_ids not provided. One of: employees, employers, all.'
+        required: true
+        example: employees
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      user_ids:
+        custom: []
+        name: user_ids
+        description: 'Optional array of specific user IDs to target (overrides audience).'
+        required: false
+        example:
+          - architecto
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      subject: 'New feature launch'
+      body: 'We just launched job matching AI!'
+      audience: employees
+      user_ids:
+        - architecto
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "status": "queued",
+            "recipient_count": 142
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{ "errors": { "subject": ["The subject field is required."] } }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/admin/users/{userId}/reanalyze'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Trigger manual CV re-analysis for a job seeker'
+      description: |-
+        [NEW API] Forces a fresh CV re-analysis for a specific job seeker. Useful for fixing stale AI data
+        or offering as a paid support action. Sets `analysis_status` to `processing` immediately, then
+        runs the analysis synchronously.
+
+        The target user must have the `employee` role and must have a CV on file.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      userId:
+        custom: []
+        name: userId
+        description: "The job seeker's user ID."
+        required: true
+        example: 664f1a2b3c4d5e6f7a8b9c0d
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      userId: 664f1a2b3c4d5e6f7a8b9c0d
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "CV re-analysis triggered successfully.",
+            "user_id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "analysis_status": "processing"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "User not found" }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{ "message": "No CV file found for this user" }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/admin/audit-log
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'View audit log'
+      description: |-
+        [NEW API] Returns a paginated, read-only list of sensitive admin actions. Supports filtering by
+        action type and date range.
+
+        Valid `action_type` values:
+        - `employer_approved`
+        - `employer_rejected`
+        - `broadcast_sent`
+        - `cv_reanalysis_triggered`
+        - `bulk_employer_onboarded`
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      action_type:
+        custom: []
+        name: action_type
+        description: 'Filter by action type.'
+        required: false
+        example: broadcast_sent
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      date_from:
+        custom: []
+        name: date_from
+        description: 'ISO date — return entries on or after this date.'
+        required: false
+        example: '2024-01-01'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      date_to:
+        custom: []
+        name: date_to
+        description: 'ISO date — return entries on or before this date.'
+        required: false
+        example: '2024-12-31'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      per_page:
+        custom: []
+        name: per_page
+        description: 'Results per page (default: 20).'
+        required: false
+        example: 20
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      page:
+        custom: []
+        name: page
+        description: 'Page number.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      action_type: broadcast_sent
+      date_from: '2024-01-01'
+      date_to: '2024-12-31'
+      per_page: 20
+      page: 1
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "data": [
+              {
+                "id": "664f1a2b3c4d5e6f7a8b9c0d",
+                "action": "employer_approved",
+                "actor_id": "664f1a2b3c4d5e6f7a8b9c0e",
+                "actor_name": "Admin User",
+                "target_id": "664f1a2b3c4d5e6f7a8b9c0f",
+                "target_type": "Employer",
+                "metadata": {},
+                "created_at": "2024-01-15T10:00:00Z"
+              }
+            ],
+            "current_page": 1, "per_page": 20, "total": 42, "total_pages": 3, "next_page": 2, "prev_page": null
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/notifications
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List notifications for the authenticated user'
+      description: |-
+        [NEW API] Returns a paginated list of in-app notifications for the currently authenticated user,
+        ordered newest first. Available to all authenticated users (employee, employer, admin).
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      per_page:
+        custom: []
+        name: per_page
+        description: 'Number of results per page (default: 15).'
+        required: false
+        example: 15
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      page:
+        custom: []
+        name: page
+        description: 'Page number.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      per_page: 15
+      page: 1
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "data": [
+              {
+                "id": "664f1a2b3c4d5e6f7a8b9c0d",
+                "type": "application_status_changed",
+                "message": "Your application status has been updated to: reviewed.",
+                "read_at": null,
+                "related_entity_id": "664f1a2b3c4d5e6f7a8b9c0e",
+                "related_entity_type": "Application",
+                "created_at": "2024-01-15T10:00:00Z"
+              }
+            ],
+            "current_page": 1,
+            "per_page": 15,
+            "total": 42,
+            "total_pages": 3,
+            "next_page": 2,
+            "prev_page": null
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/notifications/unread-count
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get unread notification count'
+      description: '[NEW API] Returns the count of unread notifications for the authenticated user.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{ "unread_count": 3 }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/notifications/read-all
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Mark all notifications as read'
+      description: '[NEW API] Bulk-updates all unread notifications for the authenticated user, setting `read_at` to now.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{ "message": "All notifications marked as read.", "updated": 5 }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/notifications/{id}/read'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Mark a notification as read'
+      description: '[NEW API] Sets the `read_at` timestamp on a specific notification owned by the authenticated user.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The notification ID.'
+        required: true
+        example: 664f1a2b3c4d5e6f7a8b9c0d
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 664f1a2b3c4d5e6f7a8b9c0d
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "type": "application_status_changed",
+            "message": "Your application status has been updated to: reviewed.",
+            "read_at": "2024-01-15T11:00:00Z",
+            "related_entity_id": "664f1a2b3c4d5e6f7a8b9c0e",
+            "related_entity_type": "Application",
+            "created_at": "2024-01-15T10:00:00Z"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "Notification not found." }'
         headers: []
         description: ''
     responseFields: []
