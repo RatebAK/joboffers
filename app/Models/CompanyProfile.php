@@ -47,6 +47,31 @@ class CompanyProfile extends Model
         'reviews',            // array of review objects
     ];
 
+    protected $attributes = [
+        // Public fields
+        'logo'             => null,
+        'logo_public_id'   => null,
+        'cover_image'      => null,
+        'cover_image_public_id' => null,
+        'description'      => null,
+        'industry'         => null,
+        'company_size'     => null,
+        'city'             => null,
+        'country'          => null,
+        'phone'            => null,
+        'phone_visible'    => false,
+        'email'            => null,
+        // Private info block
+        'private_info'     => null,
+        // Rating aggregates
+        'rating'           => 0,
+        'review_count'     => 0,
+        'would_recommend'  => 0,
+        'ceo_performance'  => 0,
+        'category_ratings' => null,
+        'reviews'          => null,
+    ];
+
     protected $casts = [
         'rating'           => 'float',
         'review_count'     => 'integer',

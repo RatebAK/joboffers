@@ -77,6 +77,70 @@ class JobSeekerProfile extends Model
         'analysis_completed_at', // When analysis completed/failed
     ];
 
+    protected $attributes = [
+        // Personal
+        'first_name'       => null,
+        'last_name'        => null,
+        'full_name'        => null,
+        'image'            => null,
+        'image_public_id'  => null,
+        'gender'           => null,
+        'nationality'      => null,
+        'city'             => null,
+        'location'         => null,
+        'address'          => null,
+        'phone'            => null,
+        'date_of_birth'    => null,
+        'marital_status'   => null,
+        // Career
+        'current_job_title'   => null,
+        'current_job_status'  => null,
+        'job_level'           => null,
+        'job_types'           => null,
+        'job_roles'           => null,
+        'work_cities'         => null,
+        'years_of_experience' => null,
+        'education_level'     => null,
+        'expected_salary'     => null,
+        'salary_range_from'   => null,
+        'salary_range_to'     => null,
+        'is_actively_seeking' => false,
+        'experience_summary'  => null,
+        'social_links'        => null,
+        // Structured data
+        'skills'              => null,
+        'education_history'   => null,
+        'work_experience'     => null,
+        // Resume / CV
+        'resume'              => null,
+        'resume_public_id'    => null,
+        'cv_file_path'        => null,
+        'cv_public_id'        => null,
+        'resume_file_type'    => null,
+        'default_cover_letter'=> null,
+        // AI-derived
+        'ai_full_name'        => null,
+        'ai_email'            => null,
+        'ai_phone'            => null,
+        'ai_location'         => null,
+        'ai_summary'          => null,
+        'ai_skills'           => null,
+        'ai_work_history'     => null,
+        'ai_education_history'=> null,
+        'ai_languages'        => null,
+        'ai_projects'         => null,
+        'ai_social_links'     => null,
+        'ai_overall_evaluation' => null,
+        'ats_score'           => null,
+        'ai_detected_language'=> null,
+        'ai_analyzed_at'      => null,
+        // Analysis status
+        'analysis_status'     => null,
+        'analysis_error'      => null,
+        'analysis_started_at' => null,
+        'analysis_completed_at' => null,
+    ];
+
     protected $casts = [
         'expected_salary' => 'float',
         'salary_range_from' => 'float',

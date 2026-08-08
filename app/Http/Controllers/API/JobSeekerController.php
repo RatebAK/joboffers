@@ -630,14 +630,19 @@ class JobSeekerController extends Controller
         $mimeType     = $file->getMimeType();
 
         // Upload directly via Cloudinary SDK so we can preserve filename + extension
+        // public_id must include the extension for raw uploads so the URL is correct
+        // Do NOT pass 'format' on raw resources — Cloudinary ignores it and it causes double extensions
+        // PDF → resource_type 'image' (Cloudinary handles PDFs natively; no extension in public_id)
+        // DOCX/DOC → resource_type 'raw' with extension in public_id so the URL includes it
+        $isPdf = strtolower($extension) === 'pdf';
         $cloudinary = app(\Cloudinary\Cloudinary::class);
         $result = $cloudinary->uploadApi()->upload($file->getRealPath(), [
-            'folder'          => 'job-seeker-cvs',
-            'public_id'       => $originalName . '_' . uniqid(),
-            'resource_type'   => 'raw',
-            'use_filename'    => true,
-            'unique_filename' => true,
-            'format'          => $extension,
+            'folder'        => 'job-seeker-cvs',
+            'public_id'     => $isPdf
+                                ? $originalName . '_' . uniqid()
+                                : $originalName . '_' . uniqid() . '.' . $extension,
+            'resource_type' => $isPdf ? 'image' : 'raw',
+            'access_mode'   => 'public',
         ]);
 
         $publicId = $result['public_id'];
@@ -736,27 +741,31 @@ class JobSeekerController extends Controller
             $profile->update($updateData);
 
         } catch (CvAnalysisException $e) {
-            // Analysis failed, but we KEEP the file (unlike before)
-            Log::error('AI analysis failed, but keeping uploaded CV file', [
+            Log::error('AI analysis failed (upload-and-analyze)', [
                 'user_id' => $user->_id,
                 'error_message' => $e->getMessage(),
                 'http_status' => $e->getHttpStatusCode(),
-                'public_id' => $publicId,
-                'cv_url' => $cvUrl,
             ]);
-            
-            // Update analysis status to error
+
             $profile->update([
                 'analysis_status' => 'error',
                 'analysis_error' => $e->getMessage(),
                 'analysis_completed_at' => now(),
             ]);
+
+            $httpStatus = $e->getHttpStatusCode();
+
+            if ($httpStatus === 422) {
+                return response()->json(['message' => 'CV analysis failed', 'error' => $e->getMessage()], 422);
+            }
+
+            return response()->json(['message' => 'CV analysis service unavailable', 'error' => $e->getMessage()], 502);
         }
 
         return response()->json([
-            'message' => 'CV uploaded successfully. Analysis is being processed.',
+            'message' => 'CV uploaded and analyzed successfully.',
             'resume_url' => $cvUrl,
-            'analysis_status' => $profile->fresh()->analysis_status,
+            'analysis_status' => 'completed',
             'profile' => $profile->fresh(),
         ], 200);
     }
@@ -859,15 +868,17 @@ class JobSeekerController extends Controller
         $extension    = $file->getClientOriginalExtension();
         $mimeType     = $file->getMimeType();
 
-        // Upload directly via Cloudinary SDK so we can preserve filename + extension
+        // PDF → resource_type 'image' (Cloudinary handles PDFs natively; no extension in public_id)
+        // DOCX/DOC → resource_type 'raw' with extension in public_id so the URL includes it
+        $isPdf = strtolower($extension) === 'pdf';
         $cloudinary = app(\Cloudinary\Cloudinary::class);
         $result = $cloudinary->uploadApi()->upload($file->getRealPath(), [
-            'folder'          => 'job-seeker-resumes',
-            'public_id'       => $originalName . '_' . uniqid(),
-            'resource_type'   => 'raw',
-            'use_filename'    => true,
-            'unique_filename' => true,
-            'format'          => $extension, // tells Cloudinary to append the extension to the URL
+            'folder'        => 'job-seeker-resumes',
+            'public_id'     => $isPdf
+                                ? $originalName . '_' . uniqid()
+                                : $originalName . '_' . uniqid() . '.' . $extension,
+            'resource_type' => $isPdf ? 'image' : 'raw',
+            'access_mode'   => 'public',
         ]);
 
         $publicId  = $result['public_id'];

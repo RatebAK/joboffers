@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "7bfed046-bc43-4291-aaad-75dcbba17936",
+        "_postman_id": "afd6f744-1174-41dc-94ea-9e79ba08c317",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -1128,7 +1128,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "female",
+                                    "value": "other",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1170,7 +1170,7 @@
                                 },
                                 {
                                     "key": "marital_status",
-                                    "value": "widowed",
+                                    "value": "prefer_not_to_say",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1188,7 +1188,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "student",
+                                    "value": "unemployed",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1206,7 +1206,7 @@
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "senior",
+                                    "value": "manager",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1248,7 +1248,7 @@
                                 },
                                 {
                                     "key": "is_actively_seeking",
-                                    "value": "",
+                                    "value": "1",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1284,7 +1284,7 @@
                                 },
                                 {
                                     "key": "skills[0][level]",
-                                    "value": "advanced",
+                                    "value": "intermediate",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1368,7 +1368,7 @@
                                 },
                                 {
                                     "key": "work_experience[0][is_currently_working]",
-                                    "value": "",
+                                    "value": "1",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1987,7 +1987,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"part_time\",\"category\":\"g\",\"min_salary\":12}"
+                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"contract\",\"category\":\"g\",\"min_salary\":12}"
                         },
                         "description": "Paginated search of active job posts for the authenticated job seeker."
                     },
@@ -3102,13 +3102,13 @@
                             }
                         ],
                         "body": null,
-                        "description": "Returns a specific job seeker's public profile by their user ID. Sensitive fields (`ai_email`, `ai_phone`) are excluded."
+                        "description": "Returns a specific job seeker's full profile by their user ID, with sensitive\npersonal fields excluded. Intended for employers reviewing candidates."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"seeker\": {\n    \"user_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n    \"name\": \"Jane Smith\",\n    \"profile\": {\n      \"current_job_title\": \"Frontend Developer\",\n      \"ats_score\": 82,\n      \"ai_skills\": [\"React\", \"TypeScript\"],\n      \"ai_summary\": \"Experienced frontend developer...\",\n      \"is_actively_seeking\": true\n    }\n  }\n}",
+                            "body": "{\n  \"user_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n  \"name\": \"Jane Smith\",\n  \"image\": \"https:\/\/res.cloudinary.com\/...\/photo.jpg\",\n  \"current_job_title\": \"Frontend Developer\",\n  \"current_job_status\": \"employed\",\n  \"job_level\": \"senior\",\n  \"job_types\": [\"full_time\", \"remote\"],\n  \"job_roles\": [\"frontend\", \"fullstack\"],\n  \"years_of_experience\": 5,\n  \"education_level\": \"bachelor\",\n  \"expected_salary\": 3000,\n  \"salary_range_from\": 2500,\n  \"salary_range_to\": 4000,\n  \"is_actively_seeking\": true,\n  \"work_cities\": [\"Damascus\", \"Remote\"],\n  \"city\": \"Damascus\",\n  \"social_links\": { \"linkedin\": \"https:\/\/linkedin.com\/in\/jane\", \"github\": null },\n  \"skills\": [],\n  \"education_history\": [],\n  \"work_experience\": [],\n  \"ats_score\": 82,\n  \"ai_skills\": [\"React\", \"TypeScript\"],\n  \"ai_summary\": \"Experienced frontend developer...\",\n  \"ai_work_history\": [],\n  \"ai_education_history\": [],\n  \"ai_languages\": [\"Arabic\", \"English\"],\n  \"ai_projects\": [],\n  \"ai_overall_evaluation\": \"Strong candidate\"\n}",
                             "name": ""
                         },
                         {
@@ -3691,154 +3691,13 @@
                     ]
                 },
                 {
-                    "name": "Create a coach session",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/job-seeker\/coach\/sessions",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/job-seeker\/coach\/sessions"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"title\":\"Resume review session\"}"
-                        },
-                        "description": "Creates a new resume coach chat session. The title defaults to \"New Conversation\"\nand will be automatically updated to the first 60 characters of the first message sent."
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 201,
-                            "body": "{ \"id\": \"...\", \"title\": \"Resume review session\", \"created_at\": \"...\", \"updated_at\": \"...\" }",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 422,
-                            "body": "{ \"errors\": { \"title\": [\"The title may not be greater than 100 characters.\"] } }",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Get a coach session",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/job-seeker\/coach\/sessions\/:sessionId",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/job-seeker\/coach\/sessions\/:sessionId",
-                            "variable": [
-                                {
-                                    "id": "sessionId",
-                                    "key": "sessionId",
-                                    "value": "64a1b2c3d4e5f6a7b8c9d0e1",
-                                    "description": "The session ID."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "Returns the session details along with its full message history in chronological order."
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"id\": \"...\",\n  \"title\": \"Resume tips\",\n  \"messages\": [\n    { \"role\": \"user\", \"content\": \"How do I improve my CV?\", \"created_at\": \"...\" },\n    { \"role\": \"assistant\", \"content\": \"Focus on quantifying achievements...\", \"created_at\": \"...\" }\n  ],\n  \"created_at\": \"...\",\n  \"updated_at\": \"...\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{ \"message\": \"Session not found\" }",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Delete a coach session",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/job-seeker\/coach\/sessions\/:sessionId",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/job-seeker\/coach\/sessions\/:sessionId",
-                            "variable": [
-                                {
-                                    "id": "sessionId",
-                                    "key": "sessionId",
-                                    "value": "64a1b2c3d4e5f6a7b8c9d0e1",
-                                    "description": "The session ID."
-                                }
-                            ]
-                        },
-                        "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "Permanently deletes the session and all of its messages."
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{ \"message\": \"Session deleted\" }",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{ \"message\": \"Session not found\" }",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
                     "name": "Chat with resume coach",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/job-seeker\/coach\/sessions\/:sessionId\/chat",
+                            "path": "api\/job-seeker\/coach\/chat",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/job-seeker\/coach\/sessions\/:sessionId\/chat",
-                            "variable": [
-                                {
-                                    "id": "sessionId",
-                                    "key": "sessionId",
-                                    "value": "64a1b2c3d4e5f6a7b8c9d0e1",
-                                    "description": "The session ID."
-                                }
-                            ]
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/coach\/chat"
                         },
                         "method": "POST",
                         "header": [
@@ -3855,19 +3714,13 @@
                             "mode": "raw",
                             "raw": "{\"message\":\"How can I improve my resume?\"}"
                         },
-                        "description": "Sends a message to the AI resume coach within a session. The full conversation\nhistory is automatically passed to the AI for context. Both the user message and\nthe AI response are persisted and will appear in subsequent `GET \/sessions\/{id}` calls."
+                        "description": "Sends a message to the AI resume coach. The AI automatically creates or continues\na session for the user. Both the user message and the AI response are persisted\nin the shared database and will appear in subsequent session\/message list calls."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{ \"response\": \"Here are some tips to improve your resume...\" }",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{ \"message\": \"Session not found\" }",
+                            "body": "{ \"response\": \"Here are some tips to improve your resume...\", \"session_id\": \"64a1b2c3d4e5f6a7b8c9d0e1\" }",
                             "name": ""
                         },
                         {
@@ -3879,7 +3732,7 @@
                         {
                             "header": [],
                             "code": 422,
-                            "body": "{ \"message\": \"Resume coach request failed\", \"reason\": \"Message contains unsupported content\" }",
+                            "body": "{ \"message\": \"Resume coach request failed\", \"reason\": \"...\" }",
                             "name": "Service rejected request"
                         },
                         {
