@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "a6ddced5-1476-42a1-995b-8934696495e5",
+        "_postman_id": "d2f17604-d771-41be-84d3-cfb365b0e785",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -486,7 +486,7 @@
                             }
                         ],
                         "body": null,
-                        "description": "Returns a single company public profile including active job posts, reviews, and ratings.",
+                        "description": "Returns a single company public profile including active job posts, reviews, and ratings.\nWhen the employer has set `private_info.expose_to_applicants = true`, the response also\nincludes `address`, `industry_tags`, `founded_year`, `website`, and `social_media`.\n`phone_main` is included when `phone_visible` is true.",
                         "auth": {
                             "type": "noauth"
                         }
@@ -1128,7 +1128,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "other",
+                                    "value": "female",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1170,7 +1170,7 @@
                                 },
                                 {
                                     "key": "marital_status",
-                                    "value": "divorced",
+                                    "value": "single",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1188,7 +1188,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "employed",
+                                    "value": "freelancing",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1206,7 +1206,7 @@
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "senior",
+                                    "value": "mid",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1284,7 +1284,7 @@
                                 },
                                 {
                                     "key": "skills[0][level]",
-                                    "value": "advanced",
+                                    "value": "intermediate",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1987,7 +1987,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"full_time\",\"category\":\"g\",\"min_salary\":12}"
+                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"freelance\",\"category\":\"g\",\"min_salary\":12}"
                         },
                         "description": "Paginated search of active job posts for the authenticated job seeker."
                     },
@@ -2663,14 +2663,27 @@
                             }
                         ],
                         "body": null,
-                        "description": "Returns the full company profile for the authenticated employer, including\nprivate fields (`private_info`, `logo`, `cover_image`, rating data, etc.)\nthat are not exposed on the public company endpoint."
+                        "description": "Returns the full company profile for the authenticated employer, including\n`private_info`, active `jobs`, `reviews`, `category_ratings`, and all rating fields.\nThis is a superset of the public company endpoint.\n\n**Field locations at a glance:**\n- `company_size`, `industry`, `phone_main`, `phone_extra` \u2014 top-level fields\n- `industry_tags`, `address`, `founded_year`, `website`, `social_media` \u2014 inside `private_info`"
                     },
                     "response": [
                         {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"employer_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n  \"name\": \"Acme Corp\",\n  \"slug\": \"acme-corp\",\n  \"logo\": \"https:\/\/example.com\/logo.png\",\n  \"cover_image\": \"https:\/\/example.com\/cover.png\",\n  \"description\": \"We build software.\",\n  \"industry\": \"Information Technology\",\n  \"company_size\": \"10_to_50\",\n  \"city\": \"Damascus\",\n  \"country\": \"Syria\",\n  \"phone\": \"0911000000\",\n  \"phone_visible\": true,\n  \"email\": \"contact@acme.com\",\n  \"private_info\": {\n    \"expose_to_applicants\": false,\n    \"address\": \"Mazzeh Street 12\",\n    \"industries\": [\"Software\", \"Consulting\"],\n    \"company_size\": \"10_to_50\",\n    \"founded_year\": 2015,\n    \"phone_main\": \"0911000000\",\n    \"phone_extra\": null,\n    \"website\": \"https:\/\/acme.com\",\n    \"social_media\": {\n      \"linkedin\": \"https:\/\/linkedin.com\/company\/acme\",\n      \"github\": null,\n      \"twitter\": null,\n      \"facebook\": null,\n      \"instagram\": null,\n      \"telegram\": null,\n      \"behance\": null\n    }\n  },\n  \"rating\": 4.2,\n  \"review_count\": 10,\n  \"would_recommend\": 85,\n  \"ceo_performance\": 78,\n  \"open_positions\": 3\n}",
-                            "name": "Success"
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Invalid authentication token signature\"}",
+                            "name": ""
                         },
                         {
                             "header": [],
@@ -2702,9 +2715,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"Tammam company\",\"description\":\"We build software.\",\"industry\":\"Information Technology Services\",\"company_size\":\"less_than_10\",\"city\":\"Damascus\",\"country\":\"Syria\",\"phone\":\"0932444357\",\"phone_visible\":false,\"email\":\"tamammb97@gmail.com\"}"
+                            "raw": "{\"name\":\"Tammam company\",\"description\":\"We build software.\",\"industry\":\"Information Technology Services\",\"company_size\":\"less_than_10\",\"city\":\"Damascus\",\"country\":\"Syria\",\"phone_main\":\"0932444357\",\"phone_extra\":\"0911000000\",\"phone_visible\":false,\"email\":\"contact@tammam.co\"}"
                         },
-                        "description": "Creates or updates the employer's company public profile.     *"
+                        "description": "Creates or updates the employer's company public profile.\n\n**Phone fields:** use `phone_main` (primary) and `phone_extra` (optional secondary).\nSet `phone_visible: true` to expose `phone_main` on the public profile.\n\n**Size vs industry:** `company_size` is the canonical headcount bucket (shared across public\nand private views). `industry` is a single display-label string. For multi-value internal\nindustry taxonomy, use `industry_tags` in the private info endpoint."
                     },
                     "response": [
                         {
@@ -2737,9 +2750,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"Tammam company\",\"description\":\"We build software.\",\"industry\":\"Information Technology Services\",\"company_size\":\"less_than_10\",\"city\":\"Damascus\",\"country\":\"Syria\",\"phone\":\"0932444357\",\"phone_visible\":false,\"email\":\"tamammb97@gmail.com\"}"
+                            "raw": "{\"name\":\"Tammam company\",\"description\":\"We build software.\",\"industry\":\"Information Technology Services\",\"company_size\":\"less_than_10\",\"city\":\"Damascus\",\"country\":\"Syria\",\"phone_main\":\"0932444357\",\"phone_extra\":\"0911000000\",\"phone_visible\":false,\"email\":\"contact@tammam.co\"}"
                         },
-                        "description": "Creates or updates the employer's company public profile.     *"
+                        "description": "Creates or updates the employer's company public profile.\n\n**Phone fields:** use `phone_main` (primary) and `phone_extra` (optional secondary).\nSet `phone_visible: true` to expose `phone_main` on the public profile.\n\n**Size vs industry:** `company_size` is the canonical headcount bucket (shared across public\nand private views). `industry` is a single display-label string. For multi-value internal\nindustry taxonomy, use `industry_tags` in the private info endpoint."
                     },
                     "response": [
                         {
@@ -2751,7 +2764,7 @@
                     ]
                 },
                 {
-                    "name": "Update private \/ general company info",
+                    "name": "Update private company info",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -2772,9 +2785,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"expose_to_applicants\":false,\"address\":\"Mazzeh, Damascus\",\"industries\":[\"Information Technology Services\"],\"company_size\":\"less_than_10\",\"founded_year\":2018,\"phone_main\":\"0932444357\",\"phone_extra\":null,\"website\":\"https:\\\/\\\/tammam.co\",\"social_media\":{\"instagram\":\"architecto\",\"telegram\":\"architecto\",\"twitter\":\"architecto\",\"facebook\":\"architecto\",\"behance\":\"architecto\",\"github\":\"architecto\",\"linkedin\":\"architecto\"}}"
+                            "raw": "{\"expose_to_applicants\":false,\"address\":\"Mazzeh, Damascus\",\"industry_tags\":[\"Software Development\",\"IT Consulting\"],\"founded_year\":2018,\"website\":\"https:\\\/\\\/tammam.co\",\"social_media\":{\"instagram\":\"architecto\",\"telegram\":\"architecto\",\"twitter\":\"architecto\",\"facebook\":\"architecto\",\"behance\":\"architecto\",\"github\":\"architecto\",\"linkedin\":\"https:\\\/\\\/linkedin.com\\\/company\\\/tammam\"}}"
                         },
-                        "description": "Updates employer-only private info (address, founded year, extra phones, social links, etc.).\nSet `expose_to_applicants` to `true` to make this block visible on job posts."
+                        "description": "Updates the employer-only private info block stored in `private_info`.\nSet `expose_to_applicants: true` to surface `address`, `industry_tags`,\n`founded_year`, `website`, and `social_media` on the public company endpoint.\n\n**Field guide \u2014 what lives here vs. the public endpoint:**\n| Field | Where |\n|---|---|\n| `company_size` | Public endpoint only (canonical, no duplicate here) |\n| `industry` | Public endpoint \u2014 single display label |\n| `industry_tags` | Private info \u2014 multi-value internal taxonomy array |\n| `phone_main` \/ `phone_extra` | Public endpoint (visibility gated by `phone_visible`) |\n| `address`, `founded_year`, `website`, `social_media` | Private info only |"
                     },
                     "response": [
                         {

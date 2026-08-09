@@ -822,7 +822,11 @@ endpoints:
       subgroup: ''
       subgroupDescription: ''
       title: 'Get company'
-      description: 'Returns a single company public profile including active job posts, reviews, and ratings.'
+      description: |-
+        Returns a single company public profile including active job posts, reviews, and ratings.
+        When the employer has set `private_info.expose_to_applicants = true`, the response also
+        includes `address`, `industry_tags`, `founded_year`, `website`, and `social_media`.
+        `phone_main` is included when `phone_visible` is true.
       authenticated: false
       deprecated: false
     headers:
@@ -2281,7 +2285,7 @@ endpoints:
         name: gender
         description: ''
         required: false
-        example: other
+        example: female
         type: string
         enumValues:
           - male
@@ -2362,7 +2366,7 @@ endpoints:
         name: marital_status
         description: ''
         required: false
-        example: divorced
+        example: single
         type: string
         enumValues:
           - single
@@ -2400,7 +2404,7 @@ endpoints:
         name: current_job_status
         description: ''
         required: false
-        example: employed
+        example: freelancing
         type: string
         enumValues:
           - employed
@@ -2438,7 +2442,7 @@ endpoints:
         name: job_level
         description: ''
         required: false
-        example: senior
+        example: mid
         type: string
         enumValues:
           - entry
@@ -2647,7 +2651,7 @@ endpoints:
         name: 'skills[].level'
         description: ''
         required: false
-        example: advanced
+        example: intermediate
         type: string
         enumValues:
           - beginner
@@ -2828,20 +2832,20 @@ endpoints:
       last_name: 'n'
       full_name: g
       image: z
-      gender: other
+      gender: female
       nationality: m
       city: i
       location: 'y'
       address: v
       phone: dljnikhwaykcmyuw
       date_of_birth: pwlvqwrsitcpscql
-      marital_status: divorced
+      marital_status: single
       salary_range_from: 16
       salary_range_to: 38
-      current_job_status: employed
+      current_job_status: freelancing
       years_of_experience: 8
       education_level: 'n'
-      job_level: senior
+      job_level: mid
       job_types:
         - r
       job_roles:
@@ -2860,7 +2864,7 @@ endpoints:
       skills:
         -
           name: 'y'
-          level: advanced
+          level: intermediate
       education_history:
         -
           certificate_type: v
@@ -3884,7 +3888,7 @@ endpoints:
         name: job_type
         description: ''
         required: false
-        example: full_time
+        example: freelance
         type: string
         enumValues:
           - full_time
@@ -3919,7 +3923,7 @@ endpoints:
     cleanBodyParameters:
       keyword: b
       location: 'n'
-      job_type: full_time
+      job_type: freelance
       category: g
       min_salary: 12
     fileParameters: []
@@ -5256,8 +5260,12 @@ endpoints:
       title: 'Get my company profile (owner view)'
       description: |-
         Returns the full company profile for the authenticated employer, including
-        private fields (`private_info`, `logo`, `cover_image`, rating data, etc.)
-        that are not exposed on the public company endpoint.
+        `private_info`, active `jobs`, `reviews`, `category_ratings`, and all rating fields.
+        This is a superset of the public company endpoint.
+
+        **Field locations at a glance:**
+        - `company_size`, `industry`, `phone_main`, `phone_extra` — top-level fields
+        - `industry_tags`, `address`, `founded_year`, `website`, `social_media` — inside `private_info`
       authenticated: true
       deprecated: false
     headers:
@@ -5274,50 +5282,13 @@ endpoints:
     responses:
       -
         custom: []
-        status: 200
-        content: |-
-          {
-            "_id": "664f1a2b3c4d5e6f7a8b9c0d",
-            "employer_id": "664f1a2b3c4d5e6f7a8b9c0e",
-            "name": "Acme Corp",
-            "slug": "acme-corp",
-            "logo": "https://example.com/logo.png",
-            "cover_image": "https://example.com/cover.png",
-            "description": "We build software.",
-            "industry": "Information Technology",
-            "company_size": "10_to_50",
-            "city": "Damascus",
-            "country": "Syria",
-            "phone": "0911000000",
-            "phone_visible": true,
-            "email": "contact@acme.com",
-            "private_info": {
-              "expose_to_applicants": false,
-              "address": "Mazzeh Street 12",
-              "industries": ["Software", "Consulting"],
-              "company_size": "10_to_50",
-              "founded_year": 2015,
-              "phone_main": "0911000000",
-              "phone_extra": null,
-              "website": "https://acme.com",
-              "social_media": {
-                "linkedin": "https://linkedin.com/company/acme",
-                "github": null,
-                "twitter": null,
-                "facebook": null,
-                "instagram": null,
-                "telegram": null,
-                "behance": null
-              }
-            },
-            "rating": 4.2,
-            "review_count": 10,
-            "would_recommend": 85,
-            "ceo_performance": 78,
-            "open_positions": 3
-          }
-        headers: []
-        description: Success
+        status: 401
+        content: '{"error":"Unauthorized","message":"Invalid authentication token signature"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
       -
         custom: []
         status: 404
@@ -5344,7 +5315,15 @@ endpoints:
       subgroup: ''
       subgroupDescription: ''
       title: 'Update public company info'
-      description: "Creates or updates the employer's company public profile.     *"
+      description: |-
+        Creates or updates the employer's company public profile.
+
+        **Phone fields:** use `phone_main` (primary) and `phone_extra` (optional secondary).
+        Set `phone_visible: true` to expose `phone_main` on the public profile.
+
+        **Size vs industry:** `company_size` is the canonical headcount bucket (shared across public
+        and private views). `industry` is a single display-label string. For multi-value internal
+        industry taxonomy, use `industry_tags` in the private info endpoint.
       authenticated: true
       deprecated: false
     headers:
@@ -5381,7 +5360,7 @@ endpoints:
       industry:
         custom: []
         name: industry
-        description: 'Industry label.'
+        description: "Single display-label for the company's primary industry."
         required: false
         example: 'Information Technology Services'
         type: string
@@ -5423,12 +5402,23 @@ endpoints:
         exampleWasSpecified: true
         nullable: true
         deprecated: false
-      phone:
+      phone_main:
         custom: []
-        name: phone
-        description: 'Contact phone.'
+        name: phone_main
+        description: 'Primary contact phone.'
         required: false
         example: '0932444357'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      phone_extra:
+        custom: []
+        name: phone_extra
+        description: 'Secondary contact phone (optional).'
+        required: false
+        example: '0911000000'
         type: string
         enumValues: []
         exampleWasSpecified: true
@@ -5437,7 +5427,7 @@ endpoints:
       phone_visible:
         custom: []
         name: phone_visible
-        description: 'Whether phone is shown to job seekers.'
+        description: 'Expose phone_main on the public profile.'
         required: false
         example: false
         type: boolean
@@ -5450,7 +5440,7 @@ endpoints:
         name: email
         description: 'Contact email.'
         required: false
-        example: tamammb97@gmail.com
+        example: contact@tammam.co
         type: string
         enumValues: []
         exampleWasSpecified: true
@@ -5463,9 +5453,10 @@ endpoints:
       company_size: less_than_10
       city: Damascus
       country: Syria
-      phone: '0932444357'
+      phone_main: '0932444357'
+      phone_extra: '0911000000'
       phone_visible: false
-      email: tamammb97@gmail.com
+      email: contact@tammam.co
     fileParameters: []
     responses:
       -
@@ -5494,7 +5485,15 @@ endpoints:
       subgroup: ''
       subgroupDescription: ''
       title: 'Update public company info'
-      description: "Creates or updates the employer's company public profile.     *"
+      description: |-
+        Creates or updates the employer's company public profile.
+
+        **Phone fields:** use `phone_main` (primary) and `phone_extra` (optional secondary).
+        Set `phone_visible: true` to expose `phone_main` on the public profile.
+
+        **Size vs industry:** `company_size` is the canonical headcount bucket (shared across public
+        and private views). `industry` is a single display-label string. For multi-value internal
+        industry taxonomy, use `industry_tags` in the private info endpoint.
       authenticated: true
       deprecated: false
     headers:
@@ -5531,7 +5530,7 @@ endpoints:
       industry:
         custom: []
         name: industry
-        description: 'Industry label.'
+        description: "Single display-label for the company's primary industry."
         required: false
         example: 'Information Technology Services'
         type: string
@@ -5573,12 +5572,23 @@ endpoints:
         exampleWasSpecified: true
         nullable: true
         deprecated: false
-      phone:
+      phone_main:
         custom: []
-        name: phone
-        description: 'Contact phone.'
+        name: phone_main
+        description: 'Primary contact phone.'
         required: false
         example: '0932444357'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      phone_extra:
+        custom: []
+        name: phone_extra
+        description: 'Secondary contact phone (optional).'
+        required: false
+        example: '0911000000'
         type: string
         enumValues: []
         exampleWasSpecified: true
@@ -5587,7 +5597,7 @@ endpoints:
       phone_visible:
         custom: []
         name: phone_visible
-        description: 'Whether phone is shown to job seekers.'
+        description: 'Expose phone_main on the public profile.'
         required: false
         example: false
         type: boolean
@@ -5600,7 +5610,7 @@ endpoints:
         name: email
         description: 'Contact email.'
         required: false
-        example: tamammb97@gmail.com
+        example: contact@tammam.co
         type: string
         enumValues: []
         exampleWasSpecified: true
@@ -5613,9 +5623,10 @@ endpoints:
       company_size: less_than_10
       city: Damascus
       country: Syria
-      phone: '0932444357'
+      phone_main: '0932444357'
+      phone_extra: '0911000000'
       phone_visible: false
-      email: tamammb97@gmail.com
+      email: contact@tammam.co
     fileParameters: []
     responses:
       -
@@ -5643,10 +5654,20 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Update private / general company info'
+      title: 'Update private company info'
       description: |-
-        Updates employer-only private info (address, founded year, extra phones, social links, etc.).
-        Set `expose_to_applicants` to `true` to make this block visible on job posts.
+        Updates the employer-only private info block stored in `private_info`.
+        Set `expose_to_applicants: true` to surface `address`, `industry_tags`,
+        `founded_year`, `website`, and `social_media` on the public company endpoint.
+
+        **Field guide — what lives here vs. the public endpoint:**
+        | Field | Where |
+        |---|---|
+        | `company_size` | Public endpoint only (canonical, no duplicate here) |
+        | `industry` | Public endpoint — single display label |
+        | `industry_tags` | Private info — multi-value internal taxonomy array |
+        | `phone_main` / `phone_extra` | Public endpoint (visibility gated by `phone_visible`) |
+        | `address`, `founded_year`, `website`, `social_media` | Private info only |
       authenticated: true
       deprecated: false
     headers:
@@ -5661,7 +5682,7 @@ endpoints:
       expose_to_applicants:
         custom: []
         name: expose_to_applicants
-        description: 'Show this info to applicants on job posts.'
+        description: 'Expose safe private fields on the public profile.'
         required: false
         example: false
         type: boolean
@@ -5680,25 +5701,15 @@ endpoints:
         exampleWasSpecified: true
         nullable: true
         deprecated: false
-      industries:
+      industry_tags:
         custom: []
-        name: industries
-        description: 'Multi-select industries.'
+        name: industry_tags
+        description: 'Internal multi-value industry taxonomy (distinct from the public `industry` display label).'
         required: false
         example:
-          - 'Information Technology Services'
+          - 'Software Development'
+          - 'IT Consulting'
         type: 'string[]'
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      company_size:
-        custom: []
-        name: company_size
-        description: 'Enum value (same as public).'
-        required: false
-        example: less_than_10
-        type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
@@ -5706,35 +5717,13 @@ endpoints:
       founded_year:
         custom: []
         name: founded_year
-        description: 'Year company was founded.'
+        description: 'Year the company was founded.'
         required: false
         example: 2018
         type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
-        deprecated: false
-      phone_main:
-        custom: []
-        name: phone_main
-        description: 'Primary phone.'
-        required: false
-        example: '0932444357'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      phone_extra:
-        custom: []
-        name: phone_extra
-        description: 'Secondary phone.'
-        required: false
-        example: null
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
         deprecated: false
       website:
         custom: []
@@ -5829,21 +5818,19 @@ endpoints:
         name: social_media.linkedin
         description: ''
         required: false
-        example: architecto
+        example: 'https://linkedin.com/company/tammam'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
     cleanBodyParameters:
       expose_to_applicants: false
       address: 'Mazzeh, Damascus'
-      industries:
-        - 'Information Technology Services'
-      company_size: less_than_10
+      industry_tags:
+        - 'Software Development'
+        - 'IT Consulting'
       founded_year: 2018
-      phone_main: '0932444357'
-      phone_extra: null
       website: 'https://tammam.co'
       social_media:
         instagram: architecto
@@ -5852,7 +5839,7 @@ endpoints:
         facebook: architecto
         behance: architecto
         github: architecto
-        linkedin: architecto
+        linkedin: 'https://linkedin.com/company/tammam'
     fileParameters: []
     responses:
       -

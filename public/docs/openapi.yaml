@@ -1138,7 +1138,7 @@ paths:
     get:
       summary: 'Get company'
       operationId: getCompany
-      description: 'Returns a single company public profile including active job posts, reviews, and ratings.'
+      description: "Returns a single company public profile including active job posts, reviews, and ratings.\nWhen the employer has set `private_info.expose_to_applicants = true`, the response also\nincludes `address`, `industry_tags`, `founded_year`, `website`, and `social_media`.\n`phone_main` is included when `phone_visible` is true."
       parameters: []
       responses:
         404:
@@ -1583,7 +1583,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: other
+                  example: female
                   enum:
                     - male
                     - female
@@ -1623,7 +1623,7 @@ paths:
                 marital_status:
                   type: string
                   description: ''
-                  example: divorced
+                  example: single
                   enum:
                     - single
                     - married
@@ -1644,7 +1644,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: employed
+                  example: freelancing
                   enum:
                     - employed
                     - unemployed
@@ -1665,7 +1665,7 @@ paths:
                 job_level:
                   type: string
                   description: ''
-                  example: senior
+                  example: mid
                   enum:
                     - entry
                     - junior
@@ -1757,7 +1757,7 @@ paths:
                       level:
                         type: string
                         description: ''
-                        example: advanced
+                        example: intermediate
                         enum:
                           - beginner
                           - intermediate
@@ -3532,7 +3532,7 @@ paths:
                 job_type:
                   type: string
                   description: ''
-                  example: full_time
+                  example: freelance
                   enum:
                     - full_time
                     - part_time
@@ -4666,174 +4666,25 @@ paths:
     get:
       summary: 'Get my company profile (owner view)'
       operationId: getMyCompanyProfileownerView
-      description: "Returns the full company profile for the authenticated employer, including\nprivate fields (`private_info`, `logo`, `cover_image`, rating data, etc.)\nthat are not exposed on the public company endpoint."
+      description: "Returns the full company profile for the authenticated employer, including\n`private_info`, active `jobs`, `reviews`, `category_ratings`, and all rating fields.\nThis is a superset of the public company endpoint.\n\n**Field locations at a glance:**\n- `company_size`, `industry`, `phone_main`, `phone_extra` — top-level fields\n- `industry_tags`, `address`, `founded_year`, `website`, `social_media` — inside `private_info`"
       parameters: []
       responses:
-        200:
-          description: Success
+        401:
+          description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  _id: 664f1a2b3c4d5e6f7a8b9c0d
-                  employer_id: 664f1a2b3c4d5e6f7a8b9c0e
-                  name: 'Acme Corp'
-                  slug: acme-corp
-                  logo: 'https://example.com/logo.png'
-                  cover_image: 'https://example.com/cover.png'
-                  description: 'We build software.'
-                  industry: 'Information Technology'
-                  company_size: 10_to_50
-                  city: Damascus
-                  country: Syria
-                  phone: '0911000000'
-                  phone_visible: true
-                  email: contact@acme.com
-                  private_info:
-                    expose_to_applicants: false
-                    address: 'Mazzeh Street 12'
-                    industries:
-                      - Software
-                      - Consulting
-                    company_size: 10_to_50
-                    founded_year: 2015
-                    phone_main: '0911000000'
-                    phone_extra: null
-                    website: 'https://acme.com'
-                    social_media:
-                      linkedin: 'https://linkedin.com/company/acme'
-                      github: null
-                      twitter: null
-                      facebook: null
-                      instagram: null
-                      telegram: null
-                      behance: null
-                  rating: 4.2
-                  review_count: 10
-                  would_recommend: 85
-                  ceo_performance: 78
-                  open_positions: 3
+                  error: Unauthorized
+                  message: 'Invalid authentication token signature'
                 properties:
-                  _id:
+                  error:
                     type: string
-                    example: 664f1a2b3c4d5e6f7a8b9c0d
-                  employer_id:
+                    example: Unauthorized
+                  message:
                     type: string
-                    example: 664f1a2b3c4d5e6f7a8b9c0e
-                  name:
-                    type: string
-                    example: 'Acme Corp'
-                  slug:
-                    type: string
-                    example: acme-corp
-                  logo:
-                    type: string
-                    example: 'https://example.com/logo.png'
-                  cover_image:
-                    type: string
-                    example: 'https://example.com/cover.png'
-                  description:
-                    type: string
-                    example: 'We build software.'
-                  industry:
-                    type: string
-                    example: 'Information Technology'
-                  company_size:
-                    type: string
-                    example: 10_to_50
-                  city:
-                    type: string
-                    example: Damascus
-                  country:
-                    type: string
-                    example: Syria
-                  phone:
-                    type: string
-                    example: '0911000000'
-                  phone_visible:
-                    type: boolean
-                    example: true
-                  email:
-                    type: string
-                    example: contact@acme.com
-                  private_info:
-                    type: object
-                    properties:
-                      expose_to_applicants:
-                        type: boolean
-                        example: false
-                      address:
-                        type: string
-                        example: 'Mazzeh Street 12'
-                      industries:
-                        type: array
-                        example:
-                          - Software
-                          - Consulting
-                        items:
-                          type: string
-                      company_size:
-                        type: string
-                        example: 10_to_50
-                      founded_year:
-                        type: integer
-                        example: 2015
-                      phone_main:
-                        type: string
-                        example: '0911000000'
-                      phone_extra:
-                        type: string
-                        example: null
-                        nullable: true
-                      website:
-                        type: string
-                        example: 'https://acme.com'
-                      social_media:
-                        type: object
-                        properties:
-                          linkedin:
-                            type: string
-                            example: 'https://linkedin.com/company/acme'
-                          github:
-                            type: string
-                            example: null
-                            nullable: true
-                          twitter:
-                            type: string
-                            example: null
-                            nullable: true
-                          facebook:
-                            type: string
-                            example: null
-                            nullable: true
-                          instagram:
-                            type: string
-                            example: null
-                            nullable: true
-                          telegram:
-                            type: string
-                            example: null
-                            nullable: true
-                          behance:
-                            type: string
-                            example: null
-                            nullable: true
-                  rating:
-                    type: number
-                    example: 4.2
-                  review_count:
-                    type: integer
-                    example: 10
-                  would_recommend:
-                    type: integer
-                    example: 85
-                  ceo_performance:
-                    type: integer
-                    example: 78
-                  open_positions:
-                    type: integer
-                    example: 3
+                    example: 'Invalid authentication token signature'
         404:
           description: ''
           content:
@@ -4851,7 +4702,7 @@ paths:
     post:
       summary: 'Update public company info'
       operationId: updatePublicCompanyInfo
-      description: "Creates or updates the employer's company public profile.     *"
+      description: "Creates or updates the employer's company public profile.\n\n**Phone fields:** use `phone_main` (primary) and `phone_extra` (optional secondary).\nSet `phone_visible: true` to expose `phone_main` on the public profile.\n\n**Size vs industry:** `company_size` is the canonical headcount bucket (shared across public\nand private views). `industry` is a single display-label string. For multi-value internal\nindustry taxonomy, use `industry_tags` in the private info endpoint."
       parameters: []
       responses:
         422:
@@ -4886,7 +4737,7 @@ paths:
                   nullable: true
                 industry:
                   type: string
-                  description: 'Industry label.'
+                  description: "Single display-label for the company's primary industry."
                   example: 'Information Technology Services'
                   nullable: true
                 company_size:
@@ -4905,25 +4756,30 @@ paths:
                   description: Country.
                   example: Syria
                   nullable: true
-                phone:
+                phone_main:
                   type: string
-                  description: 'Contact phone.'
+                  description: 'Primary contact phone.'
                   example: '0932444357'
+                  nullable: true
+                phone_extra:
+                  type: string
+                  description: 'Secondary contact phone (optional).'
+                  example: '0911000000'
                   nullable: true
                 phone_visible:
                   type: boolean
-                  description: 'Whether phone is shown to job seekers.'
+                  description: 'Expose phone_main on the public profile.'
                   example: false
                   nullable: true
                 email:
                   type: string
                   description: 'Contact email.'
-                  example: tamammb97@gmail.com
+                  example: contact@tammam.co
                   nullable: true
     put:
       summary: 'Update public company info'
       operationId: updatePublicCompanyInfo
-      description: "Creates or updates the employer's company public profile.     *"
+      description: "Creates or updates the employer's company public profile.\n\n**Phone fields:** use `phone_main` (primary) and `phone_extra` (optional secondary).\nSet `phone_visible: true` to expose `phone_main` on the public profile.\n\n**Size vs industry:** `company_size` is the canonical headcount bucket (shared across public\nand private views). `industry` is a single display-label string. For multi-value internal\nindustry taxonomy, use `industry_tags` in the private info endpoint."
       parameters: []
       responses:
         422:
@@ -4958,7 +4814,7 @@ paths:
                   nullable: true
                 industry:
                   type: string
-                  description: 'Industry label.'
+                  description: "Single display-label for the company's primary industry."
                   example: 'Information Technology Services'
                   nullable: true
                 company_size:
@@ -4977,26 +4833,31 @@ paths:
                   description: Country.
                   example: Syria
                   nullable: true
-                phone:
+                phone_main:
                   type: string
-                  description: 'Contact phone.'
+                  description: 'Primary contact phone.'
                   example: '0932444357'
+                  nullable: true
+                phone_extra:
+                  type: string
+                  description: 'Secondary contact phone (optional).'
+                  example: '0911000000'
                   nullable: true
                 phone_visible:
                   type: boolean
-                  description: 'Whether phone is shown to job seekers.'
+                  description: 'Expose phone_main on the public profile.'
                   example: false
                   nullable: true
                 email:
                   type: string
                   description: 'Contact email.'
-                  example: tamammb97@gmail.com
+                  example: contact@tammam.co
                   nullable: true
   /api/employer/company/private:
     put:
-      summary: 'Update private / general company info'
-      operationId: updatePrivateGeneralCompanyInfo
-      description: "Updates employer-only private info (address, founded year, extra phones, social links, etc.).\nSet `expose_to_applicants` to `true` to make this block visible on job posts."
+      summary: 'Update private company info'
+      operationId: updatePrivateCompanyInfo
+      description: "Updates the employer-only private info block stored in `private_info`.\nSet `expose_to_applicants: true` to surface `address`, `industry_tags`,\n`founded_year`, `website`, and `social_media` on the public company endpoint.\n\n**Field guide — what lives here vs. the public endpoint:**\n| Field | Where |\n|---|---|\n| `company_size` | Public endpoint only (canonical, no duplicate here) |\n| `industry` | Public endpoint — single display label |\n| `industry_tags` | Private info — multi-value internal taxonomy array |\n| `phone_main` / `phone_extra` | Public endpoint (visibility gated by `phone_visible`) |\n| `address`, `founded_year`, `website`, `social_media` | Private info only |"
       parameters: []
       responses:
         404:
@@ -5034,7 +4895,7 @@ paths:
               properties:
                 expose_to_applicants:
                   type: boolean
-                  description: 'Show this info to applicants on job posts.'
+                  description: 'Expose safe private fields on the public profile.'
                   example: false
                   nullable: true
                 address:
@@ -5042,31 +4903,18 @@ paths:
                   description: 'Full street address.'
                   example: 'Mazzeh, Damascus'
                   nullable: true
-                industries:
+                industry_tags:
                   type: array
-                  description: 'Multi-select industries.'
+                  description: 'Internal multi-value industry taxonomy (distinct from the public `industry` display label).'
                   example:
-                    - 'Information Technology Services'
+                    - 'Software Development'
+                    - 'IT Consulting'
                   items:
                     type: string
-                company_size:
-                  type: string
-                  description: 'Enum value (same as public).'
-                  example: less_than_10
                 founded_year:
                   type: integer
-                  description: 'Year company was founded.'
+                  description: 'Year the company was founded.'
                   example: 2018
-                phone_main:
-                  type: string
-                  description: 'Primary phone.'
-                  example: '0932444357'
-                  nullable: true
-                phone_extra:
-                  type: string
-                  description: 'Secondary phone.'
-                  example: null
-                  nullable: true
                 website:
                   type: string
                   description: 'Company website URL.'
@@ -5110,7 +4958,7 @@ paths:
                     linkedin:
                       type: string
                       description: ''
-                      example: architecto
+                      example: 'https://linkedin.com/company/tammam'
                       nullable: true
                   nullable: true
   /api/employer/company/logo:

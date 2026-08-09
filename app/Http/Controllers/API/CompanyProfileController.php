@@ -78,6 +78,9 @@ class CompanyProfileController extends Controller
      * Get company
      *
      * Returns a single company public profile including active job posts, reviews, and ratings.
+     * When the employer has set `private_info.expose_to_applicants = true`, the response also
+     * includes `address`, `industry_tags`, `founded_year`, `website`, and `social_media`.
+     * `phone_main` is included when `phone_visible` is true.
      *
      * @unauthenticated
      * @urlParam id string required Company profile ID. Example: 664f1a2b3c4d5e6f7a8b9c0d
@@ -115,49 +118,13 @@ class CompanyProfileController extends Controller
      * Get my company profile (owner view)
      *
      * Returns the full company profile for the authenticated employer, including
-     * private fields (`private_info`, `logo`, `cover_image`, rating data, etc.)
-     * that are not exposed on the public company endpoint.
+     * `private_info`, active `jobs`, `reviews`, `category_ratings`, and all rating fields.
+     * This is a superset of the public company endpoint.
      *
-     * @response 200 scenario="Success" {
-     *   "_id": "664f1a2b3c4d5e6f7a8b9c0d",
-     *   "employer_id": "664f1a2b3c4d5e6f7a8b9c0e",
-     *   "name": "Acme Corp",
-     *   "slug": "acme-corp",
-     *   "logo": "https://example.com/logo.png",
-     *   "cover_image": "https://example.com/cover.png",
-     *   "description": "We build software.",
-     *   "industry": "Information Technology",
-     *   "company_size": "10_to_50",
-     *   "city": "Damascus",
-     *   "country": "Syria",
-     *   "phone": "0911000000",
-     *   "phone_visible": true,
-     *   "email": "contact@acme.com",
-     *   "private_info": {
-     *     "expose_to_applicants": false,
-     *     "address": "Mazzeh Street 12",
-     *     "industries": ["Software", "Consulting"],
-     *     "company_size": "10_to_50",
-     *     "founded_year": 2015,
-     *     "phone_main": "0911000000",
-     *     "phone_extra": null,
-     *     "website": "https://acme.com",
-     *     "social_media": {
-     *       "linkedin": "https://linkedin.com/company/acme",
-     *       "github": null,
-     *       "twitter": null,
-     *       "facebook": null,
-     *       "instagram": null,
-     *       "telegram": null,
-     *       "behance": null
-     *     }
-     *   },
-     *   "rating": 4.2,
-     *   "review_count": 10,
-     *   "would_recommend": 85,
-     *   "ceo_performance": 78,
-     *   "open_positions": 3
-     * }
+     * **Field locations at a glance:**
+     * - `company_size`, `industry`, `phone_main`, `phone_extra` — top-level fields
+     * - `industry_tags`, `address`, `founded_year`, `website`, `social_media` — inside `private_info`
+     *
      * @response 404 { "message": "No company profile found. Create one first." }
      */
     public function myProfile()
@@ -174,16 +141,25 @@ class CompanyProfileController extends Controller
     /**
      * Update public company info
      *
-     * Creates or updates the employer's company public profile.     *
+     * Creates or updates the employer's company public profile.
+     *
+     * **Phone fields:** use `phone_main` (primary) and `phone_extra` (optional secondary).
+     * Set `phone_visible: true` to expose `phone_main` on the public profile.
+     *
+     * **Size vs industry:** `company_size` is the canonical headcount bucket (shared across public
+     * and private views). `industry` is a single display-label string. For multi-value internal
+     * industry taxonomy, use `industry_tags` in the private info endpoint.
+     *
      * @bodyParam name string Company name (required on first creation, max 150). Example: Tammam company
      * @bodyParam description string Free-text description. Example: We build software.
-     * @bodyParam industry string Industry label. Example: Information Technology Services
+     * @bodyParam industry string Single display-label for the company's primary industry. Example: Information Technology Services
      * @bodyParam company_size string Enum: less_than_10 | 10_to_50 | 51_to_200 | 201_to_500 | 501_to_1000 | 1001_to_5000 | more_than_5000. Example: less_than_10
      * @bodyParam city string City name. Example: Damascus
      * @bodyParam country string Country. Example: Syria
-     * @bodyParam phone string Contact phone. Example: 0932444357
-     * @bodyParam phone_visible boolean Whether phone is shown to job seekers. Example: false
-     * @bodyParam email string Contact email. Example: tamammb97@gmail.com
+     * @bodyParam phone_main string Primary contact phone. Example: 0932444357
+     * @bodyParam phone_extra string Secondary contact phone (optional). Example: 0911000000
+     * @bodyParam phone_visible boolean Expose phone_main on the public profile. Example: false
+     * @bodyParam email string Contact email. Example: contact@tammam.co
      * @response 422 { "errors": {} }
      */
     public function updatePublic(Request $request)
@@ -198,7 +174,8 @@ class CompanyProfileController extends Controller
             'company_size' => 'nullable|in:' . implode(',', CompanyProfile::SIZES),
             'city'         => 'nullable|string|max:100',
             'country'      => 'nullable|string|max:100',
-            'phone'        => 'nullable|string|max:30',
+            'phone_main'   => 'nullable|string|max:30',
+            'phone_extra'  => 'nullable|string|max:30',
             'phone_visible'=> 'nullable|boolean',
             'email'        => 'nullable|email|max:150',
         ]);
@@ -238,27 +215,34 @@ class CompanyProfileController extends Controller
     }
 
     /**
-     * Update private / general company info
+     * Update private company info
      *
-     * Updates employer-only private info (address, founded year, extra phones, social links, etc.).
-     * Set `expose_to_applicants` to `true` to make this block visible on job posts.
+     * Updates the employer-only private info block stored in `private_info`.
+     * Set `expose_to_applicants: true` to surface `address`, `industry_tags`,
+     * `founded_year`, `website`, and `social_media` on the public company endpoint.
      *
-     * @bodyParam expose_to_applicants boolean Show this info to applicants on job posts. Example: false
+     * **Field guide — what lives here vs. the public endpoint:**
+     * | Field | Where |
+     * |---|---|
+     * | `company_size` | Public endpoint only (canonical, no duplicate here) |
+     * | `industry` | Public endpoint — single display label |
+     * | `industry_tags` | Private info — multi-value internal taxonomy array |
+     * | `phone_main` / `phone_extra` | Public endpoint (visibility gated by `phone_visible`) |
+     * | `address`, `founded_year`, `website`, `social_media` | Private info only |
+     *
+     * @bodyParam expose_to_applicants boolean Expose safe private fields on the public profile. Example: false
      * @bodyParam address string Full street address. Example: Mazzeh, Damascus
-     * @bodyParam industries string[] Multi-select industries. Example: ["Information Technology Services"]
-     * @bodyParam company_size string Enum value (same as public). Example: less_than_10
-     * @bodyParam founded_year integer Year company was founded. Example: 2018
-     * @bodyParam phone_main string Primary phone. Example: 0932444357
-     * @bodyParam phone_extra string Secondary phone. Example: null
+     * @bodyParam industry_tags string[] Internal multi-value industry taxonomy (distinct from the public `industry` display label). Example: ["Software Development", "IT Consulting"]
+     * @bodyParam founded_year integer Year the company was founded. Example: 2018
      * @bodyParam website string Company website URL. Example: https://tammam.co
      * @bodyParam social_media object Social media links.
-     * @bodyParam social_media.instagram string
-     * @bodyParam social_media.telegram string
+     * @bodyParam social_media.linkedin string Example: https://linkedin.com/company/tammam
+     * @bodyParam social_media.github string
      * @bodyParam social_media.twitter string
      * @bodyParam social_media.facebook string
+     * @bodyParam social_media.instagram string
+     * @bodyParam social_media.telegram string
      * @bodyParam social_media.behance string
-     * @bodyParam social_media.github string
-     * @bodyParam social_media.linkedin string
      * @response 404 { "message": "No company profile found. Create one first." }
      * @response 422 { "errors": {} }
      */
@@ -273,12 +257,9 @@ class CompanyProfileController extends Controller
         $validator = Validator::make($request->all(), [
             'expose_to_applicants'   => 'nullable|boolean',
             'address'                => 'nullable|string|max:255',
-            'industries'             => 'nullable|array|min:1',
-            'industries.*'           => 'string|max:150',
-            'company_size'           => 'nullable|in:' . implode(',', CompanyProfile::SIZES),
+            'industry_tags'          => 'nullable|array|min:1',
+            'industry_tags.*'        => 'string|max:150',
             'founded_year'           => 'nullable|integer|min:1800|max:' . date('Y'),
-            'phone_main'             => 'nullable|string|max:30',
-            'phone_extra'            => 'nullable|string|max:30',
             'website'                => 'nullable|url',
             'social_media'           => 'nullable|array',
             'social_media.instagram' => 'nullable|url',
@@ -387,7 +368,8 @@ class CompanyProfileController extends Controller
         return CompanyProfile::where('employer_id', (string) Auth::user()->_id)->first();
     }
 
-    /** Public-facing shape: no private_info, phone hidden when phone_visible=false. */
+    /** Public-facing shape: no private_info, phone_main hidden when phone_visible=false.
+     *  If private_info.expose_to_applicants is true, merges safe private fields in. */
     private function publicView(CompanyProfile $profile): array
     {
         $data = $profile->only([
@@ -398,7 +380,17 @@ class CompanyProfileController extends Controller
         ]);
 
         if ($profile->phone_visible) {
-            $data['phone'] = $profile->phone;
+            $data['phone_main'] = $profile->phone_main;
+        }
+
+        // Merge exposed private fields when employer opts in
+        $private = $profile->private_info ?? [];
+        if (!empty($private['expose_to_applicants'])) {
+            foreach (['address', 'industry_tags', 'founded_year', 'website', 'social_media'] as $key) {
+                if (isset($private[$key])) {
+                    $data[$key] = $private[$key];
+                }
+            }
         }
 
         $data['open_positions'] = JobPost::where('employer_id', $profile->employer_id)
@@ -407,12 +399,25 @@ class CompanyProfileController extends Controller
         return $data;
     }
 
-    /** Owner-facing shape: includes private_info and all fields. */
+    /** Owner-facing shape: includes private_info, jobs, reviews, and rating breakdown. */
     private function ownerView(CompanyProfile $profile): array
     {
         $data = $profile->toArray();
+
         $data['open_positions'] = JobPost::where('employer_id', $profile->employer_id)
             ->where('is_active', true)->count();
+
+        $data['jobs'] = JobPost::where('employer_id', $profile->employer_id)
+            ->where('is_active', true)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(fn($job) => $this->formatJobCard($job))
+            ->values()
+            ->toArray();
+
+        $data['reviews']          = $profile->reviews ?? [];
+        $data['category_ratings'] = $profile->category_ratings ?? null;
+
         return $data;
     }
 

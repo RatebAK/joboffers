@@ -225,7 +225,7 @@
                                 <a href="#endpoints-PUTapi-employer-company">Update public company info</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-PUTapi-employer-company-private">
-                                <a href="#endpoints-PUTapi-employer-company-private">Update private / general company info</a>
+                                <a href="#endpoints-PUTapi-employer-company-private">Update private company info</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-employer-company-logo">
                                 <a href="#endpoints-POSTapi-employer-company-logo">Upload company logo</a>
@@ -344,7 +344,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: August 8, 2026</li>
+        <li>Last updated: August 9, 2026</li>
     </ul>
 </div>
 
@@ -1980,7 +1980,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>
 </p>
 
-<p>Returns a single company public profile including active job posts, reviews, and ratings.</p>
+<p>Returns a single company public profile including active job posts, reviews, and ratings.
+When the employer has set <code>private_info.expose_to_applicants = true</code>, the response also
+includes <code>address</code>, <code>industry_tags</code>, <code>founded_year</code>, <code>website</code>, and <code>social_media</code>.
+<code>phone_main</code> is included when <code>phone_visible</code> is true.</p>
 
 <span id="example-requests-GETapi-companies--id-">
 <blockquote>Example request:</blockquote>
@@ -2791,7 +2794,7 @@ All other fields are sent as regular form fields.</p>
     --form "phone=+961 70 123456"\
     --form "date_of_birth=1995-06-15"\
     --form "marital_status=architecto"\
-    --form "image=@/tmp/phpI7m6ya" </code></pre></div>
+    --form "image=@/tmp/phpgF3hLc" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -2973,7 +2976,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>JPEG/PNG/WEBP profile photo, max 2MB. Example: <code>/tmp/phpI7m6ya</code></p>
+<p>JPEG/PNG/WEBP profile photo, max 2MB. Example: <code>/tmp/phpgF3hLc</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>gender</code></b>&nbsp;&nbsp;
@@ -4848,20 +4851,20 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "last_name=n"\
     --form "full_name=g"\
     --form "image=z"\
-    --form "gender=other"\
+    --form "gender=female"\
     --form "nationality=m"\
     --form "city=i"\
     --form "location=y"\
     --form "address=v"\
     --form "phone=dljnikhwaykcmyuw"\
     --form "date_of_birth=pwlvqwrsitcpscql"\
-    --form "marital_status=divorced"\
+    --form "marital_status=single"\
     --form "salary_range_from=16"\
     --form "salary_range_to=38"\
-    --form "current_job_status=employed"\
+    --form "current_job_status=freelancing"\
     --form "years_of_experience=8"\
     --form "education_level=n"\
-    --form "job_level=senior"\
+    --form "job_level=mid"\
     --form "job_types[]=r"\
     --form "job_roles[]=w"\
     --form "work_cities[]=t"\
@@ -4874,7 +4877,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "social_links[portfolio]=m"\
     --form "social_links[twitter]=i"\
     --form "skills[][name]=y"\
-    --form "skills[][level]=advanced"\
+    --form "skills[][level]=intermediate"\
     --form "education_history[][certificate_type]=v"\
     --form "education_history[][university]=d"\
     --form "education_history[][faculty]=l"\
@@ -4890,7 +4893,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "work_experience[][to_date]=tnnoqitpxntltcvi"\
     --form "work_experience[][is_currently_working]="\
     --form "work_experience[][description]=Eius et animi quos velit et."\
-    --form "resume=@/tmp/phpgx36LR" </code></pre></div>
+    --form "resume=@/tmp/phpTnSBY9" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -4909,20 +4912,20 @@ body.append('first_name', 'b');
 body.append('last_name', 'n');
 body.append('full_name', 'g');
 body.append('image', 'z');
-body.append('gender', 'other');
+body.append('gender', 'female');
 body.append('nationality', 'm');
 body.append('city', 'i');
 body.append('location', 'y');
 body.append('address', 'v');
 body.append('phone', 'dljnikhwaykcmyuw');
 body.append('date_of_birth', 'pwlvqwrsitcpscql');
-body.append('marital_status', 'divorced');
+body.append('marital_status', 'single');
 body.append('salary_range_from', '16');
 body.append('salary_range_to', '38');
-body.append('current_job_status', 'employed');
+body.append('current_job_status', 'freelancing');
 body.append('years_of_experience', '8');
 body.append('education_level', 'n');
-body.append('job_level', 'senior');
+body.append('job_level', 'mid');
 body.append('job_types[]', 'r');
 body.append('job_roles[]', 'w');
 body.append('work_cities[]', 't');
@@ -4935,7 +4938,7 @@ body.append('social_links[github]', 'z');
 body.append('social_links[portfolio]', 'm');
 body.append('social_links[twitter]', 'i');
 body.append('skills[][name]', 'y');
-body.append('skills[][level]', 'advanced');
+body.append('skills[][level]', 'intermediate');
 body.append('education_history[][certificate_type]', 'v');
 body.append('education_history[][university]', 'd');
 body.append('education_history[][faculty]', 'l');
@@ -5102,10 +5105,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="gender"                data-endpoint="PUTapi-job-seeker-profile"
-               value="other"
+               value="female"
                data-component="body">
     <br>
-<p>Example: <code>other</code></p>
+<p>Example: <code>female</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>male</code></li> <li><code>female</code></li> <li><code>other</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5188,10 +5191,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="marital_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="divorced"
+               value="single"
                data-component="body">
     <br>
-<p>Example: <code>divorced</code></p>
+<p>Example: <code>single</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>single</code></li> <li><code>married</code></li> <li><code>divorced</code></li> <li><code>widowed</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5226,10 +5229,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="current_job_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="employed"
+               value="freelancing"
                data-component="body">
     <br>
-<p>Example: <code>employed</code></p>
+<p>Example: <code>freelancing</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>employed</code></li> <li><code>unemployed</code></li> <li><code>freelancing</code></li> <li><code>student</code></li> <li><code>open_to_work</code></li></ul>
         </div>
@@ -5264,10 +5267,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="senior"
+               value="mid"
                data-component="body">
     <br>
-<p>Example: <code>senior</code></p>
+<p>Example: <code>mid</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>entry</code></li> <li><code>junior</code></li> <li><code>mid</code></li> <li><code>senior</code></li> <li><code>lead</code></li> <li><code>manager</code></li> <li><code>director</code></li> <li><code>executive</code></li></ul>
         </div>
@@ -5460,10 +5463,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="skills.0.level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="advanced"
+               value="intermediate"
                data-component="body">
     <br>
-<p>Example: <code>advanced</code></p>
+<p>Example: <code>intermediate</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>beginner</code></li> <li><code>intermediate</code></li> <li><code>advanced</code></li> <li><code>expert</code></li></ul>
                     </div>
@@ -5695,7 +5698,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>/tmp/phpgx36LR</code></p>
+<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>/tmp/phpTnSBY9</code></p>
         </div>
         </form>
 
@@ -5736,7 +5739,7 @@ Retry failed: <code>POST /job-seeker/resume/retry-analysis</code></p>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@/tmp/phprjOYYH" </code></pre></div>
+    --form "resume=@/tmp/phpP3S6PP" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -5907,7 +5910,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phprjOYYH</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpP3S6PP</code></p>
         </div>
         </form>
 
@@ -6271,7 +6274,7 @@ This endpoint is similar to <code>/upload</code> but accepts field name <code>cv
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cv=@/tmp/phpiEc72y" </code></pre></div>
+    --form "cv=@/tmp/phpjO6ncI" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6430,7 +6433,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpiEc72y</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpjO6ncI</code></p>
         </div>
         </form>
 
@@ -7252,7 +7255,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "positions_suited_for[]=architecto"\
     --form "notice_period=architecto"\
     --form "expected_salary=architecto"\
-    --form "resume=@/tmp/phpSwwmWR" </code></pre></div>
+    --form "resume=@/tmp/phpTU1L91" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -7441,7 +7444,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/phpSwwmWR</code></p>
+<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/phpTU1L91</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>education</code></b>&nbsp;&nbsp;
@@ -7730,7 +7733,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"keyword\": \"b\",
     \"location\": \"n\",
-    \"job_type\": \"full_time\",
+    \"job_type\": \"freelance\",
     \"category\": \"g\",
     \"min_salary\": 12
 }"
@@ -7761,7 +7764,7 @@ const headers = {
 let body = {
     "keyword": "b",
     "location": "n",
-    "job_type": "full_time",
+    "job_type": "freelance",
     "category": "g",
     "min_salary": 12
 };
@@ -7975,10 +7978,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_type"                data-endpoint="GETapi-job-seeker-jobs-search"
-               value="full_time"
+               value="freelance"
                data-component="body">
     <br>
-<p>Example: <code>full_time</code></p>
+<p>Example: <code>freelance</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>full_time</code></li> <li><code>part_time</code></li> <li><code>contract</code></li> <li><code>freelance</code></li></ul>
         </div>
@@ -9015,7 +9018,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "document=@/tmp/php8BF5dy" </code></pre></div>
+    --form "document=@/tmp/phpJgH8MG" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9164,7 +9167,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/php8BF5dy</code></p>
+<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/phpJgH8MG</code></p>
         </div>
         </form>
 
@@ -10809,8 +10812,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </p>
 
 <p>Returns the full company profile for the authenticated employer, including
-private fields (<code>private_info</code>, <code>logo</code>, <code>cover_image</code>, rating data, etc.)
-that are not exposed on the public company endpoint.</p>
+<code>private_info</code>, active <code>jobs</code>, <code>reviews</code>, <code>category_ratings</code>, and all rating fields.
+This is a superset of the public company endpoint.</p>
+<p><strong>Field locations at a glance:</strong></p>
+<ul>
+<li><code>company_size</code>, <code>industry</code>, <code>phone_main</code>, <code>phone_extra</code> — top-level fields</li>
+<li><code>industry_tags</code>, <code>address</code>, <code>founded_year</code>, <code>website</code>, <code>social_media</code> — inside <code>private_info</code></li>
+</ul>
 
 <span id="example-requests-GETapi-employer-company">
 <blockquote>Example request:</blockquote>
@@ -10845,52 +10853,20 @@ fetch(url, {
 
 <span id="example-responses-GETapi-employer-company">
             <blockquote>
-            <p>Example response (200, Success):</p>
+            <p>Example response (401):</p>
         </blockquote>
-                <pre>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
-    &quot;employer_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0e&quot;,
-    &quot;name&quot;: &quot;Acme Corp&quot;,
-    &quot;slug&quot;: &quot;acme-corp&quot;,
-    &quot;logo&quot;: &quot;https://example.com/logo.png&quot;,
-    &quot;cover_image&quot;: &quot;https://example.com/cover.png&quot;,
-    &quot;description&quot;: &quot;We build software.&quot;,
-    &quot;industry&quot;: &quot;Information Technology&quot;,
-    &quot;company_size&quot;: &quot;10_to_50&quot;,
-    &quot;city&quot;: &quot;Damascus&quot;,
-    &quot;country&quot;: &quot;Syria&quot;,
-    &quot;phone&quot;: &quot;0911000000&quot;,
-    &quot;phone_visible&quot;: true,
-    &quot;email&quot;: &quot;contact@acme.com&quot;,
-    &quot;private_info&quot;: {
-        &quot;expose_to_applicants&quot;: false,
-        &quot;address&quot;: &quot;Mazzeh Street 12&quot;,
-        &quot;industries&quot;: [
-            &quot;Software&quot;,
-            &quot;Consulting&quot;
-        ],
-        &quot;company_size&quot;: &quot;10_to_50&quot;,
-        &quot;founded_year&quot;: 2015,
-        &quot;phone_main&quot;: &quot;0911000000&quot;,
-        &quot;phone_extra&quot;: null,
-        &quot;website&quot;: &quot;https://acme.com&quot;,
-        &quot;social_media&quot;: {
-            &quot;linkedin&quot;: &quot;https://linkedin.com/company/acme&quot;,
-            &quot;github&quot;: null,
-            &quot;twitter&quot;: null,
-            &quot;facebook&quot;: null,
-            &quot;instagram&quot;: null,
-            &quot;telegram&quot;: null,
-            &quot;behance&quot;: null
-        }
-    },
-    &quot;rating&quot;: 4.2,
-    &quot;review_count&quot;: 10,
-    &quot;would_recommend&quot;: 85,
-    &quot;ceo_performance&quot;: 78,
-    &quot;open_positions&quot;: 3
+    &quot;error&quot;: &quot;Unauthorized&quot;,
+    &quot;message&quot;: &quot;Invalid authentication token signature&quot;
 }</code>
  </pre>
             <blockquote>
@@ -10994,7 +10970,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Creates or updates the employer's company public profile.     *</p>
+<p>Creates or updates the employer's company public profile.</p>
+<p><strong>Phone fields:</strong> use <code>phone_main</code> (primary) and <code>phone_extra</code> (optional secondary).
+Set <code>phone_visible: true</code> to expose <code>phone_main</code> on the public profile.</p>
+<p><strong>Size vs industry:</strong> <code>company_size</code> is the canonical headcount bucket (shared across public
+and private views). <code>industry</code> is a single display-label string. For multi-value internal
+industry taxonomy, use <code>industry_tags</code> in the private info endpoint.</p>
 
 <span id="example-requests-POSTapi-employer-company">
 <blockquote>Example request:</blockquote>
@@ -11013,9 +10994,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"company_size\": \"less_than_10\",
     \"city\": \"Damascus\",
     \"country\": \"Syria\",
-    \"phone\": \"0932444357\",
+    \"phone_main\": \"0932444357\",
+    \"phone_extra\": \"0911000000\",
     \"phone_visible\": false,
-    \"email\": \"tamammb97@gmail.com\"
+    \"email\": \"contact@tammam.co\"
 }"
 </code></pre></div>
 
@@ -11038,9 +11020,10 @@ let body = {
     "company_size": "less_than_10",
     "city": "Damascus",
     "country": "Syria",
-    "phone": "0932444357",
+    "phone_main": "0932444357",
+    "phone_extra": "0911000000",
     "phone_visible": false,
-    "email": "tamammb97@gmail.com"
+    "email": "contact@tammam.co"
 };
 
 fetch(url, {
@@ -11180,7 +11163,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="Information Technology Services"
                data-component="body">
     <br>
-<p>Industry label. Example: <code>Information Technology Services</code></p>
+<p>Single display-label for the company's primary industry. Example: <code>Information Technology Services</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>company_size</code></b>&nbsp;&nbsp;
@@ -11221,16 +11204,28 @@ Must be one of:
 <p>Country. Example: <code>Syria</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>phone</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>phone_main</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="phone"                data-endpoint="POSTapi-employer-company"
+                              name="phone_main"                data-endpoint="POSTapi-employer-company"
                value="0932444357"
                data-component="body">
     <br>
-<p>Contact phone. Example: <code>0932444357</code></p>
+<p>Primary contact phone. Example: <code>0932444357</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>phone_extra</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="phone_extra"                data-endpoint="POSTapi-employer-company"
+               value="0911000000"
+               data-component="body">
+    <br>
+<p>Secondary contact phone (optional). Example: <code>0911000000</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>phone_visible</code></b>&nbsp;&nbsp;
@@ -11252,7 +11247,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Whether phone is shown to job seekers. Example: <code>false</code></p>
+<p>Expose phone_main on the public profile. Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
@@ -11261,10 +11256,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="email"                data-endpoint="POSTapi-employer-company"
-               value="tamammb97@gmail.com"
+               value="contact@tammam.co"
                data-component="body">
     <br>
-<p>Contact email. Example: <code>tamammb97@gmail.com</code></p>
+<p>Contact email. Example: <code>contact@tammam.co</code></p>
         </div>
         </form>
 
@@ -11274,7 +11269,12 @@ Must be one of:
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Creates or updates the employer's company public profile.     *</p>
+<p>Creates or updates the employer's company public profile.</p>
+<p><strong>Phone fields:</strong> use <code>phone_main</code> (primary) and <code>phone_extra</code> (optional secondary).
+Set <code>phone_visible: true</code> to expose <code>phone_main</code> on the public profile.</p>
+<p><strong>Size vs industry:</strong> <code>company_size</code> is the canonical headcount bucket (shared across public
+and private views). <code>industry</code> is a single display-label string. For multi-value internal
+industry taxonomy, use <code>industry_tags</code> in the private info endpoint.</p>
 
 <span id="example-requests-PUTapi-employer-company">
 <blockquote>Example request:</blockquote>
@@ -11293,9 +11293,10 @@ Must be one of:
     \"company_size\": \"less_than_10\",
     \"city\": \"Damascus\",
     \"country\": \"Syria\",
-    \"phone\": \"0932444357\",
+    \"phone_main\": \"0932444357\",
+    \"phone_extra\": \"0911000000\",
     \"phone_visible\": false,
-    \"email\": \"tamammb97@gmail.com\"
+    \"email\": \"contact@tammam.co\"
 }"
 </code></pre></div>
 
@@ -11318,9 +11319,10 @@ let body = {
     "company_size": "less_than_10",
     "city": "Damascus",
     "country": "Syria",
-    "phone": "0932444357",
+    "phone_main": "0932444357",
+    "phone_extra": "0911000000",
     "phone_visible": false,
-    "email": "tamammb97@gmail.com"
+    "email": "contact@tammam.co"
 };
 
 fetch(url, {
@@ -11460,7 +11462,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="Information Technology Services"
                data-component="body">
     <br>
-<p>Industry label. Example: <code>Information Technology Services</code></p>
+<p>Single display-label for the company's primary industry. Example: <code>Information Technology Services</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>company_size</code></b>&nbsp;&nbsp;
@@ -11501,16 +11503,28 @@ Must be one of:
 <p>Country. Example: <code>Syria</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>phone</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>phone_main</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="phone"                data-endpoint="PUTapi-employer-company"
+                              name="phone_main"                data-endpoint="PUTapi-employer-company"
                value="0932444357"
                data-component="body">
     <br>
-<p>Contact phone. Example: <code>0932444357</code></p>
+<p>Primary contact phone. Example: <code>0932444357</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>phone_extra</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="phone_extra"                data-endpoint="PUTapi-employer-company"
+               value="0911000000"
+               data-component="body">
+    <br>
+<p>Secondary contact phone (optional). Example: <code>0911000000</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>phone_visible</code></b>&nbsp;&nbsp;
@@ -11532,7 +11546,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Whether phone is shown to job seekers. Example: <code>false</code></p>
+<p>Expose phone_main on the public profile. Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
@@ -11541,21 +11555,30 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="email"                data-endpoint="PUTapi-employer-company"
-               value="tamammb97@gmail.com"
+               value="contact@tammam.co"
                data-component="body">
     <br>
-<p>Contact email. Example: <code>tamammb97@gmail.com</code></p>
+<p>Contact email. Example: <code>contact@tammam.co</code></p>
         </div>
         </form>
 
-                    <h2 id="endpoints-PUTapi-employer-company-private">Update private / general company info</h2>
+                    <h2 id="endpoints-PUTapi-employer-company-private">Update private company info</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Updates employer-only private info (address, founded year, extra phones, social links, etc.).
-Set <code>expose_to_applicants</code> to <code>true</code> to make this block visible on job posts.</p>
+<p>Updates the employer-only private info block stored in <code>private_info</code>.
+Set <code>expose_to_applicants: true</code> to surface <code>address</code>, <code>industry_tags</code>,
+<code>founded_year</code>, <code>website</code>, and <code>social_media</code> on the public company endpoint.</p>
+<p><strong>Field guide — what lives here vs. the public endpoint:</strong>
+| Field | Where |
+|---|---|
+| <code>company_size</code> | Public endpoint only (canonical, no duplicate here) |
+| <code>industry</code> | Public endpoint — single display label |
+| <code>industry_tags</code> | Private info — multi-value internal taxonomy array |
+| <code>phone_main</code> / <code>phone_extra</code> | Public endpoint (visibility gated by <code>phone_visible</code>) |
+| <code>address</code>, <code>founded_year</code>, <code>website</code>, <code>social_media</code> | Private info only |</p>
 
 <span id="example-requests-PUTapi-employer-company-private">
 <blockquote>Example request:</blockquote>
@@ -11570,13 +11593,11 @@ Set <code>expose_to_applicants</code> to <code>true</code> to make this block vi
     --data "{
     \"expose_to_applicants\": false,
     \"address\": \"Mazzeh, Damascus\",
-    \"industries\": [
-        \"Information Technology Services\"
+    \"industry_tags\": [
+        \"Software Development\",
+        \"IT Consulting\"
     ],
-    \"company_size\": \"less_than_10\",
     \"founded_year\": 2018,
-    \"phone_main\": \"0932444357\",
-    \"phone_extra\": null,
     \"website\": \"https:\\/\\/tammam.co\",
     \"social_media\": {
         \"instagram\": \"architecto\",
@@ -11585,7 +11606,7 @@ Set <code>expose_to_applicants</code> to <code>true</code> to make this block vi
         \"facebook\": \"architecto\",
         \"behance\": \"architecto\",
         \"github\": \"architecto\",
-        \"linkedin\": \"architecto\"
+        \"linkedin\": \"https:\\/\\/linkedin.com\\/company\\/tammam\"
     }
 }"
 </code></pre></div>
@@ -11605,13 +11626,11 @@ const headers = {
 let body = {
     "expose_to_applicants": false,
     "address": "Mazzeh, Damascus",
-    "industries": [
-        "Information Technology Services"
+    "industry_tags": [
+        "Software Development",
+        "IT Consulting"
     ],
-    "company_size": "less_than_10",
     "founded_year": 2018,
-    "phone_main": "0932444357",
-    "phone_extra": null,
     "website": "https:\/\/tammam.co",
     "social_media": {
         "instagram": "architecto",
@@ -11620,7 +11639,7 @@ let body = {
         "facebook": "architecto",
         "behance": "architecto",
         "github": "architecto",
-        "linkedin": "architecto"
+        "linkedin": "https:\/\/linkedin.com\/company\/tammam"
     }
 };
 
@@ -11756,7 +11775,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Show this info to applicants on job posts. Example: <code>false</code></p>
+<p>Expose safe private fields on the public profile. Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>address</code></b>&nbsp;&nbsp;
@@ -11771,30 +11790,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Full street address. Example: <code>Mazzeh, Damascus</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>industries</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>industry_tags</code></b>&nbsp;&nbsp;
 <small>string[]</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="industries[0]"                data-endpoint="PUTapi-employer-company-private"
+                              name="industry_tags[0]"                data-endpoint="PUTapi-employer-company-private"
                data-component="body">
         <input type="text" style="display: none"
-               name="industries[1]"                data-endpoint="PUTapi-employer-company-private"
+               name="industry_tags[1]"                data-endpoint="PUTapi-employer-company-private"
                data-component="body">
     <br>
-<p>Multi-select industries.</p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>company_size</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="company_size"                data-endpoint="PUTapi-employer-company-private"
-               value="less_than_10"
-               data-component="body">
-    <br>
-<p>Enum value (same as public). Example: <code>less_than_10</code></p>
+<p>Internal multi-value industry taxonomy (distinct from the public <code>industry</code> display label).</p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>founded_year</code></b>&nbsp;&nbsp;
@@ -11806,31 +11813,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="2018"
                data-component="body">
     <br>
-<p>Year company was founded. Example: <code>2018</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>phone_main</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="phone_main"                data-endpoint="PUTapi-employer-company-private"
-               value="0932444357"
-               data-component="body">
-    <br>
-<p>Primary phone. Example: <code>0932444357</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>phone_extra</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="phone_extra"                data-endpoint="PUTapi-employer-company-private"
-               value=""
-               data-component="body">
-    <br>
-<p>Secondary phone.</p>
+<p>Year the company was founded. Example: <code>2018</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>website</code></b>&nbsp;&nbsp;
@@ -11933,10 +11916,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="social_media.linkedin"                data-endpoint="PUTapi-employer-company-private"
-               value="architecto"
+               value="https://linkedin.com/company/tammam"
                data-component="body">
     <br>
-<p>Example: <code>architecto</code></p>
+<p>Example: <code>https://linkedin.com/company/tammam</code></p>
                     </div>
                                     </details>
         </div>
@@ -11961,7 +11944,7 @@ Accepts JPEG, PNG, WebP; max 2 MB. Any previously uploaded logo is automatically
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "logo=@/tmp/phpAhmaIe" </code></pre></div>
+    --form "logo=@/tmp/php3PSCNn" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -12111,7 +12094,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>The logo image file. Accepted: jpeg, png, webp. Max 2 MB. Example: <code>/tmp/phpAhmaIe</code></p>
+<p>The logo image file. Accepted: jpeg, png, webp. Max 2 MB. Example: <code>/tmp/php3PSCNn</code></p>
         </div>
         </form>
 
@@ -12134,7 +12117,7 @@ Accepts JPEG, PNG, WebP; max 4 MB. Any previously uploaded cover image is automa
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cover_image=@/tmp/phpugTqun" </code></pre></div>
+    --form "cover_image=@/tmp/phpgU1rQm" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -12284,7 +12267,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>The cover image file. Accepted: jpeg, png, webp. Max 4 MB. Example: <code>/tmp/phpugTqun</code></p>
+<p>The cover image file. Accepted: jpeg, png, webp. Max 4 MB. Example: <code>/tmp/phpgU1rQm</code></p>
         </div>
         </form>
 
@@ -16119,7 +16102,7 @@ State University,careers@university.edu,State University,university</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "file=@/tmp/phpN1auxv" </code></pre></div>
+    --form "file=@/tmp/php39MkbV" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -16270,7 +16253,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>CSV file, max 2 MB. Required columns: name, email, company_name. Example: <code>/tmp/phpN1auxv</code></p>
+<p>CSV file, max 2 MB. Required columns: name, email, company_name. Example: <code>/tmp/php39MkbV</code></p>
         </div>
         </form>
 

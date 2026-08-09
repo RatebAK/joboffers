@@ -30,7 +30,7 @@ function myProfileWithCompany(): array
         'company_size' => '10_to_50',
         'city'         => 'Damascus',
         'country'      => 'Syria',
-        'phone'        => '0912345678',
+        'phone_main'   => '0912345678',
         'phone_visible'=> true,
         'email'        => 'contact@mytestcorp.com',
         'rating'       => 0,
@@ -67,7 +67,7 @@ test('my profile response includes all public updatable fields', function () {
     $response = $this->withToken($token)->getJson('/api/employer/company')->assertStatus(200);
 
     $data = $response->json();
-    foreach (['name', 'description', 'industry', 'company_size', 'city', 'country', 'phone', 'phone_visible', 'email'] as $field) {
+    foreach (['name', 'description', 'industry', 'company_size', 'city', 'country', 'phone_main', 'phone_visible', 'email'] as $field) {
         expect($data)->toHaveKey($field);
     }
 
@@ -122,7 +122,6 @@ test('employer can update private info', function () {
         'address'      => 'Mazzeh, Damascus',
         'founded_year' => 2018,
         'website'      => 'https://mytestcorp.com',
-        'phone_main'   => '0932000000',
     ])->assertStatus(200);
 
     $profile->refresh();

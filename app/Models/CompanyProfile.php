@@ -29,12 +29,13 @@ class CompanyProfile extends Model
         'cover_image',        // URL
         'cover_image_public_id', // Cloudinary public_id for deletion
         'description',
-        'industry',           // single industry string
-        'company_size',       // one of self::SIZES
+        'industry',           // single display-label string (e.g. "Information Technology")
+        'company_size',       // one of self::SIZES — canonical, shared by public & private
         'city',               // e.g. "Damascus"
         'country',            // e.g. "Syria"
-        'phone',              // contact phone
-        'phone_visible',      // bool — show phone to job seekers
+        'phone_main',         // primary contact phone
+        'phone_extra',        // secondary contact phone (optional)
+        'phone_visible',      // bool — show phone_main to job seekers on public profile
         'email',              // contact email
         // Private / general info (employer-only unless expose_to_applicants = true)
         'private_info',       // embedded object — see structure below
@@ -58,7 +59,8 @@ class CompanyProfile extends Model
         'company_size'     => null,
         'city'             => null,
         'country'          => null,
-        'phone'            => null,
+        'phone_main'       => null,
+        'phone_extra'      => null,
         'phone_visible'    => false,
         'email'            => null,
         // Private info block
@@ -86,18 +88,20 @@ class CompanyProfile extends Model
     /**
      * private_info sub-document shape:
      * {
-     *   expose_to_applicants: bool,   // whether this block is visible on job posts
+     *   expose_to_applicants: bool,   // surface safe fields on public profile
      *   address: string,
-     *   industries: string[],         // multi-select, at least one
-     *   company_size: string,         // same enum, can differ from public field
+     *   industry_tags: string[],      // multi-value internal taxonomy (distinct from top-level `industry`)
      *   founded_year: int,
-     *   phone_main: string,
-     *   phone_extra: string|null,
      *   website: string|null,
      *   social_media: {
      *     instagram, telegram, twitter, facebook, behance, github, linkedin
      *   }
      * }
+     *
+     * Fields NOT in private_info (they live at the top level):
+     *   company_size  — canonical headcount bucket, set via updatePublic
+     *   phone_main    — primary phone, visibility gated by phone_visible
+     *   phone_extra   — secondary phone, always owner-only
      */
 
     public function user()
