@@ -38,6 +38,7 @@ Route::prefix('auth')->group(function () {
 // Public Job Post Routes
 Route::get('jobs', [JobPostController::class, 'index']);
 Route::get('jobs/{id}', [JobPostController::class, 'show']);
+Route::get('jobs/search', [JobSeekerController::class, 'searchJobs']);
 
 // Public Company Routes
 Route::get('companies', [CompanyProfileController::class, 'index']);
@@ -46,8 +47,8 @@ Route::get('companies/{id}', [CompanyProfileController::class, 'show']);
 // Public User Search (talents/workers search)
 Route::get('search/users', [UserSearchController::class, 'index']);
 
-// Any authenticated user can view any user's full profile
-Route::middleware('jwt.auth')->get('users/{userId}', [UserProfileController::class, 'show']);
+// Public — any user (authenticated or not) can view any user's full profile
+Route::get('users/{userId}', [UserProfileController::class, 'show']);
 
 // Job Seeker Routes
 Route::middleware(['jwt.auth', 'role:employee'])->prefix('job-seeker')->group(function () {
@@ -84,9 +85,6 @@ Route::middleware(['jwt.auth', 'role:employee'])->prefix('job-seeker')->group(fu
     Route::get('applications', [ApplicationController::class, 'index']);
     Route::post('apply', [ApplicationController::class, 'store']);
     Route::delete('applications/{id}/withdraw', [ApplicationController::class, 'withdraw']);
-    Route::get('jobs/search', [JobSeekerController::class, 'searchJobs']);
-
-    // Matched Jobs
     Route::get('matched-jobs', [MatchedJobsController::class, 'index']);
 
     // Analytics
