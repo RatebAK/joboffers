@@ -404,6 +404,24 @@ class CompanyProfileController extends Controller
     {
         $data = $profile->toArray();
 
+        // Always return a fully-shaped private_info so the frontend knows the schema
+        $data['private_info'] = array_merge([
+            'expose_to_applicants' => false,
+            'address'              => null,
+            'industry_tags'        => [],
+            'founded_year'         => null,
+            'website'              => null,
+            'social_media'         => [
+                'linkedin'  => null,
+                'github'    => null,
+                'twitter'   => null,
+                'facebook'  => null,
+                'instagram' => null,
+                'telegram'  => null,
+                'behance'   => null,
+            ],
+        ], $profile->private_info ?? []);
+
         $data['open_positions'] = JobPost::where('employer_id', $profile->employer_id)
             ->where('is_active', true)->count();
 
