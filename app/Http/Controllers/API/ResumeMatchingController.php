@@ -42,16 +42,14 @@ class ResumeMatchingController extends Controller
         $user    = $request->user();
         $profile = $user->jobSeekerProfile;
 
-        $cvUrl = $profile->cv_file_path ?? null;
-
-        if (! $cvUrl) {
+        if (! ($profile->cv_file_path ?? null)) {
             return response()->json([
                 'message' => 'No CV found on your profile. Please upload and analyze your CV first.',
             ], 422);
         }
 
         try {
-            $result = $matchingService->matchResumeToJobs($cvUrl);
+            $result = $matchingService->matchResumeToJobs($profile->user_id);
         } catch (CvAnalysisException $e) {
             if ($e->getHttpStatusCode() === 422) {
                 return response()->json([
@@ -66,7 +64,6 @@ class ResumeMatchingController extends Controller
         }
 
         $jobs = collect($result['jobs'])->map(function ($job) {
-            // Look up the job post by job_id field (not MongoDB _id)
             $dbJob = JobPost::where('job_id', $job['job_id'])->first();
 
             if (! $dbJob) {

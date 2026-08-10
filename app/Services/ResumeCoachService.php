@@ -8,15 +8,21 @@ use Illuminate\Support\Facades\Log;
 
 class ResumeCoachService
 {
-    public function chat(string $userId, string $message): array
+    public function chat(string $userId, string $message, ?string $sessionId = null): array
     {
         $apiUrl = config('services.resume_coach.url');
 
+        $payload = [
+            'user_id' => $userId,
+            'message' => $message,
+        ];
+
+        if ($sessionId) {
+            $payload['session_id'] = $sessionId;
+        }
+
         try {
-            $response = Http::timeout(60)->asForm()->post($apiUrl, [
-                'user_id' => $userId,
-                'message' => $message,
-            ]);
+            $response = Http::timeout(60)->asForm()->post($apiUrl, $payload);
         } catch (\Throwable $e) {
             Log::error('Resume coach HTTP error', ['error' => $e->getMessage()]);
             throw new CvAnalysisException('Resume coach service unavailable', 502);

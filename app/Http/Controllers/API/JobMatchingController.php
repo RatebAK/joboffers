@@ -72,22 +72,21 @@ class JobMatchingController extends Controller
 
         // Enrich candidates with profile URLs and map resume_id to user_id
         $enrichedCandidates = collect($result['candidates'])->map(function ($candidate) {
-            // Find the profile by user_id (which is the resume_id from AI)
             $profile = JobSeekerProfile::where('user_id', $candidate['resume_id'])->first();
 
             return [
-                'user_id' => $candidate['resume_id'],
-                'resume_id' => $candidate['resume_id'],
-                'full_name' => $candidate['full_name'] ?? null,
+                'user_id'              => $candidate['resume_id'],
+                'resume_id'            => $candidate['resume_id'],
+                'full_name'            => $candidate['name'] ?? $candidate['full_name'] ?? null,
                 'matched_skills_score' => $candidate['matched_skills_score'] ?? 0,
-                'skills' => $candidate['skills'] ?? [],
-                'profile_url' => $profile ? "/api/employer/job-seeker/{$candidate['resume_id']}" : null,
+                'matched_skills'       => $candidate['matched_skills'] ?? $candidate['skills'] ?? [],
+                'profile_url'          => $profile ? "/api/employer/job-seeker/{$candidate['resume_id']}" : null,
             ];
         })->toArray();
 
         return response()->json([
             'extracted_requirements' => $result['extracted_requirements'],
-            'candidates' => $enrichedCandidates,
+            'candidates'             => $enrichedCandidates,
         ], 200);
     }
 
@@ -165,12 +164,12 @@ class JobMatchingController extends Controller
             $profile = JobSeekerProfile::where('user_id', $candidate['resume_id'])->first();
 
             return [
-                'user_id' => $candidate['resume_id'],
-                'resume_id' => $candidate['resume_id'],
-                'full_name' => $candidate['full_name'] ?? null,
+                'user_id'              => $candidate['resume_id'],
+                'resume_id'            => $candidate['resume_id'],
+                'full_name'            => $candidate['name'] ?? $candidate['full_name'] ?? null,
                 'matched_skills_score' => $candidate['matched_skills_score'] ?? 0,
-                'skills' => $candidate['skills'] ?? [],
-                'profile_url' => $profile ? "/api/employer/job-seeker/{$candidate['resume_id']}" : null,
+                'matched_skills'       => $candidate['matched_skills'] ?? $candidate['skills'] ?? [],
+                'profile_url'          => $profile ? "/api/employer/job-seeker/{$candidate['resume_id']}" : null,
             ];
         })->toArray();
 

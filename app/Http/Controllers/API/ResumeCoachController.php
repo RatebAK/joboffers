@@ -52,12 +52,16 @@ class ResumeCoachController extends Controller
      */
     public function chat(Request $request, ResumeCoachService $coachService)
     {
-        $request->validate(['message' => 'required|string|max:1000']);
+        $request->validate([
+            'message'    => 'required|string|max:1000',
+            'session_id' => 'nullable|string',
+        ]);
 
-        $userId = (string) $request->user()->_id;
+        $userId    = (string) $request->user()->_id;
+        $sessionId = $request->input('session_id');
 
         try {
-            $result = $coachService->chat($userId, $request->input('message'));
+            $result = $coachService->chat($userId, $request->input('message'), $sessionId);
         } catch (CvAnalysisException $e) {
             if ($e->getHttpStatusCode() === 422) {
                 return response()->json([
@@ -73,5 +77,64 @@ class ResumeCoachController extends Controller
             'response'   => $result['response'],
             'session_id' => $result['session_id'],
         ]);
+    }
+
+    /**
+     * Get session messages
+     *
+     * Returns all messages in a specific coach chat session.
+     *
+     * @authenticated
+     * @group Resume Coach
+     *
+     * @urlParam sessionId string required The session ID. Example: 64a1b2c3d4e5f6a7b8c9d0e1
+     *
+     * @response 200 { "data": [{ "role": "user", "content": "Hello", "created_at": "..." }] }
+     * @response 404 { "message": "Session not found" }
+     */
+    public function getSession(string $sessionId, Request $request)
+    {
+        $session = CoachSession::where('_id', $sessionId)
+            ->where('user_id', $request->user()->id)
+            ->first();
+
+        if (! $session) {
+            return response()->json(['message' => 'Session not found'], 404);
+        }
+
+        $messages = CoachMessage::where('session_id', $sessionId)
+            ->orderBy('created_at', 'asc')
+            ->get(['role', 'content', 'created_at']);
+
+        return response()->json(['data' => $messages]);
+    }
+
+    /**
+     * Delete a coach session
+     *
+     * Deletes a chat session and all its messages.
+     *
+     * @authenticated
+     * @group Resume Coach
+     *
+     * @urlParam sessionId string required The session ID. Example: 64a1b2c3d4e5f6a7b8c9d0e1
+     *
+     * @response 200 { "message": "Session deleted" }
+     * @response 404 { "message": "Session not found" }
+     */
+    public function deleteSession(string $sessionId, Request $request)
+    {
+        $session = CoachSession::where('_id', $sessionId)
+            ->where('user_id', $request->user()->id)
+            ->first();
+
+        if (! $session) {
+            return response()->json(['message' => 'Session not found'], 404);
+        }
+
+        CoachMessage::where('session_id', $sessionId)->delete();
+        $session->delete();
+
+        return response()->json(['message' => 'Session deleted']);
     }
 }

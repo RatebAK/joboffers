@@ -8,13 +8,14 @@ use Illuminate\Support\Facades\Log;
 
 class ResumeMatchingService
 {
-    public function matchResumeToJobs(string $fileUrl): array
+    public function matchResumeToJobs(string $resumeId, int $limit = 10): array
     {
         $apiUrl = config('services.resume_matching.url');
 
         try {
             $response = Http::timeout(300)->connectTimeout(120)->asForm()->post($apiUrl, [
-                'file_url' => $fileUrl,
+                'resume_id' => $resumeId,
+                'limit'     => $limit,
             ]);
         } catch (\Throwable $e) {
             Log::error('Resume matching HTTP error', ['error' => $e->getMessage()]);
@@ -39,7 +40,7 @@ class ResumeMatchingService
 
         return [
             'matches_found' => $data['matches_found'] ?? 0,
-            'jobs'          => $data['jobs'] ?? $data['recommended_jobs'] ?? [],
+            'jobs'          => $data['jobs'] ?? [],
         ];
     }
 }

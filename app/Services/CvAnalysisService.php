@@ -29,8 +29,8 @@ class CvAnalysisService
         ]);
 
         $payload = [
-            'file_url' => $fileUrl,
-            'user_id'  => $resumeId,
+            'file_url'  => $fileUrl,
+            'resume_id' => $resumeId,
         ];
 
         try {
