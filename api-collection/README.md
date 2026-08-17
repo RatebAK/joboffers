@@ -5,7 +5,7 @@
 1. Install [Bruno](https://www.usebruno.com/) (free, open-source)
 2. Open Bruno → **Open Collection** → select the `bruno/` folder
 3. Select an environment (top-right dropdown):
-   - `production` → `https://joboffers-main-uj2ehj.free.laravel.cloud`
+   - `production` → `https://joboffers-main-uj2ehj.laravel.cloud`
    - `local` → `http://localhost:8000`
 
 ## Typical flow
