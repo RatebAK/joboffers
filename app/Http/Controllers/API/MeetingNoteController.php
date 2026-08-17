@@ -9,6 +9,19 @@ use Illuminate\Support\Facades\Validator;
 
 class MeetingNoteController extends Controller
 {
+    /**
+     * Add a note to a meeting
+     *
+     * Appends a note to the meeting's notes array. Only participants (organizer or invitee) can add notes.
+     *
+     * @urlParam id string required The meeting ID. Example: 664f1a2b3c4d5e6f7a8b9c0f
+     * @bodyParam content string required Note content (1-2000 chars, cannot be whitespace only). Example: Please bring your portfolio.
+     *
+     * @response 201 { "meeting": { "notes": [{ "author_id": "...", "content": "...", "created_at": "..." }] } }
+     * @response 403 { "message": "Forbidden" }
+     * @response 404 { "message": "Meeting not found" }
+     * @response 422 { "errors": { "content": ["The content field is required."] } }
+     */
     public function store(Request $request, string $id)
     {
         $meeting = Meeting::find($id);
