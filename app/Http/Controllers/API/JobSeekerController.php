@@ -3,16 +3,73 @@
 namespace App\Http\Controllers\API;
 
 use App\Exceptions\CvAnalysisException;
+use App\Exceptions\DocumentUploadException;
 use App\Http\Controllers\Controller;
 use App\Models\JobPost;
+use App\Models\JobSeekerProfile;
 use App\Services\CvAnalysisService;
+use App\Services\DocumentUploadService;
+use App\Services\StoredDocument;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class JobSeekerController extends Controller
 {
+    /**
+     * Swap the profile's stored resume for a newly uploaded file.
+     *
+     * Shared by the CV and resume upload endpoints: removes whatever was stored
+     * before, uploads the replacement, confirms it is actually downloadable, and
+     * records it on the profile with the AI fields reset.
+     *
+     * @throws DocumentUploadException
+     */
+    private function replaceStoredResume(
+        JobSeekerProfile $profile,
+        UploadedFile $file,
+        string $folder
+    ): StoredDocument {
+        $uploader = app(DocumentUploadService::class);
+
+        Log::info('Replacing stored resume', [
+            'user_id'       => $profile->user_id,
+            'folder'        => $folder,
+            'file_name'     => $file->getClientOriginalName(),
+            'file_size'     => $file->getSize(),
+            'file_type'     => $file->getMimeType(),
+            'had_previous'  => (bool) $profile->resume_public_id,
+        ]);
+
+        $this->deleteStoredResume($profile);
+
+        $document = $uploader->upload($file, $folder);
+
+        // Fail loudly here rather than letting the AI service report an
+        // unhelpful "could not extract text" for an undeliverable URL.
+        $uploader->assertDeliverable($document);
+
+        $profile->attachResume($document);
+
+        return $document;
+    }
+
+    /**
+     * Remove the resume currently stored for a profile, if any.
+     */
+    private function deleteStoredResume(JobSeekerProfile $profile): void
+    {
+        $uploader = app(DocumentUploadService::class);
+
+        $uploader->delete($profile->resume_public_id, $profile->resume_resource_type);
+
+        if ($profile->cv_public_id && $profile->cv_public_id !== $profile->resume_public_id) {
+            $uploader->delete($profile->cv_public_id, $profile->resume_resource_type);
+        }
+    }
+
     /**
      * Get job seeker profile
      *
@@ -598,90 +655,19 @@ class JobSeekerController extends Controller
             'existing_cv' => $profile->cv_public_id ? 'yes' : 'no',
         ]);
 
-        // Delete previous resume/CV from Cloudinary if they exist
-        if ($profile->resume_public_id) {
-            Log::info('Deleting previous resume from Cloudinary (upload-and-analyze)', [
-                'user_id' => $user->_id,
-                'public_id' => $profile->resume_public_id,
-            ]);
-            Storage::disk('cloudinary')->delete($profile->resume_public_id);
-        }
-        // Also delete previous CV if it exists in separate field
-        if ($profile->cv_public_id && $profile->cv_public_id !== $profile->resume_public_id) {
-            Log::info('Deleting previous CV from Cloudinary (upload-and-analyze)', [
-                'user_id' => $user->_id,
-                'public_id' => $profile->cv_public_id,
-            ]);
-            Storage::disk('cloudinary')->delete($profile->cv_public_id);
+        try {
+            $document = $this->replaceStoredResume($profile, $request->file('cv'), 'job-seeker-cvs');
+        } catch (DocumentUploadException $e) {
+            $profile->markAnalysisFailed($e->getMessage());
+
+            return response()->json([
+                'message' => 'CV upload failed',
+                'error'   => $e->getMessage(),
+            ], $e->getHttpStatusCode());
         }
 
-        // Upload to Cloudinary
-        Log::info('Uploading CV to Cloudinary (upload-and-analyze)', [
-            'user_id' => $user->_id,
-            'file_name' => $request->file('cv')->getClientOriginalName(),
-            'file_size' => $request->file('cv')->getSize(),
-            'file_type' => $request->file('cv')->getMimeType(),
-            'cloudinary_folder' => 'job-seeker-cvs',
-        ]);
-        
-        $file = $request->file('cv');
-        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $extension    = $file->getClientOriginalExtension();
-        $mimeType     = $file->getMimeType();
-
-        // Upload directly via Cloudinary SDK so we can preserve filename + extension
-        // public_id must include the extension for raw uploads so the URL is correct
-        // Do NOT pass 'format' on raw resources — Cloudinary ignores it and it causes double extensions
-        // PDF → resource_type 'image' (Cloudinary handles PDFs natively; no extension in public_id)
-        // DOCX/DOC → resource_type 'raw' with extension in public_id so the URL includes it
-        $isPdf = strtolower($extension) === 'pdf';
-        $cloudinary = app(\Cloudinary\Cloudinary::class);
-        $result = $cloudinary->uploadApi()->upload($file->getRealPath(), [
-            'folder'        => 'job-seeker-cvs',
-            'public_id'     => $isPdf
-                                ? $originalName . '_' . uniqid()
-                                : $originalName . '_' . uniqid() . '.' . $extension,
-            'resource_type' => $isPdf ? 'image' : 'raw',
-            'access_mode'   => 'public',
-        ]);
-
-        $publicId = $result['public_id'];
-        $cvUrl    = $result['secure_url'];
-        
-        Log::info('CV uploaded to Cloudinary successfully', [
-            'user_id' => $user->_id,
-            'public_id' => $publicId,
-            'cv_url' => $cvUrl,
-        ]);
-
-        // Store CV immediately and set analysis status to pending
-        $profile->update([
-            'resume' => $cvUrl,
-            'resume_public_id' => $publicId,
-            'cv_file_path' => $cvUrl,
-            'cv_public_id' => $publicId,
-            'resume_file_type' => $mimeType,
-            // Reset AI fields since we're starting fresh
-            'ai_full_name' => null,
-            'ai_email' => null,
-            'ai_phone' => null,
-            'ai_location' => null,
-            'ai_summary' => null,
-            'ai_skills' => [],
-            'ai_work_history' => [],
-            'ai_education_history' => [],
-            'ai_projects' => [],
-            'ai_languages' => [],
-            'ai_social_links' => [],
-            'ai_overall_evaluation' => null,
-            'ats_score' => null,
-            'ai_analyzed_at' => null,
-            // Set analysis status
-            'analysis_status' => 'pending',
-            'analysis_error' => null,
-            'analysis_started_at' => now(),
-            'analysis_completed_at' => null,
-        ]);
+        $cvUrl    = $document->url;
+        $mimeType = $document->mimeType;
 
         // Start analysis in background (non-blocking)
         try {
@@ -692,53 +678,17 @@ class JobSeekerController extends Controller
                 'resume_id' => (string) $user->_id,
             ]);
             
-            // Update status to processing
-            $profile->update(['analysis_status' => 'processing']);
-            
+            $profile->markAnalysisProcessing();
+
             $analysis = $cvAnalysisService->analyze($cvUrl, (string) $user->_id, $mimeType);
-            
+
             Log::info('AI analysis completed successfully (upload-and-analyze)', [
                 'user_id' => $user->_id,
                 'analysis_fields_found' => array_keys($analysis),
-                'has_full_name' => isset($analysis['full_name']),
-                'has_skills' => isset($analysis['skills']) && count($analysis['skills']) > 0,
                 'ats_score' => $analysis['ats_score'] ?? 'not provided',
             ]);
 
-            // Map AI response to profile fields
-            $updateData = [
-                'ai_full_name' => $analysis['full_name'] ?? null,
-                'ai_email' => $analysis['email'] ?? null,
-                'ai_phone' => $analysis['phone'] ?? null,
-                'ai_location' => $analysis['location'] ?? null,
-                'ai_summary' => $analysis['summary'] ?? null,
-                'ai_skills' => $analysis['skills'] ?? [],
-                'ai_work_history' => $analysis['work_history'] ?? [],
-                'ai_education_history' => $analysis['education_history'] ?? [],
-                'ai_projects' => $analysis['projects'] ?? [],
-                'ai_languages' => $analysis['languages'] ?? [],
-                'ai_overall_evaluation' => $analysis['ai_overall_evaluation'] ?? null,
-                'ats_score' => $analysis['ats_score'] ?? null,
-                'ai_analyzed_at' => now(),
-                // Update analysis status
-                'analysis_status' => 'completed',
-                'analysis_error' => null,
-                'analysis_completed_at' => now(),
-            ];
-
-            // Extract social links if provided by AI
-            if (! empty($analysis['linkedin']) || ! empty($analysis['github'])) {
-                $socialLinks = [];
-                if (! empty($analysis['linkedin'])) {
-                    $socialLinks['linkedin'] = $analysis['linkedin'];
-                }
-                if (! empty($analysis['github'])) {
-                    $socialLinks['github'] = $analysis['github'];
-                }
-                $updateData['ai_social_links'] = $socialLinks;
-            }
-
-            $profile->update($updateData);
+            $profile->applyAiAnalysis($analysis);
 
         } catch (CvAnalysisException $e) {
             Log::error('AI analysis failed (upload-and-analyze)', [
@@ -747,11 +697,7 @@ class JobSeekerController extends Controller
                 'http_status' => $e->getHttpStatusCode(),
             ]);
 
-            $profile->update([
-                'analysis_status' => 'error',
-                'analysis_error' => $e->getMessage(),
-                'analysis_completed_at' => now(),
-            ]);
+            $profile->markAnalysisFailed($e->getMessage());
 
             $httpStatus = $e->getHttpStatusCode();
 
@@ -838,87 +784,20 @@ class JobSeekerController extends Controller
             'existing_cv' => $profile->cv_public_id ? 'yes' : 'no',
         ]);
 
-        // Delete previous resume/CV from Cloudinary if it exists
-        if ($profile->resume_public_id) {
-            Log::info('Deleting previous resume from Cloudinary', [
-                'user_id' => $user->_id,
-                'public_id' => $profile->resume_public_id,
-            ]);
-            Storage::disk('cloudinary')->delete($profile->resume_public_id);
-        }
-        // Also delete previous CV if it exists in separate field
-        if ($profile->cv_public_id && $profile->cv_public_id !== $profile->resume_public_id) {
-            Log::info('Deleting previous CV from Cloudinary', [
-                'user_id' => $user->_id,
-                'public_id' => $profile->cv_public_id,
-            ]);
-            Storage::disk('cloudinary')->delete($profile->cv_public_id);
+        try {
+            $document = $this->replaceStoredResume($profile, $request->file('resume'), 'job-seeker-resumes');
+        } catch (DocumentUploadException $e) {
+            $profile->markAnalysisFailed($e->getMessage());
+
+            return response()->json([
+                'message' => 'Resume upload failed',
+                'error'   => $e->getMessage(),
+            ], $e->getHttpStatusCode());
         }
 
-        // Upload to Cloudinary
-        Log::info('Uploading resume to Cloudinary', [
-            'user_id' => $user->_id,
-            'file_name' => $request->file('resume')->getClientOriginalName(),
-            'file_size' => $request->file('resume')->getSize(),
-            'file_type' => $request->file('resume')->getMimeType(),
-        ]);
-        
-        $file = $request->file('resume');
-        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $extension    = $file->getClientOriginalExtension();
-        $mimeType     = $file->getMimeType();
-
-        // PDF → resource_type 'image' (Cloudinary handles PDFs natively; no extension in public_id)
-        // DOCX/DOC → resource_type 'raw' with extension in public_id so the URL includes it
-        $isPdf = strtolower($extension) === 'pdf';
-        $cloudinary = app(\Cloudinary\Cloudinary::class);
-        $result = $cloudinary->uploadApi()->upload($file->getRealPath(), [
-            'folder'        => 'job-seeker-resumes',
-            'public_id'     => $isPdf
-                                ? $originalName . '_' . uniqid()
-                                : $originalName . '_' . uniqid() . '.' . $extension,
-            'resource_type' => $isPdf ? 'image' : 'raw',
-            'access_mode'   => 'public',
-        ]);
-
-        $publicId  = $result['public_id'];
-        $resumeUrl = $result['secure_url'];
-        
-        Log::info('Resume uploaded to Cloudinary successfully', [
-            'user_id' => $user->_id,
-            'public_id' => $publicId,
-            'resume_url' => $resumeUrl,
-            'cloudinary_folder' => 'job-seeker-resumes',
-        ]);
-
-        // Store resume immediately and set analysis status to pending
-        $profile->update([
-            'resume' => $resumeUrl,
-            'resume_public_id' => $publicId,
-            'cv_file_path' => $resumeUrl,
-            'cv_public_id' => $publicId,
-            'resume_file_type' => $mimeType,
-            // Reset AI fields since we're starting fresh
-            'ai_full_name' => null,
-            'ai_email' => null,
-            'ai_phone' => null,
-            'ai_location' => null,
-            'ai_summary' => null,
-            'ai_skills' => [],
-            'ai_work_history' => [],
-            'ai_education_history' => [],
-            'ai_projects' => [],
-            'ai_languages' => [],
-            'ai_social_links' => [],
-            'ai_overall_evaluation' => null,
-            'ats_score' => null,
-            'ai_analyzed_at' => null,
-            // Set analysis status
-            'analysis_status' => 'pending',
-            'analysis_error' => null,
-            'analysis_started_at' => now(),
-            'analysis_completed_at' => null,
-        ]);
+        $resumeUrl = $document->url;
+        $mimeType  = $document->mimeType;
+        $publicId  = $document->publicId;
 
         // Start analysis in background (non-blocking)
         try {
@@ -929,67 +808,18 @@ class JobSeekerController extends Controller
                 'resume_id' => (string) $user->_id,
             ]);
             
-            // Update status to processing
-            $profile->update(['analysis_status' => 'processing']);
-            
-            // Call AI service - this will still be synchronous but the user gets response immediately
+            $profile->markAnalysisProcessing();
+
             $analysis = $cvAnalysisService->analyze($resumeUrl, (string) $user->_id, $mimeType);
-            
+
             Log::info('AI analysis completed successfully', [
                 'user_id' => $user->_id,
                 'analysis_fields_found' => array_keys($analysis),
-                'has_full_name' => isset($analysis['full_name']),
-                'has_skills' => isset($analysis['skills']) && count($analysis['skills']) > 0,
                 'ats_score' => $analysis['ats_score'] ?? 'not provided',
-            ]);
-
-            // Map AI response to profile fields
-            $updateData = [
-                'ai_full_name' => $analysis['full_name'] ?? null,
-                'ai_email' => $analysis['email'] ?? null,
-                'ai_phone' => $analysis['phone'] ?? null,
-                'ai_location' => $analysis['location'] ?? null,
-                'ai_summary' => $analysis['summary'] ?? null,
-                'ai_skills' => $analysis['skills'] ?? [],
-                'ai_work_history' => $analysis['work_history'] ?? [],
-                'ai_education_history' => $analysis['education_history'] ?? [],
-                'ai_projects' => $analysis['projects'] ?? [],
-                'ai_languages' => $analysis['languages'] ?? [],
-                'ai_overall_evaluation' => $analysis['ai_overall_evaluation'] ?? null,
-                'ats_score' => $analysis['ats_score'] ?? null,
-                'ai_analyzed_at' => now(),
-                // Update analysis status
-                'analysis_status' => 'completed',
-                'analysis_error' => null,
-                'analysis_completed_at' => now(),
-            ];
-
-            // Extract social links if provided by AI
-            if (! empty($analysis['linkedin']) || ! empty($analysis['github'])) {
-                $socialLinks = [];
-                if (! empty($analysis['linkedin'])) {
-                    $socialLinks['linkedin'] = $analysis['linkedin'];
-                }
-                if (! empty($analysis['github'])) {
-                    $socialLinks['github'] = $analysis['github'];
-                }
-                $updateData['ai_social_links'] = $socialLinks;
-            }
-
-            // Log profile update details
-            Log::info('Updating profile with AI analysis results', [
-                'user_id' => $user->_id,
-                'fields_updated' => array_keys($updateData),
-                'ai_fields_populated' => array_filter($updateData, function($value, $key) {
-                    return str_starts_with($key, 'ai_') && !empty($value);
-                }, ARRAY_FILTER_USE_BOTH),
-                'ats_score' => $analysis['ats_score'] ?? null,
                 'skills_count' => count($analysis['skills'] ?? []),
-                'work_history_count' => count($analysis['work_history'] ?? []),
-                'education_history_count' => count($analysis['education_history'] ?? []),
             ]);
 
-            $profile->update($updateData);
+            $profile->applyAiAnalysis($analysis);
 
             Log::info('Resume analysis completed successfully', [
                 'user_id' => $user->_id,
@@ -1007,16 +837,9 @@ class JobSeekerController extends Controller
                 'public_id' => $publicId,
                 'resume_url' => $resumeUrl,
             ]);
-            
-            // Update analysis status to error
-            $profile->update([
-                'analysis_status' => 'error',
-                'analysis_error' => $e->getMessage(),
-                'analysis_completed_at' => now(),
-            ]);
 
-            // Don't return error response here - the file is saved, analysis failed
-            // The user can check status via the profile endpoint
+            // The file is kept on purpose; the user can retry analysis later.
+            $profile->markAnalysisFailed($e->getMessage());
         }
 
         Log::info('Resume upload process completed (non-blocking)', [
@@ -1065,30 +888,8 @@ class JobSeekerController extends Controller
             'ai_data_present' => $profile->ai_full_name || $profile->ats_score ? 'yes' : 'no',
         ]);
 
-        // Delete from Cloudinary if public IDs exist
-        if ($profile->resume_public_id) {
-            Log::info('Deleting resume from Cloudinary', [
-                'user_id' => $user->_id,
-                'public_id' => $profile->resume_public_id,
-            ]);
-            Storage::disk('cloudinary')->delete($profile->resume_public_id);
-        }
-        if ($profile->cv_public_id && $profile->cv_public_id !== $profile->resume_public_id) {
-            Log::info('Deleting CV from Cloudinary', [
-                'user_id' => $user->_id,
-                'public_id' => $profile->cv_public_id,
-                'different_from_resume' => $profile->cv_public_id !== $profile->resume_public_id ? 'yes' : 'no',
-            ]);
-            Storage::disk('cloudinary')->delete($profile->cv_public_id);
-        }
-
-        // Clear all resume/CV related fields
-        $profile->update([
-            'resume' => null,
-            'resume_public_id' => null,
-            'cv_file_path' => null,
-            'cv_public_id' => null,
-        ]);
+        $this->deleteStoredResume($profile);
+        $profile->clearResume();
 
         Log::info('Resume deletion completed successfully', [
             'user_id' => $user->_id,
@@ -1370,59 +1171,17 @@ class JobSeekerController extends Controller
             'previous_error' => $profile->analysis_error,
         ]);
 
-        // Reset analysis status
-        $profile->update([
-            'analysis_status' => 'processing',
-            'analysis_error' => null,
-            'analysis_started_at' => now(),
-            'analysis_completed_at' => null,
-        ]);
+        $profile->markAnalysisProcessing();
 
-        // Retry analysis in background
         try {
             $analysis = $cvAnalysisService->analyze($profile->resume, (string) $user->_id, $profile->resume_file_type);
-            
+
             Log::info('Retry analysis completed successfully', [
                 'user_id' => $user->_id,
-                'has_full_name' => isset($analysis['full_name']),
-                'has_skills' => isset($analysis['skills']) && count($analysis['skills']) > 0,
                 'ats_score' => $analysis['ats_score'] ?? 'not provided',
             ]);
 
-            // Map AI response to profile fields
-            $updateData = [
-                'ai_full_name' => $analysis['full_name'] ?? null,
-                'ai_email' => $analysis['email'] ?? null,
-                'ai_phone' => $analysis['phone'] ?? null,
-                'ai_location' => $analysis['location'] ?? null,
-                'ai_summary' => $analysis['summary'] ?? null,
-                'ai_skills' => $analysis['skills'] ?? [],
-                'ai_work_history' => $analysis['work_history'] ?? [],
-                'ai_education_history' => $analysis['education_history'] ?? [],
-                'ai_projects' => $analysis['projects'] ?? [],
-                'ai_languages' => $analysis['languages'] ?? [],
-                'ai_overall_evaluation' => $analysis['ai_overall_evaluation'] ?? null,
-                'ats_score' => $analysis['ats_score'] ?? null,
-                'ai_analyzed_at' => now(),
-                // Update analysis status
-                'analysis_status' => 'completed',
-                'analysis_error' => null,
-                'analysis_completed_at' => now(),
-            ];
-
-            // Extract social links if provided by AI
-            if (! empty($analysis['linkedin']) || ! empty($analysis['github'])) {
-                $socialLinks = [];
-                if (! empty($analysis['linkedin'])) {
-                    $socialLinks['linkedin'] = $analysis['linkedin'];
-                }
-                if (! empty($analysis['github'])) {
-                    $socialLinks['github'] = $analysis['github'];
-                }
-                $updateData['ai_social_links'] = $socialLinks;
-            }
-
-            $profile->update($updateData);
+            $profile->applyAiAnalysis($analysis);
 
         } catch (CvAnalysisException $e) {
             Log::error('Retry analysis failed', [
@@ -1430,13 +1189,8 @@ class JobSeekerController extends Controller
                 'error_message' => $e->getMessage(),
                 'http_status' => $e->getHttpStatusCode(),
             ]);
-            
-            // Update analysis status to error
-            $profile->update([
-                'analysis_status' => 'error',
-                'analysis_error' => $e->getMessage(),
-                'analysis_completed_at' => now(),
-            ]);
+
+            $profile->markAnalysisFailed($e->getMessage());
         }
 
         return response()->json([

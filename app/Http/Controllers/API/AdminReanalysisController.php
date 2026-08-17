@@ -48,13 +48,7 @@ class AdminReanalysisController extends Controller
             return response()->json(['message' => 'No CV file found for this user'], 422);
         }
 
-        // Mark as processing
-        $profile->update([
-            'analysis_status'      => 'processing',
-            'analysis_started_at'  => now(),
-            'analysis_completed_at'=> null,
-            'analysis_error'       => null,
-        ]);
+        $profile->markAnalysisProcessing();
 
         // Write audit log before running analysis (synchronous per spec)
         AuditLogService::log(
@@ -70,34 +64,14 @@ class AdminReanalysisController extends Controller
         try {
             $analysis = $cvService->analyze($profile->cv_file_path, $userId, $profile->resume_file_type);
 
-            $profile->update([
-                'ai_full_name'         => $analysis['full_name']       ?? null,
-                'ai_email'             => $analysis['email']           ?? null,
-                'ai_phone'             => $analysis['phone']           ?? null,
-                'ai_location'          => $analysis['location']        ?? null,
-                'ai_summary'           => $analysis['summary']         ?? null,
-                'ai_skills'            => $analysis['skills']          ?? [],
-                'ai_work_history'      => $analysis['work_history']    ?? [],
-                'ai_education_history' => $analysis['education_history'] ?? [],
-                'ai_projects'          => $analysis['projects']        ?? [],
-                'ai_languages'         => $analysis['languages']       ?? [],
-                'ai_overall_evaluation'=> $analysis['overall_evaluation'] ?? null,
-                'ats_score'            => $analysis['ats_score']       ?? null,
-                'ai_analyzed_at'       => now(),
-                'analysis_status'      => 'completed',
-                'analysis_completed_at'=> now(),
-            ]);
+            $profile->applyAiAnalysis($analysis);
         } catch (\Throwable $e) {
             Log::error('Admin-triggered CV re-analysis failed', [
                 'user_id' => $userId,
                 'error'   => $e->getMessage(),
             ]);
 
-            $profile->update([
-                'analysis_status'      => 'error',
-                'analysis_error'       => $e->getMessage(),
-                'analysis_completed_at'=> now(),
-            ]);
+            $profile->markAnalysisFailed($e->getMessage());
         }
 
         return response()->json([

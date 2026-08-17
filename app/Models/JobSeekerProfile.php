@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\StoredDocument;
 use MongoDB\Laravel\Eloquent\Model;
 
 class JobSeekerProfile extends Model
@@ -52,6 +53,8 @@ class JobSeekerProfile extends Model
         'image_public_id', // Cloudinary public_id for profile photo deletion
         // Resume file metadata
         'resume_file_type', // Original MIME type of uploaded resume (e.g. application/pdf)
+        'resume_resource_type', // Cloudinary resource_type ("raw"); required to delete the asset
+        'resume_original_name', // Filename as uploaded by the user
         // Saved default cover letter (reused across applications)
         'default_cover_letter',
         // AI-derived fields
@@ -117,6 +120,8 @@ class JobSeekerProfile extends Model
         'cv_file_path'        => null,
         'cv_public_id'        => null,
         'resume_file_type'    => null,
+        'resume_resource_type'=> null,
+        'resume_original_name'=> null,
         'default_cover_letter'=> null,
         // AI-derived
         'ai_full_name'        => null,
@@ -166,8 +171,128 @@ class JobSeekerProfile extends Model
         'analysis_completed_at' => 'datetime',
     ];
 
+    public const ANALYSIS_PENDING = 'pending';
+
+    public const ANALYSIS_PROCESSING = 'processing';
+
+    public const ANALYSIS_COMPLETED = 'completed';
+
+    public const ANALYSIS_ERROR = 'error';
+
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Point the profile at a freshly uploaded resume and clear any previous AI
+     * results, so a stale analysis is never shown next to a new document.
+     */
+    public function attachResume(StoredDocument $document): void
+    {
+        $this->update([
+            'resume'               => $document->url,
+            'resume_public_id'     => $document->publicId,
+            'resume_resource_type' => $document->resourceType,
+            'resume_file_type'     => $document->mimeType,
+            'resume_original_name' => $document->originalName,
+            // `cv_*` mirrors `resume_*`; kept for API backwards compatibility.
+            'cv_file_path'         => $document->url,
+            'cv_public_id'         => $document->publicId,
+        ] + self::clearedAiAnalysis() + [
+            'analysis_status'       => self::ANALYSIS_PENDING,
+            'analysis_error'        => null,
+            'analysis_started_at'   => now(),
+            'analysis_completed_at' => null,
+        ]);
+    }
+
+    public function markAnalysisProcessing(): void
+    {
+        $this->update([
+            'analysis_status'     => self::ANALYSIS_PROCESSING,
+            'analysis_error'      => null,
+            'analysis_started_at' => now(),
+        ]);
+    }
+
+    /**
+     * Persist an AI analysis payload into the `ai_*` fields.
+     *
+     * @param  array<string, mixed>  $analysis  The `analysis` object from the CV service
+     */
+    public function applyAiAnalysis(array $analysis): void
+    {
+        $socialLinks = array_filter([
+            'linkedin' => $analysis['linkedin'] ?? null,
+            'github'   => $analysis['github'] ?? null,
+        ]);
+
+        $this->update([
+            'ai_full_name'          => $analysis['full_name'] ?? null,
+            'ai_email'              => $analysis['email'] ?? null,
+            'ai_phone'              => $analysis['phone'] ?? null,
+            'ai_location'           => $analysis['location'] ?? null,
+            'ai_summary'            => $analysis['summary'] ?? null,
+            'ai_skills'             => $analysis['skills'] ?? [],
+            'ai_work_history'       => $analysis['work_history'] ?? [],
+            'ai_education_history'  => $analysis['education_history'] ?? [],
+            'ai_projects'           => $analysis['projects'] ?? [],
+            'ai_languages'          => $analysis['languages'] ?? [],
+            'ai_social_links'       => $socialLinks ?: ($this->ai_social_links ?? []),
+            // The CV service has used both key spellings across versions.
+            'ai_overall_evaluation' => $analysis['ai_overall_evaluation']
+                                        ?? $analysis['overall_evaluation']
+                                        ?? null,
+            'ats_score'             => $analysis['ats_score'] ?? null,
+            'ai_analyzed_at'        => now(),
+            'analysis_status'       => self::ANALYSIS_COMPLETED,
+            'analysis_error'        => null,
+            'analysis_completed_at' => now(),
+        ]);
+    }
+
+    public function markAnalysisFailed(string $reason): void
+    {
+        $this->update([
+            'analysis_status'       => self::ANALYSIS_ERROR,
+            'analysis_error'        => $reason,
+            'analysis_completed_at' => now(),
+        ]);
+    }
+
+    public function clearResume(): void
+    {
+        $this->update([
+            'resume'               => null,
+            'resume_public_id'     => null,
+            'resume_resource_type' => null,
+            'resume_original_name' => null,
+            'cv_file_path'         => null,
+            'cv_public_id'         => null,
+        ]);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private static function clearedAiAnalysis(): array
+    {
+        return [
+            'ai_full_name'          => null,
+            'ai_email'              => null,
+            'ai_phone'              => null,
+            'ai_location'           => null,
+            'ai_summary'            => null,
+            'ai_skills'             => [],
+            'ai_work_history'       => [],
+            'ai_education_history'  => [],
+            'ai_projects'           => [],
+            'ai_languages'          => [],
+            'ai_social_links'       => [],
+            'ai_overall_evaluation' => null,
+            'ats_score'             => null,
+            'ai_analyzed_at'        => null,
+        ];
     }
 }
