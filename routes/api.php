@@ -23,7 +23,7 @@ use App\Http\Controllers\API\TalentReportController;
 use App\Http\Controllers\API\UserProfileController;
 use App\Http\Controllers\API\UserSearchController;
 use Illuminate\Support\Facades\Route;
-
+//test
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
