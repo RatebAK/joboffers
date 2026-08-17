@@ -158,22 +158,26 @@ class DocumentUploadService
     /**
      * The extension the document should be served under.
      *
-     * PDFs fall back to a non-restricted extension while Cloudinary PDF delivery
-     * is disabled, otherwise the URL would answer 401 for every consumer.
+     * PDFs are served under their real extension now that Cloudinary PDF
+     * delivery is enabled. The fallback logic is kept commented out in case
+     * PDF delivery needs to be disabled again in the future.
      */
     public function deliverableExtension(string $extension): string
     {
-        $extension = strtolower(ltrim($extension, '.'));
+        return strtolower(ltrim($extension, '.'));
 
-        if (! in_array($extension, self::RESTRICTED_EXTENSIONS, true)) {
-            return $extension;
-        }
-
-        if (config('services.cloudinary.pdf_delivery_enabled')) {
-            return $extension;
-        }
-
-        return strtolower((string) config('services.cloudinary.pdf_fallback_extension', 'bin'));
+        // --- Fallback logic (uncomment if Cloudinary PDF delivery is disabled) ---
+        // $extension = strtolower(ltrim($extension, '.'));
+        //
+        // if (! in_array($extension, self::RESTRICTED_EXTENSIONS, true)) {
+        //     return $extension;
+        // }
+        //
+        // if (config('services.cloudinary.pdf_delivery_enabled')) {
+        //     return $extension;
+        // }
+        //
+        // return strtolower((string) config('services.cloudinary.pdf_fallback_extension', 'txt'));
     }
 
     /**

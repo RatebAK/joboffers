@@ -47,7 +47,7 @@ return [
          * uploads keep working. Enable the Cloudinary setting and flip this to
          * true to serve PDFs under their real `.pdf` URL.
          */
-        'pdf_delivery_enabled' => env('CLOUDINARY_PDF_DELIVERY_ENABLED', false),
+        'pdf_delivery_enabled' => env('CLOUDINARY_PDF_DELIVERY_ENABLED', true),
 
         /*
          * Extension used for PDFs while `pdf_delivery_enabled` is false.
