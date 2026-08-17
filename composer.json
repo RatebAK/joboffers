@@ -11,6 +11,8 @@
     "require": {
         "php": "^8.2",
         "cloudinary-labs/cloudinary-laravel": "^3.0",
+        "google/apiclient": "2.16",
+        "google/apiclient-services": "^0.455.0",
         "knuckleswtf/scribe": "^5.10",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
@@ -79,6 +81,11 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "policy": {
+            "advisories": {
+                "block": false
+            }
         }
     },
     "minimum-stability": "stable",

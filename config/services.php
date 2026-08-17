@@ -35,6 +35,31 @@ return [
         ],
     ],
 
+    'cloudinary' => [
+        /*
+         * Cloudinary blocks delivery of `.pdf` and `.zip` URLs by default
+         * (Console → Settings → Security → "Allow delivery of PDF and ZIP files").
+         * While that setting is off, every `.pdf` delivery URL returns
+         * HTTP 401 "deny or ACL failure", so the CV analysis service receives
+         * zero bytes and reports that it could not extract any text.
+         *
+         * Leave this false to store PDFs under a delivery-safe extension so
+         * uploads keep working. Enable the Cloudinary setting and flip this to
+         * true to serve PDFs under their real `.pdf` URL.
+         */
+        'pdf_delivery_enabled' => env('CLOUDINARY_PDF_DELIVERY_ENABLED', false),
+
+        /*
+         * Extension used for PDFs while `pdf_delivery_enabled` is false.
+         * Must be a format the product environment both allows on upload and
+         * delivers, so neither "pdf"/"zip" (restricted delivery) nor "bin"
+         * (rejected on upload). The stored bytes are untouched — the CV
+         * analysis service detects the real type from the file contents — and
+         * `resume_original_name` keeps the filename the user uploaded.
+         */
+        'pdf_fallback_extension' => env('CLOUDINARY_PDF_FALLBACK_EXTENSION', 'txt'),
+    ],
+
     'cv_analysis' => [
         'url' => env('CV_ANALYSIS_API_URL'),
     ],
@@ -49,6 +74,12 @@ return [
 
     'resume_coach' => [
         'url' => env('RESUME_COACH_API_URL'),
+    ],
+
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect_uri' => env('GOOGLE_REDIRECT_URI'),
     ],
 
 ];

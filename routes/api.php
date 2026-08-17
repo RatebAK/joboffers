@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AdminMeetingController;
 use App\Http\Controllers\API\AdminReanalysisController;
 use App\Http\Controllers\API\AdminReportingController;
 use App\Http\Controllers\API\AnalyticsController;
@@ -12,10 +13,14 @@ use App\Http\Controllers\API\CompanyProfileController;
 use App\Http\Controllers\API\DirectOfferController;
 use App\Http\Controllers\API\EmployerController;
 use App\Http\Controllers\API\EmployerSearchController;
+use App\Http\Controllers\API\GoogleOAuthController;
 use App\Http\Controllers\API\JobMatchingController;
 use App\Http\Controllers\API\JobPostController;
 use App\Http\Controllers\API\JobSeekerController;
 use App\Http\Controllers\API\MatchedJobsController;
+use App\Http\Controllers\API\MeetingActionController;
+use App\Http\Controllers\API\MeetingController;
+use App\Http\Controllers\API\MeetingNoteController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\ResumeCoachController;
 use App\Http\Controllers\API\ResumeMatchingController;
@@ -185,6 +190,10 @@ Route::middleware(['jwt.auth', 'role:admin'])->prefix('admin')->group(function (
 
     // Audit log viewer
     Route::get('audit-log', [AuditLogController::class, 'index']);
+
+    // Meetings
+    Route::get('meetings',      [AdminMeetingController::class, 'index']);
+    Route::get('meetings/{id}', [AdminMeetingController::class, 'show']);
 });
 
 // Notifications — available to all authenticated users (no role restriction)
@@ -193,4 +202,28 @@ Route::middleware('jwt.auth')->prefix('notifications')->group(function () {
     Route::get('/unread-count', [NotificationController::class, 'unreadCount']);
     Route::post('/read-all',  [NotificationController::class, 'markAllRead']);
     Route::post('/{id}/read', [NotificationController::class, 'markRead']);
+});
+
+// Meetings — available to all authenticated users (employer or employee)
+Route::middleware('jwt.auth')->prefix('meetings')->group(function () {
+    Route::get('/',          [MeetingController::class, 'index']);
+    Route::post('/',         [MeetingController::class, 'store']);
+    Route::get('/upcoming',  [MeetingController::class, 'upcoming']);
+    Route::get('/{id}',      [MeetingController::class, 'show']);
+
+    Route::post('/{id}/accept',     [MeetingActionController::class, 'accept']);
+    Route::post('/{id}/decline',    [MeetingActionController::class, 'decline']);
+    Route::post('/{id}/cancel',     [MeetingActionController::class, 'cancel']);
+    Route::post('/{id}/reschedule', [MeetingActionController::class, 'reschedule']);
+    Route::post('/{id}/complete',   [MeetingActionController::class, 'complete']);
+
+    Route::post('/{id}/notes', [MeetingNoteController::class, 'store']);
+});
+
+// Google OAuth — available to all authenticated users
+Route::middleware('jwt.auth')->prefix('google')->group(function () {
+    Route::get('/connect',       [GoogleOAuthController::class, 'connect']);
+    Route::get('/callback',      [GoogleOAuthController::class, 'callback']);
+    Route::get('/status',        [GoogleOAuthController::class, 'status']);
+    Route::delete('/disconnect', [GoogleOAuthController::class, 'disconnect']);
 });
