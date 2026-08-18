@@ -3,11 +3,13 @@
 use App\Models\Meeting;
 use App\Models\User;
 
-uses(Tests\TestCase::class);
+
 
 beforeEach(function () {
     $this->employer = User::factory()->employer()->create();
+    $this->employerToken = auth('api')->login($this->employer);
     $this->seeker = User::factory()->employee()->create();
+    $this->seekerToken = auth('api')->login($this->seeker);
 });
 
 afterEach(function () {
@@ -31,7 +33,7 @@ test('returns paginated list with correct format', function () {
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->getJson('/api/meetings');
 
     $response->assertStatus(200)
@@ -76,7 +78,7 @@ test('filters by status', function () {
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->getJson('/api/meetings?status=pending');
 
     $response->assertStatus(200);
@@ -105,7 +107,7 @@ test('filters by date range', function () {
     $fromDate = now()->addDays(8)->format('Y-m-d');
     $toDate = now()->addDays(12)->format('Y-m-d');
 
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->getJson("/api/meetings?from_date={$fromDate}&to_date={$toDate}");
 
     $response->assertStatus(200);
@@ -139,7 +141,7 @@ test('sort direction works desc', function () {
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->getJson('/api/meetings?sort_direction=desc');
 
     $response->assertStatus(200);
@@ -150,7 +152,7 @@ test('sort direction works desc', function () {
 });
 
 test('returns empty data array when no matches', function () {
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->getJson('/api/meetings?status=completed');
 
     $response->assertStatus(200)
@@ -172,7 +174,7 @@ test('includes participant info in list', function () {
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->getJson('/api/meetings');
 
     $response->assertStatus(200);
@@ -198,7 +200,7 @@ test('upcoming endpoint returns max 5 accepted future meetings', function () {
         ]);
     }
 
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->getJson('/api/meetings/upcoming');
 
     $response->assertStatus(200)
@@ -213,3 +215,4 @@ test('unauthorized request returns 401', function () {
 
     $response->assertStatus(401);
 });
+

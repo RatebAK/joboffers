@@ -3,12 +3,15 @@
 use App\Models\Meeting;
 use App\Models\User;
 
-uses(Tests\TestCase::class);
+
 
 beforeEach(function () {
     $this->admin = User::factory()->admin()->create();
+    $this->adminToken = auth('api')->login($this->admin);
     $this->employer = User::factory()->employer()->create();
+    $this->employerToken = auth('api')->login($this->employer);
     $this->seeker = User::factory()->employee()->create();
+    $this->seekerToken = auth('api')->login($this->seeker);
 });
 
 afterEach(function () {
@@ -32,7 +35,7 @@ test('admin can list all meetings regardless of ownership', function () {
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($this->admin, 'api')
+    $response = $this->withToken($this->{"adminToken"})
         ->getJson('/api/admin/meetings');
 
     $response->assertStatus(200)
@@ -63,7 +66,7 @@ test('admin can view any meeting by ID', function () {
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($this->admin, 'api')
+    $response = $this->withToken($this->{"adminToken"})
         ->getJson("/api/admin/meetings/{$meeting->_id}");
 
     $response->assertStatus(200)
@@ -72,7 +75,7 @@ test('admin can view any meeting by ID', function () {
 });
 
 test('non-admin gets 403 on admin meeting list endpoint', function () {
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->getJson('/api/admin/meetings');
 
     $response->assertStatus(403);
@@ -92,15 +95,16 @@ test('non-admin gets 403 on admin meeting show endpoint', function () {
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($this->seeker, 'api')
+    $response = $this->withToken($this->{"seekerToken"})
         ->getJson("/api/admin/meetings/{$meeting->_id}");
 
     $response->assertStatus(403);
 });
 
 test('admin gets 404 for non-existent meeting ID', function () {
-    $response = $this->actingAs($this->admin, 'api')
+    $response = $this->withToken($this->{"adminToken"})
         ->getJson('/api/admin/meetings/000000000000000000000000');
 
     $response->assertStatus(404);
 });
+

@@ -3,11 +3,13 @@
 use App\Models\Meeting;
 use App\Models\User;
 
-uses(Tests\TestCase::class);
+
 
 beforeEach(function () {
     $this->employer = User::factory()->employer()->create();
+    $this->employerToken = auth('api')->login($this->employer);
     $this->seeker = User::factory()->employee()->create();
+    $this->seekerToken = auth('api')->login($this->seeker);
     $this->meeting = Meeting::create([
         'organizer_id' => (string) $this->employer->_id,
         'invitee_id' => (string) $this->seeker->_id,
@@ -29,7 +31,7 @@ afterEach(function () {
 });
 
 test('participant can add a note', function () {
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson("/api/meetings/{$this->meeting->_id}/notes", [
             'content' => 'Please prepare your portfolio.',
         ]);
@@ -45,8 +47,9 @@ test('participant can add a note', function () {
 
 test('non-participant gets 403', function () {
     $outsider = User::factory()->employee()->create();
+    $outsiderToken = auth('api')->login($outsider);
 
-    $response = $this->actingAs($outsider, 'api')
+    $response = $this->withToken($outsiderToken)
         ->postJson("/api/meetings/{$this->meeting->_id}/notes", [
             'content' => 'Trying to sneak a note in.',
         ]);
@@ -57,7 +60,7 @@ test('non-participant gets 403', function () {
 });
 
 test('empty content returns 422', function () {
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson("/api/meetings/{$this->meeting->_id}/notes", [
             'content' => '',
         ]);
@@ -66,7 +69,7 @@ test('empty content returns 422', function () {
 });
 
 test('whitespace-only content returns 422', function () {
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson("/api/meetings/{$this->meeting->_id}/notes", [
             'content' => '   ',
         ]);
@@ -77,7 +80,7 @@ test('whitespace-only content returns 422', function () {
 test('content exceeding 2000 chars returns 422', function () {
     $longContent = str_repeat('a', 2001);
 
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson("/api/meetings/{$this->meeting->_id}/notes", [
             'content' => $longContent,
         ]);
@@ -86,10 +89,11 @@ test('content exceeding 2000 chars returns 422', function () {
 });
 
 test('meeting not found returns 404', function () {
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson('/api/meetings/000000000000000000000000/notes', [
             'content' => 'Note for nonexistent meeting.',
         ]);
 
     $response->assertStatus(404);
 });
+

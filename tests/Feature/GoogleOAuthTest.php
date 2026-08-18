@@ -4,10 +4,9 @@ use App\Models\GoogleOAuthToken;
 use App\Models\User;
 use App\Services\GoogleMeetService;
 
-uses(Tests\TestCase::class);
-
 beforeEach(function () {
     $this->user = User::factory()->employer()->create();
+    $this->token = auth('api')->login($this->user);
 });
 
 afterEach(function () {
@@ -23,7 +22,7 @@ test('connect returns auth_url', function () {
 
     $this->app->instance(GoogleMeetService::class, $mockService);
 
-    $response = $this->actingAs($this->user, 'api')
+    $response = $this->withToken($this->token)
         ->getJson('/api/google/connect');
 
     $response->assertStatus(200)
@@ -40,7 +39,7 @@ test('status returns connected false for new user', function () {
 
     $this->app->instance(GoogleMeetService::class, $mockService);
 
-    $response = $this->actingAs($this->user, 'api')
+    $response = $this->withToken($this->token)
         ->getJson('/api/google/status');
 
     $response->assertStatus(200)
@@ -54,7 +53,7 @@ test('disconnect succeeds', function () {
 
     $this->app->instance(GoogleMeetService::class, $mockService);
 
-    $response = $this->actingAs($this->user, 'api')
+    $response = $this->withToken($this->token)
         ->deleteJson('/api/google/disconnect');
 
     $response->assertStatus(200)
@@ -76,9 +75,9 @@ test('unauthenticated request returns 401 on disconnect', function () {
     $response->assertStatus(401);
 });
 
-test('callback with error param returns 400', function () {
-    $response = $this->actingAs($this->user, 'api')
-        ->getJson('/api/google/callback?error=access_denied');
+test('callback with error param redirects to frontend with denied', function () {
+    $response = $this->getJson('/api/google/callback?error=access_denied');
 
-    $response->assertStatus(400);
+    $response->assertStatus(302);
+    expect($response->headers->get('Location'))->toContain('google=denied');
 });

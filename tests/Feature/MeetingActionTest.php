@@ -3,11 +3,13 @@
 use App\Models\Meeting;
 use App\Models\User;
 
-uses(Tests\TestCase::class);
+
 
 beforeEach(function () {
     $this->employer = User::factory()->employer()->create();
+    $this->employerToken = auth('api')->login($this->employer);
     $this->seeker = User::factory()->employee()->create();
+    $this->seekerToken = auth('api')->login($this->seeker);
 });
 
 afterEach(function () {
@@ -33,7 +35,7 @@ test('invitee can accept a pending meeting', function () {
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($this->seeker, 'api')
+    $response = $this->withToken($this->{"seekerToken"})
         ->postJson("/api/meetings/{$meeting->_id}/accept");
 
     $response->assertStatus(200)
@@ -56,7 +58,7 @@ test('invitee can accept a rescheduled meeting', function () {
         ],
     ]);
 
-    $response = $this->actingAs($this->seeker, 'api')
+    $response = $this->withToken($this->{"seekerToken"})
         ->postJson("/api/meetings/{$meeting->_id}/accept");
 
     $response->assertStatus(200)
@@ -79,7 +81,7 @@ test('invitee can decline a pending meeting with reason', function () {
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($this->seeker, 'api')
+    $response = $this->withToken($this->{"seekerToken"})
         ->postJson("/api/meetings/{$meeting->_id}/decline", [
             'decline_reason' => 'Schedule conflict',
         ]);
@@ -105,7 +107,7 @@ test('organizer can cancel a pending meeting', function () {
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson("/api/meetings/{$meeting->_id}/cancel");
 
     $response->assertStatus(200)
@@ -126,7 +128,7 @@ test('invitee can cancel an accepted meeting', function () {
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($this->seeker, 'api')
+    $response = $this->withToken($this->{"seekerToken"})
         ->postJson("/api/meetings/{$meeting->_id}/cancel");
 
     $response->assertStatus(200)
@@ -147,7 +149,7 @@ test('invitee cannot cancel a pending meeting must decline', function () {
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($this->seeker, 'api')
+    $response = $this->withToken($this->{"seekerToken"})
         ->postJson("/api/meetings/{$meeting->_id}/cancel");
 
     $response->assertStatus(422);
@@ -171,7 +173,7 @@ test('organizer can reschedule a meeting and previous_schedules is populated', f
 
     $newDate = now()->addDays(7)->format('Y-m-d');
 
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson("/api/meetings/{$meeting->_id}/reschedule", [
             'proposed_date' => $newDate,
             'proposed_start_time' => '16:00',
@@ -203,7 +205,7 @@ test('organizer can complete an accepted past meeting', function () {
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson("/api/meetings/{$meeting->_id}/complete");
 
     $response->assertStatus(200)
@@ -224,7 +226,7 @@ test('complete a future meeting returns 422', function () {
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson("/api/meetings/{$meeting->_id}/complete");
 
     $response->assertStatus(422)
@@ -235,6 +237,7 @@ test('complete a future meeting returns 422', function () {
 
 test('non-participant gets 403 on accept', function () {
     $outsider = User::factory()->employee()->create();
+    $outsiderToken = auth('api')->login($outsider);
 
     $meeting = Meeting::create([
         'organizer_id' => (string) $this->employer->_id,
@@ -249,7 +252,7 @@ test('non-participant gets 403 on accept', function () {
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($outsider, 'api')
+    $response = $this->withToken($outsiderToken)
         ->postJson("/api/meetings/{$meeting->_id}/accept");
 
     $response->assertStatus(403);
@@ -271,7 +274,7 @@ test('non-invitee (organizer) cannot accept a meeting', function () {
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson("/api/meetings/{$meeting->_id}/accept");
 
     $response->assertStatus(403);
@@ -291,7 +294,7 @@ test('non-organizer cannot reschedule a meeting', function () {
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($this->seeker, 'api')
+    $response = $this->withToken($this->{"seekerToken"})
         ->postJson("/api/meetings/{$meeting->_id}/reschedule", [
             'proposed_date' => now()->addDays(10)->format('Y-m-d'),
             'proposed_start_time' => '15:00',
@@ -300,3 +303,4 @@ test('non-organizer cannot reschedule a meeting', function () {
 
     $response->assertStatus(403);
 });
+

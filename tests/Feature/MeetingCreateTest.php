@@ -3,11 +3,13 @@
 use App\Models\Meeting;
 use App\Models\User;
 
-uses(Tests\TestCase::class);
+
 
 beforeEach(function () {
     $this->employer = User::factory()->employer()->create();
+    $this->employerToken = auth('api')->login($this->employer);
     $this->seeker = User::factory()->employee()->create();
+    $this->seekerToken = auth('api')->login($this->seeker);
 });
 
 afterEach(function () {
@@ -18,7 +20,7 @@ afterEach(function () {
 });
 
 test('employer can create a meeting with a job seeker', function () {
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson('/api/meetings', [
             'invitee_id' => (string) $this->seeker->_id,
             'title' => 'Initial Interview',
@@ -41,7 +43,7 @@ test('employer can create a meeting with a job seeker', function () {
 });
 
 test('job seeker can create a meeting with an employer', function () {
-    $response = $this->actingAs($this->seeker, 'api')
+    $response = $this->withToken($this->{"seekerToken"})
         ->postJson('/api/meetings', [
             'invitee_id' => (string) $this->employer->_id,
             'title' => 'Discussion about opportunity',
@@ -57,15 +59,15 @@ test('job seeker can create a meeting with an employer', function () {
 });
 
 test('missing required fields returns 422 with validation errors', function () {
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson('/api/meetings', []);
 
     $response->assertStatus(422)
-        ->assertJsonStructure(['errors' => ['invitee_id', 'title', 'meeting_type', 'proposed_date', 'proposed_start_time', 'proposed_duration_minutes']]);
+        ->assertJsonStructure(['invitee_id', 'title', 'meeting_type', 'proposed_date', 'proposed_start_time', 'proposed_duration_minutes']);
 });
 
 test('invalid meeting_type returns 422', function () {
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson('/api/meetings', [
             'invitee_id' => (string) $this->seeker->_id,
             'title' => 'Test Meeting',
@@ -76,11 +78,11 @@ test('invalid meeting_type returns 422', function () {
         ]);
 
     $response->assertStatus(422)
-        ->assertJsonValidationErrors(['meeting_type']);
+        ->assertJsonStructure(['meeting_type']);
 });
 
 test('past proposed_date returns 422', function () {
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson('/api/meetings', [
             'invitee_id' => (string) $this->seeker->_id,
             'title' => 'Test Meeting',
@@ -91,11 +93,11 @@ test('past proposed_date returns 422', function () {
         ]);
 
     $response->assertStatus(422)
-        ->assertJsonValidationErrors(['proposed_date']);
+        ->assertJsonStructure(['proposed_date']);
 });
 
 test('self-invite returns 422', function () {
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson('/api/meetings', [
             'invitee_id' => (string) $this->employer->_id,
             'title' => 'Test Meeting',
@@ -111,7 +113,7 @@ test('self-invite returns 422', function () {
 test('employer inviting another employer returns 422', function () {
     $otherEmployer = User::factory()->employer()->create();
 
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson('/api/meetings', [
             'invitee_id' => (string) $otherEmployer->_id,
             'title' => 'Test Meeting',
@@ -127,7 +129,7 @@ test('employer inviting another employer returns 422', function () {
 });
 
 test('invitee not found returns 422', function () {
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson('/api/meetings', [
             'invitee_id' => '000000000000000000000000',
             'title' => 'Test Meeting',
@@ -155,7 +157,7 @@ test('conflict warnings included in response when overlapping meeting exists', f
         'previous_schedules' => [],
     ]);
 
-    $response = $this->actingAs($this->employer, 'api')
+    $response = $this->withToken($this->{"employerToken"})
         ->postJson('/api/meetings', [
             'invitee_id' => (string) $this->seeker->_id,
             'title' => 'Overlapping Meeting',
@@ -172,3 +174,4 @@ test('conflict warnings included in response when overlapping meeting exists', f
     $data = $response->json();
     expect(count($data['organizer_conflicts']))->toBeGreaterThanOrEqual(1);
 });
+
