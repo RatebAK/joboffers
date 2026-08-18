@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 servers:
   -
-    url: 'http://localhost:8000'
+    url: 'https://joboffers-main-uj2ehj.laravel.cloud'
 tags:
   -
     name: Endpoints
@@ -1042,6 +1042,164 @@ paths:
         required: true
         schema:
           type: string
+  /api/jobs/search:
+    get:
+      summary: 'Search jobs'
+      operationId: searchJobs
+      description: 'Paginated search of active job posts for the authenticated job seeker.'
+      parameters:
+        -
+          in: query
+          name: keyword
+          description: 'Search in title, description, company name. Max 100 chars.'
+          example: React
+          required: false
+          schema:
+            type: string
+            description: 'Search in title, description, company name. Max 100 chars.'
+            example: React
+        -
+          in: query
+          name: location
+          description: 'Partial location match. Max 100 chars.'
+          example: Beirut
+          required: false
+          schema:
+            type: string
+            description: 'Partial location match. Max 100 chars.'
+            example: Beirut
+        -
+          in: query
+          name: job_type
+          description: 'One of: full_time, part_time, contract, freelance.'
+          example: full_time
+          required: false
+          schema:
+            type: string
+            description: 'One of: full_time, part_time, contract, freelance.'
+            example: full_time
+        -
+          in: query
+          name: category
+          description: ''
+          example: Engineering
+          required: false
+          schema:
+            type: string
+            description: ''
+            example: Engineering
+        -
+          in: query
+          name: min_salary
+          description: 'Minimum salary.'
+          example: 2000.0
+          required: false
+          schema:
+            type: number
+            description: 'Minimum salary.'
+            example: 2000.0
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  jobs:
+                    data:
+                      -
+                        id: 664f1a2b3c4d5e6f7a8b9c0d
+                        title: 'Senior React Developer'
+                        company_name: 'Acme Corp'
+                    current_page: 1
+                    per_page: 15
+                    total: 1
+                    total_pages: 1
+                    next_page: null
+                    prev_page: null
+                properties:
+                  jobs:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        example:
+                          -
+                            id: 664f1a2b3c4d5e6f7a8b9c0d
+                            title: 'Senior React Developer'
+                            company_name: 'Acme Corp'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: 664f1a2b3c4d5e6f7a8b9c0d
+                            title:
+                              type: string
+                              example: 'Senior React Developer'
+                            company_name:
+                              type: string
+                              example: 'Acme Corp'
+                      current_page:
+                        type: integer
+                        example: 1
+                      per_page:
+                        type: integer
+                        example: 15
+                      total:
+                        type: integer
+                        example: 1
+                      total_pages:
+                        type: integer
+                        example: 1
+                      next_page:
+                        type: string
+                        example: null
+                        nullable: true
+                      prev_page:
+                        type: string
+                        example: null
+                        nullable: true
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                keyword:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: b
+                  nullable: true
+                location:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: 'n'
+                  nullable: true
+                job_type:
+                  type: string
+                  description: ''
+                  example: full_time
+                  enum:
+                    - full_time
+                    - part_time
+                    - contract
+                    - freelance
+                  nullable: true
+                category:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: g
+                  nullable: true
+                min_salary:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 12
+                  nullable: true
   /api/companies:
     get:
       summary: 'List companies'
@@ -1583,7 +1741,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: female
+                  example: other
                   enum:
                     - male
                     - female
@@ -1665,7 +1823,7 @@ paths:
                 job_level:
                   type: string
                   description: ''
-                  example: mid
+                  example: executive
                   enum:
                     - entry
                     - junior
@@ -1715,7 +1873,7 @@ paths:
                 is_actively_seeking:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 social_links:
                   type: object
                   description: 'Social Links (nested object).'
@@ -1757,7 +1915,7 @@ paths:
                       level:
                         type: string
                         description: ''
-                        example: intermediate
+                        example: expert
                         enum:
                           - beginner
                           - intermediate
@@ -1850,7 +2008,7 @@ paths:
                       is_currently_working:
                         type: boolean
                         description: ''
-                        example: false
+                        example: true
                         nullable: true
                       description:
                         type: string
@@ -3391,164 +3549,6 @@ paths:
         required: true
         schema:
           type: string
-  /api/job-seeker/jobs/search:
-    get:
-      summary: 'Search jobs'
-      operationId: searchJobs
-      description: 'Paginated search of active job posts for the authenticated job seeker.'
-      parameters:
-        -
-          in: query
-          name: keyword
-          description: 'Search in title, description, company name. Max 100 chars.'
-          example: React
-          required: false
-          schema:
-            type: string
-            description: 'Search in title, description, company name. Max 100 chars.'
-            example: React
-        -
-          in: query
-          name: location
-          description: 'Partial location match. Max 100 chars.'
-          example: Beirut
-          required: false
-          schema:
-            type: string
-            description: 'Partial location match. Max 100 chars.'
-            example: Beirut
-        -
-          in: query
-          name: job_type
-          description: 'One of: full_time, part_time, contract, freelance.'
-          example: full_time
-          required: false
-          schema:
-            type: string
-            description: 'One of: full_time, part_time, contract, freelance.'
-            example: full_time
-        -
-          in: query
-          name: category
-          description: ''
-          example: Engineering
-          required: false
-          schema:
-            type: string
-            description: ''
-            example: Engineering
-        -
-          in: query
-          name: min_salary
-          description: 'Minimum salary.'
-          example: 2000.0
-          required: false
-          schema:
-            type: number
-            description: 'Minimum salary.'
-            example: 2000.0
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  jobs:
-                    data:
-                      -
-                        id: 664f1a2b3c4d5e6f7a8b9c0d
-                        title: 'Senior React Developer'
-                        company_name: 'Acme Corp'
-                    current_page: 1
-                    per_page: 15
-                    total: 1
-                    total_pages: 1
-                    next_page: null
-                    prev_page: null
-                properties:
-                  jobs:
-                    type: object
-                    properties:
-                      data:
-                        type: array
-                        example:
-                          -
-                            id: 664f1a2b3c4d5e6f7a8b9c0d
-                            title: 'Senior React Developer'
-                            company_name: 'Acme Corp'
-                        items:
-                          type: object
-                          properties:
-                            id:
-                              type: string
-                              example: 664f1a2b3c4d5e6f7a8b9c0d
-                            title:
-                              type: string
-                              example: 'Senior React Developer'
-                            company_name:
-                              type: string
-                              example: 'Acme Corp'
-                      current_page:
-                        type: integer
-                        example: 1
-                      per_page:
-                        type: integer
-                        example: 15
-                      total:
-                        type: integer
-                        example: 1
-                      total_pages:
-                        type: integer
-                        example: 1
-                      next_page:
-                        type: string
-                        example: null
-                        nullable: true
-                      prev_page:
-                        type: string
-                        example: null
-                        nullable: true
-      tags:
-        - Endpoints
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                keyword:
-                  type: string
-                  description: 'Must not be greater than 100 characters.'
-                  example: b
-                  nullable: true
-                location:
-                  type: string
-                  description: 'Must not be greater than 100 characters.'
-                  example: 'n'
-                  nullable: true
-                job_type:
-                  type: string
-                  description: ''
-                  example: freelance
-                  enum:
-                    - full_time
-                    - part_time
-                    - contract
-                    - freelance
-                  nullable: true
-                category:
-                  type: string
-                  description: 'Must not be greater than 100 characters.'
-                  example: g
-                  nullable: true
-                min_salary:
-                  type: number
-                  description: 'Must be at least 0.'
-                  example: 12
-                  nullable: true
   /api/job-seeker/matched-jobs:
     get:
       summary: 'Matched jobs'
@@ -7326,6 +7326,145 @@ paths:
                     nullable: true
       tags:
         - Endpoints
+  /api/admin/meetings:
+    get:
+      summary: 'List all meetings (admin)'
+      operationId: listAllMeetingsadmin
+      description: "Returns a paginated list of all meetings on the platform with both participants' profile info."
+      parameters:
+        -
+          in: query
+          name: status
+          description: 'Comma-separated statuses to filter by.'
+          example: 'pending,accepted'
+          required: false
+          schema:
+            type: string
+            description: 'Comma-separated statuses to filter by.'
+            example: 'pending,accepted'
+        -
+          in: query
+          name: from_date
+          description: 'Filter meetings from this date (YYYY-MM-DD).'
+          example: '2024-01-01'
+          required: false
+          schema:
+            type: string
+            description: 'Filter meetings from this date (YYYY-MM-DD).'
+            example: '2024-01-01'
+        -
+          in: query
+          name: to_date
+          description: 'Filter meetings up to this date (YYYY-MM-DD).'
+          example: '2024-12-31'
+          required: false
+          schema:
+            type: string
+            description: 'Filter meetings up to this date (YYYY-MM-DD).'
+            example: '2024-12-31'
+        -
+          in: query
+          name: sort_direction
+          description: 'Sort by proposed_date: asc or desc.'
+          example: asc
+          required: false
+          schema:
+            type: string
+            description: 'Sort by proposed_date: asc or desc.'
+            example: asc
+        -
+          in: query
+          name: per_page
+          description: 'Items per page (default 15, max 100).'
+          example: 15
+          required: false
+          schema:
+            type: integer
+            description: 'Items per page (default 15, max 100).'
+            example: 15
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data: []
+                  current_page: 1
+                  per_page: 15
+                  total: 0
+                  total_pages: 1
+                  next_page: null
+                  prev_page: null
+                properties:
+                  data:
+                    type: array
+                    example: []
+                  current_page:
+                    type: integer
+                    example: 1
+                  per_page:
+                    type: integer
+                    example: 15
+                  total:
+                    type: integer
+                    example: 0
+                  total_pages:
+                    type: integer
+                    example: 1
+                  next_page:
+                    type: string
+                    example: null
+                    nullable: true
+                  prev_page:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Endpoints
+  '/api/admin/meetings/{id}':
+    get:
+      summary: 'Show a specific meeting (admin)'
+      operationId: showASpecificMeetingadmin
+      description: "Returns full meeting details with both participants' profile info. No ownership check."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  meeting: {  }
+                properties:
+                  meeting:
+                    type: object
+                    properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Meeting not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Meeting not found'
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The meeting ID.'
+        example: 664f1a2b3c4d5e6f7a8b9c0d
+        required: true
+        schema:
+          type: string
   /api/notifications:
     get:
       summary: 'List notifications for the authenticated user'
@@ -7545,6 +7684,955 @@ paths:
         required: true
         schema:
           type: string
+  /api/meetings:
+    get:
+      summary: 'List meetings'
+      operationId: listMeetings
+      description: "Returns a paginated list of meetings where the authenticated user is a participant.\nSupports filtering by status, date range, and sort direction."
+      parameters:
+        -
+          in: query
+          name: status
+          description: 'Comma-separated Meeting_Status values.'
+          example: 'pending,accepted'
+          required: false
+          schema:
+            type: string
+            description: 'Comma-separated Meeting_Status values.'
+            example: 'pending,accepted'
+        -
+          in: query
+          name: from_date
+          description: 'ISO date (YYYY-MM-DD).'
+          example: '2025-01-01'
+          required: false
+          schema:
+            type: string
+            description: 'ISO date (YYYY-MM-DD).'
+            example: '2025-01-01'
+        -
+          in: query
+          name: to_date
+          description: 'ISO date (YYYY-MM-DD).'
+          example: '2025-12-31'
+          required: false
+          schema:
+            type: string
+            description: 'ISO date (YYYY-MM-DD).'
+            example: '2025-12-31'
+        -
+          in: query
+          name: sort_direction
+          description: 'asc or desc. Default: asc.'
+          example: desc
+          required: false
+          schema:
+            type: string
+            description: 'asc or desc. Default: asc.'
+            example: desc
+        -
+          in: query
+          name: per_page
+          description: 'Items per page (1-100, default 15).'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Items per page (1-100, default 15).'
+            example: 20
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data: []
+                  current_page: 1
+                  per_page: 15
+                  total: 0
+                  total_pages: 0
+                  next_page: null
+                  prev_page: null
+                properties:
+                  data:
+                    type: array
+                    example: []
+                  current_page:
+                    type: integer
+                    example: 1
+                  per_page:
+                    type: integer
+                    example: 15
+                  total:
+                    type: integer
+                    example: 0
+                  total_pages:
+                    type: integer
+                    example: 0
+                  next_page:
+                    type: string
+                    example: null
+                    nullable: true
+                  prev_page:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                from_date:
+                  type: string
+                  description: 'Must be a valid date in the format <code>Y-m-d</code>.'
+                  example: '2026-08-18'
+                  nullable: true
+                to_date:
+                  type: string
+                  description: 'Must be a valid date in the format <code>Y-m-d</code>.'
+                  example: '2026-08-18'
+                  nullable: true
+                sort_direction:
+                  type: string
+                  description: ''
+                  example: asc
+                  enum:
+                    - asc
+                    - desc
+                  nullable: true
+                per_page:
+                  type: integer
+                  description: 'Must be at least 1. Must not be greater than 100.'
+                  example: 22
+                  nullable: true
+    post:
+      summary: 'Create a meeting invitation'
+      operationId: createAMeetingInvitation
+      description: "Creates a new meeting between the authenticated user and an invitee with the opposite role.\nReturns the created meeting along with any scheduling conflicts detected for both participants."
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Meeting created successfully'
+                  meeting: {  }
+                  organizer_conflicts: []
+                  invitee_conflicts: []
+                properties:
+                  message:
+                    type: string
+                    example: 'Meeting created successfully'
+                  meeting:
+                    type: object
+                    properties: {  }
+                  organizer_conflicts:
+                    type: array
+                    example: []
+                  invitee_conflicts:
+                    type: array
+                    example: []
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Invitee not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Invitee not found'
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                invitee_id:
+                  type: string
+                  description: "The target user's ID."
+                  example: 664f1a2b3c4d5e6f7a8b9c0e
+                title:
+                  type: string
+                  description: 'Meeting title (1-255 chars).'
+                  example: 'Initial Interview'
+                meeting_type:
+                  type: string
+                  description: 'One of: in_person, phone_call, video_call.'
+                  example: video_call
+                proposed_date:
+                  type: string
+                  description: 'Future date (YYYY-MM-DD).'
+                  example: '2025-02-15'
+                proposed_start_time:
+                  type: string
+                  description: 'Start time (HH:MM).'
+                  example: '14:00'
+                proposed_duration_minutes:
+                  type: integer
+                  description: 'Duration in minutes (15-480).'
+                  example: 60
+                location_or_link:
+                  type: string
+                  description: 'optional Location or link (max 500 chars, ignored for video_call).'
+                  example: '123 Main St'
+                  nullable: true
+              required:
+                - invitee_id
+                - title
+                - meeting_type
+                - proposed_date
+                - proposed_start_time
+                - proposed_duration_minutes
+  /api/meetings/upcoming:
+    get:
+      summary: 'Upcoming meetings'
+      operationId: upcomingMeetings
+      description: "Returns the next 5 accepted meetings where the user is a participant,\nsorted by proposed_date ascending."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  meetings:
+                    -
+                      id: 664f1a2b3c4d5e6f7a8b9c0f
+                      title: Interview
+                      proposed_date: '2025-02-15'
+                      proposed_start_time: '14:00'
+                      proposed_duration_minutes: 60
+                      meeting_type: video_call
+                      participant_name: 'Jane Smith'
+                properties:
+                  meetings:
+                    type: array
+                    example:
+                      -
+                        id: 664f1a2b3c4d5e6f7a8b9c0f
+                        title: Interview
+                        proposed_date: '2025-02-15'
+                        proposed_start_time: '14:00'
+                        proposed_duration_minutes: 60
+                        meeting_type: video_call
+                        participant_name: 'Jane Smith'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0f
+                        title:
+                          type: string
+                          example: Interview
+                        proposed_date:
+                          type: string
+                          example: '2025-02-15'
+                        proposed_start_time:
+                          type: string
+                          example: '14:00'
+                        proposed_duration_minutes:
+                          type: integer
+                          example: 60
+                        meeting_type:
+                          type: string
+                          example: video_call
+                        participant_name:
+                          type: string
+                          example: 'Jane Smith'
+      tags:
+        - Endpoints
+  '/api/meetings/{id}':
+    get:
+      summary: 'Show meeting details'
+      operationId: showMeetingDetails
+      description: 'Returns full details of a specific meeting. Only accessible by participants.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  meeting: {  }
+                properties:
+                  meeting:
+                    type: object
+                    properties: {  }
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Forbidden
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Meeting not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Meeting not found'
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The meeting ID.'
+        example: 664f1a2b3c4d5e6f7a8b9c0f
+        required: true
+        schema:
+          type: string
+  '/api/meetings/{id}/accept':
+    post:
+      summary: 'Accept a meeting invitation'
+      operationId: acceptAMeetingInvitation
+      description: "Allows the invitee to accept a pending or rescheduled meeting. For video_call meetings,\noptionally provide a meet_link as a fallback if Google integration is not configured."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '{ "meeting": {...}, "google_meet_warning": null }'
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Forbidden
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Meeting not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Meeting not found'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This meeting cannot be accepted in its current state'
+                properties:
+                  message:
+                    type: string
+                    example: 'This meeting cannot be accepted in its current state'
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                meet_link:
+                  type: string
+                  description: 'Optional fallback video conference URL (max 500 chars).'
+                  example: 'https://zoom.us/j/123456'
+                  nullable: true
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The meeting ID.'
+        example: 664f1a2b3c4d5e6f7a8b9c0f
+        required: true
+        schema:
+          type: string
+  '/api/meetings/{id}/decline':
+    post:
+      summary: 'Decline a meeting invitation'
+      operationId: declineAMeetingInvitation
+      description: 'Allows the invitee to decline a pending or rescheduled meeting with an optional reason.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '{ "meeting": {...} }'
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Forbidden
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Meeting not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Meeting not found'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This meeting cannot be declined in its current state'
+                properties:
+                  message:
+                    type: string
+                    example: 'This meeting cannot be declined in its current state'
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                decline_reason:
+                  type: string
+                  description: 'Optional reason for declining (max 500 chars).'
+                  example: 'Schedule conflict'
+                  nullable: true
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The meeting ID.'
+        example: 664f1a2b3c4d5e6f7a8b9c0f
+        required: true
+        schema:
+          type: string
+  '/api/meetings/{id}/cancel':
+    post:
+      summary: 'Cancel a meeting'
+      operationId: cancelAMeeting
+      description: "Allows the organizer or invitee to cancel a meeting. Organizer can cancel from\npending/accepted/rescheduled. Invitee can cancel from accepted/rescheduled only."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '{ "meeting": {...} }'
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Forbidden
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Meeting not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Meeting not found'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This meeting cannot be cancelled in its current state'
+                properties:
+                  message:
+                    type: string
+                    example: 'This meeting cannot be cancelled in its current state'
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cancellation_reason:
+                  type: string
+                  description: 'Optional reason for cancelling (max 500 chars).'
+                  example: 'No longer needed'
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The meeting ID.'
+        example: 664f1a2b3c4d5e6f7a8b9c0f
+        required: true
+        schema:
+          type: string
+  '/api/meetings/{id}/reschedule':
+    post:
+      summary: 'Reschedule a meeting'
+      operationId: rescheduleAMeeting
+      description: "Allows the organizer to reschedule a meeting to a new time. The previous schedule\nis preserved in the meeting history."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '{ "meeting": {...}, "organizer_conflicts": [], "invitee_conflicts": [] }'
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Forbidden
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Meeting not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Meeting not found'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This meeting cannot be rescheduled in its current state'
+                properties:
+                  message:
+                    type: string
+                    example: 'This meeting cannot be rescheduled in its current state'
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                proposed_date:
+                  type: string
+                  description: 'New proposed date (must be after today).'
+                  example: '2025-02-15'
+                proposed_start_time:
+                  type: string
+                  description: 'New proposed start time.'
+                  example: '14:00'
+                proposed_duration_minutes:
+                  type: integer
+                  description: 'New duration in minutes (15-480).'
+                  example: 60
+              required:
+                - proposed_date
+                - proposed_start_time
+                - proposed_duration_minutes
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The meeting ID.'
+        example: 664f1a2b3c4d5e6f7a8b9c0f
+        required: true
+        schema:
+          type: string
+  '/api/meetings/{id}/complete':
+    post:
+      summary: 'Mark a meeting as completed'
+      operationId: markAMeetingAsCompleted
+      description: 'Allows the organizer to mark an accepted meeting as completed after it has occurred.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '{ "meeting": {...} }'
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Forbidden
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Meeting not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Meeting not found'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Only accepted meetings can be marked as completed'
+                properties:
+                  message:
+                    type: string
+                    example: 'Only accepted meetings can be marked as completed'
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The meeting ID.'
+        example: 664f1a2b3c4d5e6f7a8b9c0f
+        required: true
+        schema:
+          type: string
+  '/api/meetings/{id}/notes':
+    post:
+      summary: 'Add a note to a meeting'
+      operationId: addANoteToAMeeting
+      description: "Appends a note to the meeting's notes array. Only participants (organizer or invitee) can add notes."
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  meeting:
+                    notes:
+                      -
+                        author_id: ...
+                        content: ...
+                        created_at: ...
+                properties:
+                  meeting:
+                    type: object
+                    properties:
+                      notes:
+                        type: array
+                        example:
+                          -
+                            author_id: ...
+                            content: ...
+                            created_at: ...
+                        items:
+                          type: object
+                          properties:
+                            author_id:
+                              type: string
+                              example: ...
+                            content:
+                              type: string
+                              example: ...
+                            created_at:
+                              type: string
+                              example: ...
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Forbidden
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Meeting not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Meeting not found'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    content:
+                      - 'The content field is required.'
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      content:
+                        type: array
+                        example:
+                          - 'The content field is required.'
+                        items:
+                          type: string
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: 'Note content (1-2000 chars, cannot be whitespace only).'
+                  example: 'Please bring your portfolio.'
+              required:
+                - content
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The meeting ID.'
+        example: 664f1a2b3c4d5e6f7a8b9c0f
+        required: true
+        schema:
+          type: string
+  /api/google/connect:
+    get:
+      summary: 'Initiate Google OAuth connection'
+      operationId: initiateGoogleOAuthConnection
+      description: 'Returns a Google OAuth URL to redirect the user to for granting calendar access.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  auth_url: 'https://accounts.google.com/o/oauth2/v2/auth?...'
+                properties:
+                  auth_url:
+                    type: string
+                    example: 'https://accounts.google.com/o/oauth2/v2/auth?...'
+      tags:
+        - Endpoints
+  /api/google/callback:
+    get:
+      summary: 'Handle Google OAuth callback'
+      operationId: handleGoogleOAuthCallback
+      description: 'Exchanges the authorization code for tokens and stores them for the authenticated user.'
+      parameters:
+        -
+          in: query
+          name: code
+          description: 'The authorization code from Google.'
+          example: 4/0AX4XfWg...
+          required: true
+          schema:
+            type: string
+            description: 'The authorization code from Google.'
+            example: 4/0AX4XfWg...
+        -
+          in: query
+          name: state
+          description: 'User ID for CSRF validation.'
+          example: 664f1a2b3c4d5e6f7a8b9c0a
+          required: true
+          schema:
+            type: string
+            description: 'User ID for CSRF validation.'
+            example: 664f1a2b3c4d5e6f7a8b9c0a
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Google account connected successfully'
+                properties:
+                  message:
+                    type: string
+                    example: 'Google account connected successfully'
+        400:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Google authorization was denied'
+                properties:
+                  message:
+                    type: string
+                    example: 'Google authorization was denied'
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Invalid state parameter'
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid state parameter'
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  description: ''
+                  example: architecto
+              required:
+                - code
+  /api/google/status:
+    get:
+      summary: 'Check Google integration status'
+      operationId: checkGoogleIntegrationStatus
+      description: 'Returns whether the authenticated user has a valid Google account connection.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  connected: true
+                properties:
+                  connected:
+                    type: boolean
+                    example: true
+      tags:
+        - Endpoints
+  /api/google/disconnect:
+    delete:
+      summary: 'Disconnect Google account'
+      operationId: disconnectGoogleAccount
+      description: 'Removes the stored Google OAuth tokens for the authenticated user.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Google account disconnected successfully'
+                properties:
+                  message:
+                    type: string
+                    example: 'Google account disconnected successfully'
+      tags:
+        - Endpoints
   /api/job-seeker/coach/sessions:
     get:
       summary: 'List coach sessions'
@@ -7591,6 +8679,100 @@ paths:
                           example: ...
       tags:
         - 'Resume Coach'
+  '/api/job-seeker/coach/sessions/{sessionId}':
+    get:
+      summary: 'Get session messages'
+      operationId: getSessionMessages
+      description: 'Returns all messages in a specific coach chat session.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      role: user
+                      content: Hello
+                      created_at: ...
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        role: user
+                        content: Hello
+                        created_at: ...
+                    items:
+                      type: object
+                      properties:
+                        role:
+                          type: string
+                          example: user
+                        content:
+                          type: string
+                          example: Hello
+                        created_at:
+                          type: string
+                          example: ...
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Session not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Session not found'
+      tags:
+        - 'Resume Coach'
+    delete:
+      summary: 'Delete a coach session'
+      operationId: deleteACoachSession
+      description: 'Deletes a chat session and all its messages.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Session deleted'
+                properties:
+                  message:
+                    type: string
+                    example: 'Session deleted'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Session not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Session not found'
+      tags:
+        - 'Resume Coach'
+    parameters:
+      -
+        in: path
+        name: sessionId
+        description: 'The session ID.'
+        example: 64a1b2c3d4e5f6a7b8c9d0e1
+        required: true
+        schema:
+          type: string
   /api/job-seeker/coach/chat:
     post:
       summary: 'Chat with resume coach'
@@ -7675,5 +8857,10 @@ paths:
                   type: string
                   description: 'Your message to the coach. Max 1000 chars.'
                   example: 'How can I improve my resume?'
+                session_id:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
               required:
                 - message

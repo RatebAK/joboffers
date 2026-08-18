@@ -5,12 +5,12 @@
             "key": "baseUrl",
             "type": "string",
             "name": "string",
-            "value": "http:\/\/localhost:8000"
+            "value": "https:\/\/joboffers-main-uj2ehj.laravel.cloud"
         }
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "d2f17604-d771-41be-84d3-cfb365b0e785",
+        "_postman_id": "ca48051b-06f6-4bd4-a0e9-8538ffa697b4",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -362,6 +362,72 @@
                             "header": [],
                             "code": 404,
                             "body": "{ \"message\": \"Job post not found\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Search jobs",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/jobs\/search",
+                            "query": [
+                                {
+                                    "key": "keyword",
+                                    "value": "React",
+                                    "description": "Search in title, description, company name. Max 100 chars.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "location",
+                                    "value": "Beirut",
+                                    "description": "Partial location match. Max 100 chars.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "job_type",
+                                    "value": "full_time",
+                                    "description": "One of: full_time, part_time, contract, freelance.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "category",
+                                    "value": "Engineering",
+                                    "description": "",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "min_salary",
+                                    "value": "2000",
+                                    "description": "Minimum salary.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/jobs\/search?keyword=React&location=Beirut&job_type=full_time&category=Engineering&min_salary=2000"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"full_time\",\"category\":\"g\",\"min_salary\":12}"
+                        },
+                        "description": "Paginated search of active job posts for the authenticated job seeker."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"jobs\": {\n    \"data\": [{ \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"title\": \"Senior React Developer\", \"company_name\": \"Acme Corp\" }],\n    \"current_page\": 1, \"per_page\": 15, \"total\": 1, \"total_pages\": 1, \"next_page\": null, \"prev_page\": null\n  }\n}",
                             "name": ""
                         }
                     ]
@@ -1128,7 +1194,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "female",
+                                    "value": "other",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1206,7 +1272,7 @@
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "mid",
+                                    "value": "executive",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1248,7 +1314,7 @@
                                 },
                                 {
                                     "key": "is_actively_seeking",
-                                    "value": "",
+                                    "value": "1",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1284,7 +1350,7 @@
                                 },
                                 {
                                     "key": "skills[0][level]",
-                                    "value": "intermediate",
+                                    "value": "expert",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1368,7 +1434,7 @@
                                 },
                                 {
                                     "key": "work_experience[0][is_currently_working]",
-                                    "value": "",
+                                    "value": "1",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1930,72 +1996,6 @@
                             "header": [],
                             "code": 404,
                             "body": "{ \"message\": \"Application not found\" }",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Search jobs",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/job-seeker\/jobs\/search",
-                            "query": [
-                                {
-                                    "key": "keyword",
-                                    "value": "React",
-                                    "description": "Search in title, description, company name. Max 100 chars.",
-                                    "disabled": false
-                                },
-                                {
-                                    "key": "location",
-                                    "value": "Beirut",
-                                    "description": "Partial location match. Max 100 chars.",
-                                    "disabled": false
-                                },
-                                {
-                                    "key": "job_type",
-                                    "value": "full_time",
-                                    "description": "One of: full_time, part_time, contract, freelance.",
-                                    "disabled": false
-                                },
-                                {
-                                    "key": "category",
-                                    "value": "Engineering",
-                                    "description": "",
-                                    "disabled": false
-                                },
-                                {
-                                    "key": "min_salary",
-                                    "value": "2000",
-                                    "description": "Minimum salary.",
-                                    "disabled": false
-                                }
-                            ],
-                            "raw": "{{baseUrl}}\/api\/job-seeker\/jobs\/search?keyword=React&location=Beirut&job_type=full_time&category=Engineering&min_salary=2000"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"freelance\",\"category\":\"g\",\"min_salary\":12}"
-                        },
-                        "description": "Paginated search of active job posts for the authenticated job seeker."
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"jobs\": {\n    \"data\": [{ \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"title\": \"Senior React Developer\", \"company_name\": \"Acme Corp\" }],\n    \"current_page\": 1, \"per_page\": 15, \"total\": 1, \"total_pages\": 1, \"next_page\": null, \"prev_page\": null\n  }\n}",
                             "name": ""
                         }
                     ]
@@ -4087,6 +4087,115 @@
                     ]
                 },
                 {
+                    "name": "List all meetings (admin)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/meetings",
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "pending%2Caccepted",
+                                    "description": "Comma-separated statuses to filter by.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "from_date",
+                                    "value": "2024-01-01",
+                                    "description": "Filter meetings from this date (YYYY-MM-DD).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "to_date",
+                                    "value": "2024-12-31",
+                                    "description": "Filter meetings up to this date (YYYY-MM-DD).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_direction",
+                                    "value": "asc",
+                                    "description": "Sort by proposed_date: asc or desc.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "15",
+                                    "description": "Items per page (default 15, max 100).",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/meetings?status=pending%2Caccepted&from_date=2024-01-01&to_date=2024-12-31&sort_direction=asc&per_page=15"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns a paginated list of all meetings on the platform with both participants' profile info."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [],\n  \"current_page\": 1,\n  \"per_page\": 15,\n  \"total\": 0,\n  \"total_pages\": 1,\n  \"next_page\": null,\n  \"prev_page\": null\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Show a specific meeting (admin)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/meetings\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/meetings\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "The meeting ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns full meeting details with both participants' profile info. No ownership check."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"meeting\": {} }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Meeting not found\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "List notifications for the authenticated user",
                     "request": {
                         "url": {
@@ -4240,6 +4349,716 @@
                             "name": ""
                         }
                     ]
+                },
+                {
+                    "name": "List meetings",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/meetings",
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "pending%2Caccepted",
+                                    "description": "Comma-separated Meeting_Status values.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "from_date",
+                                    "value": "2025-01-01",
+                                    "description": "ISO date (YYYY-MM-DD).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "to_date",
+                                    "value": "2025-12-31",
+                                    "description": "ISO date (YYYY-MM-DD).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_direction",
+                                    "value": "desc",
+                                    "description": "asc or desc. Default: asc.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "Items per page (1-100, default 15).",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/meetings?status=pending%2Caccepted&from_date=2025-01-01&to_date=2025-12-31&sort_direction=desc&per_page=20"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"status\":\"architecto\",\"from_date\":\"2026-08-18\",\"to_date\":\"2026-08-18\",\"sort_direction\":\"asc\",\"per_page\":22}"
+                        },
+                        "description": "Returns a paginated list of meetings where the authenticated user is a participant.\nSupports filtering by status, date range, and sort direction."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [],\n  \"current_page\": 1,\n  \"per_page\": 15,\n  \"total\": 0,\n  \"total_pages\": 0,\n  \"next_page\": null,\n  \"prev_page\": null\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a meeting invitation",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/meetings",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/meetings"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"invitee_id\":\"664f1a2b3c4d5e6f7a8b9c0e\",\"title\":\"Initial Interview\",\"meeting_type\":\"video_call\",\"proposed_date\":\"2025-02-15\",\"proposed_start_time\":\"14:00\",\"proposed_duration_minutes\":60,\"location_or_link\":\"123 Main St\"}"
+                        },
+                        "description": "Creates a new meeting between the authenticated user and an invitee with the opposite role.\nReturns the created meeting along with any scheduling conflicts detected for both participants."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"Meeting created successfully\",\n  \"meeting\": {},\n  \"organizer_conflicts\": [],\n  \"invitee_conflicts\": []\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"message\": \"Invitee not found\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Upcoming meetings",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/meetings\/upcoming",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/meetings\/upcoming"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns the next 5 accepted meetings where the user is a participant,\nsorted by proposed_date ascending."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"meetings\": [\n    {\n      \"id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n      \"title\": \"Interview\",\n      \"proposed_date\": \"2025-02-15\",\n      \"proposed_start_time\": \"14:00\",\n      \"proposed_duration_minutes\": 60,\n      \"meeting_type\": \"video_call\",\n      \"participant_name\": \"Jane Smith\"\n    }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Show meeting details",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/meetings\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/meetings\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0f",
+                                    "description": "The meeting ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns full details of a specific meeting. Only accessible by participants."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"meeting\": {} }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Forbidden\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Meeting not found\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Accept a meeting invitation",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/meetings\/:id\/accept",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/meetings\/:id\/accept",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0f",
+                                    "description": "The meeting ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"meet_link\":\"https:\\\/\\\/zoom.us\\\/j\\\/123456\"}"
+                        },
+                        "description": "Allows the invitee to accept a pending or rescheduled meeting. For video_call meetings,\noptionally provide a meet_link as a fallback if Google integration is not configured."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"meeting\": {...}, \"google_meet_warning\": null }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Forbidden\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Meeting not found\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"message\": \"This meeting cannot be accepted in its current state\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Decline a meeting invitation",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/meetings\/:id\/decline",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/meetings\/:id\/decline",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0f",
+                                    "description": "The meeting ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"decline_reason\":\"Schedule conflict\"}"
+                        },
+                        "description": "Allows the invitee to decline a pending or rescheduled meeting with an optional reason."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"meeting\": {...} }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Forbidden\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Meeting not found\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"message\": \"This meeting cannot be declined in its current state\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Cancel a meeting",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/meetings\/:id\/cancel",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/meetings\/:id\/cancel",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0f",
+                                    "description": "The meeting ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"cancellation_reason\":\"No longer needed\"}"
+                        },
+                        "description": "Allows the organizer or invitee to cancel a meeting. Organizer can cancel from\npending\/accepted\/rescheduled. Invitee can cancel from accepted\/rescheduled only."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"meeting\": {...} }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Forbidden\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Meeting not found\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"message\": \"This meeting cannot be cancelled in its current state\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Reschedule a meeting",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/meetings\/:id\/reschedule",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/meetings\/:id\/reschedule",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0f",
+                                    "description": "The meeting ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"proposed_date\":\"2025-02-15\",\"proposed_start_time\":\"14:00\",\"proposed_duration_minutes\":60}"
+                        },
+                        "description": "Allows the organizer to reschedule a meeting to a new time. The previous schedule\nis preserved in the meeting history."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"meeting\": {...}, \"organizer_conflicts\": [], \"invitee_conflicts\": [] }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Forbidden\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Meeting not found\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"message\": \"This meeting cannot be rescheduled in its current state\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Mark a meeting as completed",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/meetings\/:id\/complete",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/meetings\/:id\/complete",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0f",
+                                    "description": "The meeting ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Allows the organizer to mark an accepted meeting as completed after it has occurred."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"meeting\": {...} }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Forbidden\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Meeting not found\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"message\": \"Only accepted meetings can be marked as completed\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Add a note to a meeting",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/meetings\/:id\/notes",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/meetings\/:id\/notes",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0f",
+                                    "description": "The meeting ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"content\":\"Please bring your portfolio.\"}"
+                        },
+                        "description": "Appends a note to the meeting's notes array. Only participants (organizer or invitee) can add notes."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{ \"meeting\": { \"notes\": [{ \"author_id\": \"...\", \"content\": \"...\", \"created_at\": \"...\" }] } }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Forbidden\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Meeting not found\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"content\": [\"The content field is required.\"] } }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Initiate Google OAuth connection",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/google\/connect",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/google\/connect"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns a Google OAuth URL to redirect the user to for granting calendar access."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"auth_url\": \"https:\/\/accounts.google.com\/o\/oauth2\/v2\/auth?...\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Handle Google OAuth callback",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/google\/callback",
+                            "query": [
+                                {
+                                    "key": "code",
+                                    "value": "4%2F0AX4XfWg...",
+                                    "description": "The authorization code from Google.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "state",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0a",
+                                    "description": "User ID for CSRF validation.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/google\/callback?code=4%2F0AX4XfWg...&state=664f1a2b3c4d5e6f7a8b9c0a"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"code\":\"architecto\"}"
+                        },
+                        "description": "Exchanges the authorization code for tokens and stores them for the authenticated user."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"Google account connected successfully\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{ \"message\": \"Google authorization was denied\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"Invalid state parameter\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Check Google integration status",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/google\/status",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/google\/status"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns whether the authenticated user has a valid Google account connection."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"connected\": true }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Disconnect Google account",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/google\/disconnect",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/google\/disconnect"
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Removes the stored Google OAuth tokens for the authenticated user."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"Google account disconnected successfully\" }",
+                            "name": ""
+                        }
+                    ]
                 }
             ]
         },
@@ -4280,6 +5099,98 @@
                     ]
                 },
                 {
+                    "name": "Get session messages",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/coach\/sessions\/:sessionId",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/coach\/sessions\/:sessionId",
+                            "variable": [
+                                {
+                                    "id": "sessionId",
+                                    "key": "sessionId",
+                                    "value": "64a1b2c3d4e5f6a7b8c9d0e1",
+                                    "description": "The session ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns all messages in a specific coach chat session."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"data\": [{ \"role\": \"user\", \"content\": \"Hello\", \"created_at\": \"...\" }] }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Session not found\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a coach session",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/coach\/sessions\/:sessionId",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/coach\/sessions\/:sessionId",
+                            "variable": [
+                                {
+                                    "id": "sessionId",
+                                    "key": "sessionId",
+                                    "value": "64a1b2c3d4e5f6a7b8c9d0e1",
+                                    "description": "The session ID."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Deletes a chat session and all its messages."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"Session deleted\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Session not found\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "Chat with resume coach",
                     "request": {
                         "url": {
@@ -4301,7 +5212,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"message\":\"How can I improve my resume?\"}"
+                            "raw": "{\"message\":\"How can I improve my resume?\",\"session_id\":\"architecto\"}"
                         },
                         "description": "Sends a message to the AI resume coach. The AI automatically creates or continues\na session for the user. Both the user message and the AI response are persisted\nin the shared database and will appear in subsequent session\/message list calls."
                     },
