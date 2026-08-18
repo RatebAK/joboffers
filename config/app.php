@@ -17,6 +17,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Frontend URL
+    |--------------------------------------------------------------------------
+    |
+    | The URL of the frontend application. Used for OAuth callback redirects
+    | and other cross-origin communication.
+    |
+    */
+
+    'frontend_url' => env('FRONTEND_URL', 'https://jobs-employment-app.vercel.app'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |

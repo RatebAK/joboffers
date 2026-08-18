@@ -220,10 +220,12 @@ Route::middleware('jwt.auth')->prefix('meetings')->group(function () {
     Route::post('/{id}/notes', [MeetingNoteController::class, 'store']);
 });
 
-// Google OAuth — available to all authenticated users
+// Google OAuth — callback must be public (browser redirect from Google)
+Route::get('google/callback', [GoogleOAuthController::class, 'callback']);
+
+// Google OAuth — authenticated endpoints
 Route::middleware('jwt.auth')->prefix('google')->group(function () {
     Route::get('/connect',       [GoogleOAuthController::class, 'connect']);
-    Route::get('/callback',      [GoogleOAuthController::class, 'callback']);
     Route::get('/status',        [GoogleOAuthController::class, 'status']);
     Route::delete('/disconnect', [GoogleOAuthController::class, 'disconnect']);
 });

@@ -27,30 +27,39 @@ class GoogleOAuthController extends Controller
     /**
      * Handle Google OAuth callback
      *
-     * Exchanges the authorization code for tokens and stores them for the authenticated user.
+     * Exchanges the authorization code for tokens and redirects the user back to the frontend.
      *
      * @queryParam code string required The authorization code from Google. Example: 4/0AX4XfWg...
      * @queryParam state string required User ID for CSRF validation. Example: 664f1a2b3c4d5e6f7a8b9c0a
      *
-     * @response 200 { "message": "Google account connected successfully" }
+     * @response 302 Redirects to frontend with ?google=connected or ?google=error
      * @response 400 { "message": "Google authorization was denied" }
-     * @response 403 { "message": "Invalid state parameter" }
      */
     public function callback(Request $request)
     {
+        $frontendUrl = config('app.frontend_url', 'https://jobs-employment-app.vercel.app');
+
         if ($request->has('error')) {
-            return response()->json(['message' => 'Google authorization was denied'], 400);
+            return redirect("{$frontendUrl}/settings?google=denied");
         }
 
-        $request->validate(['code' => 'required|string']);
-
-        if ($request->input('state') !== (string) $request->user()->_id) {
-            return response()->json(['message' => 'Invalid state parameter'], 403);
+        if (!$request->has('code') || !$request->has('state')) {
+            return redirect("{$frontendUrl}/settings?google=error");
         }
 
-        $this->googleMeetService->handleCallback($request->input('code'), $request->user());
+        try {
+            $user = \App\Models\User::find($request->input('state'));
 
-        return response()->json(['message' => 'Google account connected successfully']);
+            if (!$user) {
+                return redirect("{$frontendUrl}/settings?google=error");
+            }
+
+            $this->googleMeetService->handleCallback($request->input('code'), $user);
+
+            return redirect("{$frontendUrl}/settings?google=connected");
+        } catch (\Throwable $e) {
+            return redirect("{$frontendUrl}/settings?google=error");
+        }
     }
 
     /**
