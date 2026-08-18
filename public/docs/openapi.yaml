@@ -1183,7 +1183,7 @@ paths:
                 job_type:
                   type: string
                   description: ''
-                  example: full_time
+                  example: freelance
                   enum:
                     - full_time
                     - part_time
@@ -1741,7 +1741,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: other
+                  example: prefer_not_to_say
                   enum:
                     - male
                     - female
@@ -1781,7 +1781,7 @@ paths:
                 marital_status:
                   type: string
                   description: ''
-                  example: single
+                  example: widowed
                   enum:
                     - single
                     - married
@@ -1802,7 +1802,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: freelancing
+                  example: open_to_work
                   enum:
                     - employed
                     - unemployed
@@ -1823,7 +1823,7 @@ paths:
                 job_level:
                   type: string
                   description: ''
-                  example: executive
+                  example: senior
                   enum:
                     - entry
                     - junior
@@ -1915,7 +1915,7 @@ paths:
                       level:
                         type: string
                         description: ''
-                        example: expert
+                        example: advanced
                         enum:
                           - beginner
                           - intermediate
@@ -2008,7 +2008,7 @@ paths:
                       is_currently_working:
                         type: boolean
                         description: ''
-                        example: true
+                        example: false
                         nullable: true
                       description:
                         type: string
@@ -7806,7 +7806,7 @@ paths:
                 sort_direction:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   enum:
                     - asc
                     - desc
@@ -8492,32 +8492,11 @@ paths:
         required: true
         schema:
           type: string
-  /api/google/connect:
-    get:
-      summary: 'Initiate Google OAuth connection'
-      operationId: initiateGoogleOAuthConnection
-      description: 'Returns a Google OAuth URL to redirect the user to for granting calendar access.'
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  auth_url: 'https://accounts.google.com/o/oauth2/v2/auth?...'
-                properties:
-                  auth_url:
-                    type: string
-                    example: 'https://accounts.google.com/o/oauth2/v2/auth?...'
-      tags:
-        - Endpoints
   /api/google/callback:
     get:
       summary: 'Handle Google OAuth callback'
       operationId: handleGoogleOAuthCallback
-      description: 'Exchanges the authorization code for tokens and stores them for the authenticated user.'
+      description: 'Exchanges the authorization code for tokens and redirects the user back to the frontend.'
       parameters:
         -
           in: query
@@ -8540,18 +8519,20 @@ paths:
             description: 'User ID for CSRF validation.'
             example: 664f1a2b3c4d5e6f7a8b9c0a
       responses:
-        200:
+        302:
           description: ''
           content:
-            application/json:
+            text/plain:
               schema:
-                type: object
-                example:
-                  message: 'Google account connected successfully'
-                properties:
-                  message:
+                oneOf:
+                  -
+                    description: ''
                     type: string
-                    example: 'Google account connected successfully'
+                    example: 'Redirects to frontend with ?google=connected or ?google=error'
+                  -
+                    description: ''
+                    type: string
+                    example: "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta http-equiv=\"refresh\" content=\"0;url='https://jobs-employment-app.vercel.app/settings?google=error'\" />\n\n        <title>Redirecting to https://jobs-employment-app.vercel.app/settings?google=error</title>\n    </head>\n    <body>\n        Redirecting to <a href=\"https://jobs-employment-app.vercel.app/settings?google=error\">https://jobs-employment-app.vercel.app/settings?google=error</a>.\n    </body>\n</html>"
         400:
           description: ''
           content:
@@ -8564,33 +8545,29 @@ paths:
                   message:
                     type: string
                     example: 'Google authorization was denied'
-        403:
+      tags:
+        - Endpoints
+  /api/google/connect:
+    get:
+      summary: 'Initiate Google OAuth connection'
+      operationId: initiateGoogleOAuthConnection
+      description: 'Returns a Google OAuth URL to redirect the user to for granting calendar access.'
+      parameters: []
+      responses:
+        200:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  message: 'Invalid state parameter'
+                  auth_url: 'https://accounts.google.com/o/oauth2/v2/auth?...'
                 properties:
-                  message:
+                  auth_url:
                     type: string
-                    example: 'Invalid state parameter'
+                    example: 'https://accounts.google.com/o/oauth2/v2/auth?...'
       tags:
         - Endpoints
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                code:
-                  type: string
-                  description: ''
-                  example: architecto
-              required:
-                - code
   /api/google/status:
     get:
       summary: 'Check Google integration status'

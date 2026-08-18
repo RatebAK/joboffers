@@ -356,11 +356,11 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-meetings--id--notes">
                                 <a href="#endpoints-POSTapi-meetings--id--notes">Add a note to a meeting</a>
                             </li>
-                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-google-connect">
-                                <a href="#endpoints-GETapi-google-connect">Initiate Google OAuth connection</a>
-                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-google-callback">
                                 <a href="#endpoints-GETapi-google-callback">Handle Google OAuth callback</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-google-connect">
+                                <a href="#endpoints-GETapi-google-connect">Initiate Google OAuth connection</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-google-status">
                                 <a href="#endpoints-GETapi-google-status">Check Google integration status</a>
@@ -1826,7 +1826,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"keyword\": \"b\",
     \"location\": \"n\",
-    \"job_type\": \"full_time\",
+    \"job_type\": \"freelance\",
     \"category\": \"g\",
     \"min_salary\": 12
 }"
@@ -1857,7 +1857,7 @@ const headers = {
 let body = {
     "keyword": "b",
     "location": "n",
-    "job_type": "full_time",
+    "job_type": "freelance",
     "category": "g",
     "min_salary": 12
 };
@@ -2071,10 +2071,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_type"                data-endpoint="GETapi-jobs-search"
-               value="full_time"
+               value="freelance"
                data-component="body">
     <br>
-<p>Example: <code>full_time</code></p>
+<p>Example: <code>freelance</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>full_time</code></li> <li><code>part_time</code></li> <li><code>contract</code></li> <li><code>freelance</code></li></ul>
         </div>
@@ -3147,7 +3147,7 @@ All other fields are sent as regular form fields.</p>
     --form "phone=+961 70 123456"\
     --form "date_of_birth=1995-06-15"\
     --form "marital_status=architecto"\
-    --form "image=@C:\Users\rog\AppData\Local\Temp\phpF955.tmp" </code></pre></div>
+    --form "image=@C:\Users\rog\AppData\Local\Temp\phpDF21.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -3329,7 +3329,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>JPEG/PNG/WEBP profile photo, max 2MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpF955.tmp</code></p>
+<p>JPEG/PNG/WEBP profile photo, max 2MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpDF21.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>gender</code></b>&nbsp;&nbsp;
@@ -5204,20 +5204,20 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "last_name=n"\
     --form "full_name=g"\
     --form "image=z"\
-    --form "gender=other"\
+    --form "gender=prefer_not_to_say"\
     --form "nationality=m"\
     --form "city=i"\
     --form "location=y"\
     --form "address=v"\
     --form "phone=dljnikhwaykcmyuw"\
     --form "date_of_birth=pwlvqwrsitcpscql"\
-    --form "marital_status=single"\
+    --form "marital_status=widowed"\
     --form "salary_range_from=16"\
     --form "salary_range_to=38"\
-    --form "current_job_status=freelancing"\
+    --form "current_job_status=open_to_work"\
     --form "years_of_experience=8"\
     --form "education_level=n"\
-    --form "job_level=executive"\
+    --form "job_level=senior"\
     --form "job_types[]=r"\
     --form "job_roles[]=w"\
     --form "work_cities[]=t"\
@@ -5230,7 +5230,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "social_links[portfolio]=m"\
     --form "social_links[twitter]=i"\
     --form "skills[][name]=y"\
-    --form "skills[][level]=expert"\
+    --form "skills[][level]=advanced"\
     --form "education_history[][certificate_type]=v"\
     --form "education_history[][university]=d"\
     --form "education_history[][faculty]=l"\
@@ -5244,9 +5244,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "work_experience[][job_roles][]=u"\
     --form "work_experience[][from_date]=jwvlxjklqppwqbew"\
     --form "work_experience[][to_date]=tnnoqitpxntltcvi"\
-    --form "work_experience[][is_currently_working]=1"\
+    --form "work_experience[][is_currently_working]="\
     --form "work_experience[][description]=Eius et animi quos velit et."\
-    --form "resume=@C:\Users\rog\AppData\Local\Temp\phpFA50.tmp" </code></pre></div>
+    --form "resume=@C:\Users\rog\AppData\Local\Temp\phpDF80.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -5265,20 +5265,20 @@ body.append('first_name', 'b');
 body.append('last_name', 'n');
 body.append('full_name', 'g');
 body.append('image', 'z');
-body.append('gender', 'other');
+body.append('gender', 'prefer_not_to_say');
 body.append('nationality', 'm');
 body.append('city', 'i');
 body.append('location', 'y');
 body.append('address', 'v');
 body.append('phone', 'dljnikhwaykcmyuw');
 body.append('date_of_birth', 'pwlvqwrsitcpscql');
-body.append('marital_status', 'single');
+body.append('marital_status', 'widowed');
 body.append('salary_range_from', '16');
 body.append('salary_range_to', '38');
-body.append('current_job_status', 'freelancing');
+body.append('current_job_status', 'open_to_work');
 body.append('years_of_experience', '8');
 body.append('education_level', 'n');
-body.append('job_level', 'executive');
+body.append('job_level', 'senior');
 body.append('job_types[]', 'r');
 body.append('job_roles[]', 'w');
 body.append('work_cities[]', 't');
@@ -5291,7 +5291,7 @@ body.append('social_links[github]', 'z');
 body.append('social_links[portfolio]', 'm');
 body.append('social_links[twitter]', 'i');
 body.append('skills[][name]', 'y');
-body.append('skills[][level]', 'expert');
+body.append('skills[][level]', 'advanced');
 body.append('education_history[][certificate_type]', 'v');
 body.append('education_history[][university]', 'd');
 body.append('education_history[][faculty]', 'l');
@@ -5305,7 +5305,7 @@ body.append('work_experience[][company_name]', 't');
 body.append('work_experience[][job_roles][]', 'u');
 body.append('work_experience[][from_date]', 'jwvlxjklqppwqbew');
 body.append('work_experience[][to_date]', 'tnnoqitpxntltcvi');
-body.append('work_experience[][is_currently_working]', '1');
+body.append('work_experience[][is_currently_working]', '');
 body.append('work_experience[][description]', 'Eius et animi quos velit et.');
 body.append('resume', document.querySelector('input[name="resume"]').files[0]);
 
@@ -5458,10 +5458,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="gender"                data-endpoint="PUTapi-job-seeker-profile"
-               value="other"
+               value="prefer_not_to_say"
                data-component="body">
     <br>
-<p>Example: <code>other</code></p>
+<p>Example: <code>prefer_not_to_say</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>male</code></li> <li><code>female</code></li> <li><code>other</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5544,10 +5544,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="marital_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="single"
+               value="widowed"
                data-component="body">
     <br>
-<p>Example: <code>single</code></p>
+<p>Example: <code>widowed</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>single</code></li> <li><code>married</code></li> <li><code>divorced</code></li> <li><code>widowed</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5582,10 +5582,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="current_job_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="freelancing"
+               value="open_to_work"
                data-component="body">
     <br>
-<p>Example: <code>freelancing</code></p>
+<p>Example: <code>open_to_work</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>employed</code></li> <li><code>unemployed</code></li> <li><code>freelancing</code></li> <li><code>student</code></li> <li><code>open_to_work</code></li></ul>
         </div>
@@ -5620,10 +5620,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="executive"
+               value="senior"
                data-component="body">
     <br>
-<p>Example: <code>executive</code></p>
+<p>Example: <code>senior</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>entry</code></li> <li><code>junior</code></li> <li><code>mid</code></li> <li><code>senior</code></li> <li><code>lead</code></li> <li><code>manager</code></li> <li><code>director</code></li> <li><code>executive</code></li></ul>
         </div>
@@ -5816,10 +5816,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="skills.0.level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="expert"
+               value="advanced"
                data-component="body">
     <br>
-<p>Example: <code>expert</code></p>
+<p>Example: <code>advanced</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>beginner</code></li> <li><code>intermediate</code></li> <li><code>advanced</code></li> <li><code>expert</code></li></ul>
                     </div>
@@ -6025,7 +6025,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -6051,7 +6051,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\rog\AppData\Local\Temp\phpFA50.tmp</code></p>
+<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\rog\AppData\Local\Temp\phpDF80.tmp</code></p>
         </div>
         </form>
 
@@ -6092,7 +6092,7 @@ Retry failed: <code>POST /job-seeker/resume/retry-analysis</code></p>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@C:\Users\rog\AppData\Local\Temp\phpFA71.tmp" </code></pre></div>
+    --form "resume=@C:\Users\rog\AppData\Local\Temp\phpDF92.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6263,7 +6263,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpFA71.tmp</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpDF92.tmp</code></p>
         </div>
         </form>
 
@@ -6627,7 +6627,7 @@ This endpoint is similar to <code>/upload</code> but accepts field name <code>cv
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cv=@C:\Users\rog\AppData\Local\Temp\phpFAD2.tmp" </code></pre></div>
+    --form "cv=@C:\Users\rog\AppData\Local\Temp\phpDFB4.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6786,7 +6786,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpFAD2.tmp</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpDFB4.tmp</code></p>
         </div>
         </form>
 
@@ -7608,7 +7608,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "positions_suited_for[]=architecto"\
     --form "notice_period=architecto"\
     --form "expected_salary=architecto"\
-    --form "resume=@C:\Users\rog\AppData\Local\Temp\phpFB62.tmp" </code></pre></div>
+    --form "resume=@C:\Users\rog\AppData\Local\Temp\phpDFE6.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -7797,7 +7797,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>C:\Users\rog\AppData\Local\Temp\phpFB62.tmp</code></p>
+<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>C:\Users\rog\AppData\Local\Temp\phpDFE6.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>education</code></b>&nbsp;&nbsp;
@@ -9072,7 +9072,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "document=@C:\Users\rog\AppData\Local\Temp\phpFCAC.tmp" </code></pre></div>
+    --form "document=@C:\Users\rog\AppData\Local\Temp\phpE065.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9221,7 +9221,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpFCAC.tmp</code></p>
+<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpE065.tmp</code></p>
         </div>
         </form>
 
@@ -11998,7 +11998,7 @@ Accepts JPEG, PNG, WebP; max 2 MB. Any previously uploaded logo is automatically
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "logo=@C:\Users\rog\AppData\Local\Temp\phpFE35.tmp" </code></pre></div>
+    --form "logo=@C:\Users\rog\AppData\Local\Temp\phpE0E5.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -12148,7 +12148,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>The logo image file. Accepted: jpeg, png, webp. Max 2 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpFE35.tmp</code></p>
+<p>The logo image file. Accepted: jpeg, png, webp. Max 2 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpE0E5.tmp</code></p>
         </div>
         </form>
 
@@ -12171,7 +12171,7 @@ Accepts JPEG, PNG, WebP; max 4 MB. Any previously uploaded cover image is automa
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cover_image=@C:\Users\rog\AppData\Local\Temp\phpFE48.tmp" </code></pre></div>
+    --form "cover_image=@C:\Users\rog\AppData\Local\Temp\phpE0E8.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -12321,7 +12321,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>The cover image file. Accepted: jpeg, png, webp. Max 4 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpFE48.tmp</code></p>
+<p>The cover image file. Accepted: jpeg, png, webp. Max 4 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpE0E8.tmp</code></p>
         </div>
         </form>
 
@@ -16156,7 +16156,7 @@ State University,careers@university.edu,State University,university</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "file=@C:\Users\rog\AppData\Local\Temp\php9D.tmp" </code></pre></div>
+    --form "file=@C:\Users\rog\AppData\Local\Temp\phpE1B6.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -16307,7 +16307,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>CSV file, max 2 MB. Required columns: name, email, company_name. Example: <code>C:\Users\rog\AppData\Local\Temp\php9D.tmp</code></p>
+<p>CSV file, max 2 MB. Required columns: name, email, company_name. Example: <code>C:\Users\rog\AppData\Local\Temp\phpE1B6.tmp</code></p>
         </div>
         </form>
 
@@ -17945,7 +17945,7 @@ Supports filtering by status, date range, and sort direction.</p>
     \"status\": \"architecto\",
     \"from_date\": \"2026-08-18\",
     \"to_date\": \"2026-08-18\",
-    \"sort_direction\": \"asc\",
+    \"sort_direction\": \"desc\",
     \"per_page\": 22
 }"
 </code></pre></div>
@@ -17976,7 +17976,7 @@ let body = {
     "status": "architecto",
     "from_date": "2026-08-18",
     "to_date": "2026-08-18",
-    "sort_direction": "asc",
+    "sort_direction": "desc",
     "per_page": 22
 };
 
@@ -18193,10 +18193,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort_direction"                data-endpoint="GETapi-meetings"
-               value="asc"
+               value="desc"
                data-component="body">
     <br>
-<p>Example: <code>asc</code></p>
+<p>Example: <code>desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
         </div>
@@ -19967,6 +19967,206 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </div>
         </form>
 
+                    <h2 id="endpoints-GETapi-google-callback">Handle Google OAuth callback</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Exchanges the authorization code for tokens and redirects the user back to the frontend.</p>
+
+<span id="example-requests-GETapi-google-callback">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/google/callback?code=4%2F0AX4XfWg...&amp;state=664f1a2b3c4d5e6f7a8b9c0a" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/google/callback"
+);
+
+const params = {
+    "code": "4/0AX4XfWg...",
+    "state": "664f1a2b3c4d5e6f7a8b9c0a",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-google-callback">
+            <blockquote>
+            <p>Example response (302):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">Redirects to frontend with ?google=connected or ?google=error</code>
+ </pre>
+            <blockquote>
+            <p>Example response (302):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+location: https://jobs-employment-app.vercel.app/settings?google=error
+content-type: text/html; charset=utf-8
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;UTF-8&quot; /&gt;
+        &lt;meta http-equiv=&quot;refresh&quot; content=&quot;0;url=&#039;https://jobs-employment-app.vercel.app/settings?google=error&#039;&quot; /&gt;
+
+        &lt;title&gt;Redirecting to https://jobs-employment-app.vercel.app/settings?google=error&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        Redirecting to &lt;a href=&quot;https://jobs-employment-app.vercel.app/settings?google=error&quot;&gt;https://jobs-employment-app.vercel.app/settings?google=error&lt;/a&gt;.
+    &lt;/body&gt;
+&lt;/html&gt;</code>
+ </pre>
+            <blockquote>
+            <p>Example response (400):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Google authorization was denied&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-google-callback" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-google-callback"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-google-callback"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-google-callback" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-google-callback">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-google-callback" data-method="GET"
+      data-path="api/google/callback"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-google-callback', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-google-callback"
+                    onclick="tryItOut('GETapi-google-callback');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-google-callback"
+                    onclick="cancelTryOut('GETapi-google-callback');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-google-callback"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/google/callback</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-google-callback"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-google-callback"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-google-callback"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>code</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="code"                data-endpoint="GETapi-google-callback"
+               value="4/0AX4XfWg..."
+               data-component="query">
+    <br>
+<p>The authorization code from Google. Example: <code>4/0AX4XfWg...</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>state</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="state"                data-endpoint="GETapi-google-callback"
+               value="664f1a2b3c4d5e6f7a8b9c0a"
+               data-component="query">
+    <br>
+<p>User ID for CSRF validation. Example: <code>664f1a2b3c4d5e6f7a8b9c0a</code></p>
+            </div>
+                </form>
+
                     <h2 id="endpoints-GETapi-google-connect">Initiate Google OAuth connection</h2>
 
 <p>
@@ -20101,212 +20301,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>application/json</code></p>
             </div>
                         </form>
-
-                    <h2 id="endpoints-GETapi-google-callback">Handle Google OAuth callback</h2>
-
-<p>
-<small class="badge badge-darkred">requires authentication</small>
-</p>
-
-<p>Exchanges the authorization code for tokens and stores them for the authenticated user.</p>
-
-<span id="example-requests-GETapi-google-callback">
-<blockquote>Example request:</blockquote>
-
-
-<div class="bash-example">
-    <pre><code class="language-bash">curl --request GET \
-    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/google/callback?code=4%2F0AX4XfWg...&amp;state=664f1a2b3c4d5e6f7a8b9c0a" \
-    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
-    --header "Content-Type: application/json" \
-    --header "Accept: application/json" \
-    --data "{
-    \"code\": \"architecto\"
-}"
-</code></pre></div>
-
-
-<div class="javascript-example">
-    <pre><code class="language-javascript">const url = new URL(
-    "https://joboffers-main-uj2ehj.laravel.cloud/api/google/callback"
-);
-
-const params = {
-    "code": "4/0AX4XfWg...",
-    "state": "664f1a2b3c4d5e6f7a8b9c0a",
-};
-Object.keys(params)
-    .forEach(key =&gt; url.searchParams.append(key, params[key]));
-
-const headers = {
-    "Authorization": "Bearer {YOUR_AUTH_KEY}",
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-let body = {
-    "code": "architecto"
-};
-
-fetch(url, {
-    method: "GET",
-    headers,
-    body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre></div>
-
-</span>
-
-<span id="example-responses-GETapi-google-callback">
-            <blockquote>
-            <p>Example response (200):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Google account connected successfully&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (400):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Google authorization was denied&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (403):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Invalid state parameter&quot;
-}</code>
- </pre>
-    </span>
-<span id="execution-results-GETapi-google-callback" hidden>
-    <blockquote>Received response<span
-                id="execution-response-status-GETapi-google-callback"></span>:
-    </blockquote>
-    <pre class="json"><code id="execution-response-content-GETapi-google-callback"
-      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
-</span>
-<span id="execution-error-GETapi-google-callback" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-GETapi-google-callback">
-
-Tip: Check that you&#039;re properly connected to the network.
-If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
-You can check the Dev Tools console for debugging information.</code></pre>
-</span>
-<form id="form-GETapi-google-callback" data-method="GET"
-      data-path="api/google/callback"
-      data-authed="1"
-      data-hasfiles="0"
-      data-isarraybody="0"
-      autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('GETapi-google-callback', this);">
-    <h3>
-        Request&nbsp;&nbsp;&nbsp;
-                    <button type="button"
-                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-GETapi-google-callback"
-                    onclick="tryItOut('GETapi-google-callback');">Try it out ⚡
-            </button>
-            <button type="button"
-                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-GETapi-google-callback"
-                    onclick="cancelTryOut('GETapi-google-callback');" hidden>Cancel 🛑
-            </button>&nbsp;&nbsp;
-            <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-GETapi-google-callback"
-                    data-initial-text="Send Request 💥"
-                    data-loading-text="⏱ Sending..."
-                    hidden>Send Request 💥
-            </button>
-            </h3>
-            <p>
-            <small class="badge badge-green">GET</small>
-            <b><code>api/google/callback</code></b>
-        </p>
-                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Authorization" class="auth-value"               data-endpoint="GETapi-google-callback"
-               value="Bearer {YOUR_AUTH_KEY}"
-               data-component="header">
-    <br>
-<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="GETapi-google-callback"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="GETapi-google-callback"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
-                                    <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>code</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="code"                data-endpoint="GETapi-google-callback"
-               value="4/0AX4XfWg..."
-               data-component="query">
-    <br>
-<p>The authorization code from Google. Example: <code>4/0AX4XfWg...</code></p>
-            </div>
-                                    <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>state</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="state"                data-endpoint="GETapi-google-callback"
-               value="664f1a2b3c4d5e6f7a8b9c0a"
-               data-component="query">
-    <br>
-<p>User ID for CSRF validation. Example: <code>664f1a2b3c4d5e6f7a8b9c0a</code></p>
-            </div>
-                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-        <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>code</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="code"                data-endpoint="GETapi-google-callback"
-               value="architecto"
-               data-component="body">
-    <br>
-<p>Example: <code>architecto</code></p>
-        </div>
-        </form>
 
                     <h2 id="endpoints-GETapi-google-status">Check Google integration status</h2>
 

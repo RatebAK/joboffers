@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "ca48051b-06f6-4bd4-a0e9-8538ffa697b4",
+        "_postman_id": "041d0053-f1f5-470d-ae54-d912c6bb79be",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -419,7 +419,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"full_time\",\"category\":\"g\",\"min_salary\":12}"
+                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"freelance\",\"category\":\"g\",\"min_salary\":12}"
                         },
                         "description": "Paginated search of active job posts for the authenticated job seeker."
                     },
@@ -1194,7 +1194,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "other",
+                                    "value": "prefer_not_to_say",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1236,7 +1236,7 @@
                                 },
                                 {
                                     "key": "marital_status",
-                                    "value": "single",
+                                    "value": "widowed",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1254,7 +1254,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "freelancing",
+                                    "value": "open_to_work",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1272,7 +1272,7 @@
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "executive",
+                                    "value": "senior",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1350,7 +1350,7 @@
                                 },
                                 {
                                     "key": "skills[0][level]",
-                                    "value": "expert",
+                                    "value": "advanced",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1434,7 +1434,7 @@
                                 },
                                 {
                                     "key": "work_experience[0][is_currently_working]",
-                                    "value": "1",
+                                    "value": "",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -4403,7 +4403,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"status\":\"architecto\",\"from_date\":\"2026-08-18\",\"to_date\":\"2026-08-18\",\"sort_direction\":\"asc\",\"per_page\":22}"
+                            "raw": "{\"status\":\"architecto\",\"from_date\":\"2026-08-18\",\"to_date\":\"2026-08-18\",\"sort_direction\":\"desc\",\"per_page\":22}"
                         },
                         "description": "Returns a paginated list of meetings where the authenticated user is a participant.\nSupports filtering by status, date range, and sort direction."
                     },
@@ -4905,38 +4905,6 @@
                     ]
                 },
                 {
-                    "name": "Initiate Google OAuth connection",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/google\/connect",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/google\/connect"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "Returns a Google OAuth URL to redirect the user to for granting calendar access."
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{ \"auth_url\": \"https:\/\/accounts.google.com\/o\/oauth2\/v2\/auth?...\" }",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
                     "name": "Handle Google OAuth callback",
                     "request": {
                         "url": {
@@ -4969,17 +4937,37 @@
                                 "value": "application\/json"
                             }
                         ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"code\":\"architecto\"}"
-                        },
-                        "description": "Exchanges the authorization code for tokens and stores them for the authenticated user."
+                        "body": null,
+                        "description": "Exchanges the authorization code for tokens and redirects the user back to the frontend."
                     },
                     "response": [
                         {
                             "header": [],
-                            "code": 200,
-                            "body": "{ \"message\": \"Google account connected successfully\" }",
+                            "code": 302,
+                            "body": "Redirects to frontend with ?google=connected or ?google=error",
+                            "name": ""
+                        },
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "location",
+                                    "value": "https:\/\/jobs-employment-app.vercel.app\/settings?google=error"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "text\/html; charset=utf-8"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 302,
+                            "body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" \/>\n        <meta http-equiv=\"refresh\" content=\"0;url='https:\/\/jobs-employment-app.vercel.app\/settings?google=error'\" \/>\n\n        <title>Redirecting to https:\/\/jobs-employment-app.vercel.app\/settings?google=error<\/title>\n    <\/head>\n    <body>\n        Redirecting to <a href=\"https:\/\/jobs-employment-app.vercel.app\/settings?google=error\">https:\/\/jobs-employment-app.vercel.app\/settings?google=error<\/a>.\n    <\/body>\n<\/html>",
                             "name": ""
                         },
                         {
@@ -4987,11 +4975,37 @@
                             "code": 400,
                             "body": "{ \"message\": \"Google authorization was denied\" }",
                             "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Initiate Google OAuth connection",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/google\/connect",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/google\/connect"
                         },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns a Google OAuth URL to redirect the user to for granting calendar access."
+                    },
+                    "response": [
                         {
                             "header": [],
-                            "code": 403,
-                            "body": "{ \"message\": \"Invalid state parameter\" }",
+                            "code": 200,
+                            "body": "{ \"auth_url\": \"https:\/\/accounts.google.com\/o\/oauth2\/v2\/auth?...\" }",
                             "name": ""
                         }
                     ]

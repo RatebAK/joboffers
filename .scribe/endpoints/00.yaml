@@ -792,7 +792,7 @@ endpoints:
         name: job_type
         description: ''
         required: false
-        example: full_time
+        example: freelance
         type: string
         enumValues:
           - full_time
@@ -827,7 +827,7 @@ endpoints:
     cleanBodyParameters:
       keyword: b
       location: 'n'
-      job_type: full_time
+      job_type: freelance
       category: g
       min_salary: 12
     fileParameters: []
@@ -2454,7 +2454,7 @@ endpoints:
         name: gender
         description: ''
         required: false
-        example: other
+        example: prefer_not_to_say
         type: string
         enumValues:
           - male
@@ -2535,7 +2535,7 @@ endpoints:
         name: marital_status
         description: ''
         required: false
-        example: single
+        example: widowed
         type: string
         enumValues:
           - single
@@ -2573,7 +2573,7 @@ endpoints:
         name: current_job_status
         description: ''
         required: false
-        example: freelancing
+        example: open_to_work
         type: string
         enumValues:
           - employed
@@ -2611,7 +2611,7 @@ endpoints:
         name: job_level
         description: ''
         required: false
-        example: executive
+        example: senior
         type: string
         enumValues:
           - entry
@@ -2820,7 +2820,7 @@ endpoints:
         name: 'skills[].level'
         description: ''
         required: false
-        example: expert
+        example: advanced
         type: string
         enumValues:
           - beginner
@@ -2979,7 +2979,7 @@ endpoints:
         name: 'work_experience[].is_currently_working'
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -3001,20 +3001,20 @@ endpoints:
       last_name: 'n'
       full_name: g
       image: z
-      gender: other
+      gender: prefer_not_to_say
       nationality: m
       city: i
       location: 'y'
       address: v
       phone: dljnikhwaykcmyuw
       date_of_birth: pwlvqwrsitcpscql
-      marital_status: single
+      marital_status: widowed
       salary_range_from: 16
       salary_range_to: 38
-      current_job_status: freelancing
+      current_job_status: open_to_work
       years_of_experience: 8
       education_level: 'n'
-      job_level: executive
+      job_level: senior
       job_types:
         - r
       job_roles:
@@ -3033,7 +3033,7 @@ endpoints:
       skills:
         -
           name: 'y'
-          level: expert
+          level: advanced
       education_history:
         -
           certificate_type: v
@@ -3052,7 +3052,7 @@ endpoints:
             - u
           from_date: jwvlxjklqppwqbew
           to_date: tnnoqitpxntltcvi
-          is_currently_working: true
+          is_currently_working: false
           description: 'Eius et animi quos velit et.'
     fileParameters:
       resume: null
@@ -8483,7 +8483,7 @@ endpoints:
         name: sort_direction
         description: ''
         required: false
-        example: asc
+        example: desc
         type: string
         enumValues:
           - asc
@@ -8506,7 +8506,7 @@ endpoints:
       status: architecto
       from_date: '2026-08-18'
       to_date: '2026-08-18'
-      sort_direction: asc
+      sort_direction: desc
       per_page: 22
     fileParameters: []
     responses:
@@ -9313,47 +9313,6 @@ endpoints:
     custom: []
     httpMethods:
       - GET
-    uri: api/google/connect
-    metadata:
-      custom: []
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Initiate Google OAuth connection'
-      description: 'Returns a Google OAuth URL to redirect the user to for granting calendar access.'
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: '{ "auth_url": "https://accounts.google.com/o/oauth2/v2/auth?..." }'
-        headers: []
-        description: ''
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - GET
     uri: api/google/callback
     metadata:
       custom: []
@@ -9362,7 +9321,7 @@ endpoints:
       subgroup: ''
       subgroupDescription: ''
       title: 'Handle Google OAuth callback'
-      description: 'Exchanges the authorization code for tokens and stores them for the authenticated user.'
+      description: 'Exchanges the authorization code for tokens and redirects the user back to the frontend.'
       authenticated: true
       deprecated: false
     headers:
@@ -9397,38 +9356,83 @@ endpoints:
     cleanQueryParameters:
       code: 4/0AX4XfWg...
       state: 664f1a2b3c4d5e6f7a8b9c0a
-    bodyParameters:
-      code:
-        custom: []
-        name: code
-        description: ''
-        required: true
-        example: architecto
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-    cleanBodyParameters:
-      code: architecto
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
     responses:
       -
         custom: []
-        status: 200
-        content: '{ "message": "Google account connected successfully" }'
+        status: 302
+        content: 'Redirects to frontend with ?google=connected or ?google=error'
         headers: []
         description: ''
+      -
+        custom: []
+        status: 302
+        content: |-
+          <!DOCTYPE html>
+          <html>
+              <head>
+                  <meta charset="UTF-8" />
+                  <meta http-equiv="refresh" content="0;url='https://jobs-employment-app.vercel.app/settings?google=error'" />
+
+                  <title>Redirecting to https://jobs-employment-app.vercel.app/settings?google=error</title>
+              </head>
+              <body>
+                  Redirecting to <a href="https://jobs-employment-app.vercel.app/settings?google=error">https://jobs-employment-app.vercel.app/settings?google=error</a>.
+              </body>
+          </html>
+        headers:
+          cache-control: 'no-cache, private'
+          location: 'https://jobs-employment-app.vercel.app/settings?google=error'
+          content-type: 'text/html; charset=utf-8'
+          access-control-allow-origin: '*'
+        description: null
       -
         custom: []
         status: 400
         content: '{ "message": "Google authorization was denied" }'
         headers: []
         description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/google/connect
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Initiate Google OAuth connection'
+      description: 'Returns a Google OAuth URL to redirect the user to for granting calendar access.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
       -
         custom: []
-        status: 403
-        content: '{ "message": "Invalid state parameter" }'
+        status: 200
+        content: '{ "auth_url": "https://accounts.google.com/o/oauth2/v2/auth?..." }'
         headers: []
         description: ''
     responseFields: []
