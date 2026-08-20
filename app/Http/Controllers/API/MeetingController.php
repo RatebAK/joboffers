@@ -58,7 +58,21 @@ class MeetingController extends Controller
      *
      * @response 201 {
      *   "message": "Meeting created successfully",
-     *   "meeting": {},
+     *   "meeting": {
+     *     "_id": "664f1a2b3c4d5e6f7a8b9c0f",
+     *     "organizer_id": "664f1a2b3c4d5e6f7a8b9c0a",
+     *     "invitee_id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *     "title": "Initial Interview",
+     *     "meeting_type": "video_call",
+     *     "proposed_date": "2025-02-15",
+     *     "proposed_start_time": "14:00",
+     *     "proposed_duration_minutes": 60,
+     *     "status": "pending",
+     *     "location_or_link": null,
+     *     "meet_link": null,
+     *     "notes": [],
+     *     "previous_schedules": []
+     *   },
      *   "organizer_conflicts": [],
      *   "invitee_conflicts": []
      * }
@@ -116,11 +130,28 @@ class MeetingController extends Controller
      * @queryParam per_page integer Items per page (1-100, default 15). Example: 20
      *
      * @response 200 {
-     *   "data": [],
+     *   "data": [
+     *     {
+     *       "_id": "664f1a2b3c4d5e6f7a8b9c0f",
+     *       "title": "Initial Interview",
+     *       "meeting_type": "video_call",
+     *       "proposed_date": "2025-02-15",
+     *       "proposed_start_time": "14:00",
+     *       "proposed_duration_minutes": 60,
+     *       "status": "pending",
+     *       "participant": {
+     *         "id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *         "name": "Jane Smith",
+     *         "email": "jane@example.com",
+     *         "company_name": null,
+     *         "avatar": "https://res.cloudinary.com/xxx/image/upload/profile.jpg"
+     *       }
+     *     }
+     *   ],
      *   "current_page": 1,
      *   "per_page": 15,
-     *   "total": 0,
-     *   "total_pages": 0,
+     *   "total": 1,
+     *   "total_pages": 1,
      *   "next_page": null,
      *   "prev_page": null
      * }
@@ -211,7 +242,29 @@ class MeetingController extends Controller
      *
      * @urlParam id string required The meeting ID. Example: 664f1a2b3c4d5e6f7a8b9c0f
      *
-     * @response 200 { "meeting": {} }
+     * @response 200 {
+     *   "meeting": {
+     *     "_id": "664f1a2b3c4d5e6f7a8b9c0f",
+     *     "organizer_id": "664f1a2b3c4d5e6f7a8b9c0a",
+     *     "invitee_id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *     "title": "Initial Interview",
+     *     "meeting_type": "video_call",
+     *     "proposed_date": "2025-02-15",
+     *     "proposed_start_time": "14:00",
+     *     "proposed_duration_minutes": 60,
+     *     "status": "accepted",
+     *     "meet_link": "https://meet.google.com/abc-defg-hij",
+     *     "notes": [],
+     *     "previous_schedules": [],
+     *     "participant": {
+     *       "id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *       "name": "Jane Smith",
+     *       "email": "jane@example.com",
+     *       "company_name": null,
+     *       "avatar": "https://res.cloudinary.com/xxx/image/upload/profile.jpg"
+     *     }
+     *   }
+     * }
      * @response 403 { "message": "Forbidden" }
      * @response 404 { "message": "Meeting not found" }
      */
@@ -256,7 +309,13 @@ class MeetingController extends Controller
      *       "proposed_start_time": "14:00",
      *       "proposed_duration_minutes": 60,
      *       "meeting_type": "video_call",
-     *       "participant_name": "Jane Smith"
+     *       "participant": {
+     *         "id": "664f1a2b3c4d5e6f7a8b9c0e",
+     *         "name": "Jane Smith",
+     *         "email": "jane@example.com",
+     *         "company_name": "Acme Corp",
+     *         "avatar": "https://res.cloudinary.com/xxx/image/upload/logo.png"
+     *       }
      *     }
      *   ]
      * }

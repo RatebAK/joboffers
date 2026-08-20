@@ -25,7 +25,16 @@ class MeetingActionController extends Controller
      * @urlParam id string required The meeting ID. Example: 664f1a2b3c4d5e6f7a8b9c0f
      * @bodyParam meet_link string Optional fallback video conference URL (max 500 chars). Example: https://zoom.us/j/123456
      *
-     * @response 200 { "meeting": {...}, "google_meet_warning": null }
+     * @response 200 {
+     *   "meeting": {
+     *     "_id": "664f1a2b3c4d5e6f7a8b9c0f",
+     *     "title": "Initial Interview",
+     *     "status": "accepted",
+     *     "meeting_type": "video_call",
+     *     "meet_link": "https://meet.google.com/abc-defg-hij"
+     *   },
+     *   "google_meet_warning": null
+     * }
      * @response 403 { "message": "Forbidden" }
      * @response 404 { "message": "Meeting not found" }
      * @response 422 { "message": "This meeting cannot be accepted in its current state" }
@@ -74,7 +83,7 @@ class MeetingActionController extends Controller
      * @urlParam id string required The meeting ID. Example: 664f1a2b3c4d5e6f7a8b9c0f
      * @bodyParam decline_reason string Optional reason for declining (max 500 chars). Example: Schedule conflict
      *
-     * @response 200 { "meeting": {...} }
+     * @response 200 { "meeting": { "_id": "664f...", "status": "declined", "decline_reason": "Schedule conflict" } }
      * @response 403 { "message": "Forbidden" }
      * @response 404 { "message": "Meeting not found" }
      * @response 422 { "message": "This meeting cannot be declined in its current state" }
@@ -121,7 +130,7 @@ class MeetingActionController extends Controller
      * @urlParam id string required The meeting ID. Example: 664f1a2b3c4d5e6f7a8b9c0f
      * @bodyParam cancellation_reason string Optional reason for cancelling (max 500 chars). Example: No longer needed
      *
-     * @response 200 { "meeting": {...} }
+     * @response 200 { "meeting": { "_id": "664f...", "status": "cancelled", "cancellation_reason": "No longer needed", "cancelled_by": "664f..." } }
      * @response 403 { "message": "Forbidden" }
      * @response 404 { "message": "Meeting not found" }
      * @response 422 { "message": "This meeting cannot be cancelled in its current state" }
@@ -186,7 +195,7 @@ class MeetingActionController extends Controller
      * @bodyParam proposed_start_time string required New proposed start time. Example: 14:00
      * @bodyParam proposed_duration_minutes integer required New duration in minutes (15-480). Example: 60
      *
-     * @response 200 { "meeting": {...}, "organizer_conflicts": [], "invitee_conflicts": [] }
+     * @response 200 { "meeting": { "_id": "664f...", "status": "rescheduled", "proposed_date": "2025-02-20", "previous_schedules": [{"proposed_date": "2025-02-15", "proposed_start_time": "14:00", "proposed_duration_minutes": 60}] }, "organizer_conflicts": [], "invitee_conflicts": [] }
      * @response 403 { "message": "Forbidden" }
      * @response 404 { "message": "Meeting not found" }
      * @response 422 { "message": "This meeting cannot be rescheduled in its current state" }
@@ -228,7 +237,7 @@ class MeetingActionController extends Controller
      *
      * @urlParam id string required The meeting ID. Example: 664f1a2b3c4d5e6f7a8b9c0f
      *
-     * @response 200 { "meeting": {...} }
+     * @response 200 { "meeting": { "_id": "664f...", "status": "completed" } }
      * @response 403 { "message": "Forbidden" }
      * @response 404 { "message": "Meeting not found" }
      * @response 422 { "message": "Only accepted meetings can be marked as completed" }

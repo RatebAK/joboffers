@@ -1741,7 +1741,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: prefer_not_to_say
+                  example: male
                   enum:
                     - male
                     - female
@@ -1781,7 +1781,7 @@ paths:
                 marital_status:
                   type: string
                   description: ''
-                  example: widowed
+                  example: divorced
                   enum:
                     - single
                     - married
@@ -1802,7 +1802,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: open_to_work
+                  example: employed
                   enum:
                     - employed
                     - unemployed
@@ -1823,7 +1823,7 @@ paths:
                 job_level:
                   type: string
                   description: ''
-                  example: senior
+                  example: manager
                   enum:
                     - entry
                     - junior
@@ -1915,7 +1915,7 @@ paths:
                       level:
                         type: string
                         description: ''
-                        example: advanced
+                        example: intermediate
                         enum:
                           - beginner
                           - intermediate
@@ -7748,17 +7748,88 @@ paths:
               schema:
                 type: object
                 example:
-                  data: []
+                  data:
+                    -
+                      _id: 664f1a2b3c4d5e6f7a8b9c0f
+                      title: 'Initial Interview'
+                      meeting_type: video_call
+                      proposed_date: '2025-02-15'
+                      proposed_start_time: '14:00'
+                      proposed_duration_minutes: 60
+                      status: pending
+                      participant:
+                        id: 664f1a2b3c4d5e6f7a8b9c0e
+                        name: 'Jane Smith'
+                        email: jane@example.com
+                        company_name: null
+                        avatar: 'https://res.cloudinary.com/xxx/image/upload/profile.jpg'
                   current_page: 1
                   per_page: 15
-                  total: 0
-                  total_pages: 0
+                  total: 1
+                  total_pages: 1
                   next_page: null
                   prev_page: null
                 properties:
                   data:
                     type: array
-                    example: []
+                    example:
+                      -
+                        _id: 664f1a2b3c4d5e6f7a8b9c0f
+                        title: 'Initial Interview'
+                        meeting_type: video_call
+                        proposed_date: '2025-02-15'
+                        proposed_start_time: '14:00'
+                        proposed_duration_minutes: 60
+                        status: pending
+                        participant:
+                          id: 664f1a2b3c4d5e6f7a8b9c0e
+                          name: 'Jane Smith'
+                          email: jane@example.com
+                          company_name: null
+                          avatar: 'https://res.cloudinary.com/xxx/image/upload/profile.jpg'
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0f
+                        title:
+                          type: string
+                          example: 'Initial Interview'
+                        meeting_type:
+                          type: string
+                          example: video_call
+                        proposed_date:
+                          type: string
+                          example: '2025-02-15'
+                        proposed_start_time:
+                          type: string
+                          example: '14:00'
+                        proposed_duration_minutes:
+                          type: integer
+                          example: 60
+                        status:
+                          type: string
+                          example: pending
+                        participant:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: 664f1a2b3c4d5e6f7a8b9c0e
+                            name:
+                              type: string
+                              example: 'Jane Smith'
+                            email:
+                              type: string
+                              example: jane@example.com
+                            company_name:
+                              type: string
+                              example: null
+                              nullable: true
+                            avatar:
+                              type: string
+                              example: 'https://res.cloudinary.com/xxx/image/upload/profile.jpg'
                   current_page:
                     type: integer
                     example: 1
@@ -7767,10 +7838,10 @@ paths:
                     example: 15
                   total:
                     type: integer
-                    example: 0
+                    example: 1
                   total_pages:
                     type: integer
-                    example: 0
+                    example: 1
                   next_page:
                     type: string
                     example: null
@@ -7796,17 +7867,17 @@ paths:
                 from_date:
                   type: string
                   description: 'Must be a valid date in the format <code>Y-m-d</code>.'
-                  example: '2026-08-18'
+                  example: '2026-08-20'
                   nullable: true
                 to_date:
                   type: string
                   description: 'Must be a valid date in the format <code>Y-m-d</code>.'
-                  example: '2026-08-18'
+                  example: '2026-08-20'
                   nullable: true
                 sort_direction:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   enum:
                     - asc
                     - desc
@@ -7830,7 +7901,20 @@ paths:
                 type: object
                 example:
                   message: 'Meeting created successfully'
-                  meeting: {  }
+                  meeting:
+                    _id: 664f1a2b3c4d5e6f7a8b9c0f
+                    organizer_id: 664f1a2b3c4d5e6f7a8b9c0a
+                    invitee_id: 664f1a2b3c4d5e6f7a8b9c0e
+                    title: 'Initial Interview'
+                    meeting_type: video_call
+                    proposed_date: '2025-02-15'
+                    proposed_start_time: '14:00'
+                    proposed_duration_minutes: 60
+                    status: pending
+                    location_or_link: null
+                    meet_link: null
+                    notes: []
+                    previous_schedules: []
                   organizer_conflicts: []
                   invitee_conflicts: []
                 properties:
@@ -7839,7 +7923,48 @@ paths:
                     example: 'Meeting created successfully'
                   meeting:
                     type: object
-                    properties: {  }
+                    properties:
+                      _id:
+                        type: string
+                        example: 664f1a2b3c4d5e6f7a8b9c0f
+                      organizer_id:
+                        type: string
+                        example: 664f1a2b3c4d5e6f7a8b9c0a
+                      invitee_id:
+                        type: string
+                        example: 664f1a2b3c4d5e6f7a8b9c0e
+                      title:
+                        type: string
+                        example: 'Initial Interview'
+                      meeting_type:
+                        type: string
+                        example: video_call
+                      proposed_date:
+                        type: string
+                        example: '2025-02-15'
+                      proposed_start_time:
+                        type: string
+                        example: '14:00'
+                      proposed_duration_minutes:
+                        type: integer
+                        example: 60
+                      status:
+                        type: string
+                        example: pending
+                      location_or_link:
+                        type: string
+                        example: null
+                        nullable: true
+                      meet_link:
+                        type: string
+                        example: null
+                        nullable: true
+                      notes:
+                        type: array
+                        example: []
+                      previous_schedules:
+                        type: array
+                        example: []
                   organizer_conflicts:
                     type: array
                     example: []
@@ -7925,7 +8050,12 @@ paths:
                       proposed_start_time: '14:00'
                       proposed_duration_minutes: 60
                       meeting_type: video_call
-                      participant_name: 'Jane Smith'
+                      participant:
+                        id: 664f1a2b3c4d5e6f7a8b9c0e
+                        name: 'Jane Smith'
+                        email: jane@example.com
+                        company_name: 'Acme Corp'
+                        avatar: 'https://res.cloudinary.com/xxx/image/upload/logo.png'
                 properties:
                   meetings:
                     type: array
@@ -7937,7 +8067,12 @@ paths:
                         proposed_start_time: '14:00'
                         proposed_duration_minutes: 60
                         meeting_type: video_call
-                        participant_name: 'Jane Smith'
+                        participant:
+                          id: 664f1a2b3c4d5e6f7a8b9c0e
+                          name: 'Jane Smith'
+                          email: jane@example.com
+                          company_name: 'Acme Corp'
+                          avatar: 'https://res.cloudinary.com/xxx/image/upload/logo.png'
                     items:
                       type: object
                       properties:
@@ -7959,9 +8094,24 @@ paths:
                         meeting_type:
                           type: string
                           example: video_call
-                        participant_name:
-                          type: string
-                          example: 'Jane Smith'
+                        participant:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: 664f1a2b3c4d5e6f7a8b9c0e
+                            name:
+                              type: string
+                              example: 'Jane Smith'
+                            email:
+                              type: string
+                              example: jane@example.com
+                            company_name:
+                              type: string
+                              example: 'Acme Corp'
+                            avatar:
+                              type: string
+                              example: 'https://res.cloudinary.com/xxx/image/upload/logo.png'
       tags:
         - Endpoints
   '/api/meetings/{id}':
@@ -7978,11 +8128,84 @@ paths:
               schema:
                 type: object
                 example:
-                  meeting: {  }
+                  meeting:
+                    _id: 664f1a2b3c4d5e6f7a8b9c0f
+                    organizer_id: 664f1a2b3c4d5e6f7a8b9c0a
+                    invitee_id: 664f1a2b3c4d5e6f7a8b9c0e
+                    title: 'Initial Interview'
+                    meeting_type: video_call
+                    proposed_date: '2025-02-15'
+                    proposed_start_time: '14:00'
+                    proposed_duration_minutes: 60
+                    status: accepted
+                    meet_link: 'https://meet.google.com/abc-defg-hij'
+                    notes: []
+                    previous_schedules: []
+                    participant:
+                      id: 664f1a2b3c4d5e6f7a8b9c0e
+                      name: 'Jane Smith'
+                      email: jane@example.com
+                      company_name: null
+                      avatar: 'https://res.cloudinary.com/xxx/image/upload/profile.jpg'
                 properties:
                   meeting:
                     type: object
-                    properties: {  }
+                    properties:
+                      _id:
+                        type: string
+                        example: 664f1a2b3c4d5e6f7a8b9c0f
+                      organizer_id:
+                        type: string
+                        example: 664f1a2b3c4d5e6f7a8b9c0a
+                      invitee_id:
+                        type: string
+                        example: 664f1a2b3c4d5e6f7a8b9c0e
+                      title:
+                        type: string
+                        example: 'Initial Interview'
+                      meeting_type:
+                        type: string
+                        example: video_call
+                      proposed_date:
+                        type: string
+                        example: '2025-02-15'
+                      proposed_start_time:
+                        type: string
+                        example: '14:00'
+                      proposed_duration_minutes:
+                        type: integer
+                        example: 60
+                      status:
+                        type: string
+                        example: accepted
+                      meet_link:
+                        type: string
+                        example: 'https://meet.google.com/abc-defg-hij'
+                      notes:
+                        type: array
+                        example: []
+                      previous_schedules:
+                        type: array
+                        example: []
+                      participant:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 664f1a2b3c4d5e6f7a8b9c0e
+                          name:
+                            type: string
+                            example: 'Jane Smith'
+                          email:
+                            type: string
+                            example: jane@example.com
+                          company_name:
+                            type: string
+                            example: null
+                            nullable: true
+                          avatar:
+                            type: string
+                            example: 'https://res.cloudinary.com/xxx/image/upload/profile.jpg'
         403:
           description: ''
           content:
@@ -8028,10 +8251,40 @@ paths:
         200:
           description: ''
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
-                example: '{ "meeting": {...}, "google_meet_warning": null }'
+                type: object
+                example:
+                  meeting:
+                    _id: 664f1a2b3c4d5e6f7a8b9c0f
+                    title: 'Initial Interview'
+                    status: accepted
+                    meeting_type: video_call
+                    meet_link: 'https://meet.google.com/abc-defg-hij'
+                  google_meet_warning: null
+                properties:
+                  meeting:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 664f1a2b3c4d5e6f7a8b9c0f
+                      title:
+                        type: string
+                        example: 'Initial Interview'
+                      status:
+                        type: string
+                        example: accepted
+                      meeting_type:
+                        type: string
+                        example: video_call
+                      meet_link:
+                        type: string
+                        example: 'https://meet.google.com/abc-defg-hij'
+                  google_meet_warning:
+                    type: string
+                    example: null
+                    nullable: true
         403:
           description: ''
           content:
@@ -8101,10 +8354,27 @@ paths:
         200:
           description: ''
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
-                example: '{ "meeting": {...} }'
+                type: object
+                example:
+                  meeting:
+                    _id: 664f...
+                    status: declined
+                    decline_reason: 'Schedule conflict'
+                properties:
+                  meeting:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 664f...
+                      status:
+                        type: string
+                        example: declined
+                      decline_reason:
+                        type: string
+                        example: 'Schedule conflict'
         403:
           description: ''
           content:
@@ -8174,10 +8444,31 @@ paths:
         200:
           description: ''
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
-                example: '{ "meeting": {...} }'
+                type: object
+                example:
+                  meeting:
+                    _id: 664f...
+                    status: cancelled
+                    cancellation_reason: 'No longer needed'
+                    cancelled_by: 664f...
+                properties:
+                  meeting:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 664f...
+                      status:
+                        type: string
+                        example: cancelled
+                      cancellation_reason:
+                        type: string
+                        example: 'No longer needed'
+                      cancelled_by:
+                        type: string
+                        example: 664f...
         403:
           description: ''
           content:
@@ -8246,10 +8537,59 @@ paths:
         200:
           description: ''
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
-                example: '{ "meeting": {...}, "organizer_conflicts": [], "invitee_conflicts": [] }'
+                type: object
+                example:
+                  meeting:
+                    _id: 664f...
+                    status: rescheduled
+                    proposed_date: '2025-02-20'
+                    previous_schedules:
+                      -
+                        proposed_date: '2025-02-15'
+                        proposed_start_time: '14:00'
+                        proposed_duration_minutes: 60
+                  organizer_conflicts: []
+                  invitee_conflicts: []
+                properties:
+                  meeting:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 664f...
+                      status:
+                        type: string
+                        example: rescheduled
+                      proposed_date:
+                        type: string
+                        example: '2025-02-20'
+                      previous_schedules:
+                        type: array
+                        example:
+                          -
+                            proposed_date: '2025-02-15'
+                            proposed_start_time: '14:00'
+                            proposed_duration_minutes: 60
+                        items:
+                          type: object
+                          properties:
+                            proposed_date:
+                              type: string
+                              example: '2025-02-15'
+                            proposed_start_time:
+                              type: string
+                              example: '14:00'
+                            proposed_duration_minutes:
+                              type: integer
+                              example: 60
+                  organizer_conflicts:
+                    type: array
+                    example: []
+                  invitee_conflicts:
+                    type: array
+                    example: []
         403:
           description: ''
           content:
@@ -8330,10 +8670,23 @@ paths:
         200:
           description: ''
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
-                example: '{ "meeting": {...} }'
+                type: object
+                example:
+                  meeting:
+                    _id: 664f...
+                    status: completed
+                properties:
+                  meeting:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 664f...
+                      status:
+                        type: string
+                        example: completed
         403:
           description: ''
           content:

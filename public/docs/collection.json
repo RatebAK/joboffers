@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "041d0053-f1f5-470d-ae54-d912c6bb79be",
+        "_postman_id": "f0ebc000-2c8b-441c-9411-b5abdfbd9def",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -1194,7 +1194,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "prefer_not_to_say",
+                                    "value": "male",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1236,7 +1236,7 @@
                                 },
                                 {
                                     "key": "marital_status",
-                                    "value": "widowed",
+                                    "value": "divorced",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1254,7 +1254,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "open_to_work",
+                                    "value": "employed",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1272,7 +1272,7 @@
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "senior",
+                                    "value": "manager",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1350,7 +1350,7 @@
                                 },
                                 {
                                     "key": "skills[0][level]",
-                                    "value": "advanced",
+                                    "value": "intermediate",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -4403,7 +4403,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"status\":\"architecto\",\"from_date\":\"2026-08-18\",\"to_date\":\"2026-08-18\",\"sort_direction\":\"desc\",\"per_page\":22}"
+                            "raw": "{\"status\":\"architecto\",\"from_date\":\"2026-08-20\",\"to_date\":\"2026-08-20\",\"sort_direction\":\"asc\",\"per_page\":22}"
                         },
                         "description": "Returns a paginated list of meetings where the authenticated user is a participant.\nSupports filtering by status, date range, and sort direction."
                     },
@@ -4411,7 +4411,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": [],\n  \"current_page\": 1,\n  \"per_page\": 15,\n  \"total\": 0,\n  \"total_pages\": 0,\n  \"next_page\": null,\n  \"prev_page\": null\n}",
+                            "body": "{\n  \"data\": [\n    {\n      \"_id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n      \"title\": \"Initial Interview\",\n      \"meeting_type\": \"video_call\",\n      \"proposed_date\": \"2025-02-15\",\n      \"proposed_start_time\": \"14:00\",\n      \"proposed_duration_minutes\": 60,\n      \"status\": \"pending\",\n      \"participant\": {\n        \"id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n        \"name\": \"Jane Smith\",\n        \"email\": \"jane@example.com\",\n        \"company_name\": null,\n        \"avatar\": \"https:\/\/res.cloudinary.com\/xxx\/image\/upload\/profile.jpg\"\n      }\n    }\n  ],\n  \"current_page\": 1,\n  \"per_page\": 15,\n  \"total\": 1,\n  \"total_pages\": 1,\n  \"next_page\": null,\n  \"prev_page\": null\n}",
                             "name": ""
                         }
                     ]
@@ -4446,7 +4446,7 @@
                         {
                             "header": [],
                             "code": 201,
-                            "body": "{\n  \"message\": \"Meeting created successfully\",\n  \"meeting\": {},\n  \"organizer_conflicts\": [],\n  \"invitee_conflicts\": []\n}",
+                            "body": "{\n  \"message\": \"Meeting created successfully\",\n  \"meeting\": {\n    \"_id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n    \"organizer_id\": \"664f1a2b3c4d5e6f7a8b9c0a\",\n    \"invitee_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n    \"title\": \"Initial Interview\",\n    \"meeting_type\": \"video_call\",\n    \"proposed_date\": \"2025-02-15\",\n    \"proposed_start_time\": \"14:00\",\n    \"proposed_duration_minutes\": 60,\n    \"status\": \"pending\",\n    \"location_or_link\": null,\n    \"meet_link\": null,\n    \"notes\": [],\n    \"previous_schedules\": []\n  },\n  \"organizer_conflicts\": [],\n  \"invitee_conflicts\": []\n}",
                             "name": ""
                         },
                         {
@@ -4484,7 +4484,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"meetings\": [\n    {\n      \"id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n      \"title\": \"Interview\",\n      \"proposed_date\": \"2025-02-15\",\n      \"proposed_start_time\": \"14:00\",\n      \"proposed_duration_minutes\": 60,\n      \"meeting_type\": \"video_call\",\n      \"participant_name\": \"Jane Smith\"\n    }\n  ]\n}",
+                            "body": "{\n  \"meetings\": [\n    {\n      \"id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n      \"title\": \"Interview\",\n      \"proposed_date\": \"2025-02-15\",\n      \"proposed_start_time\": \"14:00\",\n      \"proposed_duration_minutes\": 60,\n      \"meeting_type\": \"video_call\",\n      \"participant\": {\n        \"id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n        \"name\": \"Jane Smith\",\n        \"email\": \"jane@example.com\",\n        \"company_name\": \"Acme Corp\",\n        \"avatar\": \"https:\/\/res.cloudinary.com\/xxx\/image\/upload\/logo.png\"\n      }\n    }\n  ]\n}",
                             "name": ""
                         }
                     ]
@@ -4524,7 +4524,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{ \"meeting\": {} }",
+                            "body": "{\n  \"meeting\": {\n    \"_id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n    \"organizer_id\": \"664f1a2b3c4d5e6f7a8b9c0a\",\n    \"invitee_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n    \"title\": \"Initial Interview\",\n    \"meeting_type\": \"video_call\",\n    \"proposed_date\": \"2025-02-15\",\n    \"proposed_start_time\": \"14:00\",\n    \"proposed_duration_minutes\": 60,\n    \"status\": \"accepted\",\n    \"meet_link\": \"https:\/\/meet.google.com\/abc-defg-hij\",\n    \"notes\": [],\n    \"previous_schedules\": [],\n    \"participant\": {\n      \"id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n      \"name\": \"Jane Smith\",\n      \"email\": \"jane@example.com\",\n      \"company_name\": null,\n      \"avatar\": \"https:\/\/res.cloudinary.com\/xxx\/image\/upload\/profile.jpg\"\n    }\n  }\n}",
                             "name": ""
                         },
                         {
@@ -4579,7 +4579,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{ \"meeting\": {...}, \"google_meet_warning\": null }",
+                            "body": "{\n  \"meeting\": {\n    \"_id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n    \"title\": \"Initial Interview\",\n    \"status\": \"accepted\",\n    \"meeting_type\": \"video_call\",\n    \"meet_link\": \"https:\/\/meet.google.com\/abc-defg-hij\"\n  },\n  \"google_meet_warning\": null\n}",
                             "name": ""
                         },
                         {
@@ -4640,7 +4640,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{ \"meeting\": {...} }",
+                            "body": "{ \"meeting\": { \"_id\": \"664f...\", \"status\": \"declined\", \"decline_reason\": \"Schedule conflict\" } }",
                             "name": ""
                         },
                         {
@@ -4701,7 +4701,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{ \"meeting\": {...} }",
+                            "body": "{ \"meeting\": { \"_id\": \"664f...\", \"status\": \"cancelled\", \"cancellation_reason\": \"No longer needed\", \"cancelled_by\": \"664f...\" } }",
                             "name": ""
                         },
                         {
@@ -4762,7 +4762,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{ \"meeting\": {...}, \"organizer_conflicts\": [], \"invitee_conflicts\": [] }",
+                            "body": "{ \"meeting\": { \"_id\": \"664f...\", \"status\": \"rescheduled\", \"proposed_date\": \"2025-02-20\", \"previous_schedules\": [{\"proposed_date\": \"2025-02-15\", \"proposed_start_time\": \"14:00\", \"proposed_duration_minutes\": 60}] }, \"organizer_conflicts\": [], \"invitee_conflicts\": [] }",
                             "name": ""
                         },
                         {
@@ -4820,7 +4820,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{ \"meeting\": {...} }",
+                            "body": "{ \"meeting\": { \"_id\": \"664f...\", \"status\": \"completed\" } }",
                             "name": ""
                         },
                         {

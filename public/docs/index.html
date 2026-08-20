@@ -398,7 +398,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: August 18, 2026</li>
+        <li>Last updated: August 20, 2026</li>
     </ul>
 </div>
 
@@ -3147,7 +3147,7 @@ All other fields are sent as regular form fields.</p>
     --form "phone=+961 70 123456"\
     --form "date_of_birth=1995-06-15"\
     --form "marital_status=architecto"\
-    --form "image=@C:\Users\rog\AppData\Local\Temp\phpDF21.tmp" </code></pre></div>
+    --form "image=@C:\Users\rog\AppData\Local\Temp\php9EF0.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -3329,7 +3329,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>JPEG/PNG/WEBP profile photo, max 2MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpDF21.tmp</code></p>
+<p>JPEG/PNG/WEBP profile photo, max 2MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php9EF0.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>gender</code></b>&nbsp;&nbsp;
@@ -5204,20 +5204,20 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "last_name=n"\
     --form "full_name=g"\
     --form "image=z"\
-    --form "gender=prefer_not_to_say"\
+    --form "gender=male"\
     --form "nationality=m"\
     --form "city=i"\
     --form "location=y"\
     --form "address=v"\
     --form "phone=dljnikhwaykcmyuw"\
     --form "date_of_birth=pwlvqwrsitcpscql"\
-    --form "marital_status=widowed"\
+    --form "marital_status=divorced"\
     --form "salary_range_from=16"\
     --form "salary_range_to=38"\
-    --form "current_job_status=open_to_work"\
+    --form "current_job_status=employed"\
     --form "years_of_experience=8"\
     --form "education_level=n"\
-    --form "job_level=senior"\
+    --form "job_level=manager"\
     --form "job_types[]=r"\
     --form "job_roles[]=w"\
     --form "work_cities[]=t"\
@@ -5230,7 +5230,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "social_links[portfolio]=m"\
     --form "social_links[twitter]=i"\
     --form "skills[][name]=y"\
-    --form "skills[][level]=advanced"\
+    --form "skills[][level]=intermediate"\
     --form "education_history[][certificate_type]=v"\
     --form "education_history[][university]=d"\
     --form "education_history[][faculty]=l"\
@@ -5246,7 +5246,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "work_experience[][to_date]=tnnoqitpxntltcvi"\
     --form "work_experience[][is_currently_working]="\
     --form "work_experience[][description]=Eius et animi quos velit et."\
-    --form "resume=@C:\Users\rog\AppData\Local\Temp\phpDF80.tmp" </code></pre></div>
+    --form "resume=@C:\Users\rog\AppData\Local\Temp\php9F4F.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -5265,20 +5265,20 @@ body.append('first_name', 'b');
 body.append('last_name', 'n');
 body.append('full_name', 'g');
 body.append('image', 'z');
-body.append('gender', 'prefer_not_to_say');
+body.append('gender', 'male');
 body.append('nationality', 'm');
 body.append('city', 'i');
 body.append('location', 'y');
 body.append('address', 'v');
 body.append('phone', 'dljnikhwaykcmyuw');
 body.append('date_of_birth', 'pwlvqwrsitcpscql');
-body.append('marital_status', 'widowed');
+body.append('marital_status', 'divorced');
 body.append('salary_range_from', '16');
 body.append('salary_range_to', '38');
-body.append('current_job_status', 'open_to_work');
+body.append('current_job_status', 'employed');
 body.append('years_of_experience', '8');
 body.append('education_level', 'n');
-body.append('job_level', 'senior');
+body.append('job_level', 'manager');
 body.append('job_types[]', 'r');
 body.append('job_roles[]', 'w');
 body.append('work_cities[]', 't');
@@ -5291,7 +5291,7 @@ body.append('social_links[github]', 'z');
 body.append('social_links[portfolio]', 'm');
 body.append('social_links[twitter]', 'i');
 body.append('skills[][name]', 'y');
-body.append('skills[][level]', 'advanced');
+body.append('skills[][level]', 'intermediate');
 body.append('education_history[][certificate_type]', 'v');
 body.append('education_history[][university]', 'd');
 body.append('education_history[][faculty]', 'l');
@@ -5458,10 +5458,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="gender"                data-endpoint="PUTapi-job-seeker-profile"
-               value="prefer_not_to_say"
+               value="male"
                data-component="body">
     <br>
-<p>Example: <code>prefer_not_to_say</code></p>
+<p>Example: <code>male</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>male</code></li> <li><code>female</code></li> <li><code>other</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5544,10 +5544,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="marital_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="widowed"
+               value="divorced"
                data-component="body">
     <br>
-<p>Example: <code>widowed</code></p>
+<p>Example: <code>divorced</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>single</code></li> <li><code>married</code></li> <li><code>divorced</code></li> <li><code>widowed</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5582,10 +5582,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="current_job_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="open_to_work"
+               value="employed"
                data-component="body">
     <br>
-<p>Example: <code>open_to_work</code></p>
+<p>Example: <code>employed</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>employed</code></li> <li><code>unemployed</code></li> <li><code>freelancing</code></li> <li><code>student</code></li> <li><code>open_to_work</code></li></ul>
         </div>
@@ -5620,10 +5620,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="senior"
+               value="manager"
                data-component="body">
     <br>
-<p>Example: <code>senior</code></p>
+<p>Example: <code>manager</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>entry</code></li> <li><code>junior</code></li> <li><code>mid</code></li> <li><code>senior</code></li> <li><code>lead</code></li> <li><code>manager</code></li> <li><code>director</code></li> <li><code>executive</code></li></ul>
         </div>
@@ -5816,10 +5816,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="skills.0.level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="advanced"
+               value="intermediate"
                data-component="body">
     <br>
-<p>Example: <code>advanced</code></p>
+<p>Example: <code>intermediate</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>beginner</code></li> <li><code>intermediate</code></li> <li><code>advanced</code></li> <li><code>expert</code></li></ul>
                     </div>
@@ -6051,7 +6051,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\rog\AppData\Local\Temp\phpDF80.tmp</code></p>
+<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\rog\AppData\Local\Temp\php9F4F.tmp</code></p>
         </div>
         </form>
 
@@ -6092,7 +6092,7 @@ Retry failed: <code>POST /job-seeker/resume/retry-analysis</code></p>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@C:\Users\rog\AppData\Local\Temp\phpDF92.tmp" </code></pre></div>
+    --form "resume=@C:\Users\rog\AppData\Local\Temp\php9F60.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6263,7 +6263,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpDF92.tmp</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php9F60.tmp</code></p>
         </div>
         </form>
 
@@ -6627,7 +6627,7 @@ This endpoint is similar to <code>/upload</code> but accepts field name <code>cv
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cv=@C:\Users\rog\AppData\Local\Temp\phpDFB4.tmp" </code></pre></div>
+    --form "cv=@C:\Users\rog\AppData\Local\Temp\php9F73.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6786,7 +6786,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpDFB4.tmp</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php9F73.tmp</code></p>
         </div>
         </form>
 
@@ -7608,7 +7608,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "positions_suited_for[]=architecto"\
     --form "notice_period=architecto"\
     --form "expected_salary=architecto"\
-    --form "resume=@C:\Users\rog\AppData\Local\Temp\phpDFE6.tmp" </code></pre></div>
+    --form "resume=@C:\Users\rog\AppData\Local\Temp\php9FB4.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -7797,7 +7797,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>C:\Users\rog\AppData\Local\Temp\phpDFE6.tmp</code></p>
+<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>C:\Users\rog\AppData\Local\Temp\php9FB4.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>education</code></b>&nbsp;&nbsp;
@@ -9072,7 +9072,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "document=@C:\Users\rog\AppData\Local\Temp\phpE065.tmp" </code></pre></div>
+    --form "document=@C:\Users\rog\AppData\Local\Temp\phpA062.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9221,7 +9221,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpE065.tmp</code></p>
+<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpA062.tmp</code></p>
         </div>
         </form>
 
@@ -11998,7 +11998,7 @@ Accepts JPEG, PNG, WebP; max 2 MB. Any previously uploaded logo is automatically
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "logo=@C:\Users\rog\AppData\Local\Temp\phpE0E5.tmp" </code></pre></div>
+    --form "logo=@C:\Users\rog\AppData\Local\Temp\phpA0C3.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -12148,7 +12148,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>The logo image file. Accepted: jpeg, png, webp. Max 2 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpE0E5.tmp</code></p>
+<p>The logo image file. Accepted: jpeg, png, webp. Max 2 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpA0C3.tmp</code></p>
         </div>
         </form>
 
@@ -12171,7 +12171,7 @@ Accepts JPEG, PNG, WebP; max 4 MB. Any previously uploaded cover image is automa
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cover_image=@C:\Users\rog\AppData\Local\Temp\phpE0E8.tmp" </code></pre></div>
+    --form "cover_image=@C:\Users\rog\AppData\Local\Temp\phpA0D6.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -12321,7 +12321,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>The cover image file. Accepted: jpeg, png, webp. Max 4 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpE0E8.tmp</code></p>
+<p>The cover image file. Accepted: jpeg, png, webp. Max 4 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpA0D6.tmp</code></p>
         </div>
         </form>
 
@@ -16156,7 +16156,7 @@ State University,careers@university.edu,State University,university</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "file=@C:\Users\rog\AppData\Local\Temp\phpE1B6.tmp" </code></pre></div>
+    --form "file=@C:\Users\rog\AppData\Local\Temp\phpA175.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -16307,7 +16307,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>CSV file, max 2 MB. Required columns: name, email, company_name. Example: <code>C:\Users\rog\AppData\Local\Temp\phpE1B6.tmp</code></p>
+<p>CSV file, max 2 MB. Required columns: name, email, company_name. Example: <code>C:\Users\rog\AppData\Local\Temp\phpA175.tmp</code></p>
         </div>
         </form>
 
@@ -17943,9 +17943,9 @@ Supports filtering by status, date range, and sort direction.</p>
     --header "Accept: application/json" \
     --data "{
     \"status\": \"architecto\",
-    \"from_date\": \"2026-08-18\",
-    \"to_date\": \"2026-08-18\",
-    \"sort_direction\": \"desc\",
+    \"from_date\": \"2026-08-20\",
+    \"to_date\": \"2026-08-20\",
+    \"sort_direction\": \"asc\",
     \"per_page\": 22
 }"
 </code></pre></div>
@@ -17974,9 +17974,9 @@ const headers = {
 
 let body = {
     "status": "architecto",
-    "from_date": "2026-08-18",
-    "to_date": "2026-08-18",
-    "sort_direction": "desc",
+    "from_date": "2026-08-20",
+    "to_date": "2026-08-20",
+    "sort_direction": "asc",
     "per_page": 22
 };
 
@@ -17995,11 +17995,28 @@ fetch(url, {
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;data&quot;: [],
+    &quot;data&quot;: [
+        {
+            &quot;_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0f&quot;,
+            &quot;title&quot;: &quot;Initial Interview&quot;,
+            &quot;meeting_type&quot;: &quot;video_call&quot;,
+            &quot;proposed_date&quot;: &quot;2025-02-15&quot;,
+            &quot;proposed_start_time&quot;: &quot;14:00&quot;,
+            &quot;proposed_duration_minutes&quot;: 60,
+            &quot;status&quot;: &quot;pending&quot;,
+            &quot;participant&quot;: {
+                &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0e&quot;,
+                &quot;name&quot;: &quot;Jane Smith&quot;,
+                &quot;email&quot;: &quot;jane@example.com&quot;,
+                &quot;company_name&quot;: null,
+                &quot;avatar&quot;: &quot;https://res.cloudinary.com/xxx/image/upload/profile.jpg&quot;
+            }
+        }
+    ],
     &quot;current_page&quot;: 1,
     &quot;per_page&quot;: 15,
-    &quot;total&quot;: 0,
-    &quot;total_pages&quot;: 0,
+    &quot;total&quot;: 1,
+    &quot;total_pages&quot;: 1,
     &quot;next_page&quot;: null,
     &quot;prev_page&quot;: null
 }</code>
@@ -18169,10 +18186,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from_date"                data-endpoint="GETapi-meetings"
-               value="2026-08-18"
+               value="2026-08-20"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-08-18</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-08-20</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to_date</code></b>&nbsp;&nbsp;
@@ -18181,10 +18198,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="to_date"                data-endpoint="GETapi-meetings"
-               value="2026-08-18"
+               value="2026-08-20"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-08-18</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-08-20</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>sort_direction</code></b>&nbsp;&nbsp;
@@ -18193,10 +18210,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort_direction"                data-endpoint="GETapi-meetings"
-               value="desc"
+               value="asc"
                data-component="body">
     <br>
-<p>Example: <code>desc</code></p>
+<p>Example: <code>asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
         </div>
@@ -18282,7 +18299,21 @@ fetch(url, {
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;message&quot;: &quot;Meeting created successfully&quot;,
-    &quot;meeting&quot;: {},
+    &quot;meeting&quot;: {
+        &quot;_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0f&quot;,
+        &quot;organizer_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0a&quot;,
+        &quot;invitee_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0e&quot;,
+        &quot;title&quot;: &quot;Initial Interview&quot;,
+        &quot;meeting_type&quot;: &quot;video_call&quot;,
+        &quot;proposed_date&quot;: &quot;2025-02-15&quot;,
+        &quot;proposed_start_time&quot;: &quot;14:00&quot;,
+        &quot;proposed_duration_minutes&quot;: 60,
+        &quot;status&quot;: &quot;pending&quot;,
+        &quot;location_or_link&quot;: null,
+        &quot;meet_link&quot;: null,
+        &quot;notes&quot;: [],
+        &quot;previous_schedules&quot;: []
+    },
     &quot;organizer_conflicts&quot;: [],
     &quot;invitee_conflicts&quot;: []
 }</code>
@@ -18522,7 +18553,13 @@ fetch(url, {
             &quot;proposed_start_time&quot;: &quot;14:00&quot;,
             &quot;proposed_duration_minutes&quot;: 60,
             &quot;meeting_type&quot;: &quot;video_call&quot;,
-            &quot;participant_name&quot;: &quot;Jane Smith&quot;
+            &quot;participant&quot;: {
+                &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0e&quot;,
+                &quot;name&quot;: &quot;Jane Smith&quot;,
+                &quot;email&quot;: &quot;jane@example.com&quot;,
+                &quot;company_name&quot;: &quot;Acme Corp&quot;,
+                &quot;avatar&quot;: &quot;https://res.cloudinary.com/xxx/image/upload/logo.png&quot;
+            }
         }
     ]
 }</code>
@@ -18659,7 +18696,27 @@ fetch(url, {
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;meeting&quot;: {}
+    &quot;meeting&quot;: {
+        &quot;_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0f&quot;,
+        &quot;organizer_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0a&quot;,
+        &quot;invitee_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0e&quot;,
+        &quot;title&quot;: &quot;Initial Interview&quot;,
+        &quot;meeting_type&quot;: &quot;video_call&quot;,
+        &quot;proposed_date&quot;: &quot;2025-02-15&quot;,
+        &quot;proposed_start_time&quot;: &quot;14:00&quot;,
+        &quot;proposed_duration_minutes&quot;: 60,
+        &quot;status&quot;: &quot;accepted&quot;,
+        &quot;meet_link&quot;: &quot;https://meet.google.com/abc-defg-hij&quot;,
+        &quot;notes&quot;: [],
+        &quot;previous_schedules&quot;: [],
+        &quot;participant&quot;: {
+            &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0e&quot;,
+            &quot;name&quot;: &quot;Jane Smith&quot;,
+            &quot;email&quot;: &quot;jane@example.com&quot;,
+            &quot;company_name&quot;: null,
+            &quot;avatar&quot;: &quot;https://res.cloudinary.com/xxx/image/upload/profile.jpg&quot;
+        }
+    }
 }</code>
  </pre>
             <blockquote>
@@ -18833,7 +18890,16 @@ fetch(url, {
         </blockquote>
                 <pre>
 
-<code class="language-json" style="max-height: 300px;">{ &quot;meeting&quot;: {...}, &quot;google_meet_warning&quot;: null }</code>
+<code class="language-json" style="max-height: 300px;">{
+    &quot;meeting&quot;: {
+        &quot;_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0f&quot;,
+        &quot;title&quot;: &quot;Initial Interview&quot;,
+        &quot;status&quot;: &quot;accepted&quot;,
+        &quot;meeting_type&quot;: &quot;video_call&quot;,
+        &quot;meet_link&quot;: &quot;https://meet.google.com/abc-defg-hij&quot;
+    },
+    &quot;google_meet_warning&quot;: null
+}</code>
  </pre>
             <blockquote>
             <p>Example response (403):</p>
@@ -19027,7 +19093,13 @@ fetch(url, {
         </blockquote>
                 <pre>
 
-<code class="language-json" style="max-height: 300px;">{ &quot;meeting&quot;: {...} }</code>
+<code class="language-json" style="max-height: 300px;">{
+    &quot;meeting&quot;: {
+        &quot;_id&quot;: &quot;664f...&quot;,
+        &quot;status&quot;: &quot;declined&quot;,
+        &quot;decline_reason&quot;: &quot;Schedule conflict&quot;
+    }
+}</code>
  </pre>
             <blockquote>
             <p>Example response (403):</p>
@@ -19222,7 +19294,14 @@ fetch(url, {
         </blockquote>
                 <pre>
 
-<code class="language-json" style="max-height: 300px;">{ &quot;meeting&quot;: {...} }</code>
+<code class="language-json" style="max-height: 300px;">{
+    &quot;meeting&quot;: {
+        &quot;_id&quot;: &quot;664f...&quot;,
+        &quot;status&quot;: &quot;cancelled&quot;,
+        &quot;cancellation_reason&quot;: &quot;No longer needed&quot;,
+        &quot;cancelled_by&quot;: &quot;664f...&quot;
+    }
+}</code>
  </pre>
             <blockquote>
             <p>Example response (403):</p>
@@ -19421,7 +19500,22 @@ fetch(url, {
         </blockquote>
                 <pre>
 
-<code class="language-json" style="max-height: 300px;">{ &quot;meeting&quot;: {...}, &quot;organizer_conflicts&quot;: [], &quot;invitee_conflicts&quot;: [] }</code>
+<code class="language-json" style="max-height: 300px;">{
+    &quot;meeting&quot;: {
+        &quot;_id&quot;: &quot;664f...&quot;,
+        &quot;status&quot;: &quot;rescheduled&quot;,
+        &quot;proposed_date&quot;: &quot;2025-02-20&quot;,
+        &quot;previous_schedules&quot;: [
+            {
+                &quot;proposed_date&quot;: &quot;2025-02-15&quot;,
+                &quot;proposed_start_time&quot;: &quot;14:00&quot;,
+                &quot;proposed_duration_minutes&quot;: 60
+            }
+        ]
+    },
+    &quot;organizer_conflicts&quot;: [],
+    &quot;invitee_conflicts&quot;: []
+}</code>
  </pre>
             <blockquote>
             <p>Example response (403):</p>
@@ -19631,7 +19725,12 @@ fetch(url, {
         </blockquote>
                 <pre>
 
-<code class="language-json" style="max-height: 300px;">{ &quot;meeting&quot;: {...} }</code>
+<code class="language-json" style="max-height: 300px;">{
+    &quot;meeting&quot;: {
+        &quot;_id&quot;: &quot;664f...&quot;,
+        &quot;status&quot;: &quot;completed&quot;
+    }
+}</code>
  </pre>
             <blockquote>
             <p>Example response (403):</p>
