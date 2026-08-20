@@ -792,7 +792,7 @@ endpoints:
         name: job_type
         description: ''
         required: false
-        example: freelance
+        example: part_time
         type: string
         enumValues:
           - full_time
@@ -827,7 +827,7 @@ endpoints:
     cleanBodyParameters:
       keyword: b
       location: 'n'
-      job_type: freelance
+      job_type: part_time
       category: g
       min_salary: 12
     fileParameters: []
@@ -2454,7 +2454,7 @@ endpoints:
         name: gender
         description: ''
         required: false
-        example: prefer_not_to_say
+        example: female
         type: string
         enumValues:
           - male
@@ -2535,7 +2535,7 @@ endpoints:
         name: marital_status
         description: ''
         required: false
-        example: widowed
+        example: divorced
         type: string
         enumValues:
           - single
@@ -2573,7 +2573,7 @@ endpoints:
         name: current_job_status
         description: ''
         required: false
-        example: open_to_work
+        example: unemployed
         type: string
         enumValues:
           - employed
@@ -2611,7 +2611,7 @@ endpoints:
         name: job_level
         description: ''
         required: false
-        example: senior
+        example: director
         type: string
         enumValues:
           - entry
@@ -2979,7 +2979,7 @@ endpoints:
         name: 'work_experience[].is_currently_working'
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -3001,20 +3001,20 @@ endpoints:
       last_name: 'n'
       full_name: g
       image: z
-      gender: prefer_not_to_say
+      gender: female
       nationality: m
       city: i
       location: 'y'
       address: v
       phone: dljnikhwaykcmyuw
       date_of_birth: pwlvqwrsitcpscql
-      marital_status: widowed
+      marital_status: divorced
       salary_range_from: 16
       salary_range_to: 38
-      current_job_status: open_to_work
+      current_job_status: unemployed
       years_of_experience: 8
       education_level: 'n'
-      job_level: senior
+      job_level: director
       job_types:
         - r
       job_roles:
@@ -3052,7 +3052,7 @@ endpoints:
             - u
           from_date: jwvlxjklqppwqbew
           to_date: tnnoqitpxntltcvi
-          is_currently_working: false
+          is_currently_working: true
           description: 'Eius et animi quos velit et.'
     fileParameters:
       resume: null
@@ -8461,7 +8461,7 @@ endpoints:
         name: from_date
         description: 'Must be a valid date in the format <code>Y-m-d</code>.'
         required: false
-        example: '2026-08-18'
+        example: '2026-08-20'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -8472,7 +8472,7 @@ endpoints:
         name: to_date
         description: 'Must be a valid date in the format <code>Y-m-d</code>.'
         required: false
-        example: '2026-08-18'
+        example: '2026-08-20'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -8483,7 +8483,7 @@ endpoints:
         name: sort_direction
         description: ''
         required: false
-        example: desc
+        example: asc
         type: string
         enumValues:
           - asc
@@ -8504,9 +8504,9 @@ endpoints:
         deprecated: false
     cleanBodyParameters:
       status: architecto
-      from_date: '2026-08-18'
-      to_date: '2026-08-18'
-      sort_direction: desc
+      from_date: '2026-08-20'
+      to_date: '2026-08-20'
+      sort_direction: asc
       per_page: 22
     fileParameters: []
     responses:
@@ -8515,11 +8515,28 @@ endpoints:
         status: 200
         content: |-
           {
-            "data": [],
+            "data": [
+              {
+                "_id": "664f1a2b3c4d5e6f7a8b9c0f",
+                "title": "Initial Interview",
+                "meeting_type": "video_call",
+                "proposed_date": "2025-02-15",
+                "proposed_start_time": "14:00",
+                "proposed_duration_minutes": 60,
+                "status": "pending",
+                "participant": {
+                  "id": "664f1a2b3c4d5e6f7a8b9c0e",
+                  "name": "Jane Smith",
+                  "email": "jane@example.com",
+                  "company_name": null,
+                  "avatar": "https://res.cloudinary.com/xxx/image/upload/profile.jpg"
+                }
+              }
+            ],
             "current_page": 1,
             "per_page": 15,
-            "total": 0,
-            "total_pages": 0,
+            "total": 1,
+            "total_pages": 1,
             "next_page": null,
             "prev_page": null
           }
@@ -8652,7 +8669,21 @@ endpoints:
         content: |-
           {
             "message": "Meeting created successfully",
-            "meeting": {},
+            "meeting": {
+              "_id": "664f1a2b3c4d5e6f7a8b9c0f",
+              "organizer_id": "664f1a2b3c4d5e6f7a8b9c0a",
+              "invitee_id": "664f1a2b3c4d5e6f7a8b9c0e",
+              "title": "Initial Interview",
+              "meeting_type": "video_call",
+              "proposed_date": "2025-02-15",
+              "proposed_start_time": "14:00",
+              "proposed_duration_minutes": 60,
+              "status": "pending",
+              "location_or_link": null,
+              "meet_link": null,
+              "notes": [],
+              "previous_schedules": []
+            },
             "organizer_conflicts": [],
             "invitee_conflicts": []
           }
@@ -8714,7 +8745,13 @@ endpoints:
                 "proposed_start_time": "14:00",
                 "proposed_duration_minutes": 60,
                 "meeting_type": "video_call",
-                "participant_name": "Jane Smith"
+                "participant": {
+                  "id": "664f1a2b3c4d5e6f7a8b9c0e",
+                  "name": "Jane Smith",
+                  "email": "jane@example.com",
+                  "company_name": "Acme Corp",
+                  "avatar": "https://res.cloudinary.com/xxx/image/upload/logo.png"
+                }
               }
             ]
           }
@@ -8770,7 +8807,30 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{ "meeting": {} }'
+        content: |-
+          {
+            "meeting": {
+              "_id": "664f1a2b3c4d5e6f7a8b9c0f",
+              "organizer_id": "664f1a2b3c4d5e6f7a8b9c0a",
+              "invitee_id": "664f1a2b3c4d5e6f7a8b9c0e",
+              "title": "Initial Interview",
+              "meeting_type": "video_call",
+              "proposed_date": "2025-02-15",
+              "proposed_start_time": "14:00",
+              "proposed_duration_minutes": 60,
+              "status": "accepted",
+              "meet_link": "https://meet.google.com/abc-defg-hij",
+              "notes": [],
+              "previous_schedules": [],
+              "participant": {
+                "id": "664f1a2b3c4d5e6f7a8b9c0e",
+                "name": "Jane Smith",
+                "email": "jane@example.com",
+                "company_name": null,
+                "avatar": "https://res.cloudinary.com/xxx/image/upload/profile.jpg"
+              }
+            }
+          }
         headers: []
         description: ''
       -
@@ -8849,7 +8909,17 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{ "meeting": {...}, "google_meet_warning": null }'
+        content: |-
+          {
+            "meeting": {
+              "_id": "664f1a2b3c4d5e6f7a8b9c0f",
+              "title": "Initial Interview",
+              "status": "accepted",
+              "meeting_type": "video_call",
+              "meet_link": "https://meet.google.com/abc-defg-hij"
+            },
+            "google_meet_warning": null
+          }
         headers: []
         description: ''
       -
@@ -8932,7 +9002,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{ "meeting": {...} }'
+        content: '{ "meeting": { "_id": "664f...", "status": "declined", "decline_reason": "Schedule conflict" } }'
         headers: []
         description: ''
       -
@@ -9017,7 +9087,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{ "meeting": {...} }'
+        content: '{ "meeting": { "_id": "664f...", "status": "cancelled", "cancellation_reason": "No longer needed", "cancelled_by": "664f..." } }'
         headers: []
         description: ''
       -
@@ -9126,7 +9196,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{ "meeting": {...}, "organizer_conflicts": [], "invitee_conflicts": [] }'
+        content: '{ "meeting": { "_id": "664f...", "status": "rescheduled", "proposed_date": "2025-02-20", "previous_schedules": [{"proposed_date": "2025-02-15", "proposed_start_time": "14:00", "proposed_duration_minutes": 60}] }, "organizer_conflicts": [], "invitee_conflicts": [] }'
         headers: []
         description: ''
       -
@@ -9197,7 +9267,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{ "meeting": {...} }'
+        content: '{ "meeting": { "_id": "664f...", "status": "completed" } }'
         headers: []
         description: ''
       -

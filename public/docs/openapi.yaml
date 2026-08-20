@@ -1183,7 +1183,7 @@ paths:
                 job_type:
                   type: string
                   description: ''
-                  example: freelance
+                  example: part_time
                   enum:
                     - full_time
                     - part_time
@@ -1741,7 +1741,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: male
+                  example: female
                   enum:
                     - male
                     - female
@@ -1802,7 +1802,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: employed
+                  example: unemployed
                   enum:
                     - employed
                     - unemployed
@@ -1823,7 +1823,7 @@ paths:
                 job_level:
                   type: string
                   description: ''
-                  example: manager
+                  example: director
                   enum:
                     - entry
                     - junior
@@ -1915,7 +1915,7 @@ paths:
                       level:
                         type: string
                         description: ''
-                        example: intermediate
+                        example: advanced
                         enum:
                           - beginner
                           - intermediate
@@ -2008,7 +2008,7 @@ paths:
                       is_currently_working:
                         type: boolean
                         description: ''
-                        example: false
+                        example: true
                         nullable: true
                       description:
                         type: string

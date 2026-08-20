@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "f0ebc000-2c8b-441c-9411-b5abdfbd9def",
+        "_postman_id": "51fa53d0-d0a6-40c2-be1c-243e9cdda1c3",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -419,7 +419,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"freelance\",\"category\":\"g\",\"min_salary\":12}"
+                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"part_time\",\"category\":\"g\",\"min_salary\":12}"
                         },
                         "description": "Paginated search of active job posts for the authenticated job seeker."
                     },
@@ -1194,7 +1194,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "male",
+                                    "value": "female",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1254,7 +1254,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "employed",
+                                    "value": "unemployed",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1272,7 +1272,7 @@
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "manager",
+                                    "value": "director",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1350,7 +1350,7 @@
                                 },
                                 {
                                     "key": "skills[0][level]",
-                                    "value": "intermediate",
+                                    "value": "advanced",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1434,7 +1434,7 @@
                                 },
                                 {
                                     "key": "work_experience[0][is_currently_working]",
-                                    "value": "",
+                                    "value": "1",
                                     "type": "text",
                                     "description": ""
                                 },

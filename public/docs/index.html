@@ -1826,7 +1826,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"keyword\": \"b\",
     \"location\": \"n\",
-    \"job_type\": \"freelance\",
+    \"job_type\": \"part_time\",
     \"category\": \"g\",
     \"min_salary\": 12
 }"
@@ -1857,7 +1857,7 @@ const headers = {
 let body = {
     "keyword": "b",
     "location": "n",
-    "job_type": "freelance",
+    "job_type": "part_time",
     "category": "g",
     "min_salary": 12
 };
@@ -2071,10 +2071,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_type"                data-endpoint="GETapi-jobs-search"
-               value="freelance"
+               value="part_time"
                data-component="body">
     <br>
-<p>Example: <code>freelance</code></p>
+<p>Example: <code>part_time</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>full_time</code></li> <li><code>part_time</code></li> <li><code>contract</code></li> <li><code>freelance</code></li></ul>
         </div>
@@ -3147,7 +3147,7 @@ All other fields are sent as regular form fields.</p>
     --form "phone=+961 70 123456"\
     --form "date_of_birth=1995-06-15"\
     --form "marital_status=architecto"\
-    --form "image=@C:\Users\rog\AppData\Local\Temp\php9EF0.tmp" </code></pre></div>
+    --form "image=@C:\Users\rog\AppData\Local\Temp\php9556.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -3329,7 +3329,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>JPEG/PNG/WEBP profile photo, max 2MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php9EF0.tmp</code></p>
+<p>JPEG/PNG/WEBP profile photo, max 2MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php9556.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>gender</code></b>&nbsp;&nbsp;
@@ -5204,7 +5204,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "last_name=n"\
     --form "full_name=g"\
     --form "image=z"\
-    --form "gender=male"\
+    --form "gender=female"\
     --form "nationality=m"\
     --form "city=i"\
     --form "location=y"\
@@ -5214,10 +5214,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "marital_status=divorced"\
     --form "salary_range_from=16"\
     --form "salary_range_to=38"\
-    --form "current_job_status=employed"\
+    --form "current_job_status=unemployed"\
     --form "years_of_experience=8"\
     --form "education_level=n"\
-    --form "job_level=manager"\
+    --form "job_level=director"\
     --form "job_types[]=r"\
     --form "job_roles[]=w"\
     --form "work_cities[]=t"\
@@ -5230,7 +5230,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "social_links[portfolio]=m"\
     --form "social_links[twitter]=i"\
     --form "skills[][name]=y"\
-    --form "skills[][level]=intermediate"\
+    --form "skills[][level]=advanced"\
     --form "education_history[][certificate_type]=v"\
     --form "education_history[][university]=d"\
     --form "education_history[][faculty]=l"\
@@ -5244,9 +5244,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "work_experience[][job_roles][]=u"\
     --form "work_experience[][from_date]=jwvlxjklqppwqbew"\
     --form "work_experience[][to_date]=tnnoqitpxntltcvi"\
-    --form "work_experience[][is_currently_working]="\
+    --form "work_experience[][is_currently_working]=1"\
     --form "work_experience[][description]=Eius et animi quos velit et."\
-    --form "resume=@C:\Users\rog\AppData\Local\Temp\php9F4F.tmp" </code></pre></div>
+    --form "resume=@C:\Users\rog\AppData\Local\Temp\php95B5.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -5265,7 +5265,7 @@ body.append('first_name', 'b');
 body.append('last_name', 'n');
 body.append('full_name', 'g');
 body.append('image', 'z');
-body.append('gender', 'male');
+body.append('gender', 'female');
 body.append('nationality', 'm');
 body.append('city', 'i');
 body.append('location', 'y');
@@ -5275,10 +5275,10 @@ body.append('date_of_birth', 'pwlvqwrsitcpscql');
 body.append('marital_status', 'divorced');
 body.append('salary_range_from', '16');
 body.append('salary_range_to', '38');
-body.append('current_job_status', 'employed');
+body.append('current_job_status', 'unemployed');
 body.append('years_of_experience', '8');
 body.append('education_level', 'n');
-body.append('job_level', 'manager');
+body.append('job_level', 'director');
 body.append('job_types[]', 'r');
 body.append('job_roles[]', 'w');
 body.append('work_cities[]', 't');
@@ -5291,7 +5291,7 @@ body.append('social_links[github]', 'z');
 body.append('social_links[portfolio]', 'm');
 body.append('social_links[twitter]', 'i');
 body.append('skills[][name]', 'y');
-body.append('skills[][level]', 'intermediate');
+body.append('skills[][level]', 'advanced');
 body.append('education_history[][certificate_type]', 'v');
 body.append('education_history[][university]', 'd');
 body.append('education_history[][faculty]', 'l');
@@ -5305,7 +5305,7 @@ body.append('work_experience[][company_name]', 't');
 body.append('work_experience[][job_roles][]', 'u');
 body.append('work_experience[][from_date]', 'jwvlxjklqppwqbew');
 body.append('work_experience[][to_date]', 'tnnoqitpxntltcvi');
-body.append('work_experience[][is_currently_working]', '');
+body.append('work_experience[][is_currently_working]', '1');
 body.append('work_experience[][description]', 'Eius et animi quos velit et.');
 body.append('resume', document.querySelector('input[name="resume"]').files[0]);
 
@@ -5458,10 +5458,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="gender"                data-endpoint="PUTapi-job-seeker-profile"
-               value="male"
+               value="female"
                data-component="body">
     <br>
-<p>Example: <code>male</code></p>
+<p>Example: <code>female</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>male</code></li> <li><code>female</code></li> <li><code>other</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5582,10 +5582,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="current_job_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="employed"
+               value="unemployed"
                data-component="body">
     <br>
-<p>Example: <code>employed</code></p>
+<p>Example: <code>unemployed</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>employed</code></li> <li><code>unemployed</code></li> <li><code>freelancing</code></li> <li><code>student</code></li> <li><code>open_to_work</code></li></ul>
         </div>
@@ -5620,10 +5620,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="manager"
+               value="director"
                data-component="body">
     <br>
-<p>Example: <code>manager</code></p>
+<p>Example: <code>director</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>entry</code></li> <li><code>junior</code></li> <li><code>mid</code></li> <li><code>senior</code></li> <li><code>lead</code></li> <li><code>manager</code></li> <li><code>director</code></li> <li><code>executive</code></li></ul>
         </div>
@@ -5816,10 +5816,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="skills.0.level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="intermediate"
+               value="advanced"
                data-component="body">
     <br>
-<p>Example: <code>intermediate</code></p>
+<p>Example: <code>advanced</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>beginner</code></li> <li><code>intermediate</code></li> <li><code>advanced</code></li> <li><code>expert</code></li></ul>
                     </div>
@@ -6025,7 +6025,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -6051,7 +6051,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\rog\AppData\Local\Temp\php9F4F.tmp</code></p>
+<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\rog\AppData\Local\Temp\php95B5.tmp</code></p>
         </div>
         </form>
 
@@ -6092,7 +6092,7 @@ Retry failed: <code>POST /job-seeker/resume/retry-analysis</code></p>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@C:\Users\rog\AppData\Local\Temp\php9F60.tmp" </code></pre></div>
+    --form "resume=@C:\Users\rog\AppData\Local\Temp\php95C6.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6263,7 +6263,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php9F60.tmp</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php95C6.tmp</code></p>
         </div>
         </form>
 
@@ -6627,7 +6627,7 @@ This endpoint is similar to <code>/upload</code> but accepts field name <code>cv
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cv=@C:\Users\rog\AppData\Local\Temp\php9F73.tmp" </code></pre></div>
+    --form "cv=@C:\Users\rog\AppData\Local\Temp\php95E9.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6786,7 +6786,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php9F73.tmp</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php95E9.tmp</code></p>
         </div>
         </form>
 
@@ -7608,7 +7608,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "positions_suited_for[]=architecto"\
     --form "notice_period=architecto"\
     --form "expected_salary=architecto"\
-    --form "resume=@C:\Users\rog\AppData\Local\Temp\php9FB4.tmp" </code></pre></div>
+    --form "resume=@C:\Users\rog\AppData\Local\Temp\php961A.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -7797,7 +7797,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>C:\Users\rog\AppData\Local\Temp\php9FB4.tmp</code></p>
+<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>C:\Users\rog\AppData\Local\Temp\php961A.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>education</code></b>&nbsp;&nbsp;
@@ -9072,7 +9072,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "document=@C:\Users\rog\AppData\Local\Temp\phpA062.tmp" </code></pre></div>
+    --form "document=@C:\Users\rog\AppData\Local\Temp\php968A.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9221,7 +9221,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpA062.tmp</code></p>
+<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php968A.tmp</code></p>
         </div>
         </form>
 
@@ -11998,7 +11998,7 @@ Accepts JPEG, PNG, WebP; max 2 MB. Any previously uploaded logo is automatically
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "logo=@C:\Users\rog\AppData\Local\Temp\phpA0C3.tmp" </code></pre></div>
+    --form "logo=@C:\Users\rog\AppData\Local\Temp\php96EB.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -12148,7 +12148,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>The logo image file. Accepted: jpeg, png, webp. Max 2 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpA0C3.tmp</code></p>
+<p>The logo image file. Accepted: jpeg, png, webp. Max 2 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php96EB.tmp</code></p>
         </div>
         </form>
 
@@ -12171,7 +12171,7 @@ Accepts JPEG, PNG, WebP; max 4 MB. Any previously uploaded cover image is automa
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cover_image=@C:\Users\rog\AppData\Local\Temp\phpA0D6.tmp" </code></pre></div>
+    --form "cover_image=@C:\Users\rog\AppData\Local\Temp\php96EE.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -12321,7 +12321,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>The cover image file. Accepted: jpeg, png, webp. Max 4 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\phpA0D6.tmp</code></p>
+<p>The cover image file. Accepted: jpeg, png, webp. Max 4 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php96EE.tmp</code></p>
         </div>
         </form>
 
@@ -16156,7 +16156,7 @@ State University,careers@university.edu,State University,university</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "file=@C:\Users\rog\AppData\Local\Temp\phpA175.tmp" </code></pre></div>
+    --form "file=@C:\Users\rog\AppData\Local\Temp\php979C.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -16307,7 +16307,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>CSV file, max 2 MB. Required columns: name, email, company_name. Example: <code>C:\Users\rog\AppData\Local\Temp\phpA175.tmp</code></p>
+<p>CSV file, max 2 MB. Required columns: name, email, company_name. Example: <code>C:\Users\rog\AppData\Local\Temp\php979C.tmp</code></p>
         </div>
         </form>
 
