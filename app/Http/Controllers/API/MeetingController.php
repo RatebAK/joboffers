@@ -15,6 +15,34 @@ class MeetingController extends Controller
     public function __construct(private MeetingService $meetingService) {}
 
     /**
+     * Get participant profile info including avatar.
+     */
+    private function participantInfo(?User $user): ?array
+    {
+        if (!$user) {
+            return null;
+        }
+
+        $info = [
+            'id' => (string) $user->_id,
+            'name' => $user->name,
+            'email' => $user->email,
+        ];
+
+        if ($user->hasRole('employer')) {
+            $company = \App\Models\CompanyProfile::where('user_id', (string) $user->_id)->first();
+            $info['company_name'] = $company->company_name ?? null;
+            $info['avatar'] = $company->logo ?? null;
+        } else {
+            $profile = $user->jobSeekerProfile;
+            $info['company_name'] = null;
+            $info['avatar'] = $profile->image ?? null;
+        }
+
+        return $info;
+    }
+
+    /**
      * Create a meeting invitation
      *
      * Creates a new meeting between the authenticated user and an invitee with the opposite role.
@@ -160,11 +188,7 @@ class MeetingController extends Controller
                 : User::find($meeting->organizer_id);
 
             $meetingData = $meeting->toArray();
-            $meetingData['participant'] = $otherParticipant ? [
-                'name' => $otherParticipant->name,
-                'email' => $otherParticipant->email,
-                'company_name' => $otherParticipant->company_name ?? null,
-            ] : null;
+            $meetingData['participant'] = $this->participantInfo($otherParticipant);
 
             return $meetingData;
         });
@@ -212,11 +236,7 @@ class MeetingController extends Controller
             : User::find($meeting->organizer_id);
 
         $meetingData = $meeting->toArray();
-        $meetingData['participant'] = $otherParticipant ? [
-            'name' => $otherParticipant->name,
-            'email' => $otherParticipant->email,
-            'company_name' => $otherParticipant->company_name ?? null,
-        ] : null;
+        $meetingData['participant'] = $this->participantInfo($otherParticipant);
 
         return response()->json(['meeting' => $meetingData]);
     }
@@ -261,6 +281,8 @@ class MeetingController extends Controller
                 ? User::find($meeting->invitee_id)
                 : User::find($meeting->organizer_id);
 
+            $info = $this->participantInfo($otherParticipant);
+
             return [
                 'id' => (string) $meeting->_id,
                 'title' => $meeting->title,
@@ -268,7 +290,7 @@ class MeetingController extends Controller
                 'proposed_start_time' => $meeting->proposed_start_time,
                 'proposed_duration_minutes' => $meeting->proposed_duration_minutes,
                 'meeting_type' => $meeting->meeting_type,
-                'participant_name' => $otherParticipant->name ?? null,
+                'participant' => $info,
             ];
         });
 
