@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AdminMeetingController;
+use App\Http\Controllers\API\AdminUserController;
 use App\Http\Controllers\API\AdminReanalysisController;
 use App\Http\Controllers\API\AdminReportingController;
 use App\Http\Controllers\API\AnalyticsController;
@@ -190,6 +191,11 @@ Route::middleware(['jwt.auth', 'role:admin'])->prefix('admin')->group(function (
 
     // Audit log viewer
     Route::get('audit-log', [AuditLogController::class, 'index']);
+
+    // User management (admin actions)
+    Route::post('users', [AdminUserController::class, 'createUser']);
+    Route::delete('users/{id}', [AdminUserController::class, 'deleteUser']);
+    Route::put('users/{id}/password', [AdminUserController::class, 'changePassword']);
 
     // Meetings
     Route::get('meetings',      [AdminMeetingController::class, 'index']);
