@@ -1,0 +1,43 @@
+meta {
+  name: Employer analytics - scoped to employer's jobs
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/employer/analytics
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 401 Response
+  
+  request: {
+    url: {{baseUrl}}/api/employer/analytics
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "error": "Unauthorized",
+          "message": "Invalid authentication token signature"
+        }
+      '''
+    }
+  }
+}

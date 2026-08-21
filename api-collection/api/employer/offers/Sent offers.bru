@@ -1,0 +1,58 @@
+meta {
+  name: Sent offers
+  type: http-request
+  seq: 2
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/employer/offers
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/employer/offers
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "offers": {
+            "data": [
+              {
+                "id": "664f1a2b3c4d5e6f7a8b9c0f",
+                "status": "pending",
+                "message": "We think you'd be a great fit.",
+                "job_seeker_name": "Jane Smith",
+                "job_post_title": "Senior Laravel Developer"
+              }
+            ],
+            "current_page": 1,
+            "per_page": 15,
+            "total": 1,
+            "total_pages": 1,
+            "next_page": null,
+            "prev_page": null
+          }
+        }
+      '''
+    }
+  }
+}

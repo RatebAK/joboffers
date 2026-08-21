@@ -1,0 +1,118 @@
+meta {
+  name: Match resume to available jobs
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/job-seeker/match-resume-to-jobs
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/match-resume-to-jobs
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "matches_found": 5,
+          "jobs": [
+            {
+              "_id": "664f1a2b3c4d5e6f7a8b9c0d",
+              "job_id": "JOB-0001",
+              "title": "Senior Laravel Developer",
+              "company_name": "Acme Corp",
+              "city": "Damascus",
+              "job_type": "full_time",
+              "is_active": true,
+              "matched_skills": [
+                "php",
+                "laravel"
+              ],
+              "matched_skills_score": 3
+            }
+          ]
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/match-resume-to-jobs
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "No CV found on your profile. Please upload and analyze your CV first."
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 502 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/match-resume-to-jobs
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 502
+      text: Bad Gateway
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Resume matching service unavailable"
+        }
+      '''
+    }
+  }
+}

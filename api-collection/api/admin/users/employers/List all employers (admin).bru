@@ -1,0 +1,61 @@
+meta {
+  name: List all employers (admin)
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/admin/users/employers
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~per_page: 
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/users/employers
+    method: GET
+    mode: none
+    params:query: {
+      ~per_page: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "data": [
+            {
+              "id": "...",
+              "name": "...",
+              "profile": {}
+            }
+          ],
+          "current_page": 1,
+          "per_page": 15,
+          "total": 3,
+          "total_pages": 1,
+          "next_page": null,
+          "prev_page": null
+        }
+      '''
+    }
+  }
+}

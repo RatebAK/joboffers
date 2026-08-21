@@ -1,0 +1,122 @@
+meta {
+  name: Search jobs
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/jobs/search
+  body: json
+  auth: inherit
+}
+
+params:query {
+  ~keyword: 
+  ~location: 
+  ~job_type: 
+  ~category: 
+  ~min_salary: 
+}
+
+body:json {
+  {
+    "keyword": "",
+    "location": "",
+    "job_type": "",
+    "category": "",
+    "min_salary": ""
+  }
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/jobs/search
+    method: GET
+    mode: json
+    params:query: {
+      ~keyword: 
+      ~location: 
+      ~job_type: 
+      ~category: 
+      ~min_salary: 
+    }
+  
+    body:json: {
+      {
+        "keyword": "",
+        "location": "",
+        "job_type": "",
+        "category": "",
+        "min_salary": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "jobs": {
+            "data": [
+              {
+                "id": "664f1a2b3c4d5e6f7a8b9c0d",
+                "title": "Senior React Developer",
+                "company_name": "Acme Corp"
+              }
+            ],
+            "current_page": 1,
+            "per_page": 15,
+            "total": 1,
+            "total_pages": 1,
+            "next_page": null,
+            "prev_page": null
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/jobs/search
+    method: GET
+    mode: json
+    params:query: {
+      ~keyword: 
+      ~location: 
+      ~job_type: 
+      ~category: 
+      ~min_salary: 
+    }
+  
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "keyword": "b",
+        "location": "n",
+        "job_type": "full_time",
+        "category": "g",
+        "min_salary": 12
+      }
+    }
+  }
+}

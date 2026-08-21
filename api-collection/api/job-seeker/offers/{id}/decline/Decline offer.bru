@@ -1,0 +1,106 @@
+meta {
+  name: Decline offer
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/job-seeker/offers/:id/decline
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/offers/:id/decline
+    method: POST
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Offer declined successfully",
+          "offer": {
+            "id": "664f1a2b3c4d5e6f7a8b9c0f",
+            "status": "declined"
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/offers/:id/decline
+    method: POST
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Forbidden"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/offers/:id/decline
+    method: POST
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Offer not found"
+        }
+      '''
+    }
+  }
+}

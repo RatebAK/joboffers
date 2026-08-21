@@ -1,0 +1,154 @@
+meta {
+  name: Update private company info
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: PUT
+  url: {{baseUrl}}/api/employer/company/private
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "expose_to_applicants": false,
+    "address": "",
+    "industry_tags": [],
+    "founded_year": 0,
+    "website": "",
+    "social_media": {
+      "instagram": "",
+      "telegram": "",
+      "twitter": "",
+      "facebook": "",
+      "behance": "",
+      "github": "",
+      "linkedin": ""
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  
+  request: {
+    url: {{baseUrl}}/api/employer/company/private
+    method: PUT
+    mode: json
+    body:json: {
+      {
+        "expose_to_applicants": false,
+        "address": "",
+        "industry_tags": [],
+        "founded_year": 0,
+        "website": "",
+        "social_media": {
+          "instagram": "",
+          "telegram": "",
+          "twitter": "",
+          "facebook": "",
+          "behance": "",
+          "github": "",
+          "linkedin": ""
+        }
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "No company profile found. Create one first."
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  
+  request: {
+    url: {{baseUrl}}/api/employer/company/private
+    method: PUT
+    mode: json
+    body:json: {
+      {
+        "expose_to_applicants": false,
+        "address": "",
+        "industry_tags": [],
+        "founded_year": 0,
+        "website": "",
+        "social_media": {
+          "instagram": "",
+          "telegram": "",
+          "twitter": "",
+          "facebook": "",
+          "behance": "",
+          "github": "",
+          "linkedin": ""
+        }
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "errors": {}
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/employer/company/private
+    method: PUT
+    mode: json
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "expose_to_applicants": false,
+        "address": "Mazzeh, Damascus",
+        "industry_tags": [
+          "Software Development",
+          "IT Consulting"
+        ],
+        "founded_year": 2018,
+        "website": "https://tammam.co",
+        "social_media": []
+      }
+    }
+  }
+}

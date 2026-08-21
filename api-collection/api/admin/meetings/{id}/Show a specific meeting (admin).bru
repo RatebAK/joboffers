@@ -1,0 +1,72 @@
+meta {
+  name: Show a specific meeting (admin)
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/admin/meetings/:id
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/meetings/:id
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "meeting": {}
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/meetings/:id
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Meeting not found"
+        }
+      '''
+    }
+  }
+}

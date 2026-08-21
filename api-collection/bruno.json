@@ -1,5 +1,9 @@
 {
   "version": "1",
-  "name": "Job Platform API",
-  "type": "collection"
+  "name": "Laravel API Documentation",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
 }

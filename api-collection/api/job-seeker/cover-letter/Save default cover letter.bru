@@ -1,0 +1,73 @@
+meta {
+  name: Save default cover letter
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: PUT
+  url: {{baseUrl}}/api/job-seeker/cover-letter
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "cover_letter": ""
+  }
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/cover-letter
+    method: PUT
+    mode: json
+    body:json: {
+      {
+        "cover_letter": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Default cover letter saved",
+          "default_cover_letter": "..."
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/cover-letter
+    method: PUT
+    mode: json
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "cover_letter": "architecto"
+      }
+    }
+  }
+}

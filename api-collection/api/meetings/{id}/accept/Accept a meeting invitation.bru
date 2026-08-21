@@ -1,0 +1,184 @@
+meta {
+  name: Accept a meeting invitation
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/meetings/:id/accept
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "meet_link": ""
+  }
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id/accept
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "meet_link": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "meeting": {
+            "_id": "664f1a2b3c4d5e6f7a8b9c0f",
+            "title": "Initial Interview",
+            "status": "accepted",
+            "meeting_type": "video_call",
+            "meet_link": "https://meet.google.com/abc-defg-hij"
+          },
+          "google_meet_warning": null
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id/accept
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "meet_link": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Forbidden"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id/accept
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "meet_link": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Meeting not found"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id/accept
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "meet_link": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "This meeting cannot be accepted in its current state"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id/accept
+    method: POST
+    mode: json
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "meet_link": "https://zoom.us/j/123456"
+      }
+    }
+  }
+}

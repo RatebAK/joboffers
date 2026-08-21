@@ -1,0 +1,42 @@
+meta {
+  name: Delete education history
+  type: http-request
+  seq: 2
+}
+
+http {
+  method: DELETE
+  url: {{baseUrl}}/api/job-seeker/profile/education
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/profile/education
+    method: DELETE
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Education history deleted successfully"
+        }
+      '''
+    }
+  }
+}

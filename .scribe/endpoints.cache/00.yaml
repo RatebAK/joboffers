@@ -794,7 +794,7 @@ endpoints:
         name: job_type
         description: ''
         required: false
-        example: part_time
+        example: full_time
         type: string
         enumValues:
           - full_time
@@ -829,7 +829,7 @@ endpoints:
     cleanBodyParameters:
       keyword: b
       location: 'n'
-      job_type: part_time
+      job_type: full_time
       category: g
       min_salary: 12
     fileParameters: []
@@ -966,11 +966,8 @@ endpoints:
     responses:
       -
         custom: []
-        status: 500
-        content: |-
-          {
-              "message": "Server Error"
-          }
+        status: 200
+        content: '{"data":[],"current_page":1,"per_page":10,"total":0,"total_pages":1,"next_page":null,"prev_page":null}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -1031,11 +1028,8 @@ endpoints:
         description: ''
       -
         custom: []
-        status: 500
-        content: |-
-          {
-              "message": "Server Error"
-          }
+        status: 404
+        content: '{"message":"Company profile not found"}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -2456,7 +2450,7 @@ endpoints:
         name: gender
         description: ''
         required: false
-        example: female
+        example: other
         type: string
         enumValues:
           - male
@@ -2537,7 +2531,7 @@ endpoints:
         name: marital_status
         description: ''
         required: false
-        example: divorced
+        example: prefer_not_to_say
         type: string
         enumValues:
           - single
@@ -2575,7 +2569,7 @@ endpoints:
         name: current_job_status
         description: ''
         required: false
-        example: unemployed
+        example: open_to_work
         type: string
         enumValues:
           - employed
@@ -2701,7 +2695,7 @@ endpoints:
         name: is_actively_seeking
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -3003,17 +2997,17 @@ endpoints:
       last_name: 'n'
       full_name: g
       image: z
-      gender: female
+      gender: other
       nationality: m
       city: i
       location: 'y'
       address: v
       phone: dljnikhwaykcmyuw
       date_of_birth: pwlvqwrsitcpscql
-      marital_status: divorced
+      marital_status: prefer_not_to_say
       salary_range_from: 16
       salary_range_to: 38
-      current_job_status: unemployed
+      current_job_status: open_to_work
       years_of_experience: 8
       education_level: 'n'
       job_level: director
@@ -3026,7 +3020,7 @@ endpoints:
       current_job_title: u
       experience_summary: architecto
       expected_salary: 39
-      is_actively_seeking: true
+      is_actively_seeking: false
       social_links:
         linkedin: g
         github: z
@@ -7959,6 +7953,269 @@ endpoints:
   -
     custom: []
     httpMethods:
+      - POST
+    uri: api/admin/users
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Create user (admin)'
+      description: |-
+        Creates a new user account and assigns a role. If the role is `employer`,
+        the account is immediately activated (no approval required).
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Display name. Min 2, max 100 chars.'
+        required: true
+        example: 'John Doe'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      email:
+        custom: []
+        name: email
+        description: 'Valid email address.'
+        required: true
+        example: john@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      password:
+        custom: []
+        name: password
+        description: 'Min 8 chars, must include uppercase, lowercase, digit, and special character.'
+        required: true
+        example: Secret@123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      role:
+        custom: []
+        name: role
+        description: 'Role to assign: admin, employer, or employee.'
+        required: true
+        example: employer
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      name: 'John Doe'
+      email: john@example.com
+      password: Secret@123
+      role: employer
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "message": "User created successfully.",
+            "user": {
+              "id": "664f1a2b3c4d5e6f7a8b9c0d",
+              "name": "John Doe",
+              "email": "john@example.com",
+              "roles": ["employer"],
+              "is_employer": true
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{ "email": ["The email has already been taken."] }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/admin/users/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete user (admin)'
+      description: |-
+        Permanently deletes a user account and all associated data (profile, employer record).
+        Cannot delete your own account.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The user ID to delete.'
+        required: true
+        example: 664f1a2b3c4d5e6f7a8b9c0d
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 664f1a2b3c4d5e6f7a8b9c0d
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{ "message": "User deleted successfully." }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: '{ "message": "You cannot delete your own account." }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "User not found." }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+    uri: 'api/admin/users/{id}/password'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Change user password (admin)'
+      description: 'Sets a new password for any user account. No knowledge of the current password required.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The user ID.'
+        required: true
+        example: 664f1a2b3c4d5e6f7a8b9c0d
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 664f1a2b3c4d5e6f7a8b9c0d
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      password:
+        custom: []
+        name: password
+        description: 'New password. Min 8 chars, must include uppercase, lowercase, digit, and special character.'
+        required: true
+        example: NewPass@456
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      password_confirmation:
+        custom: []
+        name: password_confirmation
+        description: 'Must match password.'
+        required: true
+        example: NewPass@456
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      password: NewPass@456
+      password_confirmation: NewPass@456
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{ "message": "Password updated successfully." }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{ "message": "User not found." }'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{ "password": ["The password confirmation does not match."] }'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
       - GET
     uri: api/admin/meetings
     metadata:
@@ -8463,7 +8720,7 @@ endpoints:
         name: from_date
         description: 'Must be a valid date in the format <code>Y-m-d</code>.'
         required: false
-        example: '2026-08-20'
+        example: '2026-08-21'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -8474,7 +8731,7 @@ endpoints:
         name: to_date
         description: 'Must be a valid date in the format <code>Y-m-d</code>.'
         required: false
-        example: '2026-08-20'
+        example: '2026-08-21'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -8485,7 +8742,7 @@ endpoints:
         name: sort_direction
         description: ''
         required: false
-        example: asc
+        example: desc
         type: string
         enumValues:
           - asc
@@ -8506,9 +8763,9 @@ endpoints:
         deprecated: false
     cleanBodyParameters:
       status: architecto
-      from_date: '2026-08-20'
-      to_date: '2026-08-20'
-      sort_direction: asc
+      from_date: '2026-08-21'
+      to_date: '2026-08-21'
+      sort_direction: desc
       per_page: 22
     fileParameters: []
     responses:

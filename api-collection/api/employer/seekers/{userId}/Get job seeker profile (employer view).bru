@@ -1,0 +1,117 @@
+meta {
+  name: Get job seeker profile (employer view)
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/employer/seekers/:userId
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/employer/seekers/:userId
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+          "name": "Jane Smith",
+          "image": "https://res.cloudinary.com/.../photo.jpg",
+          "current_job_title": "Frontend Developer",
+          "current_job_status": "employed",
+          "job_level": "senior",
+          "job_types": [
+            "full_time",
+            "remote"
+          ],
+          "job_roles": [
+            "frontend",
+            "fullstack"
+          ],
+          "years_of_experience": 5,
+          "education_level": "bachelor",
+          "expected_salary": 3000,
+          "salary_range_from": 2500,
+          "salary_range_to": 4000,
+          "is_actively_seeking": true,
+          "work_cities": [
+            "Damascus",
+            "Remote"
+          ],
+          "city": "Damascus",
+          "social_links": {
+            "linkedin": "https://linkedin.com/in/jane",
+            "github": null
+          },
+          "skills": [],
+          "education_history": [],
+          "work_experience": [],
+          "ats_score": 82,
+          "ai_skills": [
+            "React",
+            "TypeScript"
+          ],
+          "ai_summary": "Experienced frontend developer...",
+          "ai_work_history": [],
+          "ai_education_history": [],
+          "ai_languages": [
+            "Arabic",
+            "English"
+          ],
+          "ai_projects": [],
+          "ai_overall_evaluation": "Strong candidate"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  
+  request: {
+    url: {{baseUrl}}/api/employer/seekers/:userId
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Job seeker not found"
+        }
+      '''
+    }
+  }
+}

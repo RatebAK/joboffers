@@ -1,0 +1,52 @@
+meta {
+  name: List pending employer applications
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/admin/employers
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/employers
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        [
+          {
+            "id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+            "status": "pending",
+            "document_name": "business_license.pdf",
+            "user": {
+              "id": "664f1a2b3c4d5e6f7a8b9c0e",
+              "name": "John Employer",
+              "email": "john@corp.com"
+            }
+          }
+        ]
+      '''
+    }
+  }
+}

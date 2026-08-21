@@ -1,0 +1,104 @@
+meta {
+  name: Anonymized talent market report
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/admin/reports/talent
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~limit: 
+  ~industry: 
+  ~format: 
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/reports/talent
+    method: GET
+    mode: none
+    params:query: {
+      ~limit: 
+      ~industry: 
+      ~format: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "profile_count": 142,
+          "top_skills": [
+            {
+              "skill": "PHP",
+              "count": 87
+            },
+            {
+              "skill": "Laravel",
+              "count": 64
+            }
+          ],
+          "ats_stats": {
+            "average": 71.4,
+            "median": 73,
+            "minimum": 12,
+            "maximum": 98
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/reports/talent
+    method: GET
+    mode: none
+    params:query: {
+      ~limit: 
+      ~industry: 
+      ~format: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Insufficient data for anonymized report"
+        }
+      '''
+    }
+  }
+}

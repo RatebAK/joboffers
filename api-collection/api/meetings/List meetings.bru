@@ -1,0 +1,131 @@
+meta {
+  name: List meetings
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/meetings
+  body: json
+  auth: inherit
+}
+
+params:query {
+  ~status: 
+  ~from_date: 
+  ~to_date: 
+  ~sort_direction: 
+  ~per_page: 
+}
+
+body:json {
+  {
+    "status": "",
+    "from_date": "",
+    "to_date": "",
+    "sort_direction": "",
+    "per_page": 0
+  }
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings
+    method: GET
+    mode: json
+    params:query: {
+      ~status: 
+      ~from_date: 
+      ~to_date: 
+      ~sort_direction: 
+      ~per_page: 
+    }
+  
+    body:json: {
+      {
+        "status": "",
+        "from_date": "",
+        "to_date": "",
+        "sort_direction": "",
+        "per_page": 0
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "data": [
+            {
+              "_id": "664f1a2b3c4d5e6f7a8b9c0f",
+              "title": "Initial Interview",
+              "meeting_type": "video_call",
+              "proposed_date": "2025-02-15",
+              "proposed_start_time": "14:00",
+              "proposed_duration_minutes": 60,
+              "status": "pending",
+              "participant": {
+                "id": "664f1a2b3c4d5e6f7a8b9c0e",
+                "name": "Jane Smith",
+                "email": "jane@example.com",
+                "company_name": null,
+                "avatar": "https://res.cloudinary.com/xxx/image/upload/profile.jpg"
+              }
+            }
+          ],
+          "current_page": 1,
+          "per_page": 15,
+          "total": 1,
+          "total_pages": 1,
+          "next_page": null,
+          "prev_page": null
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/meetings
+    method: GET
+    mode: json
+    params:query: {
+      ~status: 
+      ~from_date: 
+      ~to_date: 
+      ~sort_direction: 
+      ~per_page: 
+    }
+  
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "status": "architecto",
+        "from_date": "2026-08-21",
+        "to_date": "2026-08-21",
+        "sort_direction": "desc",
+        "per_page": 22
+      }
+    }
+  }
+}

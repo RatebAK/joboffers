@@ -1,0 +1,58 @@
+meta {
+  name: Legacy update method - DEPRECATED
+  type: http-request
+  seq: 2
+}
+
+http {
+  method: PUT
+  url: {{baseUrl}}/api/job-seeker/profile
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  first_name: 
+  last_name: 
+  full_name: 
+  image: 
+  gender: 
+  nationality: 
+  city: 
+  location: 
+  address: 
+  phone: 
+  date_of_birth: 
+  marital_status: 
+  salary_range_from: 
+  salary_range_to: 
+  current_job_status: 
+  years_of_experience: 
+  education_level: 
+  job_level: 
+  job_types: 
+  job_roles: 
+  work_cities: 
+  current_job_title: 
+  experience_summary: 
+  expected_salary: 
+  is_actively_seeking: 
+  social_links: 
+  skills: 
+  education_history: 
+  work_experience: 
+  resume: 
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/profile
+    method: PUT
+    mode: multipartForm
+    headers: {
+      Content-Type: multipart/form-data
+    }
+  }
+}

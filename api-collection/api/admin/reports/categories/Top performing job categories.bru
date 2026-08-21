@@ -1,0 +1,58 @@
+meta {
+  name: Top performing job categories
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/admin/reports/categories
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~sort_by: 
+  ~limit: 
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/reports/categories
+    method: GET
+    mode: none
+    params:query: {
+      ~sort_by: 
+      ~limit: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "sort_by": "applications",
+          "categories": [
+            {
+              "category": "Technology",
+              "post_count": 42,
+              "application_count": 310
+            }
+          ]
+        }
+      '''
+    }
+  }
+}

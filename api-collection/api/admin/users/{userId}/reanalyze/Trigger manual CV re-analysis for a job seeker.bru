@@ -1,0 +1,104 @@
+meta {
+  name: Trigger manual CV re-analysis for a job seeker
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/admin/users/:userId/reanalyze
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/users/:userId/reanalyze
+    method: POST
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "CV re-analysis triggered successfully.",
+          "user_id": "664f1a2b3c4d5e6f7a8b9c0d",
+          "analysis_status": "processing"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/users/:userId/reanalyze
+    method: POST
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "User not found"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/users/:userId/reanalyze
+    method: POST
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "No CV file found for this user"
+        }
+      '''
+    }
+  }
+}

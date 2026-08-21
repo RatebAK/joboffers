@@ -1,0 +1,42 @@
+meta {
+  name: Initiate Google OAuth connection
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/google/connect
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/google/connect
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "auth_url": "https://accounts.google.com/o/oauth2/v2/auth?..."
+        }
+      '''
+    }
+  }
+}

@@ -1,0 +1,99 @@
+meta {
+  name: Update public company info
+  type: http-request
+  seq: 2
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/employer/company
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "",
+    "description": "",
+    "industry": "",
+    "company_size": "",
+    "city": "",
+    "country": "",
+    "phone_main": "",
+    "phone_extra": "",
+    "phone_visible": false,
+    "email": ""
+  }
+}
+
+example {
+  name: 422 Response
+  
+  request: {
+    url: {{baseUrl}}/api/employer/company
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "name": "",
+        "description": "",
+        "industry": "",
+        "company_size": "",
+        "city": "",
+        "country": "",
+        "phone_main": "",
+        "phone_extra": "",
+        "phone_visible": false,
+        "email": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "errors": {}
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/employer/company
+    method: POST
+    mode: json
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "name": "Tammam company",
+        "description": "We build software.",
+        "industry": "Information Technology Services",
+        "company_size": "less_than_10",
+        "city": "Damascus",
+        "country": "Syria",
+        "phone_main": "0932444357",
+        "phone_extra": "0911000000",
+        "phone_visible": false,
+        "email": "contact@tammam.co"
+      }
+    }
+  }
+}

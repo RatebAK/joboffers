@@ -1,0 +1,104 @@
+meta {
+  name: Retry failed resume analysis
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/job-seeker/resume/retry-analysis
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/resume/retry-analysis
+    method: POST
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Analysis retry started successfully",
+          "analysis_status": "processing",
+          "resume_url": "https://res.cloudinary.com/.../resume.pdf"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/resume/retry-analysis
+    method: POST
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "No resume found or analysis is not in error state"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/resume/retry-analysis
+    method: POST
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "No profile or resume found"
+        }
+      '''
+    }
+  }
+}

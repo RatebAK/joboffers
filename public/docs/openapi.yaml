@@ -1183,7 +1183,7 @@ paths:
                 job_type:
                   type: string
                   description: ''
-                  example: part_time
+                  example: full_time
                   enum:
                     - full_time
                     - part_time
@@ -1277,18 +1277,44 @@ paths:
             description: 'Page number.'
             example: 1
       responses:
-        500:
+        200:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  message: 'Server Error'
+                  data: []
+                  current_page: 1
+                  per_page: 10
+                  total: 0
+                  total_pages: 1
+                  next_page: null
+                  prev_page: null
                 properties:
-                  message:
+                  data:
+                    type: array
+                    example: []
+                  current_page:
+                    type: integer
+                    example: 1
+                  per_page:
+                    type: integer
+                    example: 10
+                  total:
+                    type: integer
+                    example: 0
+                  total_pages:
+                    type: integer
+                    example: 1
+                  next_page:
                     type: string
-                    example: 'Server Error'
+                    example: null
+                    nullable: true
+                  prev_page:
+                    type: string
+                    example: null
+                    nullable: true
       tags:
         - Endpoints
       security: []
@@ -1304,25 +1330,25 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                example:
-                  message: 'Company profile not found'
-                properties:
-                  message:
-                    type: string
-                    example: 'Company profile not found'
-        500:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Server Error'
-                properties:
-                  message:
-                    type: string
-                    example: 'Server Error'
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Company profile not found'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Company profile not found'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Company profile not found'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Company profile not found'
       tags:
         - Endpoints
       security: []
@@ -1741,7 +1767,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: female
+                  example: other
                   enum:
                     - male
                     - female
@@ -1781,7 +1807,7 @@ paths:
                 marital_status:
                   type: string
                   description: ''
-                  example: divorced
+                  example: prefer_not_to_say
                   enum:
                     - single
                     - married
@@ -1802,7 +1828,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: unemployed
+                  example: open_to_work
                   enum:
                     - employed
                     - unemployed
@@ -1873,7 +1899,7 @@ paths:
                 is_actively_seeking:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 social_links:
                   type: object
                   description: 'Social Links (nested object).'
@@ -6376,6 +6402,98 @@ paths:
                     nullable: true
       tags:
         - Endpoints
+    post:
+      summary: 'Create user (admin)'
+      operationId: createUseradmin
+      description: "Creates a new user account and assigns a role. If the role is `employer`,\nthe account is immediately activated (no approval required)."
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User created successfully.'
+                  user:
+                    id: 664f1a2b3c4d5e6f7a8b9c0d
+                    name: 'John Doe'
+                    email: john@example.com
+                    roles:
+                      - employer
+                    is_employer: true
+                properties:
+                  message:
+                    type: string
+                    example: 'User created successfully.'
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 664f1a2b3c4d5e6f7a8b9c0d
+                      name:
+                        type: string
+                        example: 'John Doe'
+                      email:
+                        type: string
+                        example: john@example.com
+                      roles:
+                        type: array
+                        example:
+                          - employer
+                        items:
+                          type: string
+                      is_employer:
+                        type: boolean
+                        example: true
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  email:
+                    - 'The email has already been taken.'
+                properties:
+                  email:
+                    type: array
+                    example:
+                      - 'The email has already been taken.'
+                    items:
+                      type: string
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Display name. Min 2, max 100 chars.'
+                  example: 'John Doe'
+                email:
+                  type: string
+                  description: 'Valid email address.'
+                  example: john@example.com
+                password:
+                  type: string
+                  description: 'Min 8 chars, must include uppercase, lowercase, digit, and special character.'
+                  example: Secret@123
+                role:
+                  type: string
+                  description: 'Role to assign: admin, employer, or employee.'
+                  example: employer
+              required:
+                - name
+                - email
+                - password
+                - role
   /api/admin/users/seekers:
     get:
       summary: 'List all job seekers (admin)'
@@ -7326,6 +7444,136 @@ paths:
                     nullable: true
       tags:
         - Endpoints
+  '/api/admin/users/{id}':
+    delete:
+      summary: 'Delete user (admin)'
+      operationId: deleteUseradmin
+      description: "Permanently deletes a user account and all associated data (profile, employer record).\nCannot delete your own account."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User deleted successfully.'
+                properties:
+                  message:
+                    type: string
+                    example: 'User deleted successfully.'
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You cannot delete your own account.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You cannot delete your own account.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User not found.'
+                properties:
+                  message:
+                    type: string
+                    example: 'User not found.'
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The user ID to delete.'
+        example: 664f1a2b3c4d5e6f7a8b9c0d
+        required: true
+        schema:
+          type: string
+  '/api/admin/users/{id}/password':
+    put:
+      summary: 'Change user password (admin)'
+      operationId: changeUserPasswordadmin
+      description: 'Sets a new password for any user account. No knowledge of the current password required.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Password updated successfully.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Password updated successfully.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User not found.'
+                properties:
+                  message:
+                    type: string
+                    example: 'User not found.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  password:
+                    - 'The password confirmation does not match.'
+                properties:
+                  password:
+                    type: array
+                    example:
+                      - 'The password confirmation does not match.'
+                    items:
+                      type: string
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  description: 'New password. Min 8 chars, must include uppercase, lowercase, digit, and special character.'
+                  example: NewPass@456
+                password_confirmation:
+                  type: string
+                  description: 'Must match password.'
+                  example: NewPass@456
+              required:
+                - password
+                - password_confirmation
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The user ID.'
+        example: 664f1a2b3c4d5e6f7a8b9c0d
+        required: true
+        schema:
+          type: string
   /api/admin/meetings:
     get:
       summary: 'List all meetings (admin)'
@@ -7867,17 +8115,17 @@ paths:
                 from_date:
                   type: string
                   description: 'Must be a valid date in the format <code>Y-m-d</code>.'
-                  example: '2026-08-20'
+                  example: '2026-08-21'
                   nullable: true
                 to_date:
                   type: string
                   description: 'Must be a valid date in the format <code>Y-m-d</code>.'
-                  example: '2026-08-20'
+                  example: '2026-08-21'
                   nullable: true
                 sort_direction:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   enum:
                     - asc
                     - desc

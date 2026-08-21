@@ -1,0 +1,48 @@
+meta {
+  name: Get profile
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/auth/profile
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/auth/profile
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "id": "664f1a2b3c4d5e6f7a8b9c0d",
+          "name": "Jane Smith",
+          "email": "jane@example.com",
+          "roles": [
+            "employee"
+          ],
+          "is_employer": false
+        }
+      '''
+    }
+  }
+}

@@ -1,0 +1,89 @@
+meta {
+  name: Update personal information
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: PUT
+  url: {{baseUrl}}/api/job-seeker/profile/personal-info
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  first_name: 
+  last_name: 
+  full_name: 
+  image: 
+  gender: 
+  nationality: 
+  city: 
+  location: 
+  address: 
+  phone: 
+  date_of_birth: 
+  marital_status: 
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/profile/personal-info
+    method: PUT
+    mode: multipartForm
+    body:multipart-form: {
+      first_name: 
+      last_name: 
+      full_name: 
+      image: 
+      gender: 
+      nationality: 
+      city: 
+      location: 
+      address: 
+      phone: 
+      date_of_birth: 
+      marital_status: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Personal information updated successfully",
+          "profile": {
+            "id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "full_name": "Jane Smith",
+            "image": "https://res.cloudinary.com/.../photo.jpg"
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/profile/personal-info
+    method: PUT
+    mode: multipartForm
+    headers: {
+      Content-Type: multipart/form-data
+    }
+  }
+}

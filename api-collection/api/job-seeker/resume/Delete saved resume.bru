@@ -1,0 +1,72 @@
+meta {
+  name: Delete saved resume
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: DELETE
+  url: {{baseUrl}}/api/job-seeker/resume
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/resume
+    method: DELETE
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Resume deleted successfully"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/resume
+    method: DELETE
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "No resume found on your profile"
+        }
+      '''
+    }
+  }
+}

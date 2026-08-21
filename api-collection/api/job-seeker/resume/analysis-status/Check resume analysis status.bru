@@ -1,0 +1,12 @@
+meta {
+  name: Check resume analysis status
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/job-seeker/resume/analysis-status
+  body: none
+  auth: inherit
+}

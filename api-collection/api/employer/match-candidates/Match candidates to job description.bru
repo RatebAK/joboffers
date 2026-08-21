@@ -1,0 +1,166 @@
+meta {
+  name: Match candidates to job description
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/employer/match-candidates
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "job_description": "",
+    "limit": 0
+  }
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/employer/match-candidates
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "job_description": "",
+        "limit": 0
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "extracted_requirements": [
+            "React",
+            "5+ years",
+            "Senior level"
+          ],
+          "candidates": [
+            {
+              "user_id": "664f1a2b3c4d5e6f7a8b9c0d",
+              "resume_id": "664f1a2b3c4d5e6f7a8b9c0d",
+              "full_name": "Jane Smith",
+              "matched_skills_score": 85,
+              "skills": [
+                "React",
+                "TypeScript",
+                "Node.js"
+              ],
+              "profile_url": "/api/employer/job-seeker/664f1a2b3c4d5e6f7a8b9c0d"
+            }
+          ]
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  
+  request: {
+    url: {{baseUrl}}/api/employer/match-candidates
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "job_description": "",
+        "limit": 0
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Job matching failed",
+          "reason": "Invalid job description"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 502 Response
+  
+  request: {
+    url: {{baseUrl}}/api/employer/match-candidates
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "job_description": "",
+        "limit": 0
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 502
+      text: Bad Gateway
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Job matching service unavailable"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/employer/match-candidates
+    method: POST
+    mode: json
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "job_description": "Senior React developer with 5+ years experience",
+        "limit": 10
+      }
+    }
+  }
+}

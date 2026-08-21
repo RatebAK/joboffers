@@ -1,0 +1,71 @@
+meta {
+  name: Churn & re-engagement report
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/admin/reports/churn
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~window_days: 
+  ~format: 
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/reports/churn
+    method: GET
+    mode: none
+    params:query: {
+      ~window_days: 
+      ~format: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "window_days": 30,
+          "employers": [
+            {
+              "user_id": "abc",
+              "name": "Acme Corp",
+              "email": "hr@acme.com",
+              "registered_at": "2024-01-01T00:00:00Z",
+              "last_post_date": null,
+              "total_posts": 0
+            }
+          ],
+          "seekers": [
+            {
+              "user_id": "xyz",
+              "name": "Jane Smith",
+              "email": "jane@email.com",
+              "registered_at": "2024-01-01T00:00:00Z",
+              "cv_uploaded_at": "2024-02-01T00:00:00Z",
+              "ats_score": 72
+            }
+          ]
+        }
+      '''
+    }
+  }
+}

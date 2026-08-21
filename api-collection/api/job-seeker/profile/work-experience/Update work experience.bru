@@ -1,0 +1,102 @@
+meta {
+  name: Update work experience
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: PUT
+  url: {{baseUrl}}/api/job-seeker/profile/work-experience
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "work_experience": [
+      {
+        "job_title": "",
+        "company_name": "",
+        "job_roles": [],
+        "from_date": "",
+        "to_date": "",
+        "is_currently_working": false,
+        "description": ""
+      }
+    ]
+  }
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/profile/work-experience
+    method: PUT
+    mode: json
+    body:json: {
+      {
+        "work_experience": [
+          {
+            "job_title": "",
+            "company_name": "",
+            "job_roles": [],
+            "from_date": "",
+            "to_date": "",
+            "is_currently_working": false,
+            "description": ""
+          }
+        ]
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Work experience updated successfully",
+          "profile": {
+            "work_experience": [
+              {
+                "job_title": "Developer",
+                "company_name": "Acme"
+              }
+            ]
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/profile/work-experience
+    method: PUT
+    mode: json
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "work_experience": [
+          []
+        ]
+      }
+    }
+  }
+}

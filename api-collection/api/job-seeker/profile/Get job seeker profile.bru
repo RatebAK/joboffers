@@ -1,0 +1,59 @@
+meta {
+  name: Get job seeker profile
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/job-seeker/profile
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/profile
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "profile": {
+            "id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+            "full_name": "Jane Smith",
+            "current_job_title": "Frontend Developer",
+            "is_actively_seeking": true,
+            "skills": [
+              {
+                "name": "React",
+                "level": "advanced"
+              }
+            ],
+            "ats_score": 82,
+            "ai_skills": [
+              "React",
+              "TypeScript"
+            ]
+          }
+        }
+      '''
+    }
+  }
+}

@@ -308,6 +308,15 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-admin-audit-log">
                                 <a href="#endpoints-GETapi-admin-audit-log">View audit log</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-admin-users">
+                                <a href="#endpoints-POSTapi-admin-users">Create user (admin)</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-DELETEapi-admin-users--id-">
+                                <a href="#endpoints-DELETEapi-admin-users--id-">Delete user (admin)</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-PUTapi-admin-users--id--password">
+                                <a href="#endpoints-PUTapi-admin-users--id--password">Change user password (admin)</a>
+                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-admin-meetings">
                                 <a href="#endpoints-GETapi-admin-meetings">List all meetings (admin)</a>
                             </li>
@@ -398,7 +407,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: August 20, 2026</li>
+        <li>Last updated: August 21, 2026</li>
     </ul>
 </div>
 
@@ -1826,7 +1835,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"keyword\": \"b\",
     \"location\": \"n\",
-    \"job_type\": \"part_time\",
+    \"job_type\": \"full_time\",
     \"category\": \"g\",
     \"min_salary\": 12
 }"
@@ -1857,7 +1866,7 @@ const headers = {
 let body = {
     "keyword": "b",
     "location": "n",
-    "job_type": "part_time",
+    "job_type": "full_time",
     "category": "g",
     "min_salary": 12
 };
@@ -2071,10 +2080,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_type"                data-endpoint="GETapi-jobs-search"
-               value="part_time"
+               value="full_time"
                data-component="body">
     <br>
-<p>Example: <code>part_time</code></p>
+<p>Example: <code>full_time</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>full_time</code></li> <li><code>part_time</code></li> <li><code>contract</code></li> <li><code>freelance</code></li></ul>
         </div>
@@ -2154,7 +2163,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-companies">
             <blockquote>
-            <p>Example response (500):</p>
+            <p>Example response (200):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -2166,7 +2175,13 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Server Error&quot;
+    &quot;data&quot;: [],
+    &quot;current_page&quot;: 1,
+    &quot;per_page&quot;: 10,
+    &quot;total&quot;: 0,
+    &quot;total_pages&quot;: 1,
+    &quot;next_page&quot;: null,
+    &quot;prev_page&quot;: null
 }</code>
  </pre>
     </span>
@@ -2378,7 +2393,7 @@ fetch(url, {
 }</code>
  </pre>
             <blockquote>
-            <p>Example response (500):</p>
+            <p>Example response (404):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -2390,7 +2405,7 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Server Error&quot;
+    &quot;message&quot;: &quot;Company profile not found&quot;
 }</code>
  </pre>
     </span>
@@ -3147,7 +3162,7 @@ All other fields are sent as regular form fields.</p>
     --form "phone=+961 70 123456"\
     --form "date_of_birth=1995-06-15"\
     --form "marital_status=architecto"\
-    --form "image=@C:\Users\rog\AppData\Local\Temp\php9556.tmp" </code></pre></div>
+    --form "image=@C:\Users\rog\AppData\Local\Temp\php264E.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -3329,7 +3344,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>JPEG/PNG/WEBP profile photo, max 2MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php9556.tmp</code></p>
+<p>JPEG/PNG/WEBP profile photo, max 2MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php264E.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>gender</code></b>&nbsp;&nbsp;
@@ -5204,17 +5219,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "last_name=n"\
     --form "full_name=g"\
     --form "image=z"\
-    --form "gender=female"\
+    --form "gender=other"\
     --form "nationality=m"\
     --form "city=i"\
     --form "location=y"\
     --form "address=v"\
     --form "phone=dljnikhwaykcmyuw"\
     --form "date_of_birth=pwlvqwrsitcpscql"\
-    --form "marital_status=divorced"\
+    --form "marital_status=prefer_not_to_say"\
     --form "salary_range_from=16"\
     --form "salary_range_to=38"\
-    --form "current_job_status=unemployed"\
+    --form "current_job_status=open_to_work"\
     --form "years_of_experience=8"\
     --form "education_level=n"\
     --form "job_level=director"\
@@ -5224,7 +5239,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "current_job_title=u"\
     --form "experience_summary=architecto"\
     --form "expected_salary=39"\
-    --form "is_actively_seeking=1"\
+    --form "is_actively_seeking="\
     --form "social_links[linkedin]=g"\
     --form "social_links[github]=z"\
     --form "social_links[portfolio]=m"\
@@ -5246,7 +5261,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "work_experience[][to_date]=tnnoqitpxntltcvi"\
     --form "work_experience[][is_currently_working]=1"\
     --form "work_experience[][description]=Eius et animi quos velit et."\
-    --form "resume=@C:\Users\rog\AppData\Local\Temp\php95B5.tmp" </code></pre></div>
+    --form "resume=@C:\Users\rog\AppData\Local\Temp\php2778.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -5265,17 +5280,17 @@ body.append('first_name', 'b');
 body.append('last_name', 'n');
 body.append('full_name', 'g');
 body.append('image', 'z');
-body.append('gender', 'female');
+body.append('gender', 'other');
 body.append('nationality', 'm');
 body.append('city', 'i');
 body.append('location', 'y');
 body.append('address', 'v');
 body.append('phone', 'dljnikhwaykcmyuw');
 body.append('date_of_birth', 'pwlvqwrsitcpscql');
-body.append('marital_status', 'divorced');
+body.append('marital_status', 'prefer_not_to_say');
 body.append('salary_range_from', '16');
 body.append('salary_range_to', '38');
-body.append('current_job_status', 'unemployed');
+body.append('current_job_status', 'open_to_work');
 body.append('years_of_experience', '8');
 body.append('education_level', 'n');
 body.append('job_level', 'director');
@@ -5285,7 +5300,7 @@ body.append('work_cities[]', 't');
 body.append('current_job_title', 'u');
 body.append('experience_summary', 'architecto');
 body.append('expected_salary', '39');
-body.append('is_actively_seeking', '1');
+body.append('is_actively_seeking', '');
 body.append('social_links[linkedin]', 'g');
 body.append('social_links[github]', 'z');
 body.append('social_links[portfolio]', 'm');
@@ -5458,10 +5473,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="gender"                data-endpoint="PUTapi-job-seeker-profile"
-               value="female"
+               value="other"
                data-component="body">
     <br>
-<p>Example: <code>female</code></p>
+<p>Example: <code>other</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>male</code></li> <li><code>female</code></li> <li><code>other</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5544,10 +5559,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="marital_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="divorced"
+               value="prefer_not_to_say"
                data-component="body">
     <br>
-<p>Example: <code>divorced</code></p>
+<p>Example: <code>prefer_not_to_say</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>single</code></li> <li><code>married</code></li> <li><code>divorced</code></li> <li><code>widowed</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -5582,10 +5597,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="current_job_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="unemployed"
+               value="open_to_work"
                data-component="body">
     <br>
-<p>Example: <code>unemployed</code></p>
+<p>Example: <code>open_to_work</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>employed</code></li> <li><code>unemployed</code></li> <li><code>freelancing</code></li> <li><code>student</code></li> <li><code>open_to_work</code></li></ul>
         </div>
@@ -5725,7 +5740,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
         <details>
@@ -6051,7 +6066,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\rog\AppData\Local\Temp\php95B5.tmp</code></p>
+<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\rog\AppData\Local\Temp\php2778.tmp</code></p>
         </div>
         </form>
 
@@ -6092,7 +6107,7 @@ Retry failed: <code>POST /job-seeker/resume/retry-analysis</code></p>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@C:\Users\rog\AppData\Local\Temp\php95C6.tmp" </code></pre></div>
+    --form "resume=@C:\Users\rog\AppData\Local\Temp\php27B9.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6263,7 +6278,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php95C6.tmp</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php27B9.tmp</code></p>
         </div>
         </form>
 
@@ -6627,7 +6642,7 @@ This endpoint is similar to <code>/upload</code> but accepts field name <code>cv
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cv=@C:\Users\rog\AppData\Local\Temp\php95E9.tmp" </code></pre></div>
+    --form "cv=@C:\Users\rog\AppData\Local\Temp\php27EB.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6786,7 +6801,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php95E9.tmp</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php27EB.tmp</code></p>
         </div>
         </form>
 
@@ -7608,7 +7623,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "positions_suited_for[]=architecto"\
     --form "notice_period=architecto"\
     --form "expected_salary=architecto"\
-    --form "resume=@C:\Users\rog\AppData\Local\Temp\php961A.tmp" </code></pre></div>
+    --form "resume=@C:\Users\rog\AppData\Local\Temp\php28A9.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -7797,7 +7812,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>C:\Users\rog\AppData\Local\Temp\php961A.tmp</code></p>
+<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>C:\Users\rog\AppData\Local\Temp\php28A9.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>education</code></b>&nbsp;&nbsp;
@@ -9072,7 +9087,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "document=@C:\Users\rog\AppData\Local\Temp\php968A.tmp" </code></pre></div>
+    --form "document=@C:\Users\rog\AppData\Local\Temp\php2D8D.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9221,7 +9236,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php968A.tmp</code></p>
+<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php2D8D.tmp</code></p>
         </div>
         </form>
 
@@ -11998,7 +12013,7 @@ Accepts JPEG, PNG, WebP; max 2 MB. Any previously uploaded logo is automatically
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "logo=@C:\Users\rog\AppData\Local\Temp\php96EB.tmp" </code></pre></div>
+    --form "logo=@C:\Users\rog\AppData\Local\Temp\php2E5B.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -12148,7 +12163,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>The logo image file. Accepted: jpeg, png, webp. Max 2 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php96EB.tmp</code></p>
+<p>The logo image file. Accepted: jpeg, png, webp. Max 2 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php2E5B.tmp</code></p>
         </div>
         </form>
 
@@ -12171,7 +12186,7 @@ Accepts JPEG, PNG, WebP; max 4 MB. Any previously uploaded cover image is automa
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cover_image=@C:\Users\rog\AppData\Local\Temp\php96EE.tmp" </code></pre></div>
+    --form "cover_image=@C:\Users\rog\AppData\Local\Temp\php2E6E.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -12321,7 +12336,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>The cover image file. Accepted: jpeg, png, webp. Max 4 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php96EE.tmp</code></p>
+<p>The cover image file. Accepted: jpeg, png, webp. Max 4 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php2E6E.tmp</code></p>
         </div>
         </form>
 
@@ -16156,7 +16171,7 @@ State University,careers@university.edu,State University,university</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "file=@C:\Users\rog\AppData\Local\Temp\php979C.tmp" </code></pre></div>
+    --form "file=@C:\Users\rog\AppData\Local\Temp\php34AB.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -16307,7 +16322,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>CSV file, max 2 MB. Required columns: name, email, company_name. Example: <code>C:\Users\rog\AppData\Local\Temp\php979C.tmp</code></p>
+<p>CSV file, max 2 MB. Required columns: name, email, company_name. Example: <code>C:\Users\rog\AppData\Local\Temp\php34AB.tmp</code></p>
         </div>
         </form>
 
@@ -16934,6 +16949,595 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Page number. Example: <code>1</code></p>
             </div>
                 </form>
+
+                    <h2 id="endpoints-POSTapi-admin-users">Create user (admin)</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Creates a new user account and assigns a role. If the role is <code>employer</code>,
+the account is immediately activated (no approval required).</p>
+
+<span id="example-requests-POSTapi-admin-users">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"name\": \"John Doe\",
+    \"email\": \"john@example.com\",
+    \"password\": \"Secret@123\",
+    \"role\": \"employer\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "Secret@123",
+    "role": "employer"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-admin-users">
+            <blockquote>
+            <p>Example response (201):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;User created successfully.&quot;,
+    &quot;user&quot;: {
+        &quot;id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
+        &quot;name&quot;: &quot;John Doe&quot;,
+        &quot;email&quot;: &quot;john@example.com&quot;,
+        &quot;roles&quot;: [
+            &quot;employer&quot;
+        ],
+        &quot;is_employer&quot;: true
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;email&quot;: [
+        &quot;The email has already been taken.&quot;
+    ]
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-admin-users" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-admin-users"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-admin-users"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-admin-users" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-admin-users">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-admin-users" data-method="POST"
+      data-path="api/admin/users"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-admin-users', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-admin-users"
+                    onclick="tryItOut('POSTapi-admin-users');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-admin-users"
+                    onclick="cancelTryOut('POSTapi-admin-users');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-admin-users"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/admin/users</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-admin-users"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-admin-users"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-admin-users"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="POSTapi-admin-users"
+               value="John Doe"
+               data-component="body">
+    <br>
+<p>Display name. Min 2, max 100 chars. Example: <code>John Doe</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="email"                data-endpoint="POSTapi-admin-users"
+               value="john@example.com"
+               data-component="body">
+    <br>
+<p>Valid email address. Example: <code>john@example.com</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>password</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="password"                data-endpoint="POSTapi-admin-users"
+               value="Secret@123"
+               data-component="body">
+    <br>
+<p>Min 8 chars, must include uppercase, lowercase, digit, and special character. Example: <code>Secret@123</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>role</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="role"                data-endpoint="POSTapi-admin-users"
+               value="employer"
+               data-component="body">
+    <br>
+<p>Role to assign: admin, employer, or employee. Example: <code>employer</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-DELETEapi-admin-users--id-">Delete user (admin)</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Permanently deletes a user account and all associated data (profile, employer record).
+Cannot delete your own account.</p>
+
+<span id="example-requests-DELETEapi-admin-users--id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users/664f1a2b3c4d5e6f7a8b9c0d" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users/664f1a2b3c4d5e6f7a8b9c0d"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-admin-users--id-">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;User deleted successfully.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;You cannot delete your own account.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;User not found.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-DELETEapi-admin-users--id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-admin-users--id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-admin-users--id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-admin-users--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-admin-users--id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-admin-users--id-" data-method="DELETE"
+      data-path="api/admin/users/{id}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-admin-users--id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-admin-users--id-"
+                    onclick="tryItOut('DELETEapi-admin-users--id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-admin-users--id-"
+                    onclick="cancelTryOut('DELETEapi-admin-users--id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-admin-users--id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/admin/users/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-admin-users--id-"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-admin-users--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-admin-users--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="id"                data-endpoint="DELETEapi-admin-users--id-"
+               value="664f1a2b3c4d5e6f7a8b9c0d"
+               data-component="url">
+    <br>
+<p>The user ID to delete. Example: <code>664f1a2b3c4d5e6f7a8b9c0d</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="endpoints-PUTapi-admin-users--id--password">Change user password (admin)</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Sets a new password for any user account. No knowledge of the current password required.</p>
+
+<span id="example-requests-PUTapi-admin-users--id--password">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PUT \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users/664f1a2b3c4d5e6f7a8b9c0d/password" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"password\": \"NewPass@456\",
+    \"password_confirmation\": \"NewPass@456\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users/664f1a2b3c4d5e6f7a8b9c0d/password"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "password": "NewPass@456",
+    "password_confirmation": "NewPass@456"
+};
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-PUTapi-admin-users--id--password">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Password updated successfully.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;User not found.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;password&quot;: [
+        &quot;The password confirmation does not match.&quot;
+    ]
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-PUTapi-admin-users--id--password" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PUTapi-admin-users--id--password"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-admin-users--id--password"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PUTapi-admin-users--id--password" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-admin-users--id--password">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PUTapi-admin-users--id--password" data-method="PUT"
+      data-path="api/admin/users/{id}/password"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-admin-users--id--password', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PUTapi-admin-users--id--password"
+                    onclick="tryItOut('PUTapi-admin-users--id--password');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PUTapi-admin-users--id--password"
+                    onclick="cancelTryOut('PUTapi-admin-users--id--password');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PUTapi-admin-users--id--password"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/admin/users/{id}/password</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="PUTapi-admin-users--id--password"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PUTapi-admin-users--id--password"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PUTapi-admin-users--id--password"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="id"                data-endpoint="PUTapi-admin-users--id--password"
+               value="664f1a2b3c4d5e6f7a8b9c0d"
+               data-component="url">
+    <br>
+<p>The user ID. Example: <code>664f1a2b3c4d5e6f7a8b9c0d</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>password</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="password"                data-endpoint="PUTapi-admin-users--id--password"
+               value="NewPass@456"
+               data-component="body">
+    <br>
+<p>New password. Min 8 chars, must include uppercase, lowercase, digit, and special character. Example: <code>NewPass@456</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>password_confirmation</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="password_confirmation"                data-endpoint="PUTapi-admin-users--id--password"
+               value="NewPass@456"
+               data-component="body">
+    <br>
+<p>Must match password. Example: <code>NewPass@456</code></p>
+        </div>
+        </form>
 
                     <h2 id="endpoints-GETapi-admin-meetings">List all meetings (admin)</h2>
 
@@ -17943,9 +18547,9 @@ Supports filtering by status, date range, and sort direction.</p>
     --header "Accept: application/json" \
     --data "{
     \"status\": \"architecto\",
-    \"from_date\": \"2026-08-20\",
-    \"to_date\": \"2026-08-20\",
-    \"sort_direction\": \"asc\",
+    \"from_date\": \"2026-08-21\",
+    \"to_date\": \"2026-08-21\",
+    \"sort_direction\": \"desc\",
     \"per_page\": 22
 }"
 </code></pre></div>
@@ -17974,9 +18578,9 @@ const headers = {
 
 let body = {
     "status": "architecto",
-    "from_date": "2026-08-20",
-    "to_date": "2026-08-20",
-    "sort_direction": "asc",
+    "from_date": "2026-08-21",
+    "to_date": "2026-08-21",
+    "sort_direction": "desc",
     "per_page": 22
 };
 
@@ -18186,10 +18790,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from_date"                data-endpoint="GETapi-meetings"
-               value="2026-08-20"
+               value="2026-08-21"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-08-20</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-08-21</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to_date</code></b>&nbsp;&nbsp;
@@ -18198,10 +18802,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="to_date"                data-endpoint="GETapi-meetings"
-               value="2026-08-20"
+               value="2026-08-21"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-08-20</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-08-21</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>sort_direction</code></b>&nbsp;&nbsp;
@@ -18210,10 +18814,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort_direction"                data-endpoint="GETapi-meetings"
-               value="asc"
+               value="desc"
                data-component="body">
     <br>
-<p>Example: <code>asc</code></p>
+<p>Example: <code>desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
         </div>

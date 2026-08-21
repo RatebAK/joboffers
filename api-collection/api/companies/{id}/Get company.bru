@@ -1,0 +1,12 @@
+meta {
+  name: Get company
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/companies/:id
+  body: none
+  auth: inherit
+}

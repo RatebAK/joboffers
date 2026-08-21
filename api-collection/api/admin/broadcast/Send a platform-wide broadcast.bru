@@ -1,0 +1,126 @@
+meta {
+  name: Send a platform-wide broadcast
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/admin/broadcast
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "subject": "",
+    "body": "",
+    "audience": "",
+    "user_ids": []
+  }
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/broadcast
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "subject": "",
+        "body": "",
+        "audience": "",
+        "user_ids": []
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "status": "queued",
+          "recipient_count": 142
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/broadcast
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "subject": "",
+        "body": "",
+        "audience": "",
+        "user_ids": []
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "errors": {
+            "subject": [
+              "The subject field is required."
+            ]
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/admin/broadcast
+    method: POST
+    mode: json
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "subject": "New feature launch",
+        "body": "We just launched job matching AI!",
+        "audience": "employees",
+        "user_ids": [
+          "architecto"
+        ]
+      }
+    }
+  }
+}

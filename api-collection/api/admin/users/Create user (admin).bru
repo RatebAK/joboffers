@@ -1,0 +1,130 @@
+meta {
+  name: Create user (admin)
+  type: http-request
+  seq: 2
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/admin/users
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "",
+    "email": "",
+    "password": "",
+    "role": ""
+  }
+}
+
+example {
+  name: 201 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/users
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "name": "",
+        "email": "",
+        "password": "",
+        "role": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 201
+      text: Created
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "User created successfully.",
+          "user": {
+            "id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "name": "John Doe",
+            "email": "john@example.com",
+            "roles": [
+              "employer"
+            ],
+            "is_employer": true
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/users
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "name": "",
+        "email": "",
+        "password": "",
+        "role": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "email": [
+            "The email has already been taken."
+          ]
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/admin/users
+    method: POST
+    mode: json
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "name": "John Doe",
+        "email": "john@example.com",
+        "password": "Secret@123",
+        "role": "employer"
+      }
+    }
+  }
+}

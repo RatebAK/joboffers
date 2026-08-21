@@ -1,0 +1,66 @@
+meta {
+  name: Matched jobs
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/job-seeker/matched-jobs
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~min_score: 
+  ~page: 
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/matched-jobs
+    method: GET
+    mode: none
+    params:query: {
+      ~min_score: 
+      ~page: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "data": [
+            {
+              "id": "...",
+              "title": "Senior PHP Developer",
+              "company_name": "Acme",
+              "location": "Beirut",
+              "job_type": "full_time",
+              "match_score": 9
+            }
+          ],
+          "current_page": 1,
+          "per_page": 10,
+          "total": 5,
+          "total_pages": 1,
+          "next_page": null,
+          "prev_page": null
+        }
+      '''
+    }
+  }
+}

@@ -1,0 +1,63 @@
+meta {
+  name: Conversion funnel metrics
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/admin/reports/funnel
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/reports/funnel
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "stages": [
+            {
+              "stage": "registered",
+              "count": 500,
+              "drop_off_pct": null
+            },
+            {
+              "stage": "cv_uploaded",
+              "count": 320,
+              "drop_off_pct": 36
+            },
+            {
+              "stage": "applied",
+              "count": 180,
+              "drop_off_pct": 43.75
+            },
+            {
+              "stage": "hired",
+              "count": 42,
+              "drop_off_pct": 76.67
+            }
+          ]
+        }
+      '''
+    }
+  }
+}

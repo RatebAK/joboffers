@@ -1,0 +1,63 @@
+meta {
+  name: List all meetings (admin)
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/admin/meetings
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~status: 
+  ~from_date: 
+  ~to_date: 
+  ~sort_direction: 
+  ~per_page: 
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/meetings
+    method: GET
+    mode: none
+    params:query: {
+      ~status: 
+      ~from_date: 
+      ~to_date: 
+      ~sort_direction: 
+      ~per_page: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "data": [],
+          "current_page": 1,
+          "per_page": 15,
+          "total": 0,
+          "total_pages": 1,
+          "next_page": null,
+          "prev_page": null
+        }
+      '''
+    }
+  }
+}

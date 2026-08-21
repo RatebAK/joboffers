@@ -1,0 +1,93 @@
+meta {
+  name: Search users (talents/workers)
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/search/users
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~search: 
+  ~skills: 
+  ~min_experience: 
+  ~max_experience: 
+  ~min_ats_score: 
+  ~max_ats_score: 
+  ~location: 
+  ~job_level: 
+  ~actively_seeking: 
+  ~per_page: 
+  ~page: 
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/search/users
+    method: GET
+    mode: none
+    params:query: {
+      ~search: 
+      ~skills: 
+      ~min_experience: 
+      ~max_experience: 
+      ~min_ats_score: 
+      ~max_ats_score: 
+      ~location: 
+      ~job_level: 
+      ~actively_seeking: 
+      ~per_page: 
+      ~page: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "data": [
+            {
+              "id": "664f1a2b3c4d5e6f7a8b9c0d",
+              "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+              "name": "Jane Smith",
+              "current_job_title": "Senior Frontend Developer",
+              "ai_summary": "Experienced frontend developer with 5 years...",
+              "ai_skills": [
+                "React",
+                "TypeScript",
+                "Node.js"
+              ],
+              "ai_location": "Beirut, Lebanon",
+              "ats_score": 85,
+              "years_of_experience": 5,
+              "job_level": "senior",
+              "is_actively_seeking": true
+            }
+          ],
+          "current_page": 1,
+          "per_page": 15,
+          "total": 42,
+          "total_pages": 3,
+          "next_page": 2,
+          "prev_page": null
+        }
+      '''
+    }
+  }
+}

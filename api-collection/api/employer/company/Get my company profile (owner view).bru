@@ -1,0 +1,73 @@
+meta {
+  name: Get my company profile (owner view)
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/employer/company
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 401 Response
+  
+  request: {
+    url: {{baseUrl}}/api/employer/company
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "error": "Unauthorized",
+          "message": "Invalid authentication token signature"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  
+  request: {
+    url: {{baseUrl}}/api/employer/company
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "No company profile found. Create one first."
+        }
+      '''
+    }
+  }
+}

@@ -1,0 +1,181 @@
+meta {
+  name: Decline a meeting invitation
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/meetings/:id/decline
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "decline_reason": ""
+  }
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id/decline
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "decline_reason": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "meeting": {
+            "_id": "664f...",
+            "status": "declined",
+            "decline_reason": "Schedule conflict"
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id/decline
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "decline_reason": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Forbidden"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id/decline
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "decline_reason": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Meeting not found"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id/decline
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "decline_reason": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "This meeting cannot be declined in its current state"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id/decline
+    method: POST
+    mode: json
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "decline_reason": "Schedule conflict"
+      }
+    }
+  }
+}

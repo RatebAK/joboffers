@@ -1,0 +1,94 @@
+meta {
+  name: Bulk employer onboarding via CSV upload
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/admin/onboarding/bulk
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  file: 
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/onboarding/bulk
+    method: POST
+    mode: multipartForm
+    body:multipart-form: {
+      file: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "total_rows": 5,
+          "created": 4,
+          "skipped": 1,
+          "skipped_rows": [
+            {
+              "email": "existing@example.com",
+              "reason": "email_exists"
+            }
+          ]
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/onboarding/bulk
+    method: POST
+    mode: multipartForm
+    body:multipart-form: {
+      file: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "errors": {
+            "file": [
+              "File must be a valid CSV."
+            ]
+          }
+        }
+      '''
+    }
+  }
+}

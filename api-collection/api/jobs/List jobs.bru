@@ -1,0 +1,28 @@
+meta {
+  name: List jobs
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/jobs
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~keyword: 
+  ~city: 
+  ~job_type: 
+  ~work_mode: 
+  ~job_level: 
+  ~experience_years: 
+  ~category: 
+  ~min_salary: 
+  ~max_salary: 
+  ~tag: 
+  ~communication_method: 
+  ~per_page: 
+  ~page: 
+}

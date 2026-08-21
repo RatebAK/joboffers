@@ -1,0 +1,61 @@
+meta {
+  name: Employer approval pipeline report
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/admin/reports/pipeline
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~daily_revenue_per_employer: 
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/reports/pipeline
+    method: GET
+    mode: none
+    params:query: {
+      ~daily_revenue_per_employer: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "pending_count": 5,
+          "avg_wait_days": 3.2,
+          "daily_revenue_per_employer": 10,
+          "estimated_lost_revenue": 160,
+          "employers": [
+            {
+              "user_id": "abc",
+              "name": "John Doe",
+              "email": "john@corp.com",
+              "submitted_at": "2024-01-10T00:00:00Z",
+              "days_waiting": 4
+            }
+          ]
+        }
+      '''
+    }
+  }
+}

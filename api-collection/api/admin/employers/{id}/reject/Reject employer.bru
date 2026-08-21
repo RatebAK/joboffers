@@ -1,0 +1,112 @@
+meta {
+  name: Reject employer
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/admin/employers/:id/reject
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "review_notes": ""
+  }
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/employers/:id/reject
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "review_notes": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Rejected employer request.",
+          "employer": {
+            "id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "status": "rejected",
+            "review_notes": "Insufficient documentation."
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/employers/:id/reject
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "review_notes": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "No query results for model"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/admin/employers/:id/reject
+    method: POST
+    mode: json
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "review_notes": "Insufficient documentation provided."
+      }
+    }
+  }
+}

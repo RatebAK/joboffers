@@ -1,0 +1,104 @@
+meta {
+  name: Update education history
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: PUT
+  url: {{baseUrl}}/api/job-seeker/profile/education
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "education_history": [
+      {
+        "certificate_type": "",
+        "university": "",
+        "faculty": "",
+        "major": "",
+        "major_name": "",
+        "grade": "",
+        "from_date": "",
+        "awarded_date": ""
+      }
+    ]
+  }
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/profile/education
+    method: PUT
+    mode: json
+    body:json: {
+      {
+        "education_history": [
+          {
+            "certificate_type": "",
+            "university": "",
+            "faculty": "",
+            "major": "",
+            "major_name": "",
+            "grade": "",
+            "from_date": "",
+            "awarded_date": ""
+          }
+        ]
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Education history updated successfully",
+          "profile": {
+            "education_history": [
+              {
+                "university": "AUB",
+                "major": "CS"
+              }
+            ]
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/profile/education
+    method: PUT
+    mode: json
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "education_history": [
+          []
+        ]
+      }
+    }
+  }
+}

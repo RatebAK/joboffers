@@ -1,0 +1,58 @@
+meta {
+  name: Upcoming meetings
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/meetings/upcoming
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/upcoming
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "meetings": [
+            {
+              "id": "664f1a2b3c4d5e6f7a8b9c0f",
+              "title": "Interview",
+              "proposed_date": "2025-02-15",
+              "proposed_start_time": "14:00",
+              "proposed_duration_minutes": 60,
+              "meeting_type": "video_call",
+              "participant": {
+                "id": "664f1a2b3c4d5e6f7a8b9c0e",
+                "name": "Jane Smith",
+                "email": "jane@example.com",
+                "company_name": "Acme Corp",
+                "avatar": "https://res.cloudinary.com/xxx/image/upload/logo.png"
+              }
+            }
+          ]
+        }
+      '''
+    }
+  }
+}

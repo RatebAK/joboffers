@@ -1,0 +1,12 @@
+meta {
+  name: Register
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/auth/register
+  body: none
+  auth: inherit
+}

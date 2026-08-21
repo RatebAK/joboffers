@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "51fa53d0-d0a6-40c2-be1c-243e9cdda1c3",
+        "_postman_id": "4871a4c5-6648-4846-8b85-6f46dcde951b",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -419,7 +419,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"part_time\",\"category\":\"g\",\"min_salary\":12}"
+                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"full_time\",\"category\":\"g\",\"min_salary\":12}"
                         },
                         "description": "Paginated search of active job posts for the authenticated job seeker."
                     },
@@ -517,8 +517,8 @@
                                     "value": "*"
                                 }
                             ],
-                            "code": 500,
-                            "body": "{\n    \"message\": \"Server Error\"\n}",
+                            "code": 200,
+                            "body": "{\"data\":[],\"current_page\":1,\"per_page\":10,\"total\":0,\"total_pages\":1,\"next_page\":null,\"prev_page\":null}",
                             "name": ""
                         }
                     ]
@@ -579,8 +579,8 @@
                                     "value": "*"
                                 }
                             ],
-                            "code": 500,
-                            "body": "{\n    \"message\": \"Server Error\"\n}",
+                            "code": 404,
+                            "body": "{\"message\":\"Company profile not found\"}",
                             "name": ""
                         }
                     ]
@@ -1194,7 +1194,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "female",
+                                    "value": "other",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1236,7 +1236,7 @@
                                 },
                                 {
                                     "key": "marital_status",
-                                    "value": "divorced",
+                                    "value": "prefer_not_to_say",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1254,7 +1254,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "unemployed",
+                                    "value": "open_to_work",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1314,7 +1314,7 @@
                                 },
                                 {
                                     "key": "is_actively_seeking",
-                                    "value": "1",
+                                    "value": "",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -4087,6 +4087,154 @@
                     ]
                 },
                 {
+                    "name": "Create user (admin)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/users",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/users"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"John Doe\",\"email\":\"john@example.com\",\"password\":\"Secret@123\",\"role\":\"employer\"}"
+                        },
+                        "description": "Creates a new user account and assigns a role. If the role is `employer`,\nthe account is immediately activated (no approval required)."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"User created successfully.\",\n  \"user\": {\n    \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"roles\": [\"employer\"],\n    \"is_employer\": true\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"email\": [\"The email has already been taken.\"] }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete user (admin)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/users\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/users\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "The user ID to delete."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Permanently deletes a user account and all associated data (profile, employer record).\nCannot delete your own account."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"User deleted successfully.\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"You cannot delete your own account.\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"User not found.\" }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Change user password (admin)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/users\/:id\/password",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/users\/:id\/password",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "The user ID."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"password\":\"NewPass@456\",\"password_confirmation\":\"NewPass@456\"}"
+                        },
+                        "description": "Sets a new password for any user account. No knowledge of the current password required."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"Password updated successfully.\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"User not found.\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"password\": [\"The password confirmation does not match.\"] }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "List all meetings (admin)",
                     "request": {
                         "url": {
@@ -4403,7 +4551,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"status\":\"architecto\",\"from_date\":\"2026-08-20\",\"to_date\":\"2026-08-20\",\"sort_direction\":\"asc\",\"per_page\":22}"
+                            "raw": "{\"status\":\"architecto\",\"from_date\":\"2026-08-21\",\"to_date\":\"2026-08-21\",\"sort_direction\":\"desc\",\"per_page\":22}"
                         },
                         "description": "Returns a paginated list of meetings where the authenticated user is a participant.\nSupports filtering by status, date range, and sort direction."
                     },

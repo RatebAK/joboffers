@@ -1,0 +1,122 @@
+meta {
+  name: Show meeting details
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/meetings/:id
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "meeting": {
+            "_id": "664f1a2b3c4d5e6f7a8b9c0f",
+            "organizer_id": "664f1a2b3c4d5e6f7a8b9c0a",
+            "invitee_id": "664f1a2b3c4d5e6f7a8b9c0e",
+            "title": "Initial Interview",
+            "meeting_type": "video_call",
+            "proposed_date": "2025-02-15",
+            "proposed_start_time": "14:00",
+            "proposed_duration_minutes": 60,
+            "status": "accepted",
+            "meet_link": "https://meet.google.com/abc-defg-hij",
+            "notes": [],
+            "previous_schedules": [],
+            "participant": {
+              "id": "664f1a2b3c4d5e6f7a8b9c0e",
+              "name": "Jane Smith",
+              "email": "jane@example.com",
+              "company_name": null,
+              "avatar": "https://res.cloudinary.com/xxx/image/upload/profile.jpg"
+            }
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Forbidden"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Meeting not found"
+        }
+      '''
+    }
+  }
+}

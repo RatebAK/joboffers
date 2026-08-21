@@ -1,0 +1,42 @@
+meta {
+  name: Disconnect Google account
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: DELETE
+  url: {{baseUrl}}/api/google/disconnect
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/google/disconnect
+    method: DELETE
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Google account disconnected successfully"
+        }
+      '''
+    }
+  }
+}

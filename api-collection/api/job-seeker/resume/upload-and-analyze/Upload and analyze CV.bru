@@ -1,0 +1,126 @@
+meta {
+  name: Upload and analyze CV
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/job-seeker/resume/upload-and-analyze
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  cv: 
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/resume/upload-and-analyze
+    method: POST
+    mode: multipartForm
+    body:multipart-form: {
+      cv: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "CV uploaded successfully. Analysis is being processed.",
+          "resume_url": "https://res.cloudinary.com/.../cv.pdf",
+          "analysis_status": "pending",
+          "profile": {
+            "id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "ats_score": null,
+            "ai_skills": [],
+            "ai_work_history": [],
+            "ai_analyzed_at": null,
+            "analysis_status": "pending"
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/resume/upload-and-analyze
+    method: POST
+    mode: multipartForm
+    body:multipart-form: {
+      cv: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "CV analysis failed",
+          "reason": "CV content could not be parsed."
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 502 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/resume/upload-and-analyze
+    method: POST
+    mode: multipartForm
+    body:multipart-form: {
+      cv: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 502
+      text: Bad Gateway
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "CV analysis service unavailable"
+        }
+      '''
+    }
+  }
+}

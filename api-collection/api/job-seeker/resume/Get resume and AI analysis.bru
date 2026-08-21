@@ -1,0 +1,109 @@
+meta {
+  name: Get resume and AI analysis
+  type: http-request
+  seq: 2
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/job-seeker/resume
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/resume
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "resume_url": "https://res.cloudinary.com/.../resume.pdf",
+          "analysis_status": "completed",
+          "analysis_error": null,
+          "analysis_started_at": "2026-07-18T09:31:00Z",
+          "analysis_completed_at": "2026-07-18T09:31:18Z",
+          "ats_score": 65,
+          "ai_full_name": "John Smith",
+          "ai_email": "john@example.com",
+          "ai_phone": "+1 555 0100",
+          "ai_location": "New York, NY",
+          "ai_summary": "Experienced developer...",
+          "ai_skills": [
+            "PHP",
+            "Laravel",
+            "MongoDB"
+          ],
+          "ai_work_history": [
+            {
+              "company": "Acme",
+              "role": "Developer",
+              "duration": "2020-2023",
+              "description": "..."
+            }
+          ],
+          "ai_education_history": [
+            {
+              "institution": "MIT",
+              "degree": "BSc Computer Science",
+              "year": "2020"
+            }
+          ],
+          "ai_projects": [],
+          "ai_languages": [
+            "English",
+            "Arabic"
+          ],
+          "ai_overall_evaluation": "Strong profile with relevant experience...",
+          "ai_analyzed_at": "2026-07-18T09:31:18Z"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/resume
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "No resume found. Please upload a resume first."
+        }
+      '''
+    }
+  }
+}

@@ -1,0 +1,49 @@
+meta {
+  name: List coach sessions
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/job-seeker/coach/sessions
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/coach/sessions
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "data": [
+            {
+              "id": "...",
+              "title": "Resume tips",
+              "created_at": "...",
+              "updated_at": "..."
+            }
+          ]
+        }
+      '''
+    }
+  }
+}

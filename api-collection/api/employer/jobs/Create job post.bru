@@ -1,0 +1,322 @@
+meta {
+  name: Create job post
+  type: http-request
+  seq: 2
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/employer/jobs
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "communication_method": "",
+    "communication_value": "",
+    "title": "",
+    "roles": [],
+    "portfolio_required": false,
+    "cover_letter_required": false,
+    "gender": "",
+    "age_from": 0,
+    "age_to": 0,
+    "education_level": "",
+    "job_level": "",
+    "experience_years": 0,
+    "languages": [],
+    "vacancies": 0,
+    "job_type": "",
+    "work_mode": "",
+    "city": "",
+    "address": "",
+    "salary_from": "",
+    "salary_to": "",
+    "currency": "",
+    "display_salary": false,
+    "incentives": "",
+    "description": "",
+    "requirements": "",
+    "questions": [
+      {
+        "question": "",
+        "required": ""
+      }
+    ],
+    "tags": [],
+    "category": "",
+    "expires_at": ""
+  }
+}
+
+example {
+  name: 201 Response
+  
+  request: {
+    url: {{baseUrl}}/api/employer/jobs
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "communication_method": "",
+        "communication_value": "",
+        "title": "",
+        "roles": [],
+        "portfolio_required": false,
+        "cover_letter_required": false,
+        "gender": "",
+        "age_from": 0,
+        "age_to": 0,
+        "education_level": "",
+        "job_level": "",
+        "experience_years": 0,
+        "languages": [],
+        "vacancies": 0,
+        "job_type": "",
+        "work_mode": "",
+        "city": "",
+        "address": "",
+        "salary_from": "",
+        "salary_to": "",
+        "currency": "",
+        "display_salary": false,
+        "incentives": "",
+        "description": "",
+        "requirements": "",
+        "questions": [
+          {
+            "question": "",
+            "required": ""
+          }
+        ],
+        "tags": [],
+        "category": "",
+        "expires_at": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 201
+      text: Created
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "_id": "664f1a2b3c4d5e6f7a8b9c0d",
+          "job_id": "JOB-0001",
+          "employer_id": "664f1a2b3c4d5e6f7a8b9c0e",
+          "company_profile_id": "664f1a2b3c4d5e6f7a8b9c0f",
+          "company_name": "Acme Corp",
+          "company_logo": "https://example.com/logo.png",
+          "title": "Senior Laravel Developer",
+          "is_active": true,
+          "created_at": "2026-01-15T10:00:00.000000Z",
+          "updated_at": "2026-01-15T10:00:00.000000Z"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  
+  request: {
+    url: {{baseUrl}}/api/employer/jobs
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "communication_method": "",
+        "communication_value": "",
+        "title": "",
+        "roles": [],
+        "portfolio_required": false,
+        "cover_letter_required": false,
+        "gender": "",
+        "age_from": 0,
+        "age_to": 0,
+        "education_level": "",
+        "job_level": "",
+        "experience_years": 0,
+        "languages": [],
+        "vacancies": 0,
+        "job_type": "",
+        "work_mode": "",
+        "city": "",
+        "address": "",
+        "salary_from": "",
+        "salary_to": "",
+        "currency": "",
+        "display_salary": false,
+        "incentives": "",
+        "description": "",
+        "requirements": "",
+        "questions": [
+          {
+            "question": "",
+            "required": ""
+          }
+        ],
+        "tags": [],
+        "category": "",
+        "expires_at": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "You must create a company profile before posting a job."
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  
+  request: {
+    url: {{baseUrl}}/api/employer/jobs
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "communication_method": "",
+        "communication_value": "",
+        "title": "",
+        "roles": [],
+        "portfolio_required": false,
+        "cover_letter_required": false,
+        "gender": "",
+        "age_from": 0,
+        "age_to": 0,
+        "education_level": "",
+        "job_level": "",
+        "experience_years": 0,
+        "languages": [],
+        "vacancies": 0,
+        "job_type": "",
+        "work_mode": "",
+        "city": "",
+        "address": "",
+        "salary_from": "",
+        "salary_to": "",
+        "currency": "",
+        "display_salary": false,
+        "incentives": "",
+        "description": "",
+        "requirements": "",
+        "questions": [
+          {
+            "question": "",
+            "required": ""
+          }
+        ],
+        "tags": [],
+        "category": "",
+        "expires_at": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "errors": {}
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/employer/jobs
+    method: POST
+    mode: json
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "communication_method": "by_forsa",
+        "communication_value": null,
+        "title": "Senior Laravel Developer",
+        "roles": [
+          "Backend",
+          "PHP"
+        ],
+        "portfolio_required": false,
+        "cover_letter_required": true,
+        "gender": "no_preference",
+        "age_from": null,
+        "age_to": null,
+        "education_level": "bachelor",
+        "job_level": "mid",
+        "experience_years": 3,
+        "languages": [
+          "Arabic",
+          "English"
+        ],
+        "vacancies": 2,
+        "job_type": "full_time",
+        "work_mode": "on_site",
+        "city": "Damascus",
+        "address": "Mazzeh Street 12",
+        "salary_from": "500",
+        "salary_to": "1000",
+        "currency": "USD",
+        "display_salary": true,
+        "incentives": "Monthly bonuses",
+        "description": "We are looking for...",
+        "requirements": "3+ years Laravel experience.",
+        "questions": [
+          []
+        ],
+        "tags": [
+          "Laravel",
+          "MongoDB"
+        ],
+        "category": "Engineering",
+        "expires_at": "2026-12-31"
+      }
+    }
+  }
+}

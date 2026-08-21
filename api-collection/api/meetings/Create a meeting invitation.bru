@@ -1,0 +1,148 @@
+meta {
+  name: Create a meeting invitation
+  type: http-request
+  seq: 2
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/meetings
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "invitee_id": "",
+    "title": "",
+    "meeting_type": "",
+    "proposed_date": "",
+    "proposed_start_time": "",
+    "proposed_duration_minutes": 0,
+    "location_or_link": ""
+  }
+}
+
+example {
+  name: 201 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "invitee_id": "",
+        "title": "",
+        "meeting_type": "",
+        "proposed_date": "",
+        "proposed_start_time": "",
+        "proposed_duration_minutes": 0,
+        "location_or_link": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 201
+      text: Created
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Meeting created successfully",
+          "meeting": {
+            "_id": "664f1a2b3c4d5e6f7a8b9c0f",
+            "organizer_id": "664f1a2b3c4d5e6f7a8b9c0a",
+            "invitee_id": "664f1a2b3c4d5e6f7a8b9c0e",
+            "title": "Initial Interview",
+            "meeting_type": "video_call",
+            "proposed_date": "2025-02-15",
+            "proposed_start_time": "14:00",
+            "proposed_duration_minutes": 60,
+            "status": "pending",
+            "location_or_link": null,
+            "meet_link": null,
+            "notes": [],
+            "previous_schedules": []
+          },
+          "organizer_conflicts": [],
+          "invitee_conflicts": []
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "invitee_id": "",
+        "title": "",
+        "meeting_type": "",
+        "proposed_date": "",
+        "proposed_start_time": "",
+        "proposed_duration_minutes": 0,
+        "location_or_link": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Invitee not found"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/meetings
+    method: POST
+    mode: json
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "invitee_id": "664f1a2b3c4d5e6f7a8b9c0e",
+        "title": "Initial Interview",
+        "meeting_type": "video_call",
+        "proposed_date": "2025-02-15",
+        "proposed_start_time": "14:00",
+        "proposed_duration_minutes": 60,
+        "location_or_link": "123 Main St"
+      }
+    }
+  }
+}

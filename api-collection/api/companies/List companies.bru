@@ -1,0 +1,22 @@
+meta {
+  name: List companies
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/companies
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~search: 
+  ~industry: 
+  ~city: 
+  ~company_size: 
+  ~min_rating: 
+  ~per_page: 
+  ~page: 
+}

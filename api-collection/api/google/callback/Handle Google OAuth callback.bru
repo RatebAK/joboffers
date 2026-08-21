@@ -1,0 +1,51 @@
+meta {
+  name: Handle Google OAuth callback
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/google/callback
+  body: none
+  auth: inherit
+}
+
+params:query {
+  code: 
+  state: 
+}
+
+example {
+  name: 400 Response
+  
+  request: {
+    url: {{baseUrl}}/api/google/callback
+    method: GET
+    mode: none
+    params:query: {
+      code: 
+      state: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Google authorization was denied"
+        }
+      '''
+    }
+  }
+}

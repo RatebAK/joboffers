@@ -1,0 +1,92 @@
+meta {
+  name: Apply to become employer
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/employer/apply
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  document: 
+}
+
+example {
+  name: 201 Response
+  
+  request: {
+    url: {{baseUrl}}/api/employer/apply
+    method: POST
+    mode: multipartForm
+    body:multipart-form: {
+      document: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 201
+      text: Created
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Employer application submitted.",
+          "employer": {
+            "id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "user_id": "664f1a2b3c4d5e6f7a8b9c0e",
+            "status": "pending",
+            "document_name": "business_license.pdf"
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  
+  request: {
+    url: {{baseUrl}}/api/employer/apply
+    method: POST
+    mode: multipartForm
+    body:multipart-form: {
+      document: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "errors": {
+            "document": [
+              "The document field is required."
+            ]
+          }
+        }
+      '''
+    }
+  }
+}

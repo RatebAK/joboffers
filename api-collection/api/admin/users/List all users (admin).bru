@@ -1,0 +1,66 @@
+meta {
+  name: List all users (admin)
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: GET
+  url: {{baseUrl}}/api/admin/users
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~per_page: 
+  ~page: 
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/admin/users
+    method: GET
+    mode: none
+    params:query: {
+      ~per_page: 
+      ~page: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "data": [
+            {
+              "id": "...",
+              "name": "...",
+              "email": "...",
+              "roles": [
+                "employee"
+              ]
+            }
+          ],
+          "current_page": 1,
+          "per_page": 15,
+          "total": 10,
+          "total_pages": 1,
+          "next_page": null,
+          "prev_page": null
+        }
+      '''
+    }
+  }
+}

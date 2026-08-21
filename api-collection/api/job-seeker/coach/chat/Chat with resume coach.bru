@@ -1,0 +1,112 @@
+meta {
+  name: Chat with resume coach
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/job-seeker/coach/chat
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "message": "",
+    "session_id": ""
+  }
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/coach/chat
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "message": "",
+        "session_id": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "response": "Here are some tips to improve your resume...",
+          "session_id": "64a1b2c3d4e5f6a7b8c9d0e1"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 502 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/coach/chat
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "message": "",
+        "session_id": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 502
+      text: Bad Gateway
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Resume coach service unavailable"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/coach/chat
+    method: POST
+    mode: json
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "message": "How can I improve my resume?",
+        "session_id": "architecto"
+      }
+    }
+  }
+}

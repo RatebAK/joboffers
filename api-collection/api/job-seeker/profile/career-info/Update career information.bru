@@ -1,0 +1,121 @@
+meta {
+  name: Update career information
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: PUT
+  url: {{baseUrl}}/api/job-seeker/profile/career-info
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "salary_range_from": "",
+    "salary_range_to": "",
+    "current_job_status": "",
+    "years_of_experience": 0,
+    "education_level": "",
+    "job_level": "",
+    "job_types": [],
+    "job_roles": [],
+    "work_cities": [],
+    "current_job_title": "",
+    "experience_summary": "",
+    "expected_salary": "",
+    "is_actively_seeking": false
+  }
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/profile/career-info
+    method: PUT
+    mode: json
+    body:json: {
+      {
+        "salary_range_from": "",
+        "salary_range_to": "",
+        "current_job_status": "",
+        "years_of_experience": 0,
+        "education_level": "",
+        "job_level": "",
+        "job_types": [],
+        "job_roles": [],
+        "work_cities": [],
+        "current_job_title": "",
+        "experience_summary": "",
+        "expected_salary": "",
+        "is_actively_seeking": false
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Career information updated successfully",
+          "profile": {
+            "id": "664f1a2b3c4d5e6f7a8b9c0d",
+            "current_job_title": "Frontend Developer"
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/job-seeker/profile/career-info
+    method: PUT
+    mode: json
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "salary_range_from": 2000,
+        "salary_range_to": 5000,
+        "current_job_status": "architecto",
+        "years_of_experience": 5,
+        "education_level": "Bachelor's Degree",
+        "job_level": "architecto",
+        "job_types": [
+          "full_time",
+          "remote"
+        ],
+        "job_roles": [
+          "Frontend",
+          "React"
+        ],
+        "work_cities": [
+          "Beirut",
+          "Dubai"
+        ],
+        "current_job_title": "Frontend Developer",
+        "experience_summary": "architecto",
+        "expected_salary": 3500,
+        "is_actively_seeking": true
+      }
+    }
+  }
+}

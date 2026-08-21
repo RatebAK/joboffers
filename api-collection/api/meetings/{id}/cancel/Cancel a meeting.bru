@@ -1,0 +1,182 @@
+meta {
+  name: Cancel a meeting
+  type: http-request
+  seq: 1
+}
+
+http {
+  method: POST
+  url: {{baseUrl}}/api/meetings/:id/cancel
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "cancellation_reason": ""
+  }
+}
+
+example {
+  name: 200 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id/cancel
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "cancellation_reason": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "meeting": {
+            "_id": "664f...",
+            "status": "cancelled",
+            "cancellation_reason": "No longer needed",
+            "cancelled_by": "664f..."
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id/cancel
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "cancellation_reason": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Forbidden"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id/cancel
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "cancellation_reason": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "Meeting not found"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id/cancel
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "cancellation_reason": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "This meeting cannot be cancelled in its current state"
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Request Example
+  
+  request: {
+    url: {{baseUrl}}/api/meetings/:id/cancel
+    method: POST
+    mode: json
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "cancellation_reason": "No longer needed"
+      }
+    }
+  }
+}
