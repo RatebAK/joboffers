@@ -8,7 +8,7 @@ Employers can use AI to find the best-matched candidates for their jobs based on
 
 ## API Endpoint
 
-**URL:** `https://ai-recruiter-api-for-backend.onrender.com/match-job-to-candidates`  
+**URL:** `https://recruitment-ai-api-c8vt.onrender.com/match-job-to-candidates`  
 **Method:** `POST`  
 **Content-Type:** `application/x-www-form-urlencoded`
 
@@ -16,7 +16,7 @@ Employers can use AI to find the best-matched candidates for their jobs based on
 
 ```bash
 curl -X POST \
-  'https://ai-recruiter-api-for-backend.onrender.com/match-job-to-candidates' \
+  'https://recruitment-ai-api-c8vt.onrender.com/match-job-to-candidates' \
   -H 'Content-Type: application/x-www-form-urlencoded' \
   -d 'job_description=programming&limit=5'
 ```
@@ -65,7 +65,7 @@ curl -X POST \
 Set the API URL in your `.env` file:
 
 ```env
-JOB_MATCHING_API_URL=https://ai-recruiter-api-for-backend.onrender.com/match-job-to-candidates
+JOB_MATCHING_API_URL=https://recruitment-ai-api-c8vt.onrender.com/match-job-to-candidates
 ```
 
 The URL is configured in `config/services.php`:

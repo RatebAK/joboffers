@@ -8,7 +8,7 @@ The platform uses an external AI service to analyze uploaded CVs and automatical
 
 ## API Endpoint
 
-**URL:** `https://ai-recruiter-api-for-backend.onrender.com/analyze-resume`  
+**URL:** `https://recruitment-ai-api-c8vt.onrender.com/analyze-resume`  
 **Method:** `POST`  
 **Content-Type:** `multipart/form-data`
 
@@ -16,7 +16,7 @@ The platform uses an external AI service to analyze uploaded CVs and automatical
 
 ```bash
 curl -X POST \
-  'https://ai-recruiter-api-for-backend.onrender.com/analyze-resume' \
+  'https://recruitment-ai-api-c8vt.onrender.com/analyze-resume' \
   -H 'Content-Type: multipart/form-data' \
   -F 'resume_id=123' \
   -F 'file=@resume.pdf'
@@ -71,7 +71,7 @@ curl -X POST \
 Set the API URL in your `.env` file:
 
 ```env
-CV_ANALYSIS_API_URL=https://ai-recruiter-api-for-backend.onrender.com/analyze-resume
+CV_ANALYSIS_API_URL=https://recruitment-ai-api-c8vt.onrender.com/analyze-resume
 ```
 
 The URL is configured in `config/services.php`:
