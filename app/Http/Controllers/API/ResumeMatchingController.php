@@ -39,6 +39,8 @@ class ResumeMatchingController extends Controller
      */
     public function matchResume(Request $request, ResumeMatchingService $matchingService)
     {
+        set_time_limit(300);
+
         $user    = $request->user();
         $profile = $user->jobSeekerProfile;
 
@@ -49,7 +51,7 @@ class ResumeMatchingController extends Controller
         }
 
         try {
-            $result = $matchingService->matchResumeToJobs($profile->user_id);
+            $result = $matchingService->matchResumeToJobs((string) $user->_id);
         } catch (CvAnalysisException $e) {
             if ($e->getHttpStatusCode() === 422) {
                 return response()->json([
@@ -59,7 +61,11 @@ class ResumeMatchingController extends Controller
             }
 
             return response()->json([
-                'message' => 'Resume matching service unavailable',
+                'message'        => 'Resume matching service unavailable',
+                'payload_sent'   => [
+                    'resume_id' => (string) $user->_id,
+                    'limit'     => 10,
+                ],
             ], 502);
         }
 

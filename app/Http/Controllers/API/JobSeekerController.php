@@ -762,6 +762,8 @@ class JobSeekerController extends Controller
     // Upload resume separately - NON-BLOCKING VERSION
     public function uploadResume(Request $request, CvAnalysisService $cvAnalysisService)
     {
+        set_time_limit(300);
+
         $user = $request->user();
 
         $validator = Validator::make($request->all(), [

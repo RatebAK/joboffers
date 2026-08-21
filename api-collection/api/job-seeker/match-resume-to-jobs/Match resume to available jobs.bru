@@ -1,14 +1,17 @@
 meta {
   name: Match resume to available jobs
-  type: http-request
+  type: http
   seq: 1
 }
 
-http {
-  method: GET
+get {
   url: {{baseUrl}}/api/job-seeker/match-resume-to-jobs
   body: none
   auth: inherit
+}
+
+vars:pre-request {
+  baseUrl: http://127.0.0.1:8000
 }
 
 example {

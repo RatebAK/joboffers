@@ -93,6 +93,8 @@ class ApplicationController extends Controller
      */
     public function store(Request $request)
     {
+        set_time_limit(300);
+
         $user = $request->user();
 
         $validator = Validator::make($request->all(), [
