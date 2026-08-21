@@ -62,9 +62,14 @@ class ResumeMatchingController extends Controller
 
             return response()->json([
                 'message'        => 'Resume matching service unavailable',
-                'payload_sent'   => [
-                    'resume_id' => (string) $user->_id,
-                    'limit'     => 10,
+                'debug'          => [
+                    'endpoint'       => config('services.resume_matching.url'),
+                    'method'         => 'POST',
+                    'content_type'   => 'application/x-www-form-urlencoded',
+                    'payload_sent'   => [
+                        'resume_id' => (string) $user->_id,
+                        'limit'     => 10,
+                    ],
                 ],
             ], 502);
         }
