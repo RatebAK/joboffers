@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Exceptions\CvAnalysisException;
 use App\Http\Controllers\Controller;
-use App\Models\JobPost;
 use App\Services\ResumeMatchingService;
 use Illuminate\Http\Request;
 
@@ -74,22 +73,9 @@ class ResumeMatchingController extends Controller
             ], 502);
         }
 
-        $jobs = collect($result['jobs'])->map(function ($job) {
-            $dbJob = JobPost::where('job_id', $job['job_id'])->first();
-
-            if (! $dbJob) {
-                return null;
-            }
-
-            return array_merge($dbJob->toArray(), [
-                'matched_skills'       => $job['matched_skills'] ?? [],
-                'matched_skills_score' => $job['matched_skills_score'] ?? 0,
-            ]);
-        })->filter()->values()->toArray();
-
         return response()->json([
             'matches_found' => $result['matches_found'],
-            'jobs'          => $jobs,
+            'jobs'          => $result['jobs'],
         ]);
     }
 }
