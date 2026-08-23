@@ -569,6 +569,177 @@ endpoints:
     custom: []
     httpMethods:
       - GET
+    uri: api/jobs/search
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Search jobs'
+      description: 'Paginated search of active job posts for the authenticated job seeker.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      keyword:
+        custom: []
+        name: keyword
+        description: 'Search in title, description, company name. Max 100 chars.'
+        required: false
+        example: React
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      location:
+        custom: []
+        name: location
+        description: 'Partial location match. Max 100 chars.'
+        required: false
+        example: Beirut
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      job_type:
+        custom: []
+        name: job_type
+        description: 'One of: full_time, part_time, contract, freelance.'
+        required: false
+        example: full_time
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      category:
+        custom: []
+        name: category
+        description: ''
+        required: false
+        example: Engineering
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      min_salary:
+        custom: []
+        name: min_salary
+        description: 'Minimum salary.'
+        required: false
+        example: 2000.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      keyword: React
+      location: Beirut
+      job_type: full_time
+      category: Engineering
+      min_salary: 2000.0
+    bodyParameters:
+      keyword:
+        custom: []
+        name: keyword
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      location:
+        custom: []
+        name: location
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      job_type:
+        custom: []
+        name: job_type
+        description: ''
+        required: false
+        example: contract
+        type: string
+        enumValues:
+          - full_time
+          - part_time
+          - contract
+          - freelance
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      category:
+        custom: []
+        name: category
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: g
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      min_salary:
+        custom: []
+        name: min_salary
+        description: 'Must be at least 0.'
+        required: false
+        example: 12
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      keyword: b
+      location: 'n'
+      job_type: contract
+      category: g
+      min_salary: 12
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "jobs": {
+              "data": [{ "id": "664f1a2b3c4d5e6f7a8b9c0d", "title": "Senior React Developer", "company_name": "Acme Corp" }],
+              "current_page": 1, "per_page": 15, "total": 1, "total_pages": 1, "next_page": null, "prev_page": null
+            }
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
     uri: 'api/jobs/{id}'
     metadata:
       custom: []
@@ -680,177 +851,6 @@ endpoints:
         description: ''
     responseFields: []
     auth: []
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - GET
-    uri: api/jobs/search
-    metadata:
-      custom: []
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Search jobs'
-      description: 'Paginated search of active job posts for the authenticated job seeker.'
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters:
-      keyword:
-        custom: []
-        name: keyword
-        description: 'Search in title, description, company name. Max 100 chars.'
-        required: false
-        example: React
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      location:
-        custom: []
-        name: location
-        description: 'Partial location match. Max 100 chars.'
-        required: false
-        example: Beirut
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      job_type:
-        custom: []
-        name: job_type
-        description: 'One of: full_time, part_time, contract, freelance.'
-        required: false
-        example: full_time
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      category:
-        custom: []
-        name: category
-        description: ''
-        required: false
-        example: Engineering
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      min_salary:
-        custom: []
-        name: min_salary
-        description: 'Minimum salary.'
-        required: false
-        example: 2000.0
-        type: number
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-    cleanQueryParameters:
-      keyword: React
-      location: Beirut
-      job_type: full_time
-      category: Engineering
-      min_salary: 2000.0
-    bodyParameters:
-      keyword:
-        custom: []
-        name: keyword
-        description: 'Must not be greater than 100 characters.'
-        required: false
-        example: b
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-      location:
-        custom: []
-        name: location
-        description: 'Must not be greater than 100 characters.'
-        required: false
-        example: 'n'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-      job_type:
-        custom: []
-        name: job_type
-        description: ''
-        required: false
-        example: full_time
-        type: string
-        enumValues:
-          - full_time
-          - part_time
-          - contract
-          - freelance
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-      category:
-        custom: []
-        name: category
-        description: 'Must not be greater than 100 characters.'
-        required: false
-        example: g
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-      min_salary:
-        custom: []
-        name: min_salary
-        description: 'Must be at least 0.'
-        required: false
-        example: 12
-        type: number
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-    cleanBodyParameters:
-      keyword: b
-      location: 'n'
-      job_type: full_time
-      category: g
-      min_salary: 12
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: |-
-          {
-            "jobs": {
-              "data": [{ "id": "664f1a2b3c4d5e6f7a8b9c0d", "title": "Senior React Developer", "company_name": "Acme Corp" }],
-              "current_page": 1, "per_page": 15, "total": 1, "total_pages": 1, "next_page": null, "prev_page": null
-            }
-          }
-        headers: []
-        description: ''
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAiLCJpYXQiOjE3Nzg2OTkyMzUsImV4cCI6MTc3ODcwMjgzNSwibmJmIjoxNzc4Njk5MjM1LCJqdGkiOiJDWG9yaGt5a1hKNjdvRHFYIiwic3ViIjoiNmEwNGNiZTMyNzVjN2U0ZTc0MDYzYjIyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.K-sRnHsbqbEY_SsFwR7cv65kphc0smIztaVN2ciFLcY'
     controller: null
     method: null
     route: null
@@ -2450,7 +2450,7 @@ endpoints:
         name: gender
         description: ''
         required: false
-        example: other
+        example: prefer_not_to_say
         type: string
         enumValues:
           - male
@@ -2531,7 +2531,7 @@ endpoints:
         name: marital_status
         description: ''
         required: false
-        example: prefer_not_to_say
+        example: married
         type: string
         enumValues:
           - single
@@ -2569,7 +2569,7 @@ endpoints:
         name: current_job_status
         description: ''
         required: false
-        example: open_to_work
+        example: freelancing
         type: string
         enumValues:
           - employed
@@ -2607,7 +2607,7 @@ endpoints:
         name: job_level
         description: ''
         required: false
-        example: director
+        example: mid
         type: string
         enumValues:
           - entry
@@ -2997,20 +2997,20 @@ endpoints:
       last_name: 'n'
       full_name: g
       image: z
-      gender: other
+      gender: prefer_not_to_say
       nationality: m
       city: i
       location: 'y'
       address: v
       phone: dljnikhwaykcmyuw
       date_of_birth: pwlvqwrsitcpscql
-      marital_status: prefer_not_to_say
+      marital_status: married
       salary_range_from: 16
       salary_range_to: 38
-      current_job_status: open_to_work
+      current_job_status: freelancing
       years_of_experience: 8
       education_level: 'n'
-      job_level: director
+      job_level: mid
       job_types:
         - r
       job_roles:
@@ -8720,7 +8720,7 @@ endpoints:
         name: from_date
         description: 'Must be a valid date in the format <code>Y-m-d</code>.'
         required: false
-        example: '2026-08-21'
+        example: '2026-08-23'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -8731,7 +8731,7 @@ endpoints:
         name: to_date
         description: 'Must be a valid date in the format <code>Y-m-d</code>.'
         required: false
-        example: '2026-08-21'
+        example: '2026-08-23'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -8763,8 +8763,8 @@ endpoints:
         deprecated: false
     cleanBodyParameters:
       status: architecto
-      from_date: '2026-08-21'
-      to_date: '2026-08-21'
+      from_date: '2026-08-23'
+      to_date: '2026-08-23'
       sort_direction: desc
       per_page: 22
     fileParameters: []

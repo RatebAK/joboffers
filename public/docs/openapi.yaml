@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 servers:
   -
-    url: 'https://joboffers-main-uj2ehj.laravel.cloud'
+    url: 'http://localhost:8000'
 tags:
   -
     name: Endpoints
@@ -743,6 +743,164 @@ paths:
       tags:
         - Endpoints
       security: []
+  /api/jobs/search:
+    get:
+      summary: 'Search jobs'
+      operationId: searchJobs
+      description: 'Paginated search of active job posts for the authenticated job seeker.'
+      parameters:
+        -
+          in: query
+          name: keyword
+          description: 'Search in title, description, company name. Max 100 chars.'
+          example: React
+          required: false
+          schema:
+            type: string
+            description: 'Search in title, description, company name. Max 100 chars.'
+            example: React
+        -
+          in: query
+          name: location
+          description: 'Partial location match. Max 100 chars.'
+          example: Beirut
+          required: false
+          schema:
+            type: string
+            description: 'Partial location match. Max 100 chars.'
+            example: Beirut
+        -
+          in: query
+          name: job_type
+          description: 'One of: full_time, part_time, contract, freelance.'
+          example: full_time
+          required: false
+          schema:
+            type: string
+            description: 'One of: full_time, part_time, contract, freelance.'
+            example: full_time
+        -
+          in: query
+          name: category
+          description: ''
+          example: Engineering
+          required: false
+          schema:
+            type: string
+            description: ''
+            example: Engineering
+        -
+          in: query
+          name: min_salary
+          description: 'Minimum salary.'
+          example: 2000.0
+          required: false
+          schema:
+            type: number
+            description: 'Minimum salary.'
+            example: 2000.0
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  jobs:
+                    data:
+                      -
+                        id: 664f1a2b3c4d5e6f7a8b9c0d
+                        title: 'Senior React Developer'
+                        company_name: 'Acme Corp'
+                    current_page: 1
+                    per_page: 15
+                    total: 1
+                    total_pages: 1
+                    next_page: null
+                    prev_page: null
+                properties:
+                  jobs:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        example:
+                          -
+                            id: 664f1a2b3c4d5e6f7a8b9c0d
+                            title: 'Senior React Developer'
+                            company_name: 'Acme Corp'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: 664f1a2b3c4d5e6f7a8b9c0d
+                            title:
+                              type: string
+                              example: 'Senior React Developer'
+                            company_name:
+                              type: string
+                              example: 'Acme Corp'
+                      current_page:
+                        type: integer
+                        example: 1
+                      per_page:
+                        type: integer
+                        example: 15
+                      total:
+                        type: integer
+                        example: 1
+                      total_pages:
+                        type: integer
+                        example: 1
+                      next_page:
+                        type: string
+                        example: null
+                        nullable: true
+                      prev_page:
+                        type: string
+                        example: null
+                        nullable: true
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                keyword:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: b
+                  nullable: true
+                location:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: 'n'
+                  nullable: true
+                job_type:
+                  type: string
+                  description: ''
+                  example: contract
+                  enum:
+                    - full_time
+                    - part_time
+                    - contract
+                    - freelance
+                  nullable: true
+                category:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: g
+                  nullable: true
+                min_salary:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 12
+                  nullable: true
   '/api/jobs/{id}':
     get:
       summary: 'Get job'
@@ -1042,164 +1200,6 @@ paths:
         required: true
         schema:
           type: string
-  /api/jobs/search:
-    get:
-      summary: 'Search jobs'
-      operationId: searchJobs
-      description: 'Paginated search of active job posts for the authenticated job seeker.'
-      parameters:
-        -
-          in: query
-          name: keyword
-          description: 'Search in title, description, company name. Max 100 chars.'
-          example: React
-          required: false
-          schema:
-            type: string
-            description: 'Search in title, description, company name. Max 100 chars.'
-            example: React
-        -
-          in: query
-          name: location
-          description: 'Partial location match. Max 100 chars.'
-          example: Beirut
-          required: false
-          schema:
-            type: string
-            description: 'Partial location match. Max 100 chars.'
-            example: Beirut
-        -
-          in: query
-          name: job_type
-          description: 'One of: full_time, part_time, contract, freelance.'
-          example: full_time
-          required: false
-          schema:
-            type: string
-            description: 'One of: full_time, part_time, contract, freelance.'
-            example: full_time
-        -
-          in: query
-          name: category
-          description: ''
-          example: Engineering
-          required: false
-          schema:
-            type: string
-            description: ''
-            example: Engineering
-        -
-          in: query
-          name: min_salary
-          description: 'Minimum salary.'
-          example: 2000.0
-          required: false
-          schema:
-            type: number
-            description: 'Minimum salary.'
-            example: 2000.0
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  jobs:
-                    data:
-                      -
-                        id: 664f1a2b3c4d5e6f7a8b9c0d
-                        title: 'Senior React Developer'
-                        company_name: 'Acme Corp'
-                    current_page: 1
-                    per_page: 15
-                    total: 1
-                    total_pages: 1
-                    next_page: null
-                    prev_page: null
-                properties:
-                  jobs:
-                    type: object
-                    properties:
-                      data:
-                        type: array
-                        example:
-                          -
-                            id: 664f1a2b3c4d5e6f7a8b9c0d
-                            title: 'Senior React Developer'
-                            company_name: 'Acme Corp'
-                        items:
-                          type: object
-                          properties:
-                            id:
-                              type: string
-                              example: 664f1a2b3c4d5e6f7a8b9c0d
-                            title:
-                              type: string
-                              example: 'Senior React Developer'
-                            company_name:
-                              type: string
-                              example: 'Acme Corp'
-                      current_page:
-                        type: integer
-                        example: 1
-                      per_page:
-                        type: integer
-                        example: 15
-                      total:
-                        type: integer
-                        example: 1
-                      total_pages:
-                        type: integer
-                        example: 1
-                      next_page:
-                        type: string
-                        example: null
-                        nullable: true
-                      prev_page:
-                        type: string
-                        example: null
-                        nullable: true
-      tags:
-        - Endpoints
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                keyword:
-                  type: string
-                  description: 'Must not be greater than 100 characters.'
-                  example: b
-                  nullable: true
-                location:
-                  type: string
-                  description: 'Must not be greater than 100 characters.'
-                  example: 'n'
-                  nullable: true
-                job_type:
-                  type: string
-                  description: ''
-                  example: full_time
-                  enum:
-                    - full_time
-                    - part_time
-                    - contract
-                    - freelance
-                  nullable: true
-                category:
-                  type: string
-                  description: 'Must not be greater than 100 characters.'
-                  example: g
-                  nullable: true
-                min_salary:
-                  type: number
-                  description: 'Must be at least 0.'
-                  example: 12
-                  nullable: true
   /api/companies:
     get:
       summary: 'List companies'
@@ -1767,7 +1767,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: other
+                  example: prefer_not_to_say
                   enum:
                     - male
                     - female
@@ -1807,7 +1807,7 @@ paths:
                 marital_status:
                   type: string
                   description: ''
-                  example: prefer_not_to_say
+                  example: married
                   enum:
                     - single
                     - married
@@ -1828,7 +1828,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: open_to_work
+                  example: freelancing
                   enum:
                     - employed
                     - unemployed
@@ -1849,7 +1849,7 @@ paths:
                 job_level:
                   type: string
                   description: ''
-                  example: director
+                  example: mid
                   enum:
                     - entry
                     - junior
@@ -8115,12 +8115,12 @@ paths:
                 from_date:
                   type: string
                   description: 'Must be a valid date in the format <code>Y-m-d</code>.'
-                  example: '2026-08-21'
+                  example: '2026-08-23'
                   nullable: true
                 to_date:
                   type: string
                   description: 'Must be a valid date in the format <code>Y-m-d</code>.'
-                  example: '2026-08-21'
+                  example: '2026-08-23'
                   nullable: true
                 sort_direction:
                   type: string
@@ -9257,6 +9257,54 @@ paths:
                           example: ...
       tags:
         - 'Resume Coach'
+    post:
+      summary: 'Create a coach session'
+      operationId: createACoachSession
+      description: 'Creates a new empty chat session for the authenticated job seeker.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: ...
+                    title: 'Resume review'
+                    created_at: ...
+                    updated_at: ...
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: ...
+                      title:
+                        type: string
+                        example: 'Resume review'
+                      created_at:
+                        type: string
+                        example: ...
+                      updated_at:
+                        type: string
+                        example: ...
+      tags:
+        - 'Resume Coach'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'optional Session title. Max 100 chars.'
+                  example: 'Resume review'
+                  nullable: true
   '/api/job-seeker/coach/sessions/{sessionId}':
     get:
       summary: 'Get session messages'

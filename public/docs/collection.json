@@ -5,12 +5,12 @@
             "key": "baseUrl",
             "type": "string",
             "name": "string",
-            "value": "https:\/\/joboffers-main-uj2ehj.laravel.cloud"
+            "value": "http:\/\/localhost:8000"
         }
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "4871a4c5-6648-4846-8b85-6f46dcde951b",
+        "_postman_id": "d6aa010a-39d0-45b7-95e3-cd455ec1f74e",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -318,55 +318,6 @@
                     ]
                 },
                 {
-                    "name": "Get job",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/jobs\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/jobs\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
-                                    "description": "Job post ID."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "Returns a single job post by ID. Inactive posts are still returned so\nemployers\/seekers can view their own closed postings \u2014 enforce access\ncontrol at the client if needed.",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"job_id\": \"JOB-0001\",\n  \"employer_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n  \"company_profile_id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n  \"company_name\": \"Acme Corp\",\n  \"company_logo\": \"https:\/\/example.com\/logo.png\",\n  \"title\": \"Senior Laravel Developer\",\n  \"description\": \"We are looking for an experienced Laravel developer...\",\n  \"requirements\": \"3+ years Laravel, MongoDB experience preferred.\",\n  \"roles\": [\"Backend\", \"PHP\"],\n  \"category\": \"Engineering\",\n  \"tags\": [\"Laravel\", \"MongoDB\", \"PHP\"],\n  \"job_type\": \"full_time\",\n  \"work_mode\": \"on_site\",\n  \"job_level\": \"senior\",\n  \"education_level\": \"bachelor\",\n  \"experience_years\": 3,\n  \"languages\": [\"Arabic\", \"English\"],\n  \"vacancies\": 2,\n  \"city\": \"Damascus\",\n  \"address\": \"Mazzeh Street 12\",\n  \"salary_from\": 500,\n  \"salary_to\": 1000,\n  \"currency\": \"USD\",\n  \"display_salary\": true,\n  \"incentives\": \"Monthly bonuses\",\n  \"gender\": \"no_preference\",\n  \"age_from\": null,\n  \"age_to\": null,\n  \"portfolio_required\": false,\n  \"cover_letter_required\": true,\n  \"communication_method\": \"by_forsa\",\n  \"communication_value\": null,\n  \"questions\": [\n    { \"question\": \"Describe your last project.\", \"required\": true }\n  ],\n  \"is_active\": true,\n  \"expires_at\": \"2026-12-31T00:00:00.000000Z\",\n  \"created_at\": \"2026-01-15T10:00:00.000000Z\",\n  \"updated_at\": \"2026-01-15T10:00:00.000000Z\",\n  \"company\": {\n    \"_id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n    \"slug\": \"acme-corp\",\n    \"name\": \"Acme Corp\",\n    \"logo\": \"https:\/\/example.com\/logo.png\",\n    \"description\": \"We build software.\",\n    \"city\": \"Damascus\",\n    \"country\": \"Syria\",\n    \"social_media\": {\n      \"linkedin\": \"https:\/\/linkedin.com\/company\/acme\",\n      \"github\": null,\n      \"twitter\": null,\n      \"facebook\": null,\n      \"instagram\": null,\n      \"telegram\": null,\n      \"behance\": null\n    }\n  }\n}",
-                            "name": "Success"
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{ \"message\": \"Job post not found\" }",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
                     "name": "Search jobs",
                     "request": {
                         "url": {
@@ -419,7 +370,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"full_time\",\"category\":\"g\",\"min_salary\":12}"
+                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"contract\",\"category\":\"g\",\"min_salary\":12}"
                         },
                         "description": "Paginated search of active job posts for the authenticated job seeker."
                     },
@@ -428,6 +379,55 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n  \"jobs\": {\n    \"data\": [{ \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"title\": \"Senior React Developer\", \"company_name\": \"Acme Corp\" }],\n    \"current_page\": 1, \"per_page\": 15, \"total\": 1, \"total_pages\": 1, \"next_page\": null, \"prev_page\": null\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get job",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/jobs\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/jobs\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "Job post ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns a single job post by ID. Inactive posts are still returned so\nemployers\/seekers can view their own closed postings \u2014 enforce access\ncontrol at the client if needed.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"_id\": \"664f1a2b3c4d5e6f7a8b9c0d\",\n  \"job_id\": \"JOB-0001\",\n  \"employer_id\": \"664f1a2b3c4d5e6f7a8b9c0e\",\n  \"company_profile_id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n  \"company_name\": \"Acme Corp\",\n  \"company_logo\": \"https:\/\/example.com\/logo.png\",\n  \"title\": \"Senior Laravel Developer\",\n  \"description\": \"We are looking for an experienced Laravel developer...\",\n  \"requirements\": \"3+ years Laravel, MongoDB experience preferred.\",\n  \"roles\": [\"Backend\", \"PHP\"],\n  \"category\": \"Engineering\",\n  \"tags\": [\"Laravel\", \"MongoDB\", \"PHP\"],\n  \"job_type\": \"full_time\",\n  \"work_mode\": \"on_site\",\n  \"job_level\": \"senior\",\n  \"education_level\": \"bachelor\",\n  \"experience_years\": 3,\n  \"languages\": [\"Arabic\", \"English\"],\n  \"vacancies\": 2,\n  \"city\": \"Damascus\",\n  \"address\": \"Mazzeh Street 12\",\n  \"salary_from\": 500,\n  \"salary_to\": 1000,\n  \"currency\": \"USD\",\n  \"display_salary\": true,\n  \"incentives\": \"Monthly bonuses\",\n  \"gender\": \"no_preference\",\n  \"age_from\": null,\n  \"age_to\": null,\n  \"portfolio_required\": false,\n  \"cover_letter_required\": true,\n  \"communication_method\": \"by_forsa\",\n  \"communication_value\": null,\n  \"questions\": [\n    { \"question\": \"Describe your last project.\", \"required\": true }\n  ],\n  \"is_active\": true,\n  \"expires_at\": \"2026-12-31T00:00:00.000000Z\",\n  \"created_at\": \"2026-01-15T10:00:00.000000Z\",\n  \"updated_at\": \"2026-01-15T10:00:00.000000Z\",\n  \"company\": {\n    \"_id\": \"664f1a2b3c4d5e6f7a8b9c0f\",\n    \"slug\": \"acme-corp\",\n    \"name\": \"Acme Corp\",\n    \"logo\": \"https:\/\/example.com\/logo.png\",\n    \"description\": \"We build software.\",\n    \"city\": \"Damascus\",\n    \"country\": \"Syria\",\n    \"social_media\": {\n      \"linkedin\": \"https:\/\/linkedin.com\/company\/acme\",\n      \"github\": null,\n      \"twitter\": null,\n      \"facebook\": null,\n      \"instagram\": null,\n      \"telegram\": null,\n      \"behance\": null\n    }\n  }\n}",
+                            "name": "Success"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Job post not found\" }",
                             "name": ""
                         }
                     ]
@@ -1194,7 +1194,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "other",
+                                    "value": "prefer_not_to_say",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1236,7 +1236,7 @@
                                 },
                                 {
                                     "key": "marital_status",
-                                    "value": "prefer_not_to_say",
+                                    "value": "married",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1254,7 +1254,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "open_to_work",
+                                    "value": "freelancing",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1272,7 +1272,7 @@
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "director",
+                                    "value": "mid",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -4551,7 +4551,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"status\":\"architecto\",\"from_date\":\"2026-08-21\",\"to_date\":\"2026-08-21\",\"sort_direction\":\"desc\",\"per_page\":22}"
+                            "raw": "{\"status\":\"architecto\",\"from_date\":\"2026-08-23\",\"to_date\":\"2026-08-23\",\"sort_direction\":\"desc\",\"per_page\":22}"
                         },
                         "description": "Returns a paginated list of meetings where the authenticated user is a participant.\nSupports filtering by status, date range, and sort direction."
                     },
@@ -5256,6 +5256,41 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n  \"data\": [{ \"id\": \"...\", \"title\": \"Resume tips\", \"created_at\": \"...\", \"updated_at\": \"...\" }]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a coach session",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/job-seeker\/coach\/sessions",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/job-seeker\/coach\/sessions"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"title\":\"Resume review\"}"
+                        },
+                        "description": "Creates a new empty chat session for the authenticated job seeker."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{ \"data\": { \"id\": \"...\", \"title\": \"Resume review\", \"created_at\": \"...\", \"updated_at\": \"...\" } }",
                             "name": ""
                         }
                     ]
