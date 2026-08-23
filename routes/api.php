@@ -43,8 +43,8 @@ Route::prefix('auth')->group(function () {
 
 // Public Job Post Routes
 Route::get('jobs', [JobPostController::class, 'index']);
-Route::get('jobs/{id}', [JobPostController::class, 'show']);
 Route::get('jobs/search', [JobSeekerController::class, 'searchJobs']);
+Route::get('jobs/{id}', [JobPostController::class, 'show']);
 
 // Public Company Routes
 Route::get('companies', [CompanyProfileController::class, 'index']);
@@ -106,6 +106,7 @@ Route::middleware(['jwt.auth', 'role:employee'])->prefix('job-seeker')->group(fu
 
     // Resume Coach AI
     Route::get('coach/sessions', [ResumeCoachController::class, 'listSessions']);
+    Route::post('coach/sessions', [ResumeCoachController::class, 'createSession']);
     Route::get('coach/sessions/{sessionId}', [ResumeCoachController::class, 'getSession']);
     Route::delete('coach/sessions/{sessionId}', [ResumeCoachController::class, 'deleteSession']);
     Route::post('coach/chat', [ResumeCoachController::class, 'chat']);

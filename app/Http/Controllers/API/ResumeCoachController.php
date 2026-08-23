@@ -12,6 +12,34 @@ use Illuminate\Http\Request;
 class ResumeCoachController extends Controller
 {
     /**
+     * Create a coach session
+     *
+     * Creates a new empty chat session for the authenticated job seeker.
+     *
+     * @authenticated
+     * @group Resume Coach
+     *
+     * @bodyParam title string optional Session title. Max 100 chars. Example: Resume review
+     *
+     * @response 201 { "data": { "id": "...", "title": "Resume review", "created_at": "...", "updated_at": "..." } }
+     */
+    public function createSession(Request $request)
+    {
+        $request->validate([
+            'title' => 'nullable|string|max:100',
+        ]);
+
+        $session = CoachSession::create([
+            'user_id'    => (string) $request->user()->_id,
+            'title'      => $request->input('title', 'New Session'),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return response()->json(['data' => $session], 201);
+    }
+
+    /**
      * List coach sessions
      *
      * Returns all chat sessions for the authenticated job seeker, newest first.
