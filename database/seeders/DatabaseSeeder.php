@@ -16,6 +16,10 @@ class DatabaseSeeder extends Seeder
         // Call the UserSeeder to create test users with roles
         $this->call(UserSeeder::class);
 
+        // Seed lookup tables
+        $this->call(CitySeeder::class);
+        $this->call(RoleSeeder::class);
+
         // Optionally create additional random users using factory
         // User::factory(10)->create();
     }

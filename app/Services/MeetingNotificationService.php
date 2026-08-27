@@ -15,7 +15,7 @@ class MeetingNotificationService
     {
         try {
             Notification::create([
-                'user_id'             => $meeting->invitee_id,
+                'user_id'             => (string) $meeting->invitee_id,
                 'type'                => 'meeting_invitation',
                 'message'             => "You have been invited to a meeting: {$meeting->title}",
                 'related_entity_id'   => $meeting->_id,
@@ -37,7 +37,7 @@ class MeetingNotificationService
     {
         try {
             Notification::create([
-                'user_id'             => $meeting->organizer_id,
+                'user_id'             => (string) $meeting->organizer_id,
                 'type'                => 'meeting_accepted',
                 'message'             => "Your meeting \"{$meeting->title}\" has been accepted.",
                 'related_entity_id'   => $meeting->_id,
@@ -59,7 +59,7 @@ class MeetingNotificationService
     {
         try {
             Notification::create([
-                'user_id'             => $meeting->organizer_id,
+                'user_id'             => (string) $meeting->organizer_id,
                 'type'                => 'meeting_declined',
                 'message'             => "Your meeting \"{$meeting->title}\" has been declined.",
                 'related_entity_id'   => $meeting->_id,
@@ -85,7 +85,7 @@ class MeetingNotificationService
                 : $meeting->organizer_id;
 
             Notification::create([
-                'user_id'             => $recipientId,
+                'user_id'             => (string) $recipientId,
                 'type'                => 'meeting_cancelled',
                 'message'             => "The meeting \"{$meeting->title}\" has been cancelled.",
                 'related_entity_id'   => $meeting->_id,
@@ -107,7 +107,7 @@ class MeetingNotificationService
     {
         try {
             Notification::create([
-                'user_id'             => $meeting->invitee_id,
+                'user_id'             => (string) $meeting->invitee_id,
                 'type'                => 'meeting_rescheduled',
                 'message'             => "The meeting \"{$meeting->title}\" has been rescheduled.",
                 'related_entity_id'   => $meeting->_id,

@@ -1,0 +1,415 @@
+# Lookup Tables — Categories, Cities, Roles
+# All three resources share the same contract. Admin routes require jwt.auth + role:admin.
+# Public listing routes require no authentication.
+
+# ── Categories ────────────────────────────────────────────────────────────────
+
+- httpMethods:
+    - GET
+  uri: api/categories
+  metadata:
+    groupName: Lookup Tables
+    groupDescription: Admin-managed reference lists for categories, cities, and roles. Public endpoints return the full list (no pagination). Admin endpoints require authentication with the admin role.
+    title: List categories (public)
+    description: Returns all categories ordered by name. No authentication required.
+    authenticated: false
+  headers:
+    Accept: application/json
+  responses:
+    - status: 200
+      description: Success
+      content: |
+        {
+          "data": [
+            { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Engineering", "created_at": "2026-01-01T00:00:00.000000Z", "updated_at": "2026-01-01T00:00:00.000000Z" },
+            { "id": "664f1a2b3c4d5e6f7a8b9c0e", "name": "Technology", "created_at": "2026-01-01T00:00:00.000000Z", "updated_at": "2026-01-01T00:00:00.000000Z" }
+          ]
+        }
+
+- httpMethods:
+    - GET
+  uri: api/admin/categories
+  metadata:
+    groupName: Lookup Tables
+    title: List categories (admin)
+    description: Returns all categories ordered by name. Requires admin role.
+    authenticated: true
+  headers:
+    Accept: application/json
+  responses:
+    - status: 200
+      description: Success
+      content: |
+        {
+          "data": [
+            { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Engineering", "created_at": "2026-01-01T00:00:00.000000Z", "updated_at": "2026-01-01T00:00:00.000000Z" }
+          ]
+        }
+
+- httpMethods:
+    - POST
+  uri: api/admin/categories
+  metadata:
+    groupName: Lookup Tables
+    title: Create category
+    description: Creates a new category. Name must be unique (case-insensitive). Requires admin role.
+    authenticated: true
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+  bodyParameters:
+    name:
+      name: name
+      description: Category name. Max 100 characters, must be unique.
+      required: true
+      example: Technology
+      type: string
+  responses:
+    - status: 201
+      description: Created
+      content: |
+        { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Technology", "created_at": "2026-01-01T00:00:00.000000Z", "updated_at": "2026-01-01T00:00:00.000000Z" }
+    - status: 422
+      description: Validation error
+      content: |
+        { "errors": { "name": ["The name has already been taken."] } }
+
+- httpMethods:
+    - PUT
+  uri: api/admin/categories/{id}
+  metadata:
+    groupName: Lookup Tables
+    title: Update category
+    description: Updates an existing category's name. Requires admin role.
+    authenticated: true
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+  urlParameters:
+    id:
+      name: id
+      description: The category ID.
+      required: true
+      example: 664f1a2b3c4d5e6f7a8b9c0d
+      type: string
+  bodyParameters:
+    name:
+      name: name
+      description: New category name. Max 100 characters, must be unique.
+      required: true
+      example: Engineering
+      type: string
+  responses:
+    - status: 200
+      description: Updated
+      content: |
+        { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Engineering", "created_at": "2026-01-01T00:00:00.000000Z", "updated_at": "2026-01-01T00:00:00.000000Z" }
+    - status: 404
+      description: Not found
+      content: |
+        { "message": "Not found." }
+    - status: 422
+      description: Validation error
+      content: |
+        { "errors": { "name": ["The name has already been taken."] } }
+
+- httpMethods:
+    - DELETE
+  uri: api/admin/categories/{id}
+  metadata:
+    groupName: Lookup Tables
+    title: Delete category
+    description: Deletes a category. Existing job posts that reference this category are unaffected (orphaned references remain). Requires admin role.
+    authenticated: true
+  headers:
+    Accept: application/json
+  urlParameters:
+    id:
+      name: id
+      description: The category ID.
+      required: true
+      example: 664f1a2b3c4d5e6f7a8b9c0d
+      type: string
+  responses:
+    - status: 200
+      description: Deleted
+      content: |
+        { "message": "Deleted successfully." }
+    - status: 404
+      description: Not found
+      content: |
+        { "message": "Not found." }
+
+# ── Cities ────────────────────────────────────────────────────────────────────
+
+- httpMethods:
+    - GET
+  uri: api/cities
+  metadata:
+    groupName: Lookup Tables
+    title: List cities (public)
+    description: Returns all cities ordered by name. Used to power location autocomplete. No authentication required.
+    authenticated: false
+  headers:
+    Accept: application/json
+  responses:
+    - status: 200
+      description: Success
+      content: |
+        {
+          "data": [
+            { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Aleppo", "created_at": "2026-01-01T00:00:00.000000Z", "updated_at": "2026-01-01T00:00:00.000000Z" },
+            { "id": "664f1a2b3c4d5e6f7a8b9c0e", "name": "Damascus", "created_at": "2026-01-01T00:00:00.000000Z", "updated_at": "2026-01-01T00:00:00.000000Z" }
+          ]
+        }
+
+- httpMethods:
+    - GET
+  uri: api/admin/cities
+  metadata:
+    groupName: Lookup Tables
+    title: List cities (admin)
+    description: Returns all cities ordered by name. Requires admin role.
+    authenticated: true
+  headers:
+    Accept: application/json
+  responses:
+    - status: 200
+      description: Success
+      content: |
+        {
+          "data": [
+            { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Damascus", "created_at": "2026-01-01T00:00:00.000000Z", "updated_at": "2026-01-01T00:00:00.000000Z" }
+          ]
+        }
+
+- httpMethods:
+    - POST
+  uri: api/admin/cities
+  metadata:
+    groupName: Lookup Tables
+    title: Create city
+    description: Creates a new city. Name must be unique. Requires admin role. Note — job posts and seeker profiles accept freeform city values not in this list.
+    authenticated: true
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+  bodyParameters:
+    name:
+      name: name
+      description: City name. Max 100 characters, must be unique.
+      required: true
+      example: Damascus
+      type: string
+  responses:
+    - status: 201
+      description: Created
+      content: |
+        { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Damascus", "created_at": "2026-01-01T00:00:00.000000Z", "updated_at": "2026-01-01T00:00:00.000000Z" }
+    - status: 422
+      description: Validation error
+      content: |
+        { "errors": { "name": ["The name has already been taken."] } }
+
+- httpMethods:
+    - PUT
+  uri: api/admin/cities/{id}
+  metadata:
+    groupName: Lookup Tables
+    title: Update city
+    description: Updates an existing city's name. Requires admin role.
+    authenticated: true
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+  urlParameters:
+    id:
+      name: id
+      description: The city ID.
+      required: true
+      example: 664f1a2b3c4d5e6f7a8b9c0d
+      type: string
+  bodyParameters:
+    name:
+      name: name
+      description: New city name. Max 100 characters, must be unique.
+      required: true
+      example: Latakia
+      type: string
+  responses:
+    - status: 200
+      description: Updated
+      content: |
+        { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Latakia", "created_at": "2026-01-01T00:00:00.000000Z", "updated_at": "2026-01-01T00:00:00.000000Z" }
+    - status: 404
+      description: Not found
+      content: |
+        { "message": "Not found." }
+    - status: 422
+      description: Validation error
+      content: |
+        { "errors": { "name": ["The name has already been taken."] } }
+
+- httpMethods:
+    - DELETE
+  uri: api/admin/cities/{id}
+  metadata:
+    groupName: Lookup Tables
+    title: Delete city
+    description: Deletes a city from the reference list. Existing records using this city value are unaffected. Requires admin role.
+    authenticated: true
+  headers:
+    Accept: application/json
+  urlParameters:
+    id:
+      name: id
+      description: The city ID.
+      required: true
+      example: 664f1a2b3c4d5e6f7a8b9c0d
+      type: string
+  responses:
+    - status: 200
+      description: Deleted
+      content: |
+        { "message": "Deleted successfully." }
+    - status: 404
+      description: Not found
+      content: |
+        { "message": "Not found." }
+
+# ── Roles ─────────────────────────────────────────────────────────────────────
+
+- httpMethods:
+    - GET
+  uri: api/roles
+  metadata:
+    groupName: Lookup Tables
+    title: List roles (public)
+    description: Returns all job roles ordered by name. Used to power role autocomplete. No authentication required.
+    authenticated: false
+  headers:
+    Accept: application/json
+  responses:
+    - status: 200
+      description: Success
+      content: |
+        {
+          "data": [
+            { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Backend Developer", "created_at": "2026-01-01T00:00:00.000000Z", "updated_at": "2026-01-01T00:00:00.000000Z" },
+            { "id": "664f1a2b3c4d5e6f7a8b9c0e", "name": "DevOps Engineer", "created_at": "2026-01-01T00:00:00.000000Z", "updated_at": "2026-01-01T00:00:00.000000Z" }
+          ]
+        }
+
+- httpMethods:
+    - GET
+  uri: api/admin/roles
+  metadata:
+    groupName: Lookup Tables
+    title: List roles (admin)
+    description: Returns all roles ordered by name. Requires admin role.
+    authenticated: true
+  headers:
+    Accept: application/json
+  responses:
+    - status: 200
+      description: Success
+      content: |
+        {
+          "data": [
+            { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Backend Developer", "created_at": "2026-01-01T00:00:00.000000Z", "updated_at": "2026-01-01T00:00:00.000000Z" }
+          ]
+        }
+
+- httpMethods:
+    - POST
+  uri: api/admin/roles
+  metadata:
+    groupName: Lookup Tables
+    title: Create role
+    description: Creates a new job role. Name must be unique. Requires admin role. Note — job posts and seeker profiles accept freeform role values not in this list.
+    authenticated: true
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+  bodyParameters:
+    name:
+      name: name
+      description: Role name. Max 100 characters, must be unique.
+      required: true
+      example: Backend Developer
+      type: string
+  responses:
+    - status: 201
+      description: Created
+      content: |
+        { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Backend Developer", "created_at": "2026-01-01T00:00:00.000000Z", "updated_at": "2026-01-01T00:00:00.000000Z" }
+    - status: 422
+      description: Validation error
+      content: |
+        { "errors": { "name": ["The name has already been taken."] } }
+
+- httpMethods:
+    - PUT
+  uri: api/admin/roles/{id}
+  metadata:
+    groupName: Lookup Tables
+    title: Update role
+    description: Updates an existing role's name. Requires admin role.
+    authenticated: true
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+  urlParameters:
+    id:
+      name: id
+      description: The role ID.
+      required: true
+      example: 664f1a2b3c4d5e6f7a8b9c0d
+      type: string
+  bodyParameters:
+    name:
+      name: name
+      description: New role name. Max 100 characters, must be unique.
+      required: true
+      example: Senior Backend Developer
+      type: string
+  responses:
+    - status: 200
+      description: Updated
+      content: |
+        { "id": "664f1a2b3c4d5e6f7a8b9c0d", "name": "Senior Backend Developer", "created_at": "2026-01-01T00:00:00.000000Z", "updated_at": "2026-01-01T00:00:00.000000Z" }
+    - status: 404
+      description: Not found
+      content: |
+        { "message": "Not found." }
+    - status: 422
+      description: Validation error
+      content: |
+        { "errors": { "name": ["The name has already been taken."] } }
+
+- httpMethods:
+    - DELETE
+  uri: api/admin/roles/{id}
+  metadata:
+    groupName: Lookup Tables
+    title: Delete role
+    description: Deletes a role from the reference list. Existing records using this role value are unaffected. Requires admin role.
+    authenticated: true
+  headers:
+    Accept: application/json
+  urlParameters:
+    id:
+      name: id
+      description: The role ID.
+      required: true
+      example: 664f1a2b3c4d5e6f7a8b9c0d
+      type: string
+  responses:
+    - status: 200
+      description: Deleted
+      content: |
+        { "message": "Deleted successfully." }
+    - status: 404
+      description: Not found
+      content: |
+        { "message": "Not found." }

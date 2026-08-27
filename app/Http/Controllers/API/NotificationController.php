@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Notification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use MongoDB\BSON\ObjectId;
 
 class NotificationController extends Controller
 {
@@ -41,9 +42,8 @@ class NotificationController extends Controller
     public function index(Request $request): JsonResponse
     {
         $perPage = (int) $request->query('per_page', 15);
-        $userId  = (string) auth()->id();
 
-        $paginator = Notification::where('user_id', $userId)
+        $paginator = $this->forAuthUser()
             ->orderBy('created_at', 'desc')
             ->paginate($perPage);
 
@@ -82,8 +82,7 @@ class NotificationController extends Controller
      */
     public function markRead(string $id): JsonResponse
     {
-        $userId       = (string) auth()->id();
-        $notification = Notification::where('user_id', $userId)->find($id);
+        $notification = $this->forAuthUser()->find($id);
 
         if (! $notification) {
             return response()->json(['message' => 'Notification not found.'], 404);
@@ -105,8 +104,7 @@ class NotificationController extends Controller
      */
     public function markAllRead(): JsonResponse
     {
-        $userId  = (string) auth()->id();
-        $updated = Notification::where('user_id', $userId)
+        $updated = $this->forAuthUser()
             ->whereNull('read_at')
             ->get();
 
@@ -130,8 +128,7 @@ class NotificationController extends Controller
      */
     public function unreadCount(): JsonResponse
     {
-        $userId = (string) auth()->id();
-        $count  = Notification::where('user_id', $userId)
+        $count  = $this->forAuthUser()
             ->whereNull('read_at')
             ->count();
 
@@ -139,6 +136,25 @@ class NotificationController extends Controller
     }
 
     // ── Helpers ──────────────────────────────────────────────────────
+
+    /**
+     * Build a query scoped to the authenticated user's notifications,
+     * matching against both string and ObjectId representations of user_id
+     * to be resilient against how data was originally persisted.
+     */
+    private function forAuthUser(): \MongoDB\Laravel\Eloquent\Builder
+    {
+        $strId = (string) auth()->id();
+
+        try {
+            $oid = new ObjectId($strId);
+            return Notification::where(function ($q) use ($strId, $oid) {
+                $q->where('user_id', $strId)->orWhere('user_id', $oid);
+            });
+        } catch (\Throwable) {
+            return Notification::where('user_id', $strId);
+        }
+    }
 
     private function formatNotification(Notification $n): array
     {

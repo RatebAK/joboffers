@@ -11,6 +11,9 @@ tags:
     name: Endpoints
     description: ''
   -
+    name: 'Lookup Tables'
+    description: 'Admin-managed reference lists for categories, cities, and roles. Public endpoints return the full list (no pagination). Admin endpoints require authentication with the admin role.'
+  -
     name: 'Resume Coach'
     description: ''
 components:
@@ -325,6 +328,177 @@ paths:
                         example: jane@example.com
       tags:
         - Endpoints
+  /api/categories:
+    get:
+      summary: 'List categories (public)'
+      operationId: listCategoriespublic
+      description: 'Returns all categories ordered by name. No authentication required.'
+      parameters: []
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 664f1a2b3c4d5e6f7a8b9c0d
+                      name: Engineering
+                      created_at: '2026-01-01T00:00:00.000000Z'
+                      updated_at: '2026-01-01T00:00:00.000000Z'
+                    -
+                      id: 664f1a2b3c4d5e6f7a8b9c0e
+                      name: Technology
+                      created_at: '2026-01-01T00:00:00.000000Z'
+                      updated_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 664f1a2b3c4d5e6f7a8b9c0d
+                        name: Engineering
+                        created_at: '2026-01-01T00:00:00.000000Z'
+                        updated_at: '2026-01-01T00:00:00.000000Z'
+                      -
+                        id: 664f1a2b3c4d5e6f7a8b9c0e
+                        name: Technology
+                        created_at: '2026-01-01T00:00:00.000000Z'
+                        updated_at: '2026-01-01T00:00:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0d
+                        name:
+                          type: string
+                          example: Engineering
+                        created_at:
+                          type: string
+                          example: '2026-01-01T00:00:00.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2026-01-01T00:00:00.000000Z'
+      tags:
+        - Endpoints
+      security: []
+  /api/cities:
+    get:
+      summary: 'List cities (public)'
+      operationId: listCitiespublic
+      description: 'Returns all cities ordered by name. Used to power location autocomplete. No authentication required.'
+      parameters: []
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 664f1a2b3c4d5e6f7a8b9c0d
+                      name: Aleppo
+                      created_at: '2026-01-01T00:00:00.000000Z'
+                      updated_at: '2026-01-01T00:00:00.000000Z'
+                    -
+                      id: 664f1a2b3c4d5e6f7a8b9c0e
+                      name: Damascus
+                      created_at: '2026-01-01T00:00:00.000000Z'
+                      updated_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 664f1a2b3c4d5e6f7a8b9c0d
+                        name: Aleppo
+                        created_at: '2026-01-01T00:00:00.000000Z'
+                        updated_at: '2026-01-01T00:00:00.000000Z'
+                      -
+                        id: 664f1a2b3c4d5e6f7a8b9c0e
+                        name: Damascus
+                        created_at: '2026-01-01T00:00:00.000000Z'
+                        updated_at: '2026-01-01T00:00:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0d
+                        name:
+                          type: string
+                          example: Aleppo
+                        created_at:
+                          type: string
+                          example: '2026-01-01T00:00:00.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2026-01-01T00:00:00.000000Z'
+      tags:
+        - Endpoints
+      security: []
+  /api/roles:
+    get:
+      summary: 'List roles (public)'
+      operationId: listRolespublic
+      description: 'Returns all job roles ordered by name. Used to power role autocomplete. No authentication required.'
+      parameters: []
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 664f1a2b3c4d5e6f7a8b9c0d
+                      name: 'Backend Developer'
+                      created_at: '2026-01-01T00:00:00.000000Z'
+                      updated_at: '2026-01-01T00:00:00.000000Z'
+                    -
+                      id: 664f1a2b3c4d5e6f7a8b9c0e
+                      name: 'DevOps Engineer'
+                      created_at: '2026-01-01T00:00:00.000000Z'
+                      updated_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 664f1a2b3c4d5e6f7a8b9c0d
+                        name: 'Backend Developer'
+                        created_at: '2026-01-01T00:00:00.000000Z'
+                        updated_at: '2026-01-01T00:00:00.000000Z'
+                      -
+                        id: 664f1a2b3c4d5e6f7a8b9c0e
+                        name: 'DevOps Engineer'
+                        created_at: '2026-01-01T00:00:00.000000Z'
+                        updated_at: '2026-01-01T00:00:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0d
+                        name:
+                          type: string
+                          example: 'Backend Developer'
+                        created_at:
+                          type: string
+                          example: '2026-01-01T00:00:00.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2026-01-01T00:00:00.000000Z'
+      tags:
+        - Endpoints
+      security: []
   /api/jobs:
     get:
       summary: 'List jobs'
@@ -884,7 +1058,7 @@ paths:
                 job_type:
                   type: string
                   description: ''
-                  example: contract
+                  example: full_time
                   enum:
                     - full_time
                     - part_time
@@ -901,6 +1075,92 @@ paths:
                   description: 'Must be at least 0.'
                   example: 12
                   nullable: true
+  /api/jobs/stats/by-location:
+    get:
+      summary: 'Active job counts grouped by city.'
+      operationId: activeJobCountsGroupedByCity
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      city: Cairo
+                      count: 120
+                    -
+                      city: Alexandria
+                      count: 45
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        city: Cairo
+                        count: 120
+                      -
+                        city: Alexandria
+                        count: 45
+                    items:
+                      type: object
+                      properties:
+                        city:
+                          type: string
+                          example: Cairo
+                        count:
+                          type: integer
+                          example: 120
+      tags:
+        - Endpoints
+      security: []
+  /api/jobs/stats/by-category:
+    get:
+      summary: 'Active job counts grouped by category.'
+      operationId: activeJobCountsGroupedByCategory
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      category: Technology
+                      count: 1234
+                    -
+                      category: Engineering
+                      count: 891
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        category: Technology
+                        count: 1234
+                      -
+                        category: Engineering
+                        count: 891
+                    items:
+                      type: object
+                      properties:
+                        category:
+                          type: string
+                          example: Technology
+                        count:
+                          type: integer
+                          example: 1234
+      tags:
+        - Endpoints
+      security: []
   '/api/jobs/{id}':
     get:
       summary: 'Get job'
@@ -1277,44 +1537,18 @@ paths:
             description: 'Page number.'
             example: 1
       responses:
-        200:
+        500:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  data: []
-                  current_page: 1
-                  per_page: 10
-                  total: 0
-                  total_pages: 1
-                  next_page: null
-                  prev_page: null
+                  message: 'Server Error'
                 properties:
-                  data:
-                    type: array
-                    example: []
-                  current_page:
-                    type: integer
-                    example: 1
-                  per_page:
-                    type: integer
-                    example: 10
-                  total:
-                    type: integer
-                    example: 0
-                  total_pages:
-                    type: integer
-                    example: 1
-                  next_page:
+                  message:
                     type: string
-                    example: null
-                    nullable: true
-                  prev_page:
-                    type: string
-                    example: null
-                    nullable: true
+                    example: 'Server Error'
       tags:
         - Endpoints
       security: []
@@ -1330,25 +1564,25 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  -
-                    description: ''
-                    type: object
-                    example:
-                      message: 'Company profile not found'
-                    properties:
-                      message:
-                        type: string
-                        example: 'Company profile not found'
-                  -
-                    description: ''
-                    type: object
-                    example:
-                      message: 'Company profile not found'
-                    properties:
-                      message:
-                        type: string
-                        example: 'Company profile not found'
+                type: object
+                example:
+                  message: 'Company profile not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Company profile not found'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Server Error'
+                properties:
+                  message:
+                    type: string
+                    example: 'Server Error'
       tags:
         - Endpoints
       security: []
@@ -1767,7 +2001,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: prefer_not_to_say
+                  example: female
                   enum:
                     - male
                     - female
@@ -1807,7 +2041,7 @@ paths:
                 marital_status:
                   type: string
                   description: ''
-                  example: married
+                  example: single
                   enum:
                     - single
                     - married
@@ -1828,7 +2062,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: freelancing
+                  example: employed
                   enum:
                     - employed
                     - unemployed
@@ -1899,7 +2133,7 @@ paths:
                 is_actively_seeking:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 social_links:
                   type: object
                   description: 'Social Links (nested object).'
@@ -7444,6 +7678,696 @@ paths:
                     nullable: true
       tags:
         - Endpoints
+  /api/admin/categories:
+    get:
+      summary: 'List categories (admin)'
+      operationId: listCategoriesadmin
+      description: 'Returns all categories ordered by name. Requires admin role.'
+      parameters: []
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 664f1a2b3c4d5e6f7a8b9c0d
+                      name: Engineering
+                      created_at: '2026-01-01T00:00:00.000000Z'
+                      updated_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 664f1a2b3c4d5e6f7a8b9c0d
+                        name: Engineering
+                        created_at: '2026-01-01T00:00:00.000000Z'
+                        updated_at: '2026-01-01T00:00:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0d
+                        name:
+                          type: string
+                          example: Engineering
+                        created_at:
+                          type: string
+                          example: '2026-01-01T00:00:00.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2026-01-01T00:00:00.000000Z'
+      tags:
+        - Endpoints
+    post:
+      summary: 'Create category'
+      operationId: createCategory
+      description: 'Creates a new category. Name must be unique (case-insensitive). Requires admin role.'
+      parameters: []
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 664f1a2b3c4d5e6f7a8b9c0d
+                  name: Technology
+                  created_at: '2026-01-01T00:00:00.000000Z'
+                  updated_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0d
+                  name:
+                    type: string
+                    example: Technology
+                  created_at:
+                    type: string
+                    example: '2026-01-01T00:00:00.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2026-01-01T00:00:00.000000Z'
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    name:
+                      - 'The name has already been taken.'
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        example:
+                          - 'The name has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Category name. Max 100 characters, must be unique.'
+                  example: Technology
+              required:
+                - name
+  '/api/admin/categories/{id}':
+    put:
+      summary: 'Update category'
+      operationId: updateCategory
+      description: "Updates an existing category's name. Requires admin role."
+      parameters: []
+      responses:
+        200:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 664f1a2b3c4d5e6f7a8b9c0d
+                  name: Engineering
+                  created_at: '2026-01-01T00:00:00.000000Z'
+                  updated_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0d
+                  name:
+                    type: string
+                    example: Engineering
+                  created_at:
+                    type: string
+                    example: '2026-01-01T00:00:00.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2026-01-01T00:00:00.000000Z'
+        404:
+          description: 'Not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Not found.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Not found.'
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    name:
+                      - 'The name has already been taken.'
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        example:
+                          - 'The name has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'New category name. Max 100 characters, must be unique.'
+                  example: Engineering
+              required:
+                - name
+    delete:
+      summary: 'Delete category'
+      operationId: deleteCategory
+      description: 'Deletes a category. Existing job posts that reference this category are unaffected (orphaned references remain). Requires admin role.'
+      parameters: []
+      responses:
+        200:
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Deleted successfully.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Deleted successfully.'
+        404:
+          description: 'Not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Not found.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Not found.'
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the category.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  /api/admin/cities:
+    get:
+      summary: 'List cities (admin)'
+      operationId: listCitiesadmin
+      description: 'Returns all cities ordered by name. Requires admin role.'
+      parameters: []
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 664f1a2b3c4d5e6f7a8b9c0d
+                      name: Damascus
+                      created_at: '2026-01-01T00:00:00.000000Z'
+                      updated_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 664f1a2b3c4d5e6f7a8b9c0d
+                        name: Damascus
+                        created_at: '2026-01-01T00:00:00.000000Z'
+                        updated_at: '2026-01-01T00:00:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0d
+                        name:
+                          type: string
+                          example: Damascus
+                        created_at:
+                          type: string
+                          example: '2026-01-01T00:00:00.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2026-01-01T00:00:00.000000Z'
+      tags:
+        - Endpoints
+    post:
+      summary: 'Create city'
+      operationId: createCity
+      description: 'Creates a new city. Name must be unique. Requires admin role. Note — job posts and seeker profiles accept freeform city values not in this list.'
+      parameters: []
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 664f1a2b3c4d5e6f7a8b9c0d
+                  name: Damascus
+                  created_at: '2026-01-01T00:00:00.000000Z'
+                  updated_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0d
+                  name:
+                    type: string
+                    example: Damascus
+                  created_at:
+                    type: string
+                    example: '2026-01-01T00:00:00.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2026-01-01T00:00:00.000000Z'
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    name:
+                      - 'The name has already been taken.'
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        example:
+                          - 'The name has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'City name. Max 100 characters, must be unique.'
+                  example: Damascus
+              required:
+                - name
+  '/api/admin/cities/{id}':
+    put:
+      summary: 'Update city'
+      operationId: updateCity
+      description: "Updates an existing city's name. Requires admin role."
+      parameters: []
+      responses:
+        200:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 664f1a2b3c4d5e6f7a8b9c0d
+                  name: Latakia
+                  created_at: '2026-01-01T00:00:00.000000Z'
+                  updated_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0d
+                  name:
+                    type: string
+                    example: Latakia
+                  created_at:
+                    type: string
+                    example: '2026-01-01T00:00:00.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2026-01-01T00:00:00.000000Z'
+        404:
+          description: 'Not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Not found.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Not found.'
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    name:
+                      - 'The name has already been taken.'
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        example:
+                          - 'The name has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'New city name. Max 100 characters, must be unique.'
+                  example: Latakia
+              required:
+                - name
+    delete:
+      summary: 'Delete city'
+      operationId: deleteCity
+      description: 'Deletes a city from the reference list. Existing records using this city value are unaffected. Requires admin role.'
+      parameters: []
+      responses:
+        200:
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Deleted successfully.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Deleted successfully.'
+        404:
+          description: 'Not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Not found.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Not found.'
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the city.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  /api/admin/roles:
+    get:
+      summary: 'List roles (admin)'
+      operationId: listRolesadmin
+      description: 'Returns all roles ordered by name. Requires admin role.'
+      parameters: []
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 664f1a2b3c4d5e6f7a8b9c0d
+                      name: 'Backend Developer'
+                      created_at: '2026-01-01T00:00:00.000000Z'
+                      updated_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 664f1a2b3c4d5e6f7a8b9c0d
+                        name: 'Backend Developer'
+                        created_at: '2026-01-01T00:00:00.000000Z'
+                        updated_at: '2026-01-01T00:00:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0d
+                        name:
+                          type: string
+                          example: 'Backend Developer'
+                        created_at:
+                          type: string
+                          example: '2026-01-01T00:00:00.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2026-01-01T00:00:00.000000Z'
+      tags:
+        - Endpoints
+    post:
+      summary: 'Create role'
+      operationId: createRole
+      description: 'Creates a new job role. Name must be unique. Requires admin role. Note — job posts and seeker profiles accept freeform role values not in this list.'
+      parameters: []
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 664f1a2b3c4d5e6f7a8b9c0d
+                  name: 'Backend Developer'
+                  created_at: '2026-01-01T00:00:00.000000Z'
+                  updated_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0d
+                  name:
+                    type: string
+                    example: 'Backend Developer'
+                  created_at:
+                    type: string
+                    example: '2026-01-01T00:00:00.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2026-01-01T00:00:00.000000Z'
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    name:
+                      - 'The name has already been taken.'
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        example:
+                          - 'The name has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Role name. Max 100 characters, must be unique.'
+                  example: 'Backend Developer'
+              required:
+                - name
+  '/api/admin/roles/{id}':
+    put:
+      summary: 'Update role'
+      operationId: updateRole
+      description: "Updates an existing role's name. Requires admin role."
+      parameters: []
+      responses:
+        200:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 664f1a2b3c4d5e6f7a8b9c0d
+                  name: 'Senior Backend Developer'
+                  created_at: '2026-01-01T00:00:00.000000Z'
+                  updated_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0d
+                  name:
+                    type: string
+                    example: 'Senior Backend Developer'
+                  created_at:
+                    type: string
+                    example: '2026-01-01T00:00:00.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2026-01-01T00:00:00.000000Z'
+        404:
+          description: 'Not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Not found.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Not found.'
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    name:
+                      - 'The name has already been taken.'
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        example:
+                          - 'The name has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'New role name. Max 100 characters, must be unique.'
+                  example: 'Senior Backend Developer'
+              required:
+                - name
+    delete:
+      summary: 'Delete role'
+      operationId: deleteRole
+      description: 'Deletes a role from the reference list. Existing records using this role value are unaffected. Requires admin role.'
+      parameters: []
+      responses:
+        200:
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Deleted successfully.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Deleted successfully.'
+        404:
+          description: 'Not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Not found.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Not found.'
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the role.'
+        example: architecto
+        required: true
+        schema:
+          type: string
   '/api/admin/users/{id}':
     delete:
       summary: 'Delete user (admin)'
@@ -8115,17 +9039,17 @@ paths:
                 from_date:
                   type: string
                   description: 'Must be a valid date in the format <code>Y-m-d</code>.'
-                  example: '2026-08-23'
+                  example: '2026-08-27'
                   nullable: true
                 to_date:
                   type: string
                   description: 'Must be a valid date in the format <code>Y-m-d</code>.'
-                  example: '2026-08-23'
+                  example: '2026-08-27'
                   nullable: true
                 sort_direction:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   enum:
                     - asc
                     - desc

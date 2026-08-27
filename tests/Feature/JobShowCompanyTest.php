@@ -10,7 +10,7 @@ use App\Models\User;
 
 // ── Helpers ──────────────────────────────────────────────────
 
-function makeEmployerWithCompany(array $privateInfo = []): array
+function makeEmployerWithCompanyAndPrivateInfo(array $privateInfo = []): array
 {
     $employer = User::factory()->employer()->create();
 
@@ -66,7 +66,7 @@ afterEach(function () {
 // ── Company snippet present ───────────────────────────────────
 
 test('get job returns embedded company snippet', function () {
-    [$employer, $company] = makeEmployerWithCompany();
+    [$employer, $company] = makeEmployerWithCompanyAndPrivateInfo();
     $job = makeJobPostWithCompany($employer, $company);
 
     $this->getJson("/api/jobs/{$job->_id}")
@@ -79,7 +79,7 @@ test('get job returns embedded company snippet', function () {
 });
 
 test('company snippet contains correct values', function () {
-    [$employer, $company] = makeEmployerWithCompany();
+    [$employer, $company] = makeEmployerWithCompanyAndPrivateInfo();
     $job = makeJobPostWithCompany($employer, $company);
 
     $response = $this->getJson("/api/jobs/{$job->_id}")->assertStatus(200);
@@ -95,7 +95,7 @@ test('company snippet contains correct values', function () {
 });
 
 test('company snippet includes social media links', function () {
-    [$employer, $company] = makeEmployerWithCompany();
+    [$employer, $company] = makeEmployerWithCompanyAndPrivateInfo();
     $job = makeJobPostWithCompany($employer, $company);
 
     $this->getJson("/api/jobs/{$job->_id}")
@@ -131,7 +131,7 @@ test('company snippet is null-safe when no private_info set', function () {
 // ── Job still returns own fields ──────────────────────────────
 
 test('job fields are still present alongside company snippet', function () {
-    [$employer, $company] = makeEmployerWithCompany();
+    [$employer, $company] = makeEmployerWithCompanyAndPrivateInfo();
     $job = makeJobPostWithCompany($employer, $company);
 
     $this->getJson("/api/jobs/{$job->_id}")
@@ -176,7 +176,7 @@ test('returns 404 for non-existent job', function () {
 });
 
 test('endpoint is public — no auth required', function () {
-    [$employer, $company] = makeEmployerWithCompany();
+    [$employer, $company] = makeEmployerWithCompanyAndPrivateInfo();
     $job = makeJobPostWithCompany($employer, $company);
 
     // No withToken() — should still work

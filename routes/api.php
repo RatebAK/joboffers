@@ -28,6 +28,10 @@ use App\Http\Controllers\API\ResumeMatchingController;
 use App\Http\Controllers\API\TalentReportController;
 use App\Http\Controllers\API\UserProfileController;
 use App\Http\Controllers\API\UserSearchController;
+use App\Http\Controllers\API\LookupController;
+use App\Models\Category;
+use App\Models\City;
+use App\Models\Role;
 use Illuminate\Support\Facades\Route;
 //test
 Route::prefix('auth')->group(function () {
@@ -41,9 +45,16 @@ Route::prefix('auth')->group(function () {
     });
 });
 
+// Public Lookup Routes (for autocomplete / dropdowns)
+Route::get('categories', fn () => (new LookupController(Category::class))->index());
+Route::get('cities',     fn () => (new LookupController(City::class))->index());
+Route::get('roles',      fn () => (new LookupController(Role::class))->index());
+
 // Public Job Post Routes
 Route::get('jobs', [JobPostController::class, 'index']);
 Route::get('jobs/search', [JobSeekerController::class, 'searchJobs']);
+Route::get('jobs/stats/by-location', [JobPostController::class, 'statsByLocation']);
+Route::get('jobs/stats/by-category', [JobPostController::class, 'statsByCategory']);
 Route::get('jobs/{id}', [JobPostController::class, 'show']);
 
 // Public Company Routes
@@ -192,6 +203,14 @@ Route::middleware(['jwt.auth', 'role:admin'])->prefix('admin')->group(function (
 
     // Audit log viewer
     Route::get('audit-log', [AuditLogController::class, 'index']);
+
+    // Lookup table management (categories strictly validated; cities & roles advisory)
+    foreach (['categories' => Category::class, 'cities' => City::class, 'roles' => Role::class] as $segment => $model) {
+        Route::get($segment,             fn ()       => (new LookupController($model))->index());
+        Route::post($segment,            fn ()       => (new LookupController($model))->store(request()));
+        Route::put("{$segment}/{id}",    fn ($id)    => (new LookupController($model))->update(request(), $id));
+        Route::delete("{$segment}/{id}", fn ($id)    => (new LookupController($model))->destroy($id));
+    }
 
     // User management (admin actions)
     Route::post('users', [AdminUserController::class, 'createUser']);

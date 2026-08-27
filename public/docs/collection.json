@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "d6aa010a-39d0-45b7-95e3-cd455ec1f74e",
+        "_postman_id": "8668f5da-a479-4d74-9cd4-32eeceef713c",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -204,6 +204,141 @@
                     ]
                 },
                 {
+                    "name": "GET api\/categories",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/categories",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/categories"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 500,
+                            "body": "{\n    \"message\": \"Server Error\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET api\/cities",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/cities",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/cities"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 500,
+                            "body": "{\n    \"message\": \"Server Error\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET api\/roles",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/roles",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/roles"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 500,
+                            "body": "{\n    \"message\": \"Server Error\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "List jobs",
                     "request": {
                         "url": {
@@ -370,7 +505,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"contract\",\"category\":\"g\",\"min_salary\":12}"
+                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"full_time\",\"category\":\"g\",\"min_salary\":12}"
                         },
                         "description": "Paginated search of active job posts for the authenticated job seeker."
                     },
@@ -379,6 +514,76 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n  \"jobs\": {\n    \"data\": [{ \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"title\": \"Senior React Developer\", \"company_name\": \"Acme Corp\" }],\n    \"current_page\": 1, \"per_page\": 15, \"total\": 1, \"total_pages\": 1, \"next_page\": null, \"prev_page\": null\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Active job counts grouped by city.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/jobs\/stats\/by-location",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/jobs\/stats\/by-location"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\"city\": \"Cairo\", \"count\": 120},\n    {\"city\": \"Alexandria\", \"count\": 45}\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Active job counts grouped by category.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/jobs\/stats\/by-category",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/jobs\/stats\/by-category"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\"category\": \"Technology\", \"count\": 1234},\n    {\"category\": \"Engineering\", \"count\": 891}\n  ]\n}",
                             "name": ""
                         }
                     ]
@@ -517,8 +722,8 @@
                                     "value": "*"
                                 }
                             ],
-                            "code": 200,
-                            "body": "{\"data\":[],\"current_page\":1,\"per_page\":10,\"total\":0,\"total_pages\":1,\"next_page\":null,\"prev_page\":null}",
+                            "code": 500,
+                            "body": "{\n    \"message\": \"Server Error\"\n}",
                             "name": ""
                         }
                     ]
@@ -579,8 +784,8 @@
                                     "value": "*"
                                 }
                             ],
-                            "code": 404,
-                            "body": "{\"message\":\"Company profile not found\"}",
+                            "code": 500,
+                            "body": "{\n    \"message\": \"Server Error\"\n}",
                             "name": ""
                         }
                     ]
@@ -1194,7 +1399,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "prefer_not_to_say",
+                                    "value": "female",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1236,7 +1441,7 @@
                                 },
                                 {
                                     "key": "marital_status",
-                                    "value": "married",
+                                    "value": "single",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1254,7 +1459,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "freelancing",
+                                    "value": "employed",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1314,7 +1519,7 @@
                                 },
                                 {
                                     "key": "is_actively_seeking",
-                                    "value": "",
+                                    "value": "1",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -4087,6 +4292,414 @@
                     ]
                 },
                 {
+                    "name": "GET api\/admin\/categories",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/categories",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/categories"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Invalid authentication token signature\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST api\/admin\/categories",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/categories",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/categories"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "PUT api\/admin\/categories\/{id}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/categories\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/categories\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "architecto",
+                                    "description": "The ID of the category."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "DELETE api\/admin\/categories\/{id}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/categories\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/categories\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "architecto",
+                                    "description": "The ID of the category."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "GET api\/admin\/cities",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/cities",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/cities"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Invalid authentication token signature\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST api\/admin\/cities",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/cities",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/cities"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "PUT api\/admin\/cities\/{id}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/cities\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/cities\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "architecto",
+                                    "description": "The ID of the city."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "DELETE api\/admin\/cities\/{id}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/cities\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/cities\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "architecto",
+                                    "description": "The ID of the city."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "GET api\/admin\/roles",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/roles",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/roles"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"error\":\"Unauthorized\",\"message\":\"Invalid authentication token signature\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST api\/admin\/roles",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/roles",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/roles"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "PUT api\/admin\/roles\/{id}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/roles\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/roles\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "architecto",
+                                    "description": "The ID of the role."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "DELETE api\/admin\/roles\/{id}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/roles\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/roles\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "architecto",
+                                    "description": "The ID of the role."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
                     "name": "Create user (admin)",
                     "request": {
                         "url": {
@@ -4551,7 +5164,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"status\":\"architecto\",\"from_date\":\"2026-08-23\",\"to_date\":\"2026-08-23\",\"sort_direction\":\"desc\",\"per_page\":22}"
+                            "raw": "{\"status\":\"architecto\",\"from_date\":\"2026-08-27\",\"to_date\":\"2026-08-27\",\"sort_direction\":\"asc\",\"per_page\":22}"
                         },
                         "description": "Returns a paginated list of meetings where the authenticated user is a participant.\nSupports filtering by status, date range, and sort direction."
                     },
@@ -5219,6 +5832,603 @@
                             "code": 200,
                             "body": "{ \"message\": \"Google account disconnected successfully\" }",
                             "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Lookup Tables",
+            "description": "Admin-managed reference lists for categories, cities, and roles. Public endpoints return the full list (no pagination). Admin endpoints require authentication with the admin role.",
+            "item": [
+                {
+                    "name": "List categories (public)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/categories",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/categories"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns all categories ordered by name. No authentication required.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Engineering\", \"created_at\": \"2026-01-01T00:00:00.000000Z\", \"updated_at\": \"2026-01-01T00:00:00.000000Z\" },\n    { \"id\": \"664f1a2b3c4d5e6f7a8b9c0e\", \"name\": \"Technology\", \"created_at\": \"2026-01-01T00:00:00.000000Z\", \"updated_at\": \"2026-01-01T00:00:00.000000Z\" }\n  ]\n}\n",
+                            "name": "Success"
+                        }
+                    ]
+                },
+                {
+                    "name": "List categories (admin)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/categories",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/categories"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns all categories ordered by name. Requires admin role."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Engineering\", \"created_at\": \"2026-01-01T00:00:00.000000Z\", \"updated_at\": \"2026-01-01T00:00:00.000000Z\" }\n  ]\n}\n",
+                            "name": "Success"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create category",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/categories",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/categories"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Technology\"}"
+                        },
+                        "description": "Creates a new category. Name must be unique (case-insensitive). Requires admin role."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{ \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Technology\", \"created_at\": \"2026-01-01T00:00:00.000000Z\", \"updated_at\": \"2026-01-01T00:00:00.000000Z\" }\n",
+                            "name": "Created"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"name\": [\"The name has already been taken.\"] } }\n",
+                            "name": "Validation error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update category",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/categories\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/categories\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "The category ID."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Engineering\"}"
+                        },
+                        "description": "Updates an existing category's name. Requires admin role."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Engineering\", \"created_at\": \"2026-01-01T00:00:00.000000Z\", \"updated_at\": \"2026-01-01T00:00:00.000000Z\" }\n",
+                            "name": "Updated"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Not found.\" }\n",
+                            "name": "Not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"name\": [\"The name has already been taken.\"] } }\n",
+                            "name": "Validation error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete category",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/categories\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/categories\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "The category ID."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Deletes a category. Existing job posts that reference this category are unaffected (orphaned references remain). Requires admin role."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"Deleted successfully.\" }\n",
+                            "name": "Deleted"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Not found.\" }\n",
+                            "name": "Not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "List cities (public)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/cities",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/cities"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns all cities ordered by name. Used to power location autocomplete. No authentication required.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Aleppo\", \"created_at\": \"2026-01-01T00:00:00.000000Z\", \"updated_at\": \"2026-01-01T00:00:00.000000Z\" },\n    { \"id\": \"664f1a2b3c4d5e6f7a8b9c0e\", \"name\": \"Damascus\", \"created_at\": \"2026-01-01T00:00:00.000000Z\", \"updated_at\": \"2026-01-01T00:00:00.000000Z\" }\n  ]\n}\n",
+                            "name": "Success"
+                        }
+                    ]
+                },
+                {
+                    "name": "List cities (admin)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/cities",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/cities"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns all cities ordered by name. Requires admin role."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Damascus\", \"created_at\": \"2026-01-01T00:00:00.000000Z\", \"updated_at\": \"2026-01-01T00:00:00.000000Z\" }\n  ]\n}\n",
+                            "name": "Success"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create city",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/cities",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/cities"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Damascus\"}"
+                        },
+                        "description": "Creates a new city. Name must be unique. Requires admin role. Note \u2014 job posts and seeker profiles accept freeform city values not in this list."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{ \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Damascus\", \"created_at\": \"2026-01-01T00:00:00.000000Z\", \"updated_at\": \"2026-01-01T00:00:00.000000Z\" }\n",
+                            "name": "Created"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"name\": [\"The name has already been taken.\"] } }\n",
+                            "name": "Validation error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update city",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/cities\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/cities\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "The city ID."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Latakia\"}"
+                        },
+                        "description": "Updates an existing city's name. Requires admin role."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Latakia\", \"created_at\": \"2026-01-01T00:00:00.000000Z\", \"updated_at\": \"2026-01-01T00:00:00.000000Z\" }\n",
+                            "name": "Updated"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Not found.\" }\n",
+                            "name": "Not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"name\": [\"The name has already been taken.\"] } }\n",
+                            "name": "Validation error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete city",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/cities\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/cities\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "The city ID."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Deletes a city from the reference list. Existing records using this city value are unaffected. Requires admin role."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"Deleted successfully.\" }\n",
+                            "name": "Deleted"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Not found.\" }\n",
+                            "name": "Not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "List roles (public)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/roles",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/roles"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns all job roles ordered by name. Used to power role autocomplete. No authentication required.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Backend Developer\", \"created_at\": \"2026-01-01T00:00:00.000000Z\", \"updated_at\": \"2026-01-01T00:00:00.000000Z\" },\n    { \"id\": \"664f1a2b3c4d5e6f7a8b9c0e\", \"name\": \"DevOps Engineer\", \"created_at\": \"2026-01-01T00:00:00.000000Z\", \"updated_at\": \"2026-01-01T00:00:00.000000Z\" }\n  ]\n}\n",
+                            "name": "Success"
+                        }
+                    ]
+                },
+                {
+                    "name": "List roles (admin)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/roles",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/roles"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns all roles ordered by name. Requires admin role."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    { \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Backend Developer\", \"created_at\": \"2026-01-01T00:00:00.000000Z\", \"updated_at\": \"2026-01-01T00:00:00.000000Z\" }\n  ]\n}\n",
+                            "name": "Success"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create role",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/roles",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/roles"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Backend Developer\"}"
+                        },
+                        "description": "Creates a new job role. Name must be unique. Requires admin role. Note \u2014 job posts and seeker profiles accept freeform role values not in this list."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{ \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Backend Developer\", \"created_at\": \"2026-01-01T00:00:00.000000Z\", \"updated_at\": \"2026-01-01T00:00:00.000000Z\" }\n",
+                            "name": "Created"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"name\": [\"The name has already been taken.\"] } }\n",
+                            "name": "Validation error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update role",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/roles\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/roles\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "The role ID."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Senior Backend Developer\"}"
+                        },
+                        "description": "Updates an existing role's name. Requires admin role."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Senior Backend Developer\", \"created_at\": \"2026-01-01T00:00:00.000000Z\", \"updated_at\": \"2026-01-01T00:00:00.000000Z\" }",
+                            "name": "Updated"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Not found.\" }",
+                            "name": "Not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"name\": [\"The name has already been taken.\"] } }\n",
+                            "name": "Validation error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete role",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/roles\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/roles\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "The role ID."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Deletes a role from the reference list. Existing records using this role value are unaffected. Requires admin role."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"Deleted successfully.\" }",
+                            "name": "Deleted"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Not found.\" }\n",
+                            "name": "Not found"
                         }
                     ]
                 }

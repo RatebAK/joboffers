@@ -18,10 +18,22 @@ class Notification extends Model
     ];
 
     protected $casts = [
+        'user_id'    => 'string',
         'read_at'    => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    protected static function booted(): void
+    {
+        // Guarantee user_id is always persisted as a plain string,
+        // regardless of whether the caller passed an ObjectId or string.
+        static::creating(function (self $notification) {
+            if ($notification->user_id !== null) {
+                $notification->user_id = (string) $notification->user_id;
+            }
+        });
+    }
 
     public function user()
     {

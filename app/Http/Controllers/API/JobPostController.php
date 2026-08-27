@@ -60,7 +60,7 @@ class JobPostController extends Controller
             'questions.*.required'  => 'nullable|boolean',
 
             // Meta
-            'category'              => 'nullable|string|max:100',
+            'category'              => 'nullable|string|exists:categories,name',
             'tags'                  => 'nullable|array',
             'tags.*'                => 'string|max:50',
             'expires_at'            => 'nullable|date|after:today',
@@ -275,6 +275,14 @@ class JobPostController extends Controller
 
         $data = $post->toArray();
 
+        // If the request carries a valid JWT, indicate whether this user has applied
+        $user = auth('api')->user();
+        if ($user) {
+            $data['has_applied'] = \App\Models\Application::where('user_id', (string) $user->_id)
+                ->where('job_post_id', (string) $post->_id)
+                ->exists();
+        }
+
         // Embed company snippet for the "About Company" section
         $company = CompanyProfile::find($post->company_profile_id);
         if ($company) {
@@ -293,6 +301,60 @@ class JobPostController extends Controller
 
         return response()->json($data);
     }
+
+    /**
+     * Active job counts grouped by city.
+     *
+     * @unauthenticated
+     * @response 200 {
+     *   "data": [
+     *     {"city": "Cairo", "count": 120},
+     *     {"city": "Alexandria", "count": 45}
+     *   ]
+     * }
+     */
+    public function statsByLocation()
+    {
+        $results = JobPost::raw(function ($collection) {
+            return $collection->aggregate([
+                ['$match' => ['is_active' => true]],
+                ['$group' => ['_id' => '$city', 'count' => ['$sum' => 1]]],
+                ['$match' => ['_id' => ['$ne' => null]]],
+                ['$sort'  => ['count' => -1]],
+                ['$project' => ['_id' => 0, 'city' => '$_id', 'count' => 1]],
+            ]);
+        });
+
+        return response()->json(['data' => array_values(iterator_to_array($results))]);
+    }
+
+    /**
+     * Active job counts grouped by category.
+     *
+     * @unauthenticated
+     * @response 200 {
+     *   "data": [
+     *     {"category": "Technology", "count": 1234},
+     *     {"category": "Engineering", "count": 891}
+     *   ]
+     * }
+     */
+    public function statsByCategory()
+    {
+        $results = JobPost::raw(function ($collection) {
+            return $collection->aggregate([
+                ['$match'   => ['is_active' => true]],
+                ['$group'   => ['_id' => '$category', 'count' => ['$sum' => 1]]],
+                ['$match'   => ['_id' => ['$ne' => null]]],
+                ['$sort'    => ['count' => -1]],
+                ['$project' => ['_id' => 0, 'category' => '$_id', 'count' => 1]],
+            ]);
+        });
+
+        return response()->json(['data' => array_values(iterator_to_array($results))]);
+    }
+
+
 
     // -----------------------------------------------------------------------
     // Employer endpoints
