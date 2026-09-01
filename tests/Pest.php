@@ -40,7 +40,15 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * Create a user of the given role and return a JWT for them.
+ *
+ * @param  string  $role  admin | employer | employee
+ * @return string  The bearer token.
+ */
+function tokenFor(string $role): string
 {
-    // ..
+    $user = \App\Models\User::factory()->{$role}()->create();
+
+    return auth('api')->login($user);
 }

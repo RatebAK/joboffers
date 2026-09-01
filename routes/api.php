@@ -12,6 +12,7 @@ use App\Http\Controllers\API\BroadcastController;
 use App\Http\Controllers\API\BulkOnboardingController;
 use App\Http\Controllers\API\CompanyProfileController;
 use App\Http\Controllers\API\DirectOfferController;
+use App\Http\Controllers\API\EducationLookupController;
 use App\Http\Controllers\API\EmployerController;
 use App\Http\Controllers\API\EmployerSearchController;
 use App\Http\Controllers\API\GoogleOAuthController;
@@ -46,9 +47,13 @@ Route::prefix('auth')->group(function () {
 });
 
 // Public Lookup Routes (for autocomplete / dropdowns)
-Route::get('categories', fn () => (new LookupController(Category::class))->index());
-Route::get('cities',     fn () => (new LookupController(City::class))->index());
-Route::get('roles',      fn () => (new LookupController(Role::class))->index());
+Route::get('categories',   fn () => (new LookupController(Category::class))->index());
+Route::get('cities',       fn () => (new LookupController(City::class))->index());
+Route::get('roles',        fn () => (new LookupController(Role::class))->index());
+
+// Public Education Lookup Routes (universities / faculties / majors)
+Route::get('{resource}', [EducationLookupController::class, 'index'])
+    ->whereIn('resource', ['universities', 'faculties', 'majors']);
 
 // Public Job Post Routes
 Route::get('jobs', [JobPostController::class, 'index']);
@@ -205,12 +210,23 @@ Route::middleware(['jwt.auth', 'role:admin'])->prefix('admin')->group(function (
     Route::get('audit-log', [AuditLogController::class, 'index']);
 
     // Lookup table management (categories strictly validated; cities & roles advisory)
-    foreach (['categories' => Category::class, 'cities' => City::class, 'roles' => Role::class] as $segment => $model) {
+    $lookupModels = [
+        'categories' => Category::class,
+        'cities'     => City::class,
+        'roles'      => Role::class,
+    ];
+    foreach ($lookupModels as $segment => $model) {
         Route::get($segment,             fn ()       => (new LookupController($model))->index());
         Route::post($segment,            fn ()       => (new LookupController($model))->store(request()));
         Route::put("{$segment}/{id}",    fn ($id)    => (new LookupController($model))->update(request(), $id));
         Route::delete("{$segment}/{id}", fn ($id)    => (new LookupController($model))->destroy($id));
     }
+
+    // Education lookup management (universities / faculties / majors) — documented controller
+    Route::get('{resource}',            [EducationLookupController::class, 'index'])->whereIn('resource', ['universities', 'faculties', 'majors']);
+    Route::post('{resource}',           [EducationLookupController::class, 'store'])->whereIn('resource', ['universities', 'faculties', 'majors']);
+    Route::put('{resource}/{id}',       [EducationLookupController::class, 'update'])->whereIn('resource', ['universities', 'faculties', 'majors']);
+    Route::delete('{resource}/{id}',    [EducationLookupController::class, 'destroy'])->whereIn('resource', ['universities', 'faculties', 'majors']);
 
     // User management (admin actions)
     Route::post('users', [AdminUserController::class, 'createUser']);

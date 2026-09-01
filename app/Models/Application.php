@@ -25,12 +25,14 @@ class Application extends Model
         'positions_suited_for',   // array of position strings
         'notice_period',          // e.g. "2 weeks", "1 month", "immediately"
         'expected_salary',        // numeric or string e.g. "3000 USD"
+        'answers',                // array of { question: string, answer: string } — replies to the job post's screening questions
     ];
 
     protected $casts = [
         'applied_at'           => 'datetime',
         'years_of_experience'  => 'integer',
         'positions_suited_for' => 'array',
+        'answers'              => 'array',
     ];
 
     // Relationship with user (job seeker)

@@ -5,8 +5,11 @@ info:
   version: 1.0.0
 servers:
   -
-    url: 'http://localhost:8000'
+    url: 'https://joboffers-main-uj2ehj.laravel.cloud'
 tags:
+  -
+    name: 'Education Lookups'
+    description: "\nLookup tables for Universities, Faculties, and Majors. These power the\nautocomplete / dropdown suggestions used across seeker profiles and job posts.\n\nAdmins seed the recommended values; the public listing endpoints require no\nauthentication. Values are advisory — clients may still submit freeform text\nwhere these lookups are consumed."
   -
     name: Endpoints
     description: ''
@@ -26,6 +29,310 @@ security:
   -
     default: []
 paths:
+  '/api/{resource}':
+    get:
+      summary: 'List education lookup items'
+      operationId: listEducationLookupItems
+      description: "Returns every item in the given lookup table, sorted by name. Requires no\nauthentication — intended for autocomplete and dropdown population."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      _id: 664f1a2b3c4d5e6f7a8b9c0d
+                      name: 'Damascus University'
+                    -
+                      _id: 664f1a2b3c4d5e6f7a8b9c0e
+                      name: 'Tishreen University'
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        _id: 664f1a2b3c4d5e6f7a8b9c0d
+                        name: 'Damascus University'
+                      -
+                        _id: 664f1a2b3c4d5e6f7a8b9c0e
+                        name: 'Tishreen University'
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0d
+                        name:
+                          type: string
+                          example: 'Damascus University'
+      tags:
+        - 'Education Lookups'
+      security: []
+    parameters:
+      -
+        in: path
+        name: resource
+        description: 'The lookup table. One of: universities, faculties, majors.'
+        example: universities
+        required: true
+        schema:
+          type: string
+  '/api/admin/{resource}':
+    get:
+      summary: 'List education lookup items'
+      operationId: listEducationLookupItems
+      description: "Returns every item in the given lookup table, sorted by name. Requires no\nauthentication — intended for autocomplete and dropdown population."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      _id: 664f1a2b3c4d5e6f7a8b9c0d
+                      name: 'Damascus University'
+                    -
+                      _id: 664f1a2b3c4d5e6f7a8b9c0e
+                      name: 'Tishreen University'
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        _id: 664f1a2b3c4d5e6f7a8b9c0d
+                        name: 'Damascus University'
+                      -
+                        _id: 664f1a2b3c4d5e6f7a8b9c0e
+                        name: 'Tishreen University'
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          example: 664f1a2b3c4d5e6f7a8b9c0d
+                        name:
+                          type: string
+                          example: 'Damascus University'
+      tags:
+        - 'Education Lookups'
+      security: []
+    post:
+      summary: 'Create an education lookup item (admin)'
+      operationId: createAnEducationLookupItemadmin
+      description: 'Adds a new value to the lookup table. Names must be unique within the table.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  _id: 664f1a2b3c4d5e6f7a8b9c0d
+                  name: 'Aleppo University'
+                properties:
+                  _id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0d
+                  name:
+                    type: string
+                    example: 'Aleppo University'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This action is unauthorized.'
+                properties:
+                  message:
+                    type: string
+                    example: 'This action is unauthorized.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    name:
+                      - 'The name has already been taken.'
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        example:
+                          - 'The name has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - 'Education Lookups'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'The item name. Max 100 chars, unique per table.'
+                  example: 'Aleppo University'
+              required:
+                - name
+    parameters:
+      -
+        in: path
+        name: resource
+        description: 'The lookup table. One of: universities, faculties, majors.'
+        example: universities
+        required: true
+        schema:
+          type: string
+  '/api/admin/{resource}/{id}':
+    put:
+      summary: 'Update an education lookup item (admin)'
+      operationId: updateAnEducationLookupItemadmin
+      description: 'Renames an existing item. The new name must be unique within the table.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  _id: 664f1a2b3c4d5e6f7a8b9c0d
+                  name: 'Aleppo University'
+                properties:
+                  _id:
+                    type: string
+                    example: 664f1a2b3c4d5e6f7a8b9c0d
+                  name:
+                    type: string
+                    example: 'Aleppo University'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Not found.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Not found.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    name:
+                      - 'The name has already been taken.'
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        example:
+                          - 'The name has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - 'Education Lookups'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'The new item name. Max 100 chars, unique per table.'
+                  example: 'Aleppo University'
+              required:
+                - name
+    delete:
+      summary: 'Delete an education lookup item (admin)'
+      operationId: deleteAnEducationLookupItemadmin
+      description: 'Removes an item from the lookup table.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Deleted successfully.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Deleted successfully.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Not found.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Not found.'
+      tags:
+        - 'Education Lookups'
+    parameters:
+      -
+        in: path
+        name: resource
+        description: 'The lookup table. One of: universities, faculties, majors.'
+        example: universities
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: id
+        description: 'The item ID.'
+        example: 664f1a2b3c4d5e6f7a8b9c0d
+        required: true
+        schema:
+          type: string
   /api/auth/register:
     post:
       summary: Register
@@ -1058,7 +1365,7 @@ paths:
                 job_type:
                   type: string
                   description: ''
-                  example: full_time
+                  example: contract
                   enum:
                     - full_time
                     - part_time
@@ -1537,18 +1844,44 @@ paths:
             description: 'Page number.'
             example: 1
       responses:
-        500:
+        200:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  message: 'Server Error'
+                  data: []
+                  current_page: 1
+                  per_page: 10
+                  total: 0
+                  total_pages: 1
+                  next_page: null
+                  prev_page: null
                 properties:
-                  message:
+                  data:
+                    type: array
+                    example: []
+                  current_page:
+                    type: integer
+                    example: 1
+                  per_page:
+                    type: integer
+                    example: 10
+                  total:
+                    type: integer
+                    example: 0
+                  total_pages:
+                    type: integer
+                    example: 1
+                  next_page:
                     type: string
-                    example: 'Server Error'
+                    example: null
+                    nullable: true
+                  prev_page:
+                    type: string
+                    example: null
+                    nullable: true
       tags:
         - Endpoints
       security: []
@@ -1564,25 +1897,25 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                example:
-                  message: 'Company profile not found'
-                properties:
-                  message:
-                    type: string
-                    example: 'Company profile not found'
-        500:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Server Error'
-                properties:
-                  message:
-                    type: string
-                    example: 'Server Error'
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Company profile not found'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Company profile not found'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Company profile not found'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Company profile not found'
       tags:
         - Endpoints
       security: []
@@ -2001,7 +2334,7 @@ paths:
                 gender:
                   type: string
                   description: ''
-                  example: female
+                  example: male
                   enum:
                     - male
                     - female
@@ -2041,7 +2374,7 @@ paths:
                 marital_status:
                   type: string
                   description: ''
-                  example: single
+                  example: divorced
                   enum:
                     - single
                     - married
@@ -2062,7 +2395,7 @@ paths:
                 current_job_status:
                   type: string
                   description: ''
-                  example: employed
+                  example: freelancing
                   enum:
                     - employed
                     - unemployed
@@ -2083,7 +2416,7 @@ paths:
                 job_level:
                   type: string
                   description: ''
-                  example: mid
+                  example: entry
                   enum:
                     - entry
                     - junior
@@ -3753,6 +4086,26 @@ paths:
                   description: 'Optional expected salary. Max 100 chars.'
                   example: architecto
                   nullable: true
+                answers:
+                  type: array
+                  description: "Answers to the job post's screening questions. Required questions must be answered."
+                  example:
+                    - []
+                  items:
+                    type: object
+                    nullable: true
+                    properties:
+                      question:
+                        type: string
+                        description: 'The exact question text from the job post.'
+                        example: 'Describe your last project.'
+                      answer:
+                        type: string
+                        description: "The applicant's answer."
+                        example: 'I led a team of 4 building a payments API.'
+                    required:
+                      - question
+                      - answer
               required:
                 - job_post_id
   '/api/job-seeker/applications/{id}/withdraw':
@@ -7904,7 +8257,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the category.'
-        example: architecto
+        example: 6a91dc79eedd3632860832b2
         required: true
         schema:
           type: string
@@ -8134,7 +8487,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the city.'
-        example: architecto
+        example: 6a91df0fe9468f4d84005433
         required: true
         schema:
           type: string
@@ -8364,7 +8717,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the role.'
-        example: architecto
+        example: 6a91df03e9468f4d84005432
         required: true
         schema:
           type: string
@@ -9039,17 +9392,17 @@ paths:
                 from_date:
                   type: string
                   description: 'Must be a valid date in the format <code>Y-m-d</code>.'
-                  example: '2026-08-27'
+                  example: '2026-09-01'
                   nullable: true
                 to_date:
                   type: string
                   description: 'Must be a valid date in the format <code>Y-m-d</code>.'
-                  example: '2026-08-27'
+                  example: '2026-09-01'
                   nullable: true
                 sort_direction:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   enum:
                     - asc
                     - desc

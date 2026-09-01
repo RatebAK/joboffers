@@ -351,11 +351,8 @@ endpoints:
     responses:
       -
         custom: []
-        status: 500
-        content: |-
-          {
-              "message": "Server Error"
-          }
+        status: 200
+        content: '{"data":[{"name":"Software","updated_at":"2026-08-28T19:07:37.549000Z","created_at":"2026-08-28T19:07:37.549000Z","id":"6a91dc79eedd3632860832b2"}]}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -398,11 +395,8 @@ endpoints:
     responses:
       -
         custom: []
-        status: 500
-        content: |-
-          {
-              "message": "Server Error"
-          }
+        status: 200
+        content: '{"data":[{"name":"Aleppo","updated_at":"2026-08-28T19:32:29.181000Z","created_at":"2026-08-28T19:32:29.181000Z","id":"6a91e24ded29c87bec05f3a3"},{"name":"Damascus","updated_at":"2026-08-28T19:18:39.478000Z","created_at":"2026-08-28T19:18:39.478000Z","id":"6a91df0fe9468f4d84005433"},{"name":"Hamah","updated_at":"2026-08-28T19:32:48.457000Z","created_at":"2026-08-28T19:32:48.457000Z","id":"6a91e260ed29c87bec05f3a6"},{"name":"Homs","updated_at":"2026-08-28T19:32:43.257000Z","created_at":"2026-08-28T19:32:43.257000Z","id":"6a91e25bed29c87bec05f3a5"},{"name":"Idleb","updated_at":"2026-08-28T19:33:32.155000Z","created_at":"2026-08-28T19:33:32.155000Z","id":"6a91e28c26320d8dcb04c8e2"},{"name":"Latakia","updated_at":"2026-08-28T19:32:38.731000Z","created_at":"2026-08-28T19:32:38.731000Z","id":"6a91e256ed29c87bec05f3a4"}]}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -445,11 +439,8 @@ endpoints:
     responses:
       -
         custom: []
-        status: 500
-        content: |-
-          {
-              "message": "Server Error"
-          }
+        status: 200
+        content: '{"data":[{"name":"Backend Developer","updated_at":"2026-08-28T19:18:27.507000Z","created_at":"2026-08-28T19:18:27.507000Z","id":"6a91df03e9468f4d84005432"},{"name":"Frontend Developer","updated_at":"2026-08-28T19:29:13.849000Z","created_at":"2026-08-28T19:29:13.849000Z","id":"6a91e189ed29c87bec05f3a2"},{"name":"Full Stack Developer","updated_at":"2026-08-28T19:29:27.913000Z","created_at":"2026-08-28T19:29:27.913000Z","id":"6a91e197e9468f4d84005434"},{"name":"UI\/UX Designer","updated_at":"2026-08-28T19:31:30.869000Z","created_at":"2026-08-28T19:31:30.869000Z","id":"6a91e212e9468f4d84005435"}]}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -817,7 +808,7 @@ endpoints:
         name: job_type
         description: ''
         required: false
-        example: full_time
+        example: contract
         type: string
         enumValues:
           - full_time
@@ -852,7 +843,7 @@ endpoints:
     cleanBodyParameters:
       keyword: b
       location: 'n'
-      job_type: full_time
+      job_type: contract
       category: g
       min_salary: 12
     fileParameters: []
@@ -1193,11 +1184,8 @@ endpoints:
     responses:
       -
         custom: []
-        status: 500
-        content: |-
-          {
-              "message": "Server Error"
-          }
+        status: 200
+        content: '{"data":[],"current_page":1,"per_page":10,"total":0,"total_pages":1,"next_page":null,"prev_page":null}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -1258,11 +1246,8 @@ endpoints:
         description: ''
       -
         custom: []
-        status: 500
-        content: |-
-          {
-              "message": "Server Error"
-          }
+        status: 404
+        content: '{"message":"Company profile not found"}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -2683,7 +2668,7 @@ endpoints:
         name: gender
         description: ''
         required: false
-        example: female
+        example: male
         type: string
         enumValues:
           - male
@@ -2764,7 +2749,7 @@ endpoints:
         name: marital_status
         description: ''
         required: false
-        example: single
+        example: divorced
         type: string
         enumValues:
           - single
@@ -2802,7 +2787,7 @@ endpoints:
         name: current_job_status
         description: ''
         required: false
-        example: employed
+        example: freelancing
         type: string
         enumValues:
           - employed
@@ -2840,7 +2825,7 @@ endpoints:
         name: job_level
         description: ''
         required: false
-        example: mid
+        example: entry
         type: string
         enumValues:
           - entry
@@ -3230,20 +3215,20 @@ endpoints:
       last_name: 'n'
       full_name: g
       image: z
-      gender: female
+      gender: male
       nationality: m
       city: i
       location: 'y'
       address: v
       phone: dljnikhwaykcmyuw
       date_of_birth: pwlvqwrsitcpscql
-      marital_status: single
+      marital_status: divorced
       salary_range_from: 16
       salary_range_to: 38
-      current_job_status: employed
+      current_job_status: freelancing
       years_of_experience: 8
       education_level: 'n'
-      job_level: mid
+      job_level: entry
       job_types:
         - r
       job_roles:
@@ -4059,6 +4044,40 @@ endpoints:
         exampleWasSpecified: false
         nullable: true
         deprecated: false
+      answers:
+        custom: []
+        name: answers
+        description: "Answers to the job post's screening questions. Required questions must be answered."
+        required: false
+        example:
+          - []
+        type: 'object[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'answers[].question':
+        custom: []
+        name: 'answers[].question'
+        description: 'The exact question text from the job post.'
+        required: true
+        example: 'Describe your last project.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'answers[].answer':
+        custom: []
+        name: 'answers[].answer'
+        description: "The applicant's answer."
+        required: true
+        example: 'I led a team of 4 building a payments API.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
     cleanBodyParameters:
       job_post_id: 664f1a2b3c4d5e6f7a8b9c0d
       cover_letter: 'I am very interested in this position.'
@@ -4071,6 +4090,10 @@ endpoints:
         - architecto
       notice_period: architecto
       expected_salary: architecto
+      answers:
+        -
+          question: 'Describe your last project.'
+          answer: 'I led a team of 4 building a payments API.'
     fileParameters:
       resume: null
     responses:
@@ -8287,14 +8310,14 @@ endpoints:
         name: id
         description: 'The ID of the category.'
         required: true
-        example: architecto
+        example: 6a91dc79eedd3632860832b2
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: architecto
+      id: 6a91dc79eedd3632860832b2
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -8334,14 +8357,14 @@ endpoints:
         name: id
         description: 'The ID of the category.'
         required: true
-        example: architecto
+        example: 6a91dc79eedd3632860832b2
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: architecto
+      id: 6a91dc79eedd3632860832b2
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -8460,14 +8483,14 @@ endpoints:
         name: id
         description: 'The ID of the city.'
         required: true
-        example: architecto
+        example: 6a91df0fe9468f4d84005433
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: architecto
+      id: 6a91df0fe9468f4d84005433
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -8507,14 +8530,14 @@ endpoints:
         name: id
         description: 'The ID of the city.'
         required: true
-        example: architecto
+        example: 6a91df0fe9468f4d84005433
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: architecto
+      id: 6a91df0fe9468f4d84005433
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -8633,14 +8656,14 @@ endpoints:
         name: id
         description: 'The ID of the role.'
         required: true
-        example: architecto
+        example: 6a91df03e9468f4d84005432
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: architecto
+      id: 6a91df03e9468f4d84005432
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -8680,14 +8703,14 @@ endpoints:
         name: id
         description: 'The ID of the role.'
         required: true
-        example: architecto
+        example: 6a91df03e9468f4d84005432
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: architecto
+      id: 6a91df03e9468f4d84005432
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -9472,7 +9495,7 @@ endpoints:
         name: from_date
         description: 'Must be a valid date in the format <code>Y-m-d</code>.'
         required: false
-        example: '2026-08-27'
+        example: '2026-09-01'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -9483,7 +9506,7 @@ endpoints:
         name: to_date
         description: 'Must be a valid date in the format <code>Y-m-d</code>.'
         required: false
-        example: '2026-08-27'
+        example: '2026-09-01'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -9494,7 +9517,7 @@ endpoints:
         name: sort_direction
         description: ''
         required: false
-        example: asc
+        example: desc
         type: string
         enumValues:
           - asc
@@ -9515,9 +9538,9 @@ endpoints:
         deprecated: false
     cleanBodyParameters:
       status: architecto
-      from_date: '2026-08-27'
-      to_date: '2026-08-27'
-      sort_direction: asc
+      from_date: '2026-09-01'
+      to_date: '2026-09-01'
+      sort_direction: desc
       per_page: 22
     fileParameters: []
     responses:

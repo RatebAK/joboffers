@@ -26,7 +26,7 @@
             </style>
 
     <script>
-        var tryItOutBaseUrl = "http://localhost:8000";
+        var tryItOutBaseUrl = "https://joboffers-main-uj2ehj.laravel.cloud";
         var useCsrf = Boolean();
         var csrfUrl = "/sanctum/csrf-cookie";
     </script>
@@ -65,6 +65,28 @@
                 <li class="tocify-item level-1" data-unique="authenticating-requests">
                     <a href="#authenticating-requests">Authenticating requests</a>
                 </li>
+                            </ul>
+                    <ul id="tocify-header-education-lookups" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="education-lookups">
+                    <a href="#education-lookups">Education Lookups</a>
+                </li>
+                                    <ul id="tocify-subheader-education-lookups" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="education-lookups-GETapi--resource-">
+                                <a href="#education-lookups-GETapi--resource-">List education lookup items</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="education-lookups-GETapi-admin--resource-">
+                                <a href="#education-lookups-GETapi-admin--resource-">List education lookup items</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="education-lookups-POSTapi-admin--resource-">
+                                <a href="#education-lookups-POSTapi-admin--resource-">Create an education lookup item (admin)</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="education-lookups-PUTapi-admin--resource---id-">
+                                <a href="#education-lookups-PUTapi-admin--resource---id-">Update an education lookup item (admin)</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="education-lookups-DELETEapi-admin--resource---id-">
+                                <a href="#education-lookups-DELETEapi-admin--resource---id-">Delete an education lookup item (admin)</a>
+                            </li>
+                                                                        </ul>
                             </ul>
                     <ul id="tocify-header-endpoints" class="tocify-header">
                 <li class="tocify-item level-1" data-unique="endpoints">
@@ -513,7 +535,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: August 27, 2026</li>
+        <li>Last updated: September 1, 2026</li>
     </ul>
 </div>
 
@@ -522,7 +544,7 @@
     <div class="content">
         <h1 id="introduction">Introduction</h1>
 <aside>
-    <strong>Base URL</strong>: <code>http://localhost:8000</code>
+    <strong>Base URL</strong>: <code>https://joboffers-main-uj2ehj.laravel.cloud</code>
 </aside>
 <pre><code>This documentation aims to provide all the information you need to work with our API.
 
@@ -534,7 +556,875 @@ You can switch the language used with the tabs at the top right (or from the nav
 <p>All authenticated endpoints are marked with a <code>requires authentication</code> badge in the documentation below.</p>
 <p>You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.</p>
 
-        <h1 id="endpoints">Endpoints</h1>
+        <h1 id="education-lookups">Education Lookups</h1>
+
+    <p>Lookup tables for Universities, Faculties, and Majors. These power the
+autocomplete / dropdown suggestions used across seeker profiles and job posts.</p>
+<p>Admins seed the recommended values; the public listing endpoints require no
+authentication. Values are advisory — clients may still submit freeform text
+where these lookups are consumed.</p>
+
+                                <h2 id="education-lookups-GETapi--resource-">List education lookup items</h2>
+
+<p>
+</p>
+
+<p>Returns every item in the given lookup table, sorted by name. Requires no
+authentication — intended for autocomplete and dropdown population.</p>
+
+<span id="example-requests-GETapi--resource-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/universities" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/universities"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi--resource-">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: [
+        {
+            &quot;_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
+            &quot;name&quot;: &quot;Damascus University&quot;
+        },
+        {
+            &quot;_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0e&quot;,
+            &quot;name&quot;: &quot;Tishreen University&quot;
+        }
+    ]
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi--resource-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi--resource-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi--resource-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi--resource-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi--resource-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi--resource-" data-method="GET"
+      data-path="api/{resource}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi--resource-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi--resource-"
+                    onclick="tryItOut('GETapi--resource-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi--resource-"
+                    onclick="cancelTryOut('GETapi--resource-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi--resource-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/{resource}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi--resource-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi--resource-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>resource</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="resource"                data-endpoint="GETapi--resource-"
+               value="universities"
+               data-component="url">
+    <br>
+<p>The lookup table. One of: universities, faculties, majors. Example: <code>universities</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="education-lookups-GETapi-admin--resource-">List education lookup items</h2>
+
+<p>
+</p>
+
+<p>Returns every item in the given lookup table, sorted by name. Requires no
+authentication — intended for autocomplete and dropdown population.</p>
+
+<span id="example-requests-GETapi-admin--resource-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/universities" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/universities"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-admin--resource-">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: [
+        {
+            &quot;_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
+            &quot;name&quot;: &quot;Damascus University&quot;
+        },
+        {
+            &quot;_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0e&quot;,
+            &quot;name&quot;: &quot;Tishreen University&quot;
+        }
+    ]
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-admin--resource-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-admin--resource-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-admin--resource-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-admin--resource-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-admin--resource-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-admin--resource-" data-method="GET"
+      data-path="api/admin/{resource}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-admin--resource-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-admin--resource-"
+                    onclick="tryItOut('GETapi-admin--resource-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-admin--resource-"
+                    onclick="cancelTryOut('GETapi-admin--resource-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-admin--resource-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/admin/{resource}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-admin--resource-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-admin--resource-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>resource</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="resource"                data-endpoint="GETapi-admin--resource-"
+               value="universities"
+               data-component="url">
+    <br>
+<p>The lookup table. One of: universities, faculties, majors. Example: <code>universities</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="education-lookups-POSTapi-admin--resource-">Create an education lookup item (admin)</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Adds a new value to the lookup table. Names must be unique within the table.</p>
+
+<span id="example-requests-POSTapi-admin--resource-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/universities" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"name\": \"Aleppo University\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/universities"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "name": "Aleppo University"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-admin--resource-">
+            <blockquote>
+            <p>Example response (201):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
+    &quot;name&quot;: &quot;Aleppo University&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;This action is unauthorized.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;errors&quot;: {
+        &quot;name&quot;: [
+            &quot;The name has already been taken.&quot;
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-admin--resource-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-admin--resource-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-admin--resource-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-admin--resource-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-admin--resource-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-admin--resource-" data-method="POST"
+      data-path="api/admin/{resource}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-admin--resource-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-admin--resource-"
+                    onclick="tryItOut('POSTapi-admin--resource-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-admin--resource-"
+                    onclick="cancelTryOut('POSTapi-admin--resource-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-admin--resource-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/admin/{resource}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-admin--resource-"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-admin--resource-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-admin--resource-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>resource</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="resource"                data-endpoint="POSTapi-admin--resource-"
+               value="universities"
+               data-component="url">
+    <br>
+<p>The lookup table. One of: universities, faculties, majors. Example: <code>universities</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="POSTapi-admin--resource-"
+               value="Aleppo University"
+               data-component="body">
+    <br>
+<p>The item name. Max 100 chars, unique per table. Example: <code>Aleppo University</code></p>
+        </div>
+        </form>
+
+                    <h2 id="education-lookups-PUTapi-admin--resource---id-">Update an education lookup item (admin)</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Renames an existing item. The new name must be unique within the table.</p>
+
+<span id="example-requests-PUTapi-admin--resource---id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PUT \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/universities/664f1a2b3c4d5e6f7a8b9c0d" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"name\": \"Aleppo University\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/universities/664f1a2b3c4d5e6f7a8b9c0d"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "name": "Aleppo University"
+};
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-PUTapi-admin--resource---id-">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;_id&quot;: &quot;664f1a2b3c4d5e6f7a8b9c0d&quot;,
+    &quot;name&quot;: &quot;Aleppo University&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Not found.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;errors&quot;: {
+        &quot;name&quot;: [
+            &quot;The name has already been taken.&quot;
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-PUTapi-admin--resource---id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PUTapi-admin--resource---id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-admin--resource---id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PUTapi-admin--resource---id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-admin--resource---id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PUTapi-admin--resource---id-" data-method="PUT"
+      data-path="api/admin/{resource}/{id}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-admin--resource---id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PUTapi-admin--resource---id-"
+                    onclick="tryItOut('PUTapi-admin--resource---id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PUTapi-admin--resource---id-"
+                    onclick="cancelTryOut('PUTapi-admin--resource---id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PUTapi-admin--resource---id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/admin/{resource}/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="PUTapi-admin--resource---id-"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PUTapi-admin--resource---id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PUTapi-admin--resource---id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>resource</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="resource"                data-endpoint="PUTapi-admin--resource---id-"
+               value="universities"
+               data-component="url">
+    <br>
+<p>The lookup table. One of: universities, faculties, majors. Example: <code>universities</code></p>
+            </div>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="id"                data-endpoint="PUTapi-admin--resource---id-"
+               value="664f1a2b3c4d5e6f7a8b9c0d"
+               data-component="url">
+    <br>
+<p>The item ID. Example: <code>664f1a2b3c4d5e6f7a8b9c0d</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="PUTapi-admin--resource---id-"
+               value="Aleppo University"
+               data-component="body">
+    <br>
+<p>The new item name. Max 100 chars, unique per table. Example: <code>Aleppo University</code></p>
+        </div>
+        </form>
+
+                    <h2 id="education-lookups-DELETEapi-admin--resource---id-">Delete an education lookup item (admin)</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Removes an item from the lookup table.</p>
+
+<span id="example-requests-DELETEapi-admin--resource---id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/universities/664f1a2b3c4d5e6f7a8b9c0d" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/universities/664f1a2b3c4d5e6f7a8b9c0d"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-admin--resource---id-">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Deleted successfully.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Not found.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-DELETEapi-admin--resource---id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-admin--resource---id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-admin--resource---id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-admin--resource---id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-admin--resource---id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-admin--resource---id-" data-method="DELETE"
+      data-path="api/admin/{resource}/{id}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-admin--resource---id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-admin--resource---id-"
+                    onclick="tryItOut('DELETEapi-admin--resource---id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-admin--resource---id-"
+                    onclick="cancelTryOut('DELETEapi-admin--resource---id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-admin--resource---id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/admin/{resource}/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-admin--resource---id-"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-admin--resource---id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-admin--resource---id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>resource</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="resource"                data-endpoint="DELETEapi-admin--resource---id-"
+               value="universities"
+               data-component="url">
+    <br>
+<p>The lookup table. One of: universities, faculties, majors. Example: <code>universities</code></p>
+            </div>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="id"                data-endpoint="DELETEapi-admin--resource---id-"
+               value="664f1a2b3c4d5e6f7a8b9c0d"
+               data-component="url">
+    <br>
+<p>The item ID. Example: <code>664f1a2b3c4d5e6f7a8b9c0d</code></p>
+            </div>
+                    </form>
+
+                <h1 id="endpoints">Endpoints</h1>
 
     
 
@@ -551,7 +1441,7 @@ You can switch the language used with the tabs at the top right (or from the nav
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/auth/register" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/auth/register" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -566,7 +1456,7 @@ You can switch the language used with the tabs at the top right (or from the nav
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/auth/register"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/auth/register"
 );
 
 const headers = {
@@ -770,7 +1660,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/auth/login" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/auth/login" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -782,7 +1672,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/auth/login"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/auth/login"
 );
 
 const headers = {
@@ -946,7 +1836,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/auth/profile" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/auth/profile" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -954,7 +1844,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/auth/profile"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/auth/profile"
 );
 
 const headers = {
@@ -1087,7 +1977,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/auth/logout" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/auth/logout" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1095,7 +1985,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/auth/logout"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/auth/logout"
 );
 
 const headers = {
@@ -1222,7 +2112,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/auth/refresh" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/auth/refresh" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1230,7 +2120,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/auth/refresh"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/auth/refresh"
 );
 
 const headers = {
@@ -1364,7 +2254,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/categories" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/categories" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1372,7 +2262,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/categories"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/categories"
 );
 
 const headers = {
@@ -1391,7 +2281,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-categories">
             <blockquote>
-            <p>Example response (500):</p>
+            <p>Example response (200):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -1403,7 +2293,14 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Server Error&quot;
+    &quot;data&quot;: [
+        {
+            &quot;name&quot;: &quot;Software&quot;,
+            &quot;updated_at&quot;: &quot;2026-08-28T19:07:37.549000Z&quot;,
+            &quot;created_at&quot;: &quot;2026-08-28T19:07:37.549000Z&quot;,
+            &quot;id&quot;: &quot;6a91dc79eedd3632860832b2&quot;
+        }
+    ]
 }</code>
  </pre>
     </span>
@@ -1506,7 +2403,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/cities" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/cities" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1514,7 +2411,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/cities"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/cities"
 );
 
 const headers = {
@@ -1533,7 +2430,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-cities">
             <blockquote>
-            <p>Example response (500):</p>
+            <p>Example response (200):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -1545,7 +2442,44 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Server Error&quot;
+    &quot;data&quot;: [
+        {
+            &quot;name&quot;: &quot;Aleppo&quot;,
+            &quot;updated_at&quot;: &quot;2026-08-28T19:32:29.181000Z&quot;,
+            &quot;created_at&quot;: &quot;2026-08-28T19:32:29.181000Z&quot;,
+            &quot;id&quot;: &quot;6a91e24ded29c87bec05f3a3&quot;
+        },
+        {
+            &quot;name&quot;: &quot;Damascus&quot;,
+            &quot;updated_at&quot;: &quot;2026-08-28T19:18:39.478000Z&quot;,
+            &quot;created_at&quot;: &quot;2026-08-28T19:18:39.478000Z&quot;,
+            &quot;id&quot;: &quot;6a91df0fe9468f4d84005433&quot;
+        },
+        {
+            &quot;name&quot;: &quot;Hamah&quot;,
+            &quot;updated_at&quot;: &quot;2026-08-28T19:32:48.457000Z&quot;,
+            &quot;created_at&quot;: &quot;2026-08-28T19:32:48.457000Z&quot;,
+            &quot;id&quot;: &quot;6a91e260ed29c87bec05f3a6&quot;
+        },
+        {
+            &quot;name&quot;: &quot;Homs&quot;,
+            &quot;updated_at&quot;: &quot;2026-08-28T19:32:43.257000Z&quot;,
+            &quot;created_at&quot;: &quot;2026-08-28T19:32:43.257000Z&quot;,
+            &quot;id&quot;: &quot;6a91e25bed29c87bec05f3a5&quot;
+        },
+        {
+            &quot;name&quot;: &quot;Idleb&quot;,
+            &quot;updated_at&quot;: &quot;2026-08-28T19:33:32.155000Z&quot;,
+            &quot;created_at&quot;: &quot;2026-08-28T19:33:32.155000Z&quot;,
+            &quot;id&quot;: &quot;6a91e28c26320d8dcb04c8e2&quot;
+        },
+        {
+            &quot;name&quot;: &quot;Latakia&quot;,
+            &quot;updated_at&quot;: &quot;2026-08-28T19:32:38.731000Z&quot;,
+            &quot;created_at&quot;: &quot;2026-08-28T19:32:38.731000Z&quot;,
+            &quot;id&quot;: &quot;6a91e256ed29c87bec05f3a4&quot;
+        }
+    ]
 }</code>
  </pre>
     </span>
@@ -1648,7 +2582,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/roles" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/roles" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1656,7 +2590,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/roles"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/roles"
 );
 
 const headers = {
@@ -1675,7 +2609,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-roles">
             <blockquote>
-            <p>Example response (500):</p>
+            <p>Example response (200):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -1687,7 +2621,32 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Server Error&quot;
+    &quot;data&quot;: [
+        {
+            &quot;name&quot;: &quot;Backend Developer&quot;,
+            &quot;updated_at&quot;: &quot;2026-08-28T19:18:27.507000Z&quot;,
+            &quot;created_at&quot;: &quot;2026-08-28T19:18:27.507000Z&quot;,
+            &quot;id&quot;: &quot;6a91df03e9468f4d84005432&quot;
+        },
+        {
+            &quot;name&quot;: &quot;Frontend Developer&quot;,
+            &quot;updated_at&quot;: &quot;2026-08-28T19:29:13.849000Z&quot;,
+            &quot;created_at&quot;: &quot;2026-08-28T19:29:13.849000Z&quot;,
+            &quot;id&quot;: &quot;6a91e189ed29c87bec05f3a2&quot;
+        },
+        {
+            &quot;name&quot;: &quot;Full Stack Developer&quot;,
+            &quot;updated_at&quot;: &quot;2026-08-28T19:29:27.913000Z&quot;,
+            &quot;created_at&quot;: &quot;2026-08-28T19:29:27.913000Z&quot;,
+            &quot;id&quot;: &quot;6a91e197e9468f4d84005434&quot;
+        },
+        {
+            &quot;name&quot;: &quot;UI/UX Designer&quot;,
+            &quot;updated_at&quot;: &quot;2026-08-28T19:31:30.869000Z&quot;,
+            &quot;created_at&quot;: &quot;2026-08-28T19:31:30.869000Z&quot;,
+            &quot;id&quot;: &quot;6a91e212e9468f4d84005435&quot;
+        }
+    ]
 }</code>
  </pre>
     </span>
@@ -1789,14 +2748,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/jobs?keyword=Laravel&amp;city=Damascus&amp;job_type=full_time&amp;work_mode=remote&amp;job_level=senior&amp;experience_years=3&amp;category=Engineering&amp;min_salary=500&amp;max_salary=3000&amp;tag=React&amp;communication_method=by_forsa&amp;per_page=10&amp;page=1" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/jobs?keyword=Laravel&amp;city=Damascus&amp;job_type=full_time&amp;work_mode=remote&amp;job_level=senior&amp;experience_years=3&amp;category=Engineering&amp;min_salary=500&amp;max_salary=3000&amp;tag=React&amp;communication_method=by_forsa&amp;per_page=10&amp;page=1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/jobs"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/jobs"
 );
 
 const params = {
@@ -2146,14 +3105,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/jobs/search?keyword=React&amp;location=Beirut&amp;job_type=full_time&amp;category=Engineering&amp;min_salary=2000" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/jobs/search?keyword=React&amp;location=Beirut&amp;job_type=full_time&amp;category=Engineering&amp;min_salary=2000" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
     \"keyword\": \"b\",
     \"location\": \"n\",
-    \"job_type\": \"full_time\",
+    \"job_type\": \"contract\",
     \"category\": \"g\",
     \"min_salary\": 12
 }"
@@ -2162,7 +3121,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/jobs/search"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/jobs/search"
 );
 
 const params = {
@@ -2184,7 +3143,7 @@ const headers = {
 let body = {
     "keyword": "b",
     "location": "n",
-    "job_type": "full_time",
+    "job_type": "contract",
     "category": "g",
     "min_salary": 12
 };
@@ -2398,10 +3357,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_type"                data-endpoint="GETapi-jobs-search"
-               value="full_time"
+               value="contract"
                data-component="body">
     <br>
-<p>Example: <code>full_time</code></p>
+<p>Example: <code>contract</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>full_time</code></li> <li><code>part_time</code></li> <li><code>contract</code></li> <li><code>freelance</code></li></ul>
         </div>
@@ -2444,14 +3403,14 @@ Must be one of:
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/jobs/stats/by-location" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/jobs/stats/by-location" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/jobs/stats/by-location"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/jobs/stats/by-location"
 );
 
 const headers = {
@@ -2573,14 +3532,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/jobs/stats/by-category" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/jobs/stats/by-category" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/jobs/stats/by-category"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/jobs/stats/by-category"
 );
 
 const headers = {
@@ -2704,14 +3663,14 @@ control at the client if needed.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/jobs/664f1a2b3c4d5e6f7a8b9c0d" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/jobs/664f1a2b3c4d5e6f7a8b9c0d" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/jobs/664f1a2b3c4d5e6f7a8b9c0d"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/jobs/664f1a2b3c4d5e6f7a8b9c0d"
 );
 
 const headers = {
@@ -2916,14 +3875,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/companies?search=Tammam&amp;industry=Technology&amp;city=Damascus&amp;company_size=less_than_10&amp;min_rating=3.5&amp;per_page=10&amp;page=1" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/companies?search=Tammam&amp;industry=Technology&amp;city=Damascus&amp;company_size=less_than_10&amp;min_rating=3.5&amp;per_page=10&amp;page=1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/companies"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/companies"
 );
 
 const params = {
@@ -2953,7 +3912,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-companies">
             <blockquote>
-            <p>Example response (500):</p>
+            <p>Example response (200):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -2965,7 +3924,13 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Server Error&quot;
+    &quot;data&quot;: [],
+    &quot;current_page&quot;: 1,
+    &quot;per_page&quot;: 10,
+    &quot;total&quot;: 0,
+    &quot;total_pages&quot;: 1,
+    &quot;next_page&quot;: null,
+    &quot;prev_page&quot;: null
 }</code>
  </pre>
     </span>
@@ -3143,14 +4108,14 @@ includes <code>address</code>, <code>industry_tags</code>, <code>founded_year</c
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/companies/664f1a2b3c4d5e6f7a8b9c0d" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/companies/664f1a2b3c4d5e6f7a8b9c0d" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/companies/664f1a2b3c4d5e6f7a8b9c0d"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/companies/664f1a2b3c4d5e6f7a8b9c0d"
 );
 
 const headers = {
@@ -3177,7 +4142,7 @@ fetch(url, {
 }</code>
  </pre>
             <blockquote>
-            <p>Example response (500):</p>
+            <p>Example response (404):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -3189,7 +4154,7 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Server Error&quot;
+    &quot;message&quot;: &quot;Company profile not found&quot;
 }</code>
  </pre>
     </span>
@@ -3293,7 +4258,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/search/users?search=React+Developer&amp;skills=React%2CTypeScript%2CNode.js&amp;min_experience=3&amp;max_experience=10&amp;min_ats_score=70&amp;max_ats_score=95&amp;location=Beirut&amp;job_level=senior&amp;actively_seeking=1&amp;per_page=10&amp;page=1" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/search/users?search=React+Developer&amp;skills=React%2CTypeScript%2CNode.js&amp;min_experience=3&amp;max_experience=10&amp;min_ats_score=70&amp;max_ats_score=95&amp;location=Beirut&amp;job_level=senior&amp;actively_seeking=1&amp;per_page=10&amp;page=1" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -3301,7 +4266,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/search/users"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/search/users"
 );
 
 const params = {
@@ -3612,7 +4577,7 @@ Admins receive all fields. Non-admin callers receive all fields except password.
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/users/664f1a2b3c4d5e6f7a8b9c0e" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/users/664f1a2b3c4d5e6f7a8b9c0e" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -3620,7 +4585,7 @@ Admins receive all fields. Non-admin callers receive all fields except password.
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/users/664f1a2b3c4d5e6f7a8b9c0e"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/users/664f1a2b3c4d5e6f7a8b9c0e"
 );
 
 const headers = {
@@ -3777,7 +4742,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/job-seeker/profile" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -3785,7 +4750,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/profile"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile"
 );
 
 const headers = {
@@ -3931,7 +4896,7 @@ All other fields are sent as regular form fields.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/job-seeker/profile/personal-info" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/personal-info" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
@@ -3946,12 +4911,12 @@ All other fields are sent as regular form fields.</p>
     --form "phone=+961 70 123456"\
     --form "date_of_birth=1995-06-15"\
     --form "marital_status=architecto"\
-    --form "image=@/tmp/phpFM3KgB" </code></pre></div>
+    --form "image=@C:\Users\rog\AppData\Local\Temp\php908F.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/profile/personal-info"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/personal-info"
 );
 
 const headers = {
@@ -4128,7 +5093,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>JPEG/PNG/WEBP profile photo, max 2MB. Example: <code>/tmp/phpFM3KgB</code></p>
+<p>JPEG/PNG/WEBP profile photo, max 2MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php908F.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>gender</code></b>&nbsp;&nbsp;
@@ -4242,7 +5207,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/job-seeker/profile/career-info" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/career-info" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -4275,7 +5240,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/profile/career-info"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/career-info"
 );
 
 const headers = {
@@ -4604,7 +5569,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/job-seeker/profile/social-links" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/social-links" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -4621,7 +5586,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/profile/social-links"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/social-links"
 );
 
 const headers = {
@@ -4823,7 +5788,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/job-seeker/profile/skills" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/skills" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -4840,7 +5805,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/profile/skills"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/skills"
 );
 
 const headers = {
@@ -5021,7 +5986,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/job-seeker/profile/skills" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/skills" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -5029,7 +5994,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/profile/skills"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/skills"
 );
 
 const headers = {
@@ -5156,7 +6121,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/job-seeker/profile/education" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/education" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -5179,7 +6144,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/profile/education"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/education"
 );
 
 const headers = {
@@ -5438,7 +6403,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/job-seeker/profile/education" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/education" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -5446,7 +6411,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/profile/education"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/education"
 );
 
 const headers = {
@@ -5573,7 +6538,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/job-seeker/profile/work-experience" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/work-experience" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -5598,7 +6563,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/profile/work-experience"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/work-experience"
 );
 
 const headers = {
@@ -5859,7 +6824,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/job-seeker/profile/work-experience" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/work-experience" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -5867,7 +6832,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/profile/work-experience"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile/work-experience"
 );
 
 const headers = {
@@ -5995,7 +6960,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/job-seeker/profile" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
@@ -6003,20 +6968,20 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "last_name=n"\
     --form "full_name=g"\
     --form "image=z"\
-    --form "gender=female"\
+    --form "gender=male"\
     --form "nationality=m"\
     --form "city=i"\
     --form "location=y"\
     --form "address=v"\
     --form "phone=dljnikhwaykcmyuw"\
     --form "date_of_birth=pwlvqwrsitcpscql"\
-    --form "marital_status=single"\
+    --form "marital_status=divorced"\
     --form "salary_range_from=16"\
     --form "salary_range_to=38"\
-    --form "current_job_status=employed"\
+    --form "current_job_status=freelancing"\
     --form "years_of_experience=8"\
     --form "education_level=n"\
-    --form "job_level=mid"\
+    --form "job_level=entry"\
     --form "job_types[]=r"\
     --form "job_roles[]=w"\
     --form "work_cities[]=t"\
@@ -6045,12 +7010,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "work_experience[][to_date]=tnnoqitpxntltcvi"\
     --form "work_experience[][is_currently_working]=1"\
     --form "work_experience[][description]=Eius et animi quos velit et."\
-    --form "resume=@/tmp/phpr9rgOW" </code></pre></div>
+    --form "resume=@C:\Users\rog\AppData\Local\Temp\php90CF.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/profile"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/profile"
 );
 
 const headers = {
@@ -6064,20 +7029,20 @@ body.append('first_name', 'b');
 body.append('last_name', 'n');
 body.append('full_name', 'g');
 body.append('image', 'z');
-body.append('gender', 'female');
+body.append('gender', 'male');
 body.append('nationality', 'm');
 body.append('city', 'i');
 body.append('location', 'y');
 body.append('address', 'v');
 body.append('phone', 'dljnikhwaykcmyuw');
 body.append('date_of_birth', 'pwlvqwrsitcpscql');
-body.append('marital_status', 'single');
+body.append('marital_status', 'divorced');
 body.append('salary_range_from', '16');
 body.append('salary_range_to', '38');
-body.append('current_job_status', 'employed');
+body.append('current_job_status', 'freelancing');
 body.append('years_of_experience', '8');
 body.append('education_level', 'n');
-body.append('job_level', 'mid');
+body.append('job_level', 'entry');
 body.append('job_types[]', 'r');
 body.append('job_roles[]', 'w');
 body.append('work_cities[]', 't');
@@ -6257,10 +7222,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="gender"                data-endpoint="PUTapi-job-seeker-profile"
-               value="female"
+               value="male"
                data-component="body">
     <br>
-<p>Example: <code>female</code></p>
+<p>Example: <code>male</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>male</code></li> <li><code>female</code></li> <li><code>other</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -6343,10 +7308,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="marital_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="single"
+               value="divorced"
                data-component="body">
     <br>
-<p>Example: <code>single</code></p>
+<p>Example: <code>divorced</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>single</code></li> <li><code>married</code></li> <li><code>divorced</code></li> <li><code>widowed</code></li> <li><code>prefer_not_to_say</code></li></ul>
         </div>
@@ -6381,10 +7346,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="current_job_status"                data-endpoint="PUTapi-job-seeker-profile"
-               value="employed"
+               value="freelancing"
                data-component="body">
     <br>
-<p>Example: <code>employed</code></p>
+<p>Example: <code>freelancing</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>employed</code></li> <li><code>unemployed</code></li> <li><code>freelancing</code></li> <li><code>student</code></li> <li><code>open_to_work</code></li></ul>
         </div>
@@ -6419,10 +7384,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="job_level"                data-endpoint="PUTapi-job-seeker-profile"
-               value="mid"
+               value="entry"
                data-component="body">
     <br>
-<p>Example: <code>mid</code></p>
+<p>Example: <code>entry</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>entry</code></li> <li><code>junior</code></li> <li><code>mid</code></li> <li><code>senior</code></li> <li><code>lead</code></li> <li><code>manager</code></li> <li><code>director</code></li> <li><code>executive</code></li></ul>
         </div>
@@ -6850,7 +7815,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>/tmp/phpr9rgOW</code></p>
+<p>Resume file. Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\rog\AppData\Local\Temp\php90CF.tmp</code></p>
         </div>
         </form>
 
@@ -6887,16 +7852,16 @@ Retry failed: <code>POST /job-seeker/resume/retry-analysis</code></p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/job-seeker/resume/upload" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/resume/upload" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "resume=@/tmp/phpGFnwxR" </code></pre></div>
+    --form "resume=@C:\Users\rog\AppData\Local\Temp\php90D1.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/resume/upload"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/resume/upload"
 );
 
 const headers = {
@@ -7062,7 +8027,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpGFnwxR</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php90D1.tmp</code></p>
         </div>
         </form>
 
@@ -7080,7 +8045,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/job-seeker/resume" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/resume" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -7088,7 +8053,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/resume"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/resume"
 );
 
 const headers = {
@@ -7224,7 +8189,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/job-seeker/resume" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/resume" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -7232,7 +8197,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/resume"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/resume"
 );
 
 const headers = {
@@ -7422,16 +8387,16 @@ This endpoint is similar to <code>/upload</code> but accepts field name <code>cv
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/job-seeker/resume/upload-and-analyze" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/resume/upload-and-analyze" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cv=@/tmp/phpsTMWtE" </code></pre></div>
+    --form "cv=@C:\Users\rog\AppData\Local\Temp\php90E4.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/resume/upload-and-analyze"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/resume/upload-and-analyze"
 );
 
 const headers = {
@@ -7585,7 +8550,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>/tmp/phpsTMWtE</code></p>
+<p>PDF/DOC/DOCX file, max 10 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php90E4.tmp</code></p>
         </div>
         </form>
 
@@ -7603,7 +8568,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/job-seeker/resume/analysis-status" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/resume/analysis-status" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -7611,7 +8576,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/resume/analysis-status"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/resume/analysis-status"
 );
 
 const headers = {
@@ -7766,7 +8731,7 @@ Requires that a resume is already uploaded and analysis status is 'error'.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/job-seeker/resume/retry-analysis" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/resume/retry-analysis" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -7774,7 +8739,7 @@ Requires that a resume is already uploaded and analysis status is 'error'.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/resume/retry-analysis"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/resume/retry-analysis"
 );
 
 const headers = {
@@ -7922,7 +8887,7 @@ to jobs if no per-application cover letter is provided.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/job-seeker/cover-letter" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/cover-letter" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -7934,7 +8899,7 @@ to jobs if no per-application cover letter is provided.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/cover-letter"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/cover-letter"
 );
 
 const headers = {
@@ -8079,7 +9044,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/job-seeker/cover-letter" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/cover-letter" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -8087,7 +9052,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/cover-letter"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/cover-letter"
 );
 
 const headers = {
@@ -8223,7 +9188,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/job-seeker/applications" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/applications" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -8231,7 +9196,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/applications"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/applications"
 );
 
 const headers = {
@@ -8393,7 +9358,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/job-seeker/apply" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/apply" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
@@ -8407,12 +9372,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "positions_suited_for[]=architecto"\
     --form "notice_period=architecto"\
     --form "expected_salary=architecto"\
-    --form "resume=@/tmp/phpFxsox0" </code></pre></div>
+    --form "answers[][question]=Describe your last project."\
+    --form "answers[][answer]=I led a team of 4 building a payments API."\
+    --form "resume=@C:\Users\rog\AppData\Local\Temp\php9106.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/apply"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/apply"
 );
 
 const headers = {
@@ -8432,6 +9399,8 @@ body.append('what_to_add', 'architecto');
 body.append('positions_suited_for[]', 'architecto');
 body.append('notice_period', 'architecto');
 body.append('expected_salary', 'architecto');
+body.append('answers[][question]', 'Describe your last project.');
+body.append('answers[][answer]', 'I led a team of 4 building a payments API.');
 body.append('resume', document.querySelector('input[name="resume"]').files[0]);
 
 fetch(url, {
@@ -8596,7 +9565,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>/tmp/phpFxsox0</code></p>
+<p>Optional PDF/DOC resume file (max 5 MB). Overrides profile CV. Example: <code>C:\Users\rog\AppData\Local\Temp\php9106.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>education</code></b>&nbsp;&nbsp;
@@ -8696,6 +9665,42 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Optional expected salary. Max 100 chars. Example: <code>architecto</code></p>
         </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>answers</code></b>&nbsp;&nbsp;
+<small>object[]</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+<br>
+<p>Answers to the job post's screening questions. Required questions must be answered.</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>question</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="answers.0.question"                data-endpoint="POSTapi-job-seeker-apply"
+               value="Describe your last project."
+               data-component="body">
+    <br>
+<p>The exact question text from the job post. Example: <code>Describe your last project.</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>answer</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="answers.0.answer"                data-endpoint="POSTapi-job-seeker-apply"
+               value="I led a team of 4 building a payments API."
+               data-component="body">
+    <br>
+<p>The applicant's answer. Example: <code>I led a team of 4 building a payments API.</code></p>
+                    </div>
+                                    </details>
+        </div>
         </form>
 
                     <h2 id="endpoints-DELETEapi-job-seeker-applications--id--withdraw">Withdraw application</h2>
@@ -8712,7 +9717,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/job-seeker/applications/664f1a2b3c4d5e6f7a8b9c0f/withdraw" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/applications/664f1a2b3c4d5e6f7a8b9c0f/withdraw" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -8720,7 +9725,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/applications/664f1a2b3c4d5e6f7a8b9c0f/withdraw"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/applications/664f1a2b3c4d5e6f7a8b9c0f/withdraw"
 );
 
 const headers = {
@@ -8880,7 +9885,7 @@ and experience level match (+2). Posts the seeker has already applied to are exc
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/job-seeker/matched-jobs?min_score=4&amp;page=1" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/matched-jobs?min_score=4&amp;page=1" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -8888,7 +9893,7 @@ and experience level match (+2). Posts the seeker has already applied to are exc
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/matched-jobs"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/matched-jobs"
 );
 
 const params = {
@@ -9062,7 +10067,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/job-seeker/analytics" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/analytics" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -9070,7 +10075,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/analytics"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/analytics"
 );
 
 const headers = {
@@ -9205,7 +10210,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/job-seeker/offers" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/offers" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -9213,7 +10218,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/offers"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/offers"
 );
 
 const headers = {
@@ -9356,7 +10361,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/job-seeker/offers/664f1a2b3c4d5e6f7a8b9c0f/accept" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/offers/664f1a2b3c4d5e6f7a8b9c0f/accept" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -9364,7 +10369,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/offers/664f1a2b3c4d5e6f7a8b9c0f/accept"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/offers/664f1a2b3c4d5e6f7a8b9c0f/accept"
 );
 
 const headers = {
@@ -9526,7 +10531,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/job-seeker/offers/664f1a2b3c4d5e6f7a8b9c0f/decline" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/offers/664f1a2b3c4d5e6f7a8b9c0f/decline" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -9534,7 +10539,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/offers/664f1a2b3c4d5e6f7a8b9c0f/decline"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/offers/664f1a2b3c4d5e6f7a8b9c0f/decline"
 );
 
 const headers = {
@@ -9698,7 +10703,7 @@ recommendations from the database, ranked by match percentage and ATS compatibil
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/job-seeker/match-resume-to-jobs" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/match-resume-to-jobs" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -9706,7 +10711,7 @@ recommendations from the database, ranked by match percentage and ATS compatibil
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/match-resume-to-jobs"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/match-resume-to-jobs"
 );
 
 const headers = {
@@ -9867,16 +10872,16 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/employer/apply" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/apply" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "document=@/tmp/phpXoHcDA" </code></pre></div>
+    --form "document=@C:\Users\rog\AppData\Local\Temp\php928E.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/apply"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/apply"
 );
 
 const headers = {
@@ -10020,7 +11025,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>/tmp/phpXoHcDA</code></p>
+<p>PDF, DOC, DOCX, JPG, or PNG. Max 5 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php928E.tmp</code></p>
         </div>
         </form>
 
@@ -10038,7 +11043,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/employer/status" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/status" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -10046,7 +11051,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/status"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/status"
 );
 
 const headers = {
@@ -10179,7 +11184,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/employer/jobs" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/jobs" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -10187,7 +11192,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/jobs"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/jobs"
 );
 
 const headers = {
@@ -10335,7 +11340,7 @@ the employer's company profile — they cannot be overridden here.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/employer/jobs" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/jobs" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -10389,7 +11394,7 @@ the employer's company profile — they cannot be overridden here.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/jobs"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/jobs"
 );
 
 const headers = {
@@ -10999,7 +12004,7 @@ and always sourced from the employer's company profile.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -11007,7 +12012,7 @@ and always sourced from the employer's company profile.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d"
 );
 
 const headers = {
@@ -11178,7 +12183,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -11186,7 +12191,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d"
 );
 
 const headers = {
@@ -11344,7 +12349,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d/deactivate" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d/deactivate" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -11352,7 +12357,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d/deactivate"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d/deactivate"
 );
 
 const headers = {
@@ -11508,7 +12513,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d/activate" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d/activate" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -11516,7 +12521,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d/activate"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d/activate"
 );
 
 const headers = {
@@ -11679,7 +12684,7 @@ This is a superset of the public company endpoint.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/employer/company" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/company" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -11687,7 +12692,7 @@ This is a superset of the public company endpoint.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/company"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/company"
 );
 
 const headers = {
@@ -11836,7 +12841,7 @@ industry taxonomy, use <code>industry_tags</code> in the private info endpoint.<
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/employer/company" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/company" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -11857,7 +12862,7 @@ industry taxonomy, use <code>industry_tags</code> in the private info endpoint.<
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/company"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/company"
 );
 
 const headers = {
@@ -12135,7 +13140,7 @@ industry taxonomy, use <code>industry_tags</code> in the private info endpoint.<
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/employer/company" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/company" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -12156,7 +13161,7 @@ industry taxonomy, use <code>industry_tags</code> in the private info endpoint.<
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/company"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/company"
 );
 
 const headers = {
@@ -12439,7 +13444,7 @@ Set <code>expose_to_applicants: true</code> to surface <code>address</code>, <co
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/employer/company/private" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/company/private" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -12467,7 +13472,7 @@ Set <code>expose_to_applicants: true</code> to surface <code>address</code>, <co
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/company/private"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/company/private"
 );
 
 const headers = {
@@ -12793,16 +13798,16 @@ Accepts JPEG, PNG, WebP; max 2 MB. Any previously uploaded logo is automatically
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/employer/company/logo" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/company/logo" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "logo=@/tmp/phpcHNDoQ" </code></pre></div>
+    --form "logo=@C:\Users\rog\AppData\Local\Temp\php92D0.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/company/logo"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/company/logo"
 );
 
 const headers = {
@@ -12947,7 +13952,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>The logo image file. Accepted: jpeg, png, webp. Max 2 MB. Example: <code>/tmp/phpcHNDoQ</code></p>
+<p>The logo image file. Accepted: jpeg, png, webp. Max 2 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php92D0.tmp</code></p>
         </div>
         </form>
 
@@ -12966,16 +13971,16 @@ Accepts JPEG, PNG, WebP; max 4 MB. Any previously uploaded cover image is automa
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/employer/company/cover" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/company/cover" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "cover_image=@/tmp/phptGVHhl" </code></pre></div>
+    --form "cover_image=@C:\Users\rog\AppData\Local\Temp\php92D3.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/company/cover"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/company/cover"
 );
 
 const headers = {
@@ -13120,7 +14125,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>The cover image file. Accepted: jpeg, png, webp. Max 4 MB. Example: <code>/tmp/phptGVHhl</code></p>
+<p>The cover image file. Accepted: jpeg, png, webp. Max 4 MB. Example: <code>C:\Users\rog\AppData\Local\Temp\php92D3.tmp</code></p>
         </div>
         </form>
 
@@ -13138,7 +14143,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d/applications" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d/applications" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -13146,7 +14151,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d/applications"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/jobs/664f1a2b3c4d5e6f7a8b9c0d/applications"
 );
 
 const headers = {
@@ -13322,7 +14327,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/employer/applications/664f1a2b3c4d5e6f7a8b9c0f/status" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/applications/664f1a2b3c4d5e6f7a8b9c0f/status" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -13335,7 +14340,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/applications/664f1a2b3c4d5e6f7a8b9c0f/status"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/applications/664f1a2b3c4d5e6f7a8b9c0f/status"
 );
 
 const headers = {
@@ -13528,7 +14533,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/employer/seekers?skills=React%2CTypeScript&amp;min_ats_score=70&amp;max_ats_score=95&amp;location=Beirut&amp;keyword=frontend&amp;page=1" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/seekers?skills=React%2CTypeScript&amp;min_ats_score=70&amp;max_ats_score=95&amp;location=Beirut&amp;keyword=frontend&amp;page=1" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -13536,7 +14541,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/seekers"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/seekers"
 );
 
 const params = {
@@ -13769,7 +14774,7 @@ personal fields excluded. Intended for employers reviewing candidates.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/employer/seekers/664f1a2b3c4d5e6f7a8b9c0e" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/seekers/664f1a2b3c4d5e6f7a8b9c0e" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -13777,7 +14782,7 @@ personal fields excluded. Intended for employers reviewing candidates.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/seekers/664f1a2b3c4d5e6f7a8b9c0e"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/seekers/664f1a2b3c4d5e6f7a8b9c0e"
 );
 
 const headers = {
@@ -13971,7 +14976,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/employer/offers" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/offers" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -13985,7 +14990,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/offers"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/offers"
 );
 
 const headers = {
@@ -14190,7 +15195,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/employer/offers" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/offers" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -14198,7 +15203,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/offers"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/offers"
 );
 
 const headers = {
@@ -14342,7 +15347,7 @@ Returns candidates ordered by relevance with matched skills scores.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/employer/match-candidates" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/match-candidates" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -14355,7 +15360,7 @@ Returns candidates ordered by relevance with matched skills scores.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/match-candidates"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/match-candidates"
 );
 
 const headers = {
@@ -14550,7 +15555,7 @@ Employer must own the job post.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/employer/jobs/architecto/match-candidates" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/jobs/architecto/match-candidates" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -14562,7 +15567,7 @@ Employer must own the job post.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/jobs/architecto/match-candidates"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/jobs/architecto/match-candidates"
 );
 
 const headers = {
@@ -14757,7 +15762,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/employer/analytics" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/analytics" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -14765,7 +15770,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/employer/analytics"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/employer/analytics"
 );
 
 const headers = {
@@ -14900,7 +15905,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/employers" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/employers" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -14908,7 +15913,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/employers"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/employers"
 );
 
 const headers = {
@@ -15046,7 +16051,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/admin/employers/664f1a2b3c4d5e6f7a8b9c0d/approve" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/employers/664f1a2b3c4d5e6f7a8b9c0d/approve" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -15054,7 +16059,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/employers/664f1a2b3c4d5e6f7a8b9c0d/approve"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/employers/664f1a2b3c4d5e6f7a8b9c0d/approve"
 );
 
 const headers = {
@@ -15208,7 +16213,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/admin/employers/664f1a2b3c4d5e6f7a8b9c0d/reject" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/employers/664f1a2b3c4d5e6f7a8b9c0d/reject" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -15220,7 +16225,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/employers/664f1a2b3c4d5e6f7a8b9c0d/reject"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/employers/664f1a2b3c4d5e6f7a8b9c0d/reject"
 );
 
 const headers = {
@@ -15391,7 +16396,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/analytics" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/analytics" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -15399,7 +16404,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/analytics"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/analytics"
 );
 
 const headers = {
@@ -15534,7 +16539,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/users?per_page=15&amp;page=1" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users?per_page=15&amp;page=1" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -15542,7 +16547,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/users"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users"
 );
 
 const params = {
@@ -15716,7 +16721,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/users/seekers?per_page=15" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users/seekers?per_page=15" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -15724,7 +16729,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/users/seekers"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users/seekers"
 );
 
 const params = {
@@ -15882,7 +16887,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/users/employers?per_page=15" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users/employers?per_page=15" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -15890,7 +16895,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/users/employers"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users/employers"
 );
 
 const params = {
@@ -16049,7 +17054,7 @@ CV on file but have never applied. Use <code>format=csv</code> to download a CSV
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/reports/churn?window_days=30&amp;format=csv" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/reports/churn?window_days=30&amp;format=csv" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -16057,7 +17062,7 @@ CV on file but have never applied. Use <code>format=csv</code> to download a CSV
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/reports/churn"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/reports/churn"
 );
 
 const params = {
@@ -16237,7 +17242,7 @@ including drop-off percentages at each stage.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/reports/funnel" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/reports/funnel" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -16245,7 +17250,7 @@ including drop-off percentages at each stage.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/reports/funnel"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/reports/funnel"
 );
 
 const headers = {
@@ -16394,7 +17399,7 @@ Useful for prioritising the approval queue.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/reports/pipeline?daily_revenue_per_employer=10" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/reports/pipeline?daily_revenue_per_employer=10" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -16402,7 +17407,7 @@ Useful for prioritising the approval queue.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/reports/pipeline"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/reports/pipeline"
 );
 
 const params = {
@@ -16561,7 +17566,7 @@ Useful for identifying where to focus sales outreach.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/reports/categories?sort_by=applications&amp;limit=10" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/reports/categories?sort_by=applications&amp;limit=10" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -16569,7 +17574,7 @@ Useful for identifying where to focus sales outreach.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/reports/categories"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/reports/categories"
 );
 
 const params = {
@@ -16737,7 +17742,7 @@ All PII (name, email, phone, user_id, ai_contact fields) is excluded — safe to
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/reports/talent?limit=20&amp;industry=Technology&amp;format=csv" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/reports/talent?limit=20&amp;industry=Technology&amp;format=csv" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -16745,7 +17750,7 @@ All PII (name, email, phone, user_id, ai_contact fields) is excluded — safe to
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/reports/talent"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/reports/talent"
 );
 
 const params = {
@@ -16951,16 +17956,16 @@ State University,careers@university.edu,State University,university</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/admin/onboarding/bulk" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/onboarding/bulk" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "file=@/tmp/phpBHK1WN" </code></pre></div>
+    --form "file=@C:\Users\rog\AppData\Local\Temp\php96DD.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/onboarding/bulk"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/onboarding/bulk"
 );
 
 const headers = {
@@ -17106,7 +18111,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>CSV file, max 2 MB. Required columns: name, email, company_name. Example: <code>/tmp/phpBHK1WN</code></p>
+<p>CSV file, max 2 MB. Required columns: name, email, company_name. Example: <code>C:\Users\rog\AppData\Local\Temp\php96DD.tmp</code></p>
         </div>
         </form>
 
@@ -17127,7 +18132,7 @@ in-app notification creation are processed asynchronously via Laravel queues.</p
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/admin/broadcast" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/broadcast" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -17144,7 +18149,7 @@ in-app notification creation are processed asynchronously via Laravel queues.</p
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/broadcast"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/broadcast"
 );
 
 const headers = {
@@ -17348,7 +18353,7 @@ runs the analysis synchronously.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/admin/users/664f1a2b3c4d5e6f7a8b9c0d/reanalyze" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users/664f1a2b3c4d5e6f7a8b9c0d/reanalyze" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -17356,7 +18361,7 @@ runs the analysis synchronously.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/users/664f1a2b3c4d5e6f7a8b9c0d/reanalyze"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users/664f1a2b3c4d5e6f7a8b9c0d/reanalyze"
 );
 
 const headers = {
@@ -17525,7 +18530,7 @@ action type and date range.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/audit-log?action_type=broadcast_sent&amp;date_from=2024-01-01&amp;date_to=2024-12-31&amp;per_page=20&amp;page=1" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/audit-log?action_type=broadcast_sent&amp;date_from=2024-01-01&amp;date_to=2024-12-31&amp;per_page=20&amp;page=1" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -17533,7 +18538,7 @@ action type and date range.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/audit-log"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/audit-log"
 );
 
 const params = {
@@ -17748,7 +18753,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/categories" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/categories" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -17756,7 +18761,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/categories"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/categories"
 );
 
 const headers = {
@@ -17891,7 +18896,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/admin/categories" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/categories" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -17899,7 +18904,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/categories"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/categories"
 );
 
 const headers = {
@@ -18017,7 +19022,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/admin/categories/architecto" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/categories/6a91dc79eedd3632860832b2" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -18025,7 +19030,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/categories/architecto"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/categories/6a91dc79eedd3632860832b2"
 );
 
 const headers = {
@@ -18135,10 +19140,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="id"                data-endpoint="PUTapi-admin-categories--id-"
-               value="architecto"
+               value="6a91dc79eedd3632860832b2"
                data-component="url">
     <br>
-<p>The ID of the category. Example: <code>architecto</code></p>
+<p>The ID of the category. Example: <code>6a91dc79eedd3632860832b2</code></p>
             </div>
                     </form>
 
@@ -18156,7 +19161,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/admin/categories/architecto" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/categories/6a91dc79eedd3632860832b2" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -18164,7 +19169,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/categories/architecto"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/categories/6a91dc79eedd3632860832b2"
 );
 
 const headers = {
@@ -18274,10 +19279,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="id"                data-endpoint="DELETEapi-admin-categories--id-"
-               value="architecto"
+               value="6a91dc79eedd3632860832b2"
                data-component="url">
     <br>
-<p>The ID of the category. Example: <code>architecto</code></p>
+<p>The ID of the category. Example: <code>6a91dc79eedd3632860832b2</code></p>
             </div>
                     </form>
 
@@ -18295,7 +19300,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/cities" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/cities" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -18303,7 +19308,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/cities"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/cities"
 );
 
 const headers = {
@@ -18438,7 +19443,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/admin/cities" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/cities" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -18446,7 +19451,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/cities"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/cities"
 );
 
 const headers = {
@@ -18564,7 +19569,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/admin/cities/architecto" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/cities/6a91df0fe9468f4d84005433" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -18572,7 +19577,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/cities/architecto"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/cities/6a91df0fe9468f4d84005433"
 );
 
 const headers = {
@@ -18682,10 +19687,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="id"                data-endpoint="PUTapi-admin-cities--id-"
-               value="architecto"
+               value="6a91df0fe9468f4d84005433"
                data-component="url">
     <br>
-<p>The ID of the city. Example: <code>architecto</code></p>
+<p>The ID of the city. Example: <code>6a91df0fe9468f4d84005433</code></p>
             </div>
                     </form>
 
@@ -18703,7 +19708,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/admin/cities/architecto" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/cities/6a91df0fe9468f4d84005433" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -18711,7 +19716,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/cities/architecto"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/cities/6a91df0fe9468f4d84005433"
 );
 
 const headers = {
@@ -18821,10 +19826,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="id"                data-endpoint="DELETEapi-admin-cities--id-"
-               value="architecto"
+               value="6a91df0fe9468f4d84005433"
                data-component="url">
     <br>
-<p>The ID of the city. Example: <code>architecto</code></p>
+<p>The ID of the city. Example: <code>6a91df0fe9468f4d84005433</code></p>
             </div>
                     </form>
 
@@ -18842,7 +19847,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/roles" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/roles" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -18850,7 +19855,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/roles"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/roles"
 );
 
 const headers = {
@@ -18985,7 +19990,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/admin/roles" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/roles" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -18993,7 +19998,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/roles"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/roles"
 );
 
 const headers = {
@@ -19111,7 +20116,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/admin/roles/architecto" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/roles/6a91df03e9468f4d84005432" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -19119,7 +20124,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/roles/architecto"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/roles/6a91df03e9468f4d84005432"
 );
 
 const headers = {
@@ -19229,10 +20234,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="id"                data-endpoint="PUTapi-admin-roles--id-"
-               value="architecto"
+               value="6a91df03e9468f4d84005432"
                data-component="url">
     <br>
-<p>The ID of the role. Example: <code>architecto</code></p>
+<p>The ID of the role. Example: <code>6a91df03e9468f4d84005432</code></p>
             </div>
                     </form>
 
@@ -19250,7 +20255,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/admin/roles/architecto" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/roles/6a91df03e9468f4d84005432" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -19258,7 +20263,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/roles/architecto"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/roles/6a91df03e9468f4d84005432"
 );
 
 const headers = {
@@ -19368,10 +20373,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="id"                data-endpoint="DELETEapi-admin-roles--id-"
-               value="architecto"
+               value="6a91df03e9468f4d84005432"
                data-component="url">
     <br>
-<p>The ID of the role. Example: <code>architecto</code></p>
+<p>The ID of the role. Example: <code>6a91df03e9468f4d84005432</code></p>
             </div>
                     </form>
 
@@ -19390,7 +20395,7 @@ the account is immediately activated (no approval required).</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/admin/users" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -19405,7 +20410,7 @@ the account is immediately activated (no approval required).</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/users"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users"
 );
 
 const headers = {
@@ -19609,7 +20614,7 @@ Cannot delete your own account.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/admin/users/664f1a2b3c4d5e6f7a8b9c0d" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users/664f1a2b3c4d5e6f7a8b9c0d" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -19617,7 +20622,7 @@ Cannot delete your own account.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/users/664f1a2b3c4d5e6f7a8b9c0d"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users/664f1a2b3c4d5e6f7a8b9c0d"
 );
 
 const headers = {
@@ -19775,7 +20780,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/admin/users/664f1a2b3c4d5e6f7a8b9c0d/password" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users/664f1a2b3c4d5e6f7a8b9c0d/password" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -19788,7 +20793,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/users/664f1a2b3c4d5e6f7a8b9c0d/password"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/users/664f1a2b3c4d5e6f7a8b9c0d/password"
 );
 
 const headers = {
@@ -19978,7 +20983,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/meetings?status=pending%2Caccepted&amp;from_date=2024-01-01&amp;to_date=2024-12-31&amp;sort_direction=asc&amp;per_page=15" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/meetings?status=pending%2Caccepted&amp;from_date=2024-01-01&amp;to_date=2024-12-31&amp;sort_direction=asc&amp;per_page=15" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -19986,7 +20991,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/meetings"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/meetings"
 );
 
 const params = {
@@ -20190,7 +21195,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/meetings/664f1a2b3c4d5e6f7a8b9c0d" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/meetings/664f1a2b3c4d5e6f7a8b9c0d" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -20198,7 +21203,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/meetings/664f1a2b3c4d5e6f7a8b9c0d"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/meetings/664f1a2b3c4d5e6f7a8b9c0d"
 );
 
 const headers = {
@@ -20348,7 +21353,7 @@ ordered newest first. Available to all authenticated users (employee, employer, 
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/notifications?per_page=15&amp;page=1" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/notifications?per_page=15&amp;page=1" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -20356,7 +21361,7 @@ ordered newest first. Available to all authenticated users (employee, employer, 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/notifications"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/notifications"
 );
 
 const params = {
@@ -20531,7 +21536,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/notifications/unread-count" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/notifications/unread-count" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -20539,7 +21544,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/notifications/unread-count"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/notifications/unread-count"
 );
 
 const headers = {
@@ -20666,7 +21671,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/notifications/read-all" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/notifications/read-all" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -20674,7 +21679,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/notifications/read-all"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/notifications/read-all"
 );
 
 const headers = {
@@ -20802,7 +21807,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/notifications/664f1a2b3c4d5e6f7a8b9c0d/read" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/notifications/664f1a2b3c4d5e6f7a8b9c0d/read" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -20810,7 +21815,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/notifications/664f1a2b3c4d5e6f7a8b9c0d/read"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/notifications/664f1a2b3c4d5e6f7a8b9c0d/read"
 );
 
 const headers = {
@@ -20966,15 +21971,15 @@ Supports filtering by status, date range, and sort direction.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/meetings?status=pending%2Caccepted&amp;from_date=2025-01-01&amp;to_date=2025-12-31&amp;sort_direction=desc&amp;per_page=20" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings?status=pending%2Caccepted&amp;from_date=2025-01-01&amp;to_date=2025-12-31&amp;sort_direction=desc&amp;per_page=20" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
     \"status\": \"architecto\",
-    \"from_date\": \"2026-08-27\",
-    \"to_date\": \"2026-08-27\",
-    \"sort_direction\": \"asc\",
+    \"from_date\": \"2026-09-01\",
+    \"to_date\": \"2026-09-01\",
+    \"sort_direction\": \"desc\",
     \"per_page\": 22
 }"
 </code></pre></div>
@@ -20982,7 +21987,7 @@ Supports filtering by status, date range, and sort direction.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/meetings"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings"
 );
 
 const params = {
@@ -21003,9 +22008,9 @@ const headers = {
 
 let body = {
     "status": "architecto",
-    "from_date": "2026-08-27",
-    "to_date": "2026-08-27",
-    "sort_direction": "asc",
+    "from_date": "2026-09-01",
+    "to_date": "2026-09-01",
+    "sort_direction": "desc",
     "per_page": 22
 };
 
@@ -21215,10 +22220,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from_date"                data-endpoint="GETapi-meetings"
-               value="2026-08-27"
+               value="2026-09-01"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-08-27</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-09-01</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to_date</code></b>&nbsp;&nbsp;
@@ -21227,10 +22232,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="to_date"                data-endpoint="GETapi-meetings"
-               value="2026-08-27"
+               value="2026-09-01"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-08-27</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-09-01</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>sort_direction</code></b>&nbsp;&nbsp;
@@ -21239,10 +22244,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort_direction"                data-endpoint="GETapi-meetings"
-               value="asc"
+               value="desc"
                data-component="body">
     <br>
-<p>Example: <code>asc</code></p>
+<p>Example: <code>desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
         </div>
@@ -21275,7 +22280,7 @@ Returns the created meeting along with any scheduling conflicts detected for bot
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/meetings" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -21293,7 +22298,7 @@ Returns the created meeting along with any scheduling conflicts detected for bot
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/meetings"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings"
 );
 
 const headers = {
@@ -21542,7 +22547,7 @@ sorted by proposed_date ascending.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/meetings/upcoming" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings/upcoming" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -21550,7 +22555,7 @@ sorted by proposed_date ascending.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/meetings/upcoming"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings/upcoming"
 );
 
 const headers = {
@@ -21693,7 +22698,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/meetings/664f1a2b3c4d5e6f7a8b9c0f" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings/664f1a2b3c4d5e6f7a8b9c0f" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -21701,7 +22706,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/meetings/664f1a2b3c4d5e6f7a8b9c0f"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings/664f1a2b3c4d5e6f7a8b9c0f"
 );
 
 const headers = {
@@ -21880,7 +22885,7 @@ optionally provide a meet_link as a fallback if Google integration is not config
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/accept" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/accept" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -21892,7 +22897,7 @@ optionally provide a meet_link as a fallback if Google integration is not config
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/accept"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/accept"
 );
 
 const headers = {
@@ -22083,7 +23088,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/decline" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/decline" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -22095,7 +23100,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/decline"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/decline"
 );
 
 const headers = {
@@ -22284,7 +23289,7 @@ pending/accepted/rescheduled. Invitee can cancel from accepted/rescheduled only.
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/cancel" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/cancel" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -22296,7 +23301,7 @@ pending/accepted/rescheduled. Invitee can cancel from accepted/rescheduled only.
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/cancel"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/cancel"
 );
 
 const headers = {
@@ -22486,7 +23491,7 @@ is preserved in the meeting history.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/reschedule" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/reschedule" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -22500,7 +23505,7 @@ is preserved in the meeting history.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/reschedule"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/reschedule"
 );
 
 const headers = {
@@ -22723,7 +23728,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/complete" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/complete" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -22731,7 +23736,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/complete"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/complete"
 );
 
 const headers = {
@@ -22901,7 +23906,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/notes" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/notes" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -22913,7 +23918,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/notes"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/meetings/664f1a2b3c4d5e6f7a8b9c0f/notes"
 );
 
 const headers = {
@@ -23109,7 +24114,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/google/callback?code=4%2F0AX4XfWg...&amp;state=664f1a2b3c4d5e6f7a8b9c0a" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/google/callback?code=4%2F0AX4XfWg...&amp;state=664f1a2b3c4d5e6f7a8b9c0a" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -23117,7 +24122,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/google/callback"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/google/callback"
 );
 
 const params = {
@@ -23309,7 +24314,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/google/connect" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/google/connect" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -23317,7 +24322,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/google/connect"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/google/connect"
 );
 
 const headers = {
@@ -23444,7 +24449,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/google/status" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/google/status" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -23452,7 +24457,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/google/status"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/google/status"
 );
 
 const headers = {
@@ -23579,7 +24584,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/google/disconnect" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/google/disconnect" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -23587,7 +24592,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/google/disconnect"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/google/disconnect"
 );
 
 const headers = {
@@ -23717,13 +24722,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/categories" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/categories" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/categories"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/categories"
 );
 
 const headers = {
@@ -23837,13 +24842,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/categories" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/categories" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/categories"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/categories"
 );
 
 const headers = {
@@ -23951,7 +24956,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/admin/categories" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/categories" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -23962,7 +24967,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/categories"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/categories"
 );
 
 const headers = {
@@ -24109,7 +25114,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/admin/categories/664f1a2b3c4d5e6f7a8b9c0d" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/categories/664f1a2b3c4d5e6f7a8b9c0d" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -24120,7 +25125,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/categories/664f1a2b3c4d5e6f7a8b9c0d"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/categories/664f1a2b3c4d5e6f7a8b9c0d"
 );
 
 const headers = {
@@ -24289,13 +25294,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/admin/categories/664f1a2b3c4d5e6f7a8b9c0d" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/categories/664f1a2b3c4d5e6f7a8b9c0d" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/categories/664f1a2b3c4d5e6f7a8b9c0d"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/categories/664f1a2b3c4d5e6f7a8b9c0d"
 );
 
 const headers = {
@@ -24417,13 +25422,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/cities" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/cities" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/cities"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/cities"
 );
 
 const headers = {
@@ -24537,13 +25542,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/cities" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/cities" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/cities"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/cities"
 );
 
 const headers = {
@@ -24651,7 +25656,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/admin/cities" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/cities" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -24662,7 +25667,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/cities"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/cities"
 );
 
 const headers = {
@@ -24809,7 +25814,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/admin/cities/664f1a2b3c4d5e6f7a8b9c0d" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/cities/664f1a2b3c4d5e6f7a8b9c0d" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -24820,7 +25825,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/cities/664f1a2b3c4d5e6f7a8b9c0d"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/cities/664f1a2b3c4d5e6f7a8b9c0d"
 );
 
 const headers = {
@@ -24989,13 +25994,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/admin/cities/664f1a2b3c4d5e6f7a8b9c0d" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/cities/664f1a2b3c4d5e6f7a8b9c0d" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/cities/664f1a2b3c4d5e6f7a8b9c0d"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/cities/664f1a2b3c4d5e6f7a8b9c0d"
 );
 
 const headers = {
@@ -25117,13 +26122,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/roles" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/roles" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/roles"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/roles"
 );
 
 const headers = {
@@ -25237,13 +26242,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/admin/roles" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/roles" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/roles"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/roles"
 );
 
 const headers = {
@@ -25351,7 +26356,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/admin/roles" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/roles" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -25362,7 +26367,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/roles"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/roles"
 );
 
 const headers = {
@@ -25509,7 +26514,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/admin/roles/664f1a2b3c4d5e6f7a8b9c0d" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/roles/664f1a2b3c4d5e6f7a8b9c0d" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -25520,7 +26525,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/roles/664f1a2b3c4d5e6f7a8b9c0d"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/roles/664f1a2b3c4d5e6f7a8b9c0d"
 );
 
 const headers = {
@@ -25689,13 +26694,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/admin/roles/664f1a2b3c4d5e6f7a8b9c0d" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/roles/664f1a2b3c4d5e6f7a8b9c0d" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/admin/roles/664f1a2b3c4d5e6f7a8b9c0d"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/admin/roles/664f1a2b3c4d5e6f7a8b9c0d"
 );
 
 const headers = {
@@ -25822,7 +26827,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/job-seeker/coach/sessions" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/coach/sessions" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -25830,7 +26835,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/coach/sessions"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/coach/sessions"
 );
 
 const headers = {
@@ -25964,7 +26969,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/job-seeker/coach/sessions" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/coach/sessions" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -25976,7 +26981,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/coach/sessions"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/coach/sessions"
 );
 
 const headers = {
@@ -26125,7 +27130,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/job-seeker/coach/sessions/64a1b2c3d4e5f6a7b8c9d0e1" \
+    --get "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/coach/sessions/64a1b2c3d4e5f6a7b8c9d0e1" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -26133,7 +27138,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/coach/sessions/64a1b2c3d4e5f6a7b8c9d0e1"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/coach/sessions/64a1b2c3d4e5f6a7b8c9d0e1"
 );
 
 const headers = {
@@ -26288,7 +27293,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/job-seeker/coach/sessions/64a1b2c3d4e5f6a7b8c9d0e1" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/coach/sessions/64a1b2c3d4e5f6a7b8c9d0e1" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -26296,7 +27301,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/coach/sessions/64a1b2c3d4e5f6a7b8c9d0e1"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/coach/sessions/64a1b2c3d4e5f6a7b8c9d0e1"
 );
 
 const headers = {
@@ -26447,7 +27452,7 @@ in the shared database and will appear in subsequent session/message list calls.
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/job-seeker/coach/chat" \
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/coach/chat" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -26460,7 +27465,7 @@ in the shared database and will appear in subsequent session/message list calls.
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/job-seeker/coach/chat"
+    "https://joboffers-main-uj2ehj.laravel.cloud/api/job-seeker/coach/chat"
 );
 
 const headers = {

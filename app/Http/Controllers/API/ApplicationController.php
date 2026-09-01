@@ -77,6 +77,9 @@ class ApplicationController extends Controller
      * @bodyParam positions_suited_for array Optional array of suitable positions.
      * @bodyParam notice_period string Optional notice period. Max 100 chars.
      * @bodyParam expected_salary string Optional expected salary. Max 100 chars.
+     * @bodyParam answers object[] Answers to the job post's screening questions. Required questions must be answered.
+     * @bodyParam answers[].question string required The exact question text from the job post. Example: Describe your last project.
+     * @bodyParam answers[].answer string required The applicant's answer. Example: I led a team of 4 building a payments API.
      *
      * @response 201 {
      *   "message": "Application submitted successfully",
@@ -111,6 +114,9 @@ class ApplicationController extends Controller
             'positions_suited_for.*'=> 'string|max:100',
             'notice_period'         => 'nullable|string|max:100',
             'expected_salary'       => 'nullable|string|max:100',
+            'answers'               => 'nullable|array',
+            'answers.*.question'    => 'required_with:answers|string|max:500',
+            'answers.*.answer'      => 'required_with:answers|string|max:2000',
         ]);
 
         if ($validator->fails()) {
@@ -126,6 +132,13 @@ class ApplicationController extends Controller
                 ->firstOrFail();
         } catch (\Exception $e) {
             return response()->json(['message' => 'Job post not found or is not active'], 404);
+        }
+
+        // Match submitted answers to the job post's questions and enforce required ones
+        $resolvedAnswers = $this->resolveAnswers($jobPost->questions ?? [], $data['answers'] ?? []);
+
+        if ($resolvedAnswers instanceof \Illuminate\Http\JsonResponse) {
+            return $resolvedAnswers;
         }
 
         // Check for duplicate application
@@ -181,12 +194,60 @@ class ApplicationController extends Controller
             'positions_suited_for'  => $data['positions_suited_for'] ?? null,
             'notice_period'         => $data['notice_period'] ?? null,
             'expected_salary'       => $data['expected_salary'] ?? null,
+            'answers'               => $resolvedAnswers,
         ]);
 
         return response()->json([
             'message'     => 'Application submitted successfully',
             'application' => $application->load('jobPost'),
         ], 201);
+    }
+
+    /**
+     * Pairs submitted answers with a job post's screening questions.
+     *
+     * Answers are keyed by their `question` text. Only questions defined on the
+     * job post are kept; unknown questions are ignored. Every question marked
+     * `required` on the job post must have a non-empty answer.
+     *
+     * @param  array  $questions        The job post's questions: [{ question, required }]
+     * @param  array  $submittedAnswers The applicant's answers: [{ question, answer }]
+     * @return array|\Illuminate\Http\JsonResponse  Resolved [{ question, answer }] or a 422 response
+     */
+    private function resolveAnswers(array $questions, array $submittedAnswers)
+    {
+        if (empty($questions)) {
+            return [];
+        }
+
+        $answersByQuestion = collect($submittedAnswers)
+            ->mapWithKeys(fn ($a) => [trim($a['question']) => trim($a['answer'])]);
+
+        $resolved       = [];
+        $missingRequired = [];
+
+        foreach ($questions as $question) {
+            $text   = trim($question['question'] ?? '');
+            $answer = $answersByQuestion->get($text);
+
+            if (($question['required'] ?? false) && ($answer === null || $answer === '')) {
+                $missingRequired[] = $text;
+                continue;
+            }
+
+            if ($answer !== null && $answer !== '') {
+                $resolved[] = ['question' => $text, 'answer' => $answer];
+            }
+        }
+
+        if (! empty($missingRequired)) {
+            return response()->json([
+                'message' => 'Please answer all required questions.',
+                'errors'  => ['answers' => $missingRequired],
+            ], 422);
+        }
+
+        return $resolved;
     }
 
     /**

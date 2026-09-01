@@ -5,16 +5,282 @@
             "key": "baseUrl",
             "type": "string",
             "name": "string",
-            "value": "http:\/\/localhost:8000"
+            "value": "https:\/\/joboffers-main-uj2ehj.laravel.cloud"
         }
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "8668f5da-a479-4d74-9cd4-32eeceef713c",
+        "_postman_id": "407799b2-5db9-42fb-b687-abc460548a8e",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
     "item": [
+        {
+            "name": "Education Lookups",
+            "description": "\nLookup tables for Universities, Faculties, and Majors. These power the\nautocomplete \/ dropdown suggestions used across seeker profiles and job posts.\n\nAdmins seed the recommended values; the public listing endpoints require no\nauthentication. Values are advisory \u2014 clients may still submit freeform text\nwhere these lookups are consumed.",
+            "item": [
+                {
+                    "name": "List education lookup items",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/:resource",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/:resource",
+                            "variable": [
+                                {
+                                    "id": "resource",
+                                    "key": "resource",
+                                    "value": "universities",
+                                    "description": "The lookup table. One of: universities, faculties, majors."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns every item in the given lookup table, sorted by name. Requires no\nauthentication \u2014 intended for autocomplete and dropdown population.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    { \"_id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Damascus University\" },\n    { \"_id\": \"664f1a2b3c4d5e6f7a8b9c0e\", \"name\": \"Tishreen University\" }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "List education lookup items",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/:resource",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/:resource",
+                            "variable": [
+                                {
+                                    "id": "resource",
+                                    "key": "resource",
+                                    "value": "universities",
+                                    "description": "The lookup table. One of: universities, faculties, majors."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns every item in the given lookup table, sorted by name. Requires no\nauthentication \u2014 intended for autocomplete and dropdown population.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    { \"_id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Damascus University\" },\n    { \"_id\": \"664f1a2b3c4d5e6f7a8b9c0e\", \"name\": \"Tishreen University\" }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create an education lookup item (admin)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/:resource",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/:resource",
+                            "variable": [
+                                {
+                                    "id": "resource",
+                                    "key": "resource",
+                                    "value": "universities",
+                                    "description": "The lookup table. One of: universities, faculties, majors."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Aleppo University\"}"
+                        },
+                        "description": "Adds a new value to the lookup table. Names must be unique within the table."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{ \"_id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Aleppo University\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{ \"message\": \"Unauthenticated.\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{ \"message\": \"This action is unauthorized.\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"name\": [\"The name has already been taken.\"] } }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update an education lookup item (admin)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/:resource\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/:resource\/:id",
+                            "variable": [
+                                {
+                                    "id": "resource",
+                                    "key": "resource",
+                                    "value": "universities",
+                                    "description": "The lookup table. One of: universities, faculties, majors."
+                                },
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "The item ID."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Aleppo University\"}"
+                        },
+                        "description": "Renames an existing item. The new name must be unique within the table."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"_id\": \"664f1a2b3c4d5e6f7a8b9c0d\", \"name\": \"Aleppo University\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Not found.\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{ \"errors\": { \"name\": [\"The name has already been taken.\"] } }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete an education lookup item (admin)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/:resource\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/:resource\/:id",
+                            "variable": [
+                                {
+                                    "id": "resource",
+                                    "key": "resource",
+                                    "value": "universities",
+                                    "description": "The lookup table. One of: universities, faculties, majors."
+                                },
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "664f1a2b3c4d5e6f7a8b9c0d",
+                                    "description": "The item ID."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Removes an item from the lookup table."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"Deleted successfully.\" }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{ \"message\": \"Not found.\" }",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
         {
             "name": "Endpoints",
             "description": "",
@@ -242,8 +508,8 @@
                                     "value": "*"
                                 }
                             ],
-                            "code": 500,
-                            "body": "{\n    \"message\": \"Server Error\"\n}",
+                            "code": 200,
+                            "body": "{\"data\":[{\"name\":\"Software\",\"updated_at\":\"2026-08-28T19:07:37.549000Z\",\"created_at\":\"2026-08-28T19:07:37.549000Z\",\"id\":\"6a91dc79eedd3632860832b2\"}]}",
                             "name": ""
                         }
                     ]
@@ -287,8 +553,8 @@
                                     "value": "*"
                                 }
                             ],
-                            "code": 500,
-                            "body": "{\n    \"message\": \"Server Error\"\n}",
+                            "code": 200,
+                            "body": "{\"data\":[{\"name\":\"Aleppo\",\"updated_at\":\"2026-08-28T19:32:29.181000Z\",\"created_at\":\"2026-08-28T19:32:29.181000Z\",\"id\":\"6a91e24ded29c87bec05f3a3\"},{\"name\":\"Damascus\",\"updated_at\":\"2026-08-28T19:18:39.478000Z\",\"created_at\":\"2026-08-28T19:18:39.478000Z\",\"id\":\"6a91df0fe9468f4d84005433\"},{\"name\":\"Hamah\",\"updated_at\":\"2026-08-28T19:32:48.457000Z\",\"created_at\":\"2026-08-28T19:32:48.457000Z\",\"id\":\"6a91e260ed29c87bec05f3a6\"},{\"name\":\"Homs\",\"updated_at\":\"2026-08-28T19:32:43.257000Z\",\"created_at\":\"2026-08-28T19:32:43.257000Z\",\"id\":\"6a91e25bed29c87bec05f3a5\"},{\"name\":\"Idleb\",\"updated_at\":\"2026-08-28T19:33:32.155000Z\",\"created_at\":\"2026-08-28T19:33:32.155000Z\",\"id\":\"6a91e28c26320d8dcb04c8e2\"},{\"name\":\"Latakia\",\"updated_at\":\"2026-08-28T19:32:38.731000Z\",\"created_at\":\"2026-08-28T19:32:38.731000Z\",\"id\":\"6a91e256ed29c87bec05f3a4\"}]}",
                             "name": ""
                         }
                     ]
@@ -332,8 +598,8 @@
                                     "value": "*"
                                 }
                             ],
-                            "code": 500,
-                            "body": "{\n    \"message\": \"Server Error\"\n}",
+                            "code": 200,
+                            "body": "{\"data\":[{\"name\":\"Backend Developer\",\"updated_at\":\"2026-08-28T19:18:27.507000Z\",\"created_at\":\"2026-08-28T19:18:27.507000Z\",\"id\":\"6a91df03e9468f4d84005432\"},{\"name\":\"Frontend Developer\",\"updated_at\":\"2026-08-28T19:29:13.849000Z\",\"created_at\":\"2026-08-28T19:29:13.849000Z\",\"id\":\"6a91e189ed29c87bec05f3a2\"},{\"name\":\"Full Stack Developer\",\"updated_at\":\"2026-08-28T19:29:27.913000Z\",\"created_at\":\"2026-08-28T19:29:27.913000Z\",\"id\":\"6a91e197e9468f4d84005434\"},{\"name\":\"UI\\\/UX Designer\",\"updated_at\":\"2026-08-28T19:31:30.869000Z\",\"created_at\":\"2026-08-28T19:31:30.869000Z\",\"id\":\"6a91e212e9468f4d84005435\"}]}",
                             "name": ""
                         }
                     ]
@@ -505,7 +771,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"full_time\",\"category\":\"g\",\"min_salary\":12}"
+                            "raw": "{\"keyword\":\"b\",\"location\":\"n\",\"job_type\":\"contract\",\"category\":\"g\",\"min_salary\":12}"
                         },
                         "description": "Paginated search of active job posts for the authenticated job seeker."
                     },
@@ -722,8 +988,8 @@
                                     "value": "*"
                                 }
                             ],
-                            "code": 500,
-                            "body": "{\n    \"message\": \"Server Error\"\n}",
+                            "code": 200,
+                            "body": "{\"data\":[],\"current_page\":1,\"per_page\":10,\"total\":0,\"total_pages\":1,\"next_page\":null,\"prev_page\":null}",
                             "name": ""
                         }
                     ]
@@ -784,8 +1050,8 @@
                                     "value": "*"
                                 }
                             ],
-                            "code": 500,
-                            "body": "{\n    \"message\": \"Server Error\"\n}",
+                            "code": 404,
+                            "body": "{\"message\":\"Company profile not found\"}",
                             "name": ""
                         }
                     ]
@@ -1399,7 +1665,7 @@
                                 },
                                 {
                                     "key": "gender",
-                                    "value": "female",
+                                    "value": "male",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1441,7 +1707,7 @@
                                 },
                                 {
                                     "key": "marital_status",
-                                    "value": "single",
+                                    "value": "divorced",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1459,7 +1725,7 @@
                                 },
                                 {
                                     "key": "current_job_status",
-                                    "value": "employed",
+                                    "value": "freelancing",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1477,7 +1743,7 @@
                                 },
                                 {
                                     "key": "job_level",
-                                    "value": "mid",
+                                    "value": "entry",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -2122,6 +2388,18 @@
                                     "value": "architecto",
                                     "type": "text",
                                     "description": "Optional expected salary. Max 100 chars."
+                                },
+                                {
+                                    "key": "answers[0][question]",
+                                    "value": "Describe your last project.",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "answers[0][answer]",
+                                    "value": "I led a team of 4 building a payments API.",
+                                    "type": "text",
+                                    "description": ""
                                 },
                                 {
                                     "key": "resume",
@@ -4373,7 +4651,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "architecto",
+                                    "value": "6a91dc79eedd3632860832b2",
                                     "description": "The ID of the category."
                                 }
                             ]
@@ -4406,7 +4684,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "architecto",
+                                    "value": "6a91dc79eedd3632860832b2",
                                     "description": "The ID of the category."
                                 }
                             ]
@@ -4509,7 +4787,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "architecto",
+                                    "value": "6a91df0fe9468f4d84005433",
                                     "description": "The ID of the city."
                                 }
                             ]
@@ -4542,7 +4820,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "architecto",
+                                    "value": "6a91df0fe9468f4d84005433",
                                     "description": "The ID of the city."
                                 }
                             ]
@@ -4645,7 +4923,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "architecto",
+                                    "value": "6a91df03e9468f4d84005432",
                                     "description": "The ID of the role."
                                 }
                             ]
@@ -4678,7 +4956,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "architecto",
+                                    "value": "6a91df03e9468f4d84005432",
                                     "description": "The ID of the role."
                                 }
                             ]
@@ -5164,7 +5442,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"status\":\"architecto\",\"from_date\":\"2026-08-27\",\"to_date\":\"2026-08-27\",\"sort_direction\":\"asc\",\"per_page\":22}"
+                            "raw": "{\"status\":\"architecto\",\"from_date\":\"2026-09-01\",\"to_date\":\"2026-09-01\",\"sort_direction\":\"desc\",\"per_page\":22}"
                         },
                         "description": "Returns a paginated list of meetings where the authenticated user is a participant.\nSupports filtering by status, date range, and sort direction."
                     },
