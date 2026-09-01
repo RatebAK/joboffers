@@ -1,54 +1,115 @@
 <?php
 
+use App\Models\CompanyProfile;
+use App\Models\JobPost;
+use App\Models\User;
+use Tests\Concerns\RefreshMongoDatabase;
+use Tests\TestCase;
+
 /*
 |--------------------------------------------------------------------------
-| Test Case
+| Test Case & Database Isolation
 |--------------------------------------------------------------------------
 |
-| The closure you provide to your test functions is always bound to a specific PHPUnit test
-| case class. By default, that class is "PHPUnit\Framework\TestCase". Of course, you may
-| need to change it using the "pest()" function to bind a different classes or traits.
+| Every Feature test runs against the MongoDB test database and starts from a
+| clean slate. The RefreshMongoDatabase concern drops all collections before
+| each test, so individual tests never need to clean up after themselves.
 |
 */
 
-pest()->extend(Tests\TestCase::class)
+pest()->extend(TestCase::class)
+    ->use(RefreshMongoDatabase::class)
+    ->beforeEach(fn () => $this->setUpRefreshMongoDatabase())
     ->in('Feature');
+
+/*
+|--------------------------------------------------------------------------
+| Authentication Helpers
+|--------------------------------------------------------------------------
+|
+| Small, composable helpers used across the suite to create users of a given
+| role and authenticate as them. Prefer these over hand-rolling users and
+| tokens in each test file.
+|
+*/
+
+/**
+ * Create a user with the given role.
+ *
+ * @param  string  $role  admin | employer | employee
+ */
+function createUser(string $role = 'employee', array $attributes = []): User
+{
+    return User::factory()->{$role}()->create($attributes);
+}
+
+/**
+ * Create a user of the given role and return a JWT for them.
+ */
+function tokenFor(string $role, array $attributes = []): string
+{
+    return auth('api')->login(createUser($role, $attributes));
+}
+
+/**
+ * Create a user of the given role and return [User, token].
+ *
+ * @return array{0: User, 1: string}
+ */
+function userWithToken(string $role, array $attributes = []): array
+{
+    $user = createUser($role, $attributes);
+
+    return [$user, auth('api')->login($user)];
+}
+
+/*
+|--------------------------------------------------------------------------
+| Domain Builders
+|--------------------------------------------------------------------------
+|
+| Factory-style helpers for the domain objects that tests build repeatedly.
+|
+*/
+
+/**
+ * Create a company profile owned by the given employer.
+ */
+function createCompanyFor(User $employer, array $attributes = []): CompanyProfile
+{
+    return CompanyProfile::create(array_merge([
+        'employer_id' => (string) $employer->_id,
+        'name'        => 'Test Company',
+        'slug'        => 'test-company-'.uniqid(),
+    ], $attributes));
+}
+
+/**
+ * Create an active job post owned by the given employer.
+ */
+function createJob(User $employer, array $attributes = []): JobPost
+{
+    return JobPost::create(array_merge([
+        'title'                => 'Test Engineer',
+        'description'          => 'Write tests.',
+        'requirements'         => 'PHP.',
+        'company_name'         => 'TestCo',
+        'job_type'             => 'full_time',
+        'work_mode'            => 'remote',
+        'city'                 => 'Beirut',
+        'vacancies'            => 1,
+        'communication_method' => 'by_forsa',
+        'employer_id'          => (string) $employer->_id,
+        'is_active'            => true,
+    ], $attributes));
+}
 
 /*
 |--------------------------------------------------------------------------
 | Expectations
 |--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
 */
 
 expect()->extend('toBeOne', function () {
     return $this->toBe(1);
 });
-
-/*
-|--------------------------------------------------------------------------
-| Functions
-|--------------------------------------------------------------------------
-|
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
-|
-*/
-
-/**
- * Create a user of the given role and return a JWT for them.
- *
- * @param  string  $role  admin | employer | employee
- * @return string  The bearer token.
- */
-function tokenFor(string $role): string
-{
-    $user = \App\Models\User::factory()->{$role}()->create();
-
-    return auth('api')->login($user);
-}

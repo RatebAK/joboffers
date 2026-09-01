@@ -420,8 +420,6 @@ test('public job show returns roles field', function () {
 
     $response = $this->getJson("/api/jobs/{$job->_id}")->assertStatus(200);
 
-    dump('[SHOW] response:', $response->json());
-
     expect($response->json('roles'))->toContain('DevOps');
 
     $job->delete(); $employer->delete();

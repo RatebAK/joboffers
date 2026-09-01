@@ -39,12 +39,6 @@ test('Property 1: registration creates user with specified role', function () {
             'role' => $role
         ]);
         
-        if ($response->status() !== 201) {
-            dump('Failed at iteration ' . $i);
-            dump('Email: ' . $email);
-            dump('Response: ' . json_encode($response->json()));
-        }
-        
         expect($response->status())->toBe(201);
         expect($response->json('user.roles'))->toContain($role);
         

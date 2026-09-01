@@ -1,361 +1,228 @@
 <?php
 
-// ============================================================
-// DO NOT DELETE — Comprehensive tests for the direct offer flow.
-// Covers: sending, validation, duplicates, ownership, listing,
-// accept/decline by correct and incorrect seekers, and
-// attempting to act on already-resolved offers.
-// ============================================================
+// =============================================================================
+// DirectOfferTest
+//
+// Exemplar of the project's test conventions (see tests/README.md):
+//   - No manual cleanup: the database is reset before every test.
+//   - Shared helpers (userWithToken, createJob) instead of per-file factories.
+//   - beforeEach builds the common fixtures; each test asserts one behaviour.
+//
+// Covers the direct offer flow: sending, validation, duplicates, ownership,
+// listing, accept/decline, and guards against acting on resolved offers.
+// =============================================================================
 
 use App\Models\Application;
 use App\Models\DirectOffer;
-use App\Models\JobPost;
-use App\Models\JobSeekerProfile;
-use App\Models\User;
 
-// ── Helpers ───────────────────────────────────────────────────
-
-function offerEmployer(): array
+/** Create a pending offer from $employer to $seeker for $job. */
+function pendingOffer(string $employerId, string $seekerId, string $jobId, array $attributes = []): DirectOffer
 {
-    $employer = User::factory()->employer()->create();
-    $token    = auth('api')->login($employer);
-    return [$employer, $token];
-}
-
-function offerSeeker(): array
-{
-    $seeker = User::factory()->employee()->create();
-    $token  = auth('api')->login($seeker);
-    return [$seeker, $token];
-}
-
-function offerJob(string $employerId): JobPost
-{
-    return JobPost::create([
-        'title'        => 'Offer Test Job',
-        'description'  => 'Test.',
-        'requirements' => 'Test.',
-        'company_name' => 'OfferCo',
-        'job_type'     => 'full_time',
-        'location'     => 'Remote',
-        'employer_id'  => $employerId,
-        'is_active'    => true,
-    ]);
-}
-
-function pendingOffer(string $employerId, string $seekerId, string $jobId): DirectOffer
-{
-    return DirectOffer::create([
+    return DirectOffer::create(array_merge([
         'employer_id'   => $employerId,
         'job_seeker_id' => $seekerId,
         'job_post_id'   => $jobId,
         'message'       => 'We want you.',
         'status'        => 'pending',
-    ]);
+    ], $attributes));
 }
 
-// ── Sending Offers ────────────────────────────────────────────
-
-test('offer send requires all fields', function () {
-    [$employer, $token] = offerEmployer();
-
-    $this->withToken($token)->postJson('/api/employer/offers', [])
-         ->assertStatus(422)
-         ->assertJsonStructure(['errors' => ['job_seeker_id', 'job_post_id', 'message']]);
-
-    $employer->delete();
+beforeEach(function () {
+    [$this->employer, $this->employerToken] = userWithToken('employer');
+    [$this->seeker, $this->seekerToken]     = userWithToken('employee');
+    $this->job = createJob($this->employer, ['title' => 'Offer Test Job']);
 });
 
-test('offer send returns 404 for non-existent job post', function () {
-    [$employer, $token] = offerEmployer();
-    [$seeker]           = offerSeeker();
+// ── Sending offers ───────────────────────────────────────────────────────
 
-    $this->withToken($token)->postJson('/api/employer/offers', [
-        'job_seeker_id' => (string) $seeker->_id,
-        'job_post_id'   => '000000000000000000000000',
-        'message'       => 'Hi.',
-    ])->assertStatus(404);
-
-    $seeker->delete();
-    $employer->delete();
+test('sending an offer requires all fields', function () {
+    $this->withToken($this->employerToken)
+        ->postJson('/api/employer/offers', [])
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['job_seeker_id', 'job_post_id', 'message']);
 });
 
-test('offer send returns 422 for non-existent job seeker', function () {
-    [$employer, $token] = offerEmployer();
-    $job = offerJob((string) $employer->_id);
-
-    $this->withToken($token)->postJson('/api/employer/offers', [
-        'job_seeker_id' => '000000000000000000000000',
-        'job_post_id'   => (string) $job->_id,
-        'message'       => 'Hi.',
-    ])->assertStatus(422);
-
-    $job->delete();
-    $employer->delete();
+test('sending an offer for a non-existent job post returns 404', function () {
+    $this->withToken($this->employerToken)
+        ->postJson('/api/employer/offers', [
+            'job_seeker_id' => (string) $this->seeker->_id,
+            'job_post_id'   => '000000000000000000000000',
+            'message'       => 'Hi.',
+        ])
+        ->assertNotFound();
 });
 
-test('offer send returns 422 when target user is not a job seeker', function () {
-    [$employer, $token] = offerEmployer();
-    [$otherEmployer]    = offerEmployer();
-    $job = offerJob((string) $employer->_id);
-
-    $this->withToken($token)->postJson('/api/employer/offers', [
-        'job_seeker_id' => (string) $otherEmployer->_id,
-        'job_post_id'   => (string) $job->_id,
-        'message'       => 'Hi.',
-    ])->assertStatus(422);
-
-    $job->delete();
-    $otherEmployer->delete();
-    $employer->delete();
+test('sending an offer to a non-existent job seeker returns 422', function () {
+    $this->withToken($this->employerToken)
+        ->postJson('/api/employer/offers', [
+            'job_seeker_id' => '000000000000000000000000',
+            'job_post_id'   => (string) $this->job->_id,
+            'message'       => 'Hi.',
+        ])
+        ->assertStatus(422);
 });
 
-test('offer send returns 201 with pending status and offer structure', function () {
-    [$employer, $token] = offerEmployer();
-    [$seeker]           = offerSeeker();
-    $job = offerJob((string) $employer->_id);
+test('sending an offer to a user who is not a job seeker returns 422', function () {
+    $otherEmployer = createUser('employer');
 
-    $response = $this->withToken($token)->postJson('/api/employer/offers', [
-        'job_seeker_id' => (string) $seeker->_id,
-        'job_post_id'   => (string) $job->_id,
-        'message'       => 'Great fit for our team.',
-    ]);
-
-    $response->assertStatus(201)
-             ->assertJsonPath('offer.status', 'pending')
-             ->assertJsonStructure(['message', 'offer' => ['employer_id', 'job_seeker_id', 'job_post_id', 'message', 'status']]);
-
-    DirectOffer::where('employer_id', $employer->_id)->delete();
-    $job->delete();
-    $seeker->delete();
-    $employer->delete();
+    $this->withToken($this->employerToken)
+        ->postJson('/api/employer/offers', [
+            'job_seeker_id' => (string) $otherEmployer->_id,
+            'job_post_id'   => (string) $this->job->_id,
+            'message'       => 'Hi.',
+        ])
+        ->assertStatus(422);
 });
 
-test('duplicate offer returns 409', function () {
-    [$employer, $token] = offerEmployer();
-    [$seeker]           = offerSeeker();
-    $job = offerJob((string) $employer->_id);
-    pendingOffer((string) $employer->_id, (string) $seeker->_id, (string) $job->_id);
-
-    $this->withToken($token)->postJson('/api/employer/offers', [
-        'job_seeker_id' => (string) $seeker->_id,
-        'job_post_id'   => (string) $job->_id,
-        'message'       => 'Again.',
-    ])->assertStatus(409);
-
-    DirectOffer::where('employer_id', $employer->_id)->delete();
-    $job->delete();
-    $seeker->delete();
-    $employer->delete();
+test('sending a valid offer returns 201 with pending status', function () {
+    $this->withToken($this->employerToken)
+        ->postJson('/api/employer/offers', [
+            'job_seeker_id' => (string) $this->seeker->_id,
+            'job_post_id'   => (string) $this->job->_id,
+            'message'       => 'Great fit for our team.',
+        ])
+        ->assertCreated()
+        ->assertJsonPath('offer.status', 'pending')
+        ->assertJsonStructure([
+            'message',
+            'offer' => ['employer_id', 'job_seeker_id', 'job_post_id', 'message', 'status'],
+        ]);
 });
 
-test('employer cannot send offer for another employers job post', function () {
-    [$employer, $token] = offerEmployer();
-    [$other]            = offerEmployer();
-    [$seeker]           = offerSeeker();
-    $job = offerJob((string) $other->_id);
+test('sending a duplicate offer returns 409', function () {
+    pendingOffer((string) $this->employer->_id, (string) $this->seeker->_id, (string) $this->job->_id);
 
-    $this->withToken($token)->postJson('/api/employer/offers', [
-        'job_seeker_id' => (string) $seeker->_id,
-        'job_post_id'   => (string) $job->_id,
-        'message'       => 'Sneaky.',
-    ])->assertStatus(403);
-
-    $job->delete();
-    $seeker->delete();
-    $other->delete();
-    $employer->delete();
+    $this->withToken($this->employerToken)
+        ->postJson('/api/employer/offers', [
+            'job_seeker_id' => (string) $this->seeker->_id,
+            'job_post_id'   => (string) $this->job->_id,
+            'message'       => 'Again.',
+        ])
+        ->assertStatus(409);
 });
 
-// ── Listing Offers ────────────────────────────────────────────
+test('an employer cannot send an offer for another employers job post', function () {
+    $otherEmployer = createUser('employer');
+    $othersJob     = createJob($otherEmployer);
 
-test('employer sent offers list includes job_seeker_name and job_post_title', function () {
-    [$employer, $token] = offerEmployer();
-    [$seeker]           = offerSeeker();
-    $job = offerJob((string) $employer->_id);
-    pendingOffer((string) $employer->_id, (string) $seeker->_id, (string) $job->_id);
-
-    $response = $this->withToken($token)->getJson('/api/employer/offers')
-                     ->assertStatus(200)
-                     ->assertJsonStructure(['offers']);
-
-    $items = $response->json('offers.data');
-    expect($items)->not->toBeEmpty();
-    expect($items[0])->toHaveKey('job_seeker_name');
-    expect($items[0])->toHaveKey('job_post_title');
-
-    DirectOffer::where('employer_id', $employer->_id)->delete();
-    $job->delete();
-    $seeker->delete();
-    $employer->delete();
+    $this->withToken($this->employerToken)
+        ->postJson('/api/employer/offers', [
+            'job_seeker_id' => (string) $this->seeker->_id,
+            'job_post_id'   => (string) $othersJob->_id,
+            'message'       => 'Sneaky.',
+        ])
+        ->assertForbidden();
 });
 
-test('seeker received offers list includes job_post_title and employer_company_name', function () {
-    [$employer]         = offerEmployer();
-    [$seeker, $token]   = offerSeeker();
-    $job = offerJob((string) $employer->_id);
-    pendingOffer((string) $employer->_id, (string) $seeker->_id, (string) $job->_id);
+// ── Listing offers ───────────────────────────────────────────────────────
 
-    $response = $this->withToken($token)->getJson('/api/job-seeker/offers')
-                     ->assertStatus(200)
-                     ->assertJsonStructure(['offers']);
+test('the employer sent-offers list includes seeker name and job title', function () {
+    pendingOffer((string) $this->employer->_id, (string) $this->seeker->_id, (string) $this->job->_id);
 
-    $items = $response->json('offers.data');
-    expect($items)->not->toBeEmpty();
-    expect($items[0])->toHaveKey('job_post_title');
-    expect($items[0])->toHaveKey('employer_company_name');
+    $items = $this->withToken($this->employerToken)
+        ->getJson('/api/employer/offers')
+        ->assertOk()
+        ->json('offers.data');
 
-    DirectOffer::where('employer_id', $employer->_id)->delete();
-    $job->delete();
-    $seeker->delete();
-    $employer->delete();
+    expect($items)->not->toBeEmpty()
+        ->and($items[0])->toHaveKeys(['job_seeker_name', 'job_post_title']);
 });
 
-// ── Accept ────────────────────────────────────────────────────
+test('the seeker received-offers list includes job title and company name', function () {
+    pendingOffer((string) $this->employer->_id, (string) $this->seeker->_id, (string) $this->job->_id);
 
-test('seeker can accept a pending offer and application is auto-created', function () {
-    [$employer]       = offerEmployer();
-    [$seeker, $token] = offerSeeker();
-    $job = offerJob((string) $employer->_id);
-    $offer = pendingOffer((string) $employer->_id, (string) $seeker->_id, (string) $job->_id);
+    $items = $this->withToken($this->seekerToken)
+        ->getJson('/api/job-seeker/offers')
+        ->assertOk()
+        ->json('offers.data');
 
-    $this->withToken($token)->postJson("/api/job-seeker/offers/{$offer->_id}/accept")
-         ->assertStatus(200)
-         ->assertJsonPath('offer.status', 'accepted');
-
-    $application = Application::where('user_id', $seeker->_id)
-                               ->where('job_post_id', (string) $job->_id)
-                               ->first();
-    expect($application)->not->toBeNull();
-    expect($application->status)->toBe('pending');
-
-    Application::where('user_id', $seeker->_id)->delete();
-    $offer->delete();
-    $job->delete();
-    $seeker->delete();
-    $employer->delete();
+    expect($items)->not->toBeEmpty()
+        ->and($items[0])->toHaveKeys(['job_post_title', 'employer_company_name']);
 });
 
-test('seeker cannot accept another seekers offer', function () {
-    [$employer]         = offerEmployer();
-    [$seeker]           = offerSeeker();
-    [$otherSeeker, $token] = offerSeeker();
-    $job = offerJob((string) $employer->_id);
-    $offer = pendingOffer((string) $employer->_id, (string) $seeker->_id, (string) $job->_id);
+// ── Accept ───────────────────────────────────────────────────────────────
 
-    $this->withToken($token)->postJson("/api/job-seeker/offers/{$offer->_id}/accept")
-         ->assertStatus(403);
+test('a seeker can accept a pending offer, auto-creating an application', function () {
+    $offer = pendingOffer((string) $this->employer->_id, (string) $this->seeker->_id, (string) $this->job->_id);
 
-    $offer->delete();
-    $job->delete();
-    $seeker->delete();
-    $otherSeeker->delete();
-    $employer->delete();
+    $this->withToken($this->seekerToken)
+        ->postJson("/api/job-seeker/offers/{$offer->_id}/accept")
+        ->assertOk()
+        ->assertJsonPath('offer.status', 'accepted');
+
+    $application = Application::where('user_id', $this->seeker->_id)
+        ->where('job_post_id', (string) $this->job->_id)
+        ->first();
+
+    expect($application)->not->toBeNull()
+        ->and($application->status)->toBe('pending');
 });
 
-test('accept returns 404 for non-existent offer', function () {
-    [, $token] = offerSeeker();
+test('a seeker cannot accept another seekers offer', function () {
+    $offer = pendingOffer((string) $this->employer->_id, (string) $this->seeker->_id, (string) $this->job->_id);
+    $otherSeekerToken = tokenFor('employee');
 
-    $this->withToken($token)->postJson('/api/job-seeker/offers/000000000000000000000000/accept')
-         ->assertStatus(404);
+    $this->withToken($otherSeekerToken)
+        ->postJson("/api/job-seeker/offers/{$offer->_id}/accept")
+        ->assertForbidden();
 });
 
-// ── Decline ───────────────────────────────────────────────────
+test('accepting a non-existent offer returns 404', function () {
+    $this->withToken($this->seekerToken)
+        ->postJson('/api/job-seeker/offers/000000000000000000000000/accept')
+        ->assertNotFound();
+});
 
-test('seeker can decline a pending offer', function () {
-    [$employer]       = offerEmployer();
-    [$seeker, $token] = offerSeeker();
-    $job = offerJob((string) $employer->_id);
-    $offer = pendingOffer((string) $employer->_id, (string) $seeker->_id, (string) $job->_id);
+test('a seeker cannot accept an already-resolved offer', function () {
+    $offer = pendingOffer(
+        (string) $this->employer->_id,
+        (string) $this->seeker->_id,
+        (string) $this->job->_id,
+        ['status' => 'accepted'],
+    );
 
-    $this->withToken($token)->postJson("/api/job-seeker/offers/{$offer->_id}/decline")
-         ->assertStatus(200)
-         ->assertJsonPath('offer.status', 'declined');
+    $this->withToken($this->seekerToken)
+        ->postJson("/api/job-seeker/offers/{$offer->_id}/accept")
+        ->assertStatus(409);
+});
+
+// ── Decline ──────────────────────────────────────────────────────────────
+
+test('a seeker can decline a pending offer', function () {
+    $offer = pendingOffer((string) $this->employer->_id, (string) $this->seeker->_id, (string) $this->job->_id);
+
+    $this->withToken($this->seekerToken)
+        ->postJson("/api/job-seeker/offers/{$offer->_id}/decline")
+        ->assertOk()
+        ->assertJsonPath('offer.status', 'declined');
 
     expect(DirectOffer::find($offer->_id)->status)->toBe('declined');
-
-    $offer->delete();
-    $job->delete();
-    $seeker->delete();
-    $employer->delete();
 });
 
-test('seeker cannot decline another seekers offer', function () {
-    [$employer]            = offerEmployer();
-    [$seeker]              = offerSeeker();
-    [$otherSeeker, $token] = offerSeeker();
-    $job = offerJob((string) $employer->_id);
-    $offer = pendingOffer((string) $employer->_id, (string) $seeker->_id, (string) $job->_id);
+test('a seeker cannot decline another seekers offer', function () {
+    $offer = pendingOffer((string) $this->employer->_id, (string) $this->seeker->_id, (string) $this->job->_id);
+    $otherSeekerToken = tokenFor('employee');
 
-    $this->withToken($token)->postJson("/api/job-seeker/offers/{$offer->_id}/decline")
-         ->assertStatus(403);
-
-    $offer->delete();
-    $job->delete();
-    $seeker->delete();
-    $otherSeeker->delete();
-    $employer->delete();
+    $this->withToken($otherSeekerToken)
+        ->postJson("/api/job-seeker/offers/{$offer->_id}/decline")
+        ->assertForbidden();
 });
 
-test('decline returns 404 for non-existent offer', function () {
-    [, $token] = offerSeeker();
-
-    $this->withToken($token)->postJson('/api/job-seeker/offers/000000000000000000000000/decline')
-         ->assertStatus(404);
+test('declining a non-existent offer returns 404', function () {
+    $this->withToken($this->seekerToken)
+        ->postJson('/api/job-seeker/offers/000000000000000000000000/decline')
+        ->assertNotFound();
 });
 
-// ── Already-resolved offer guards ────────────────────────────
+test('a seeker cannot decline an already-resolved offer', function () {
+    $offer = pendingOffer(
+        (string) $this->employer->_id,
+        (string) $this->seeker->_id,
+        (string) $this->job->_id,
+        ['status' => 'declined'],
+    );
 
-test('seeker cannot accept an already accepted offer', function () {
-    [$employer]       = offerEmployer();
-    [$seeker, $token] = offerSeeker();
-    $job = offerJob((string) $employer->_id);
-    $offer = DirectOffer::create([
-        'employer_id'   => (string) $employer->_id,
-        'job_seeker_id' => (string) $seeker->_id,
-        'job_post_id'   => (string) $job->_id,
-        'message'       => 'Already accepted.',
-        'status'        => 'accepted',
-    ]);
-
-    $this->withToken($token)->postJson("/api/job-seeker/offers/{$offer->_id}/accept")
-         ->assertStatus(409);
-
-    $offer->delete(); $job->delete(); $seeker->delete(); $employer->delete();
-});
-
-test('seeker cannot decline an already declined offer', function () {
-    [$employer]       = offerEmployer();
-    [$seeker, $token] = offerSeeker();
-    $job = offerJob((string) $employer->_id);
-    $offer = DirectOffer::create([
-        'employer_id'   => (string) $employer->_id,
-        'job_seeker_id' => (string) $seeker->_id,
-        'job_post_id'   => (string) $job->_id,
-        'message'       => 'Already declined.',
-        'status'        => 'declined',
-    ]);
-
-    $this->withToken($token)->postJson("/api/job-seeker/offers/{$offer->_id}/decline")
-         ->assertStatus(409);
-
-    $offer->delete(); $job->delete(); $seeker->delete(); $employer->delete();
-});
-
-test('seeker cannot accept a declined offer', function () {
-    [$employer]       = offerEmployer();
-    [$seeker, $token] = offerSeeker();
-    $job = offerJob((string) $employer->_id);
-    $offer = DirectOffer::create([
-        'employer_id'   => (string) $employer->_id,
-        'job_seeker_id' => (string) $seeker->_id,
-        'job_post_id'   => (string) $job->_id,
-        'message'       => 'Was declined.',
-        'status'        => 'declined',
-    ]);
-
-    $this->withToken($token)->postJson("/api/job-seeker/offers/{$offer->_id}/accept")
-         ->assertStatus(409);
-
-    $offer->delete(); $job->delete(); $seeker->delete(); $employer->delete();
+    $this->withToken($this->seekerToken)
+        ->postJson("/api/job-seeker/offers/{$offer->_id}/decline")
+        ->assertStatus(409);
 });
