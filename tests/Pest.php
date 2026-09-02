@@ -117,6 +117,22 @@ function createJob(User $employer, array $attributes = []): JobPost
 }
 
 /**
+ * Create a job seeker (employee) with an attached JobSeekerProfile.
+ *
+ * @return array{0: User, 1: \App\Models\JobSeekerProfile}
+ */
+function createSeekerWithProfile(array $userAttributes = [], array $profileAttributes = []): array
+{
+    $user    = createUser('employee', $userAttributes);
+    $profile = \App\Models\JobSeekerProfile::create(array_merge(
+        ['user_id' => (string) $user->_id],
+        $profileAttributes,
+    ));
+
+    return [$user, $profile];
+}
+
+/**
  * Create a meeting between an organizer and an invitee.
  *
  * Defaults to a pending video call three days out; override any field via
