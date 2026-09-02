@@ -1,39 +1,35 @@
 <?php
 
-use App\Models\Meeting;
+// =============================================================================
+// MeetingCreateTest — POST /api/meetings
+// =============================================================================
+
 use App\Models\User;
 
-
-
 beforeEach(function () {
-    $this->employer = User::factory()->employer()->create();
-    $this->employerToken = auth('api')->login($this->employer);
-    $this->seeker = User::factory()->employee()->create();
-    $this->seekerToken = auth('api')->login($this->seeker);
+    [$this->employer, $this->employerToken] = userWithToken('employer');
+    [$this->seeker, $this->seekerToken]     = userWithToken('employee');
 });
 
-afterEach(function () {
-    Meeting::where('organizer_id', (string) $this->employer->_id)->delete();
-    Meeting::where('invitee_id', (string) $this->seeker->_id)->delete();
-    $this->employer->delete();
-    $this->seeker->delete();
-});
+/** A valid create payload inviting the seeker, with overrides. */
+function meetingPayload(User $invitee, array $overrides = []): array
+{
+    return array_merge([
+        'invitee_id'                => (string) $invitee->_id,
+        'title'                     => 'Initial Interview',
+        'meeting_type'              => 'video_call',
+        'proposed_date'             => now()->addDays(3)->format('Y-m-d'),
+        'proposed_start_time'       => '14:00',
+        'proposed_duration_minutes' => 60,
+    ], $overrides);
+}
 
-test('employer can create a meeting with a job seeker', function () {
-    $response = $this->withToken($this->{"employerToken"})
-        ->postJson('/api/meetings', [
-            'invitee_id' => (string) $this->seeker->_id,
-            'title' => 'Initial Interview',
-            'meeting_type' => 'video_call',
-            'proposed_date' => now()->addDays(3)->format('Y-m-d'),
-            'proposed_start_time' => '14:00',
-            'proposed_duration_minutes' => 60,
-        ]);
-
-    $response->assertStatus(201)
+test('an employer can invite a job seeker to a meeting', function () {
+    $this->withToken($this->employerToken)
+        ->postJson('/api/meetings', meetingPayload($this->seeker))
+        ->assertCreated()
         ->assertJsonPath('meeting.status', 'pending')
         ->assertJsonPath('meeting.title', 'Initial Interview')
-        ->assertJsonPath('meeting.meeting_type', 'video_call')
         ->assertJsonStructure([
             'message',
             'meeting' => ['organizer_id', 'invitee_id', 'title', 'status'],
@@ -42,136 +38,71 @@ test('employer can create a meeting with a job seeker', function () {
         ]);
 });
 
-test('job seeker can create a meeting with an employer', function () {
-    $response = $this->withToken($this->{"seekerToken"})
-        ->postJson('/api/meetings', [
-            'invitee_id' => (string) $this->employer->_id,
-            'title' => 'Discussion about opportunity',
-            'meeting_type' => 'phone_call',
-            'proposed_date' => now()->addDays(5)->format('Y-m-d'),
-            'proposed_start_time' => '10:00',
-            'proposed_duration_minutes' => 30,
+test('a job seeker can invite an employer to a meeting', function () {
+    $this->withToken($this->seekerToken)
+        ->postJson('/api/meetings', meetingPayload($this->employer, [
+            'meeting_type'     => 'phone_call',
             'location_or_link' => '+1-555-0100',
-        ]);
-
-    $response->assertStatus(201)
+        ]))
+        ->assertCreated()
         ->assertJsonPath('meeting.status', 'pending');
 });
 
-test('missing required fields returns 422 with validation errors', function () {
-    $response = $this->withToken($this->{"employerToken"})
-        ->postJson('/api/meetings', []);
-
-    $response->assertStatus(422)
+test('creating a meeting requires all mandatory fields', function () {
+    $this->withToken($this->employerToken)
+        ->postJson('/api/meetings', [])
+        ->assertStatus(422)
         ->assertJsonStructure(['invitee_id', 'title', 'meeting_type', 'proposed_date', 'proposed_start_time', 'proposed_duration_minutes']);
 });
 
-test('invalid meeting_type returns 422', function () {
-    $response = $this->withToken($this->{"employerToken"})
-        ->postJson('/api/meetings', [
-            'invitee_id' => (string) $this->seeker->_id,
-            'title' => 'Test Meeting',
-            'meeting_type' => 'invalid_type',
-            'proposed_date' => now()->addDays(3)->format('Y-m-d'),
-            'proposed_start_time' => '14:00',
-            'proposed_duration_minutes' => 60,
-        ]);
-
-    $response->assertStatus(422)
+test('an invalid meeting_type is rejected', function () {
+    $this->withToken($this->employerToken)
+        ->postJson('/api/meetings', meetingPayload($this->seeker, ['meeting_type' => 'invalid_type']))
+        ->assertStatus(422)
         ->assertJsonStructure(['meeting_type']);
 });
 
-test('past proposed_date returns 422', function () {
-    $response = $this->withToken($this->{"employerToken"})
-        ->postJson('/api/meetings', [
-            'invitee_id' => (string) $this->seeker->_id,
-            'title' => 'Test Meeting',
-            'meeting_type' => 'video_call',
-            'proposed_date' => now()->subDays(2)->format('Y-m-d'),
-            'proposed_start_time' => '14:00',
-            'proposed_duration_minutes' => 60,
-        ]);
-
-    $response->assertStatus(422)
+test('a past proposed_date is rejected', function () {
+    $this->withToken($this->employerToken)
+        ->postJson('/api/meetings', meetingPayload($this->seeker, ['proposed_date' => now()->subDays(2)->format('Y-m-d')]))
+        ->assertStatus(422)
         ->assertJsonStructure(['proposed_date']);
 });
 
-test('self-invite returns 422', function () {
-    $response = $this->withToken($this->{"employerToken"})
-        ->postJson('/api/meetings', [
-            'invitee_id' => (string) $this->employer->_id,
-            'title' => 'Test Meeting',
-            'meeting_type' => 'video_call',
-            'proposed_date' => now()->addDays(3)->format('Y-m-d'),
-            'proposed_start_time' => '14:00',
-            'proposed_duration_minutes' => 60,
-        ]);
-
-    $response->assertStatus(422);
+test('a user cannot invite themselves', function () {
+    $this->withToken($this->employerToken)
+        ->postJson('/api/meetings', meetingPayload($this->employer))
+        ->assertStatus(422);
 });
 
-test('employer inviting another employer returns 422', function () {
-    $otherEmployer = User::factory()->employer()->create();
+test('an employer cannot invite another employer', function () {
+    $otherEmployer = createUser('employer');
 
-    $response = $this->withToken($this->{"employerToken"})
-        ->postJson('/api/meetings', [
-            'invitee_id' => (string) $otherEmployer->_id,
-            'title' => 'Test Meeting',
-            'meeting_type' => 'video_call',
-            'proposed_date' => now()->addDays(3)->format('Y-m-d'),
-            'proposed_start_time' => '14:00',
-            'proposed_duration_minutes' => 60,
-        ]);
-
-    $response->assertStatus(422);
-
-    $otherEmployer->delete();
+    $this->withToken($this->employerToken)
+        ->postJson('/api/meetings', meetingPayload($otherEmployer))
+        ->assertStatus(422);
 });
 
-test('invitee not found returns 422', function () {
-    $response = $this->withToken($this->{"employerToken"})
-        ->postJson('/api/meetings', [
-            'invitee_id' => '000000000000000000000000',
-            'title' => 'Test Meeting',
-            'meeting_type' => 'video_call',
-            'proposed_date' => now()->addDays(3)->format('Y-m-d'),
-            'proposed_start_time' => '14:00',
-            'proposed_duration_minutes' => 60,
-        ]);
-
-    $response->assertStatus(422);
+test('inviting a non-existent user is rejected', function () {
+    $this->withToken($this->employerToken)
+        ->postJson('/api/meetings', meetingPayload($this->seeker, ['invitee_id' => '000000000000000000000000']))
+        ->assertStatus(422);
 });
 
-test('conflict warnings included in response when overlapping meeting exists', function () {
-    // Create an existing accepted meeting that overlaps
-    Meeting::create([
-        'organizer_id' => (string) $this->employer->_id,
-        'invitee_id' => (string) $this->seeker->_id,
-        'title' => 'Existing Meeting',
-        'meeting_type' => 'phone_call',
-        'proposed_date' => now()->addDays(3)->format('Y-m-d'),
+test('an overlapping meeting surfaces conflict warnings', function () {
+    createMeeting($this->employer, $this->seeker, [
+        'meeting_type'        => 'phone_call',
         'proposed_start_time' => '14:00',
-        'proposed_duration_minutes' => 60,
-        'status' => 'accepted',
-        'notes' => [],
-        'previous_schedules' => [],
+        'status'              => 'accepted',
     ]);
 
-    $response = $this->withToken($this->{"employerToken"})
-        ->postJson('/api/meetings', [
-            'invitee_id' => (string) $this->seeker->_id,
-            'title' => 'Overlapping Meeting',
-            'meeting_type' => 'video_call',
-            'proposed_date' => now()->addDays(3)->format('Y-m-d'),
+    $response = $this->withToken($this->employerToken)
+        ->postJson('/api/meetings', meetingPayload($this->seeker, [
+            'title'               => 'Overlapping Meeting',
             'proposed_start_time' => '14:30',
-            'proposed_duration_minutes' => 60,
-        ]);
-
-    $response->assertStatus(201)
+        ]))
+        ->assertCreated()
         ->assertJsonStructure(['organizer_conflicts', 'invitee_conflicts']);
 
-    // At least one conflict should be detected for the organizer
-    $data = $response->json();
-    expect(count($data['organizer_conflicts']))->toBeGreaterThanOrEqual(1);
+    expect(count($response->json('organizer_conflicts')))->toBeGreaterThanOrEqual(1);
 });
-

@@ -1,99 +1,49 @@
 <?php
 
-use App\Models\Meeting;
-use App\Models\User;
-
-
+// =============================================================================
+// MeetingNoteTest — POST /api/meetings/{id}/notes
+// =============================================================================
 
 beforeEach(function () {
-    $this->employer = User::factory()->employer()->create();
-    $this->employerToken = auth('api')->login($this->employer);
-    $this->seeker = User::factory()->employee()->create();
-    $this->seekerToken = auth('api')->login($this->seeker);
-    $this->meeting = Meeting::create([
-        'organizer_id' => (string) $this->employer->_id,
-        'invitee_id' => (string) $this->seeker->_id,
-        'title' => 'Note Test Meeting',
-        'meeting_type' => 'video_call',
-        'proposed_date' => now()->addDays(3)->format('Y-m-d'),
-        'proposed_start_time' => '10:00',
-        'proposed_duration_minutes' => 60,
-        'status' => 'accepted',
-        'notes' => [],
-        'previous_schedules' => [],
-    ]);
+    [$this->employer, $this->employerToken] = userWithToken('employer');
+    [$this->seeker]                          = userWithToken('employee');
+    $this->meeting = createMeeting($this->employer, $this->seeker, ['status' => 'accepted']);
 });
 
-afterEach(function () {
-    $this->meeting->delete();
-    $this->employer->delete();
-    $this->seeker->delete();
+test('a participant can add a note', function () {
+    $notes = $this->withToken($this->employerToken)
+        ->postJson("/api/meetings/{$this->meeting->_id}/notes", ['content' => 'Please prepare your portfolio.'])
+        ->assertCreated()
+        ->assertJsonStructure(['meeting' => ['notes']])
+        ->json('meeting.notes');
+
+    expect($notes)->toHaveCount(1)
+        ->and($notes[0]['content'])->toBe('Please prepare your portfolio.')
+        ->and($notes[0]['author_id'])->toBe((string) $this->employer->_id);
 });
 
-test('participant can add a note', function () {
-    $response = $this->withToken($this->{"employerToken"})
-        ->postJson("/api/meetings/{$this->meeting->_id}/notes", [
-            'content' => 'Please prepare your portfolio.',
-        ]);
+test('a non-participant cannot add a note', function () {
+    $outsiderToken = tokenFor('employee');
 
-    $response->assertStatus(201)
-        ->assertJsonStructure(['meeting' => ['notes']]);
-
-    $notes = $response->json('meeting.notes');
-    expect($notes)->toHaveCount(1);
-    expect($notes[0]['content'])->toBe('Please prepare your portfolio.');
-    expect($notes[0]['author_id'])->toBe((string) $this->employer->_id);
+    $this->withToken($outsiderToken)
+        ->postJson("/api/meetings/{$this->meeting->_id}/notes", ['content' => 'Sneaking a note in.'])
+        ->assertForbidden();
 });
 
-test('non-participant gets 403', function () {
-    $outsider = User::factory()->employee()->create();
-    $outsiderToken = auth('api')->login($outsider);
+test('note content cannot be empty or whitespace only', function (string $content) {
+    $this->withToken($this->employerToken)
+        ->postJson("/api/meetings/{$this->meeting->_id}/notes", ['content' => $content])
+        ->assertStatus(422);
+})->with(['empty' => '', 'whitespace' => '   ']);
 
-    $response = $this->withToken($outsiderToken)
-        ->postJson("/api/meetings/{$this->meeting->_id}/notes", [
-            'content' => 'Trying to sneak a note in.',
-        ]);
-
-    $response->assertStatus(403);
-
-    $outsider->delete();
+test('note content cannot exceed 2000 characters', function () {
+    $this->withToken($this->employerToken)
+        ->postJson("/api/meetings/{$this->meeting->_id}/notes", ['content' => str_repeat('a', 2001)])
+        ->assertStatus(422);
 });
 
-test('empty content returns 422', function () {
-    $response = $this->withToken($this->{"employerToken"})
-        ->postJson("/api/meetings/{$this->meeting->_id}/notes", [
-            'content' => '',
-        ]);
-
-    $response->assertStatus(422);
+test('adding a note to a non-existent meeting returns 404', function () {
+    $this->withToken($this->employerToken)
+        ->postJson('/api/meetings/000000000000000000000000/notes', ['content' => 'For a ghost meeting.'])
+        ->assertNotFound();
 });
-
-test('whitespace-only content returns 422', function () {
-    $response = $this->withToken($this->{"employerToken"})
-        ->postJson("/api/meetings/{$this->meeting->_id}/notes", [
-            'content' => '   ',
-        ]);
-
-    $response->assertStatus(422);
-});
-
-test('content exceeding 2000 chars returns 422', function () {
-    $longContent = str_repeat('a', 2001);
-
-    $response = $this->withToken($this->{"employerToken"})
-        ->postJson("/api/meetings/{$this->meeting->_id}/notes", [
-            'content' => $longContent,
-        ]);
-
-    $response->assertStatus(422);
-});
-
-test('meeting not found returns 404', function () {
-    $response = $this->withToken($this->{"employerToken"})
-        ->postJson('/api/meetings/000000000000000000000000/notes', [
-            'content' => 'Note for nonexistent meeting.',
-        ]);
-
-    $response->assertStatus(404);
-});
-

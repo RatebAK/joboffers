@@ -116,6 +116,28 @@ function createJob(User $employer, array $attributes = []): JobPost
     ], $attributes));
 }
 
+/**
+ * Create a meeting between an organizer and an invitee.
+ *
+ * Defaults to a pending video call three days out; override any field via
+ * $attributes (status, proposed_date, previous_schedules, etc.).
+ */
+function createMeeting(User $organizer, User $invitee, array $attributes = []): \App\Models\Meeting
+{
+    return \App\Models\Meeting::create(array_merge([
+        'organizer_id'              => (string) $organizer->_id,
+        'invitee_id'                => (string) $invitee->_id,
+        'title'                     => 'Test Meeting',
+        'meeting_type'              => 'video_call',
+        'proposed_date'             => now()->addDays(3)->format('Y-m-d'),
+        'proposed_start_time'       => '10:00',
+        'proposed_duration_minutes' => 60,
+        'status'                    => 'pending',
+        'notes'                     => [],
+        'previous_schedules'        => [],
+    ], $attributes));
+}
+
 /*
 |--------------------------------------------------------------------------
 | Expectations
