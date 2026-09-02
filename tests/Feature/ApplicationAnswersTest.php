@@ -40,12 +40,6 @@ beforeEach(function () {
     $this->seeker   = User::factory()->employee()->create();
 });
 
-afterEach(function () {
-    Application::truncate();
-    JobPost::truncate();
-    User::truncate();
-});
-
 // ── Storing answers ────────────────────────────────────────────────────────
 
 test('answers to job post questions are stored on the application', function () {

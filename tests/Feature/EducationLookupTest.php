@@ -27,12 +27,6 @@ dataset('lookups', [
     'majors'       => ['majors', Major::class],
 ]);
 
-afterEach(function () {
-    University::truncate();
-    Faculty::truncate();
-    Major::truncate();
-});
-
 // ── Public listing ───────────────────────────────────────────────────────────
 
 test('anyone can list without authentication', function (string $segment, string $model) {
