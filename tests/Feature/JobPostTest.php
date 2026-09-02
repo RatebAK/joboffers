@@ -1,426 +1,292 @@
 <?php
 
-// ============================================================
-// DO NOT DELETE — Comprehensive tests for job post endpoints.
-// Covers: public listing, single show, 404s, job_id generation,
-// employer CRUD, deactivation, ownership enforcement,
-// all filter combinations, and pagination edge cases.
-// ============================================================
+// =============================================================================
+// JobPostTest
+//
+// Covers job post endpoints: public listing and show, job_id generation,
+// employer CRUD, activation/deactivation, ownership enforcement, filters,
+// pagination edges, and the roles field.
+// =============================================================================
 
 use App\Models\Application;
-use App\Models\JobPost;
-use App\Models\User;
 
-// ── Helpers ───────────────────────────────────────────────────
-
-function jpEmployer(): array
+/** Employer + token that already owns a company profile, so store() succeeds. */
+function employerWithCompany(): array
 {
-    $employer = User::factory()->employer()->create();
-    $token    = auth('api')->login($employer);
+    [$employer, $token] = userWithToken('employer');
+    createCompanyFor($employer, ['name' => 'TestCo']);
+
     return [$employer, $token];
 }
 
-function jpJob(string $employerId, array $overrides = []): JobPost
+/** Minimal valid job creation payload, with overrides. */
+function jobPayload(array $overrides = []): array
 {
-    return JobPost::create(array_merge([
-        'title'            => 'Test Engineer',
-        'description'      => 'Write tests.',
-        'company_name'     => 'TestCo',
-        'job_type'         => 'full_time',
-        'work_mode'        => 'remote',
-        'job_level'        => 'mid',
-        'city'             => 'Beirut',
-        'category'         => 'Engineering',
-        'tags'             => ['PHP', 'Testing'],
-        'salary_from'      => 2000,
-        'salary_to'        => 4000,
-        'currency'         => 'USD',
-        'vacancies'        => 1,
+    return array_merge([
+        'title'                => 'New Role',
+        'description'          => 'Desc.',
+        'job_type'             => 'full_time',
+        'vacancies'            => 1,
+        'city'                 => 'Beirut',
         'communication_method' => 'by_forsa',
-        'employer_id'      => $employerId,
-        'is_active'        => true,
-    ], $overrides));
+    ], $overrides);
 }
 
-/** Create employer + company profile so the store() endpoint works. */
-function jpEmployerWithCompany(): array
-{
-    [$employer, $token] = jpEmployer();
-    \App\Models\CompanyProfile::create([
-        'employer_id' => (string) $employer->_id,
-        'name'        => 'TestCo',
-        'slug'        => 'testco-' . uniqid(),
-    ]);
-    return [$employer, $token];
-}
+// ── Public: GET /api/jobs ────────────────────────────────────────────────
 
-// ── Public: GET /api/jobs ─────────────────────────────────────
+test('the public job list returns only active posts', function () {
+    $employer = createUser('employer');
+    $keyword  = uniqid('JOB_');
+    createJob($employer, ['is_active' => true, 'title' => "{$keyword}_active"]);
+    createJob($employer, ['is_active' => false, 'title' => "{$keyword}_inactive"]);
 
-test('public job list returns only active posts', function () {
-    [$employer] = jpEmployer();
-    $uid = uniqid('ACTIVEJOB_');
-    $active   = jpJob((string) $employer->_id, ['is_active' => true,  'title' => $uid . '_active']);
-    $inactive = jpJob((string) $employer->_id, ['is_active' => false, 'title' => $uid . '_inactive']);
+    $titles = collect(
+        $this->getJson("/api/jobs?keyword={$keyword}&per_page=100")->assertOk()->json('data')
+    )->pluck('title');
 
-    // Filter by unique keyword so pagination doesn't matter
-    $response = $this->getJson("/api/jobs?keyword={$uid}&per_page=100")->assertStatus(200);
-    $titles = collect($response->json('data'))->pluck('title')->toArray();
-
-    expect($titles)->toContain($uid . '_active');
-    expect($titles)->not->toContain($uid . '_inactive');
-
-    $active->delete(); $inactive->delete(); $employer->delete();
+    expect($titles)->toContain("{$keyword}_active")
+        ->not->toContain("{$keyword}_inactive");
 });
 
-test('public job list has correct pagination shape', function () {
-    [$employer] = jpEmployer();
-    $job = jpJob((string) $employer->_id);
+test('the public job list has the standard pagination shape', function () {
+    createJob(createUser('employer'));
 
     $this->getJson('/api/jobs')
-         ->assertStatus(200)
-         ->assertJsonStructure([
-             'data', 'current_page', 'per_page', 'total',
-             'total_pages', 'next_page', 'prev_page',
-         ]);
-
-    $job->delete(); $employer->delete();
+        ->assertOk()
+        ->assertJsonStructure([
+            'data', 'current_page', 'per_page', 'total',
+            'total_pages', 'next_page', 'prev_page',
+        ]);
 });
 
-test('public job list per_page is capped at 100', function () {
-    [$employer] = jpEmployer();
-
-    $response = $this->getJson('/api/jobs?per_page=999')->assertStatus(200);
-    expect($response->json('per_page'))->toBeLessThanOrEqual(100);
-
-    $employer->delete();
+test('the public job list caps per_page at 100', function () {
+    expect($this->getJson('/api/jobs?per_page=999')->assertOk()->json('per_page'))
+        ->toBeLessThanOrEqual(100);
 });
 
-// ── Public: GET /api/jobs/{id} ────────────────────────────────
+// ── Public: GET /api/jobs/{id} ───────────────────────────────────────────
 
-test('public show returns a single job post', function () {
-    [$employer] = jpEmployer();
-    $job = jpJob((string) $employer->_id);
+test('the public show endpoint returns a single job post', function () {
+    $job = createJob(createUser('employer'), ['title' => 'Test Engineer']);
 
     $this->getJson("/api/jobs/{$job->_id}")
-         ->assertStatus(200)
-         ->assertJsonPath('title', 'Test Engineer')
-         ->assertJsonPath('job_type', 'full_time');
-
-    $job->delete(); $employer->delete();
+        ->assertOk()
+        ->assertJsonPath('title', 'Test Engineer')
+        ->assertJsonPath('job_type', 'full_time');
 });
 
-test('public show returns 404 for unknown id', function () {
-    $this->getJson('/api/jobs/000000000000000000000000')->assertStatus(404);
+test('the public show endpoint returns 404 for an unknown id', function () {
+    $this->getJson('/api/jobs/000000000000000000000000')->assertNotFound();
 });
 
-test('public show returns inactive job post by id', function () {
-    // Individual show does not filter by is_active — only the list does
-    [$employer] = jpEmployer();
-    $job = jpJob((string) $employer->_id, ['is_active' => false]);
+test('the public show endpoint returns inactive posts by id', function () {
+    // Only the list filters by is_active; show does not.
+    $job = createJob(createUser('employer'), ['is_active' => false]);
 
-    $this->getJson("/api/jobs/{$job->_id}")->assertStatus(200);
-
-    $job->delete(); $employer->delete();
+    $this->getJson("/api/jobs/{$job->_id}")->assertOk();
 });
 
-// ── Employer: POST /api/employer/jobs ─────────────────────────
+test('the public show endpoint returns the roles field', function () {
+    $job = createJob(createUser('employer'), ['roles' => ['DevOps', 'AWS']]);
 
-test('employer job creation assigns a job_id field', function () {
-    [$employer, $token] = jpEmployerWithCompany();
-
-    $response = $this->withToken($token)->postJson('/api/employer/jobs', [
-        'title'       => 'New Role',
-        'description' => 'Desc.',
-        'job_type'    => 'contract',
-        'vacancies'   => 1,
-        'city'        => 'Beirut',
-        'communication_method' => 'by_forsa',
-    ]);
-
-    $response->assertStatus(201);
-    expect($response->json('job_id'))->toStartWith('JOB-');
-
-    JobPost::where('employer_id', (string) $employer->_id)->delete();
-    \App\Models\CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
-    $employer->delete();
+    expect($this->getJson("/api/jobs/{$job->_id}")->assertOk()->json('roles'))
+        ->toContain('DevOps');
 });
 
-test('employer job creation sets employer_id from auth user', function () {
-    [$employer, $token] = jpEmployerWithCompany();
+// ── Employer: POST /api/employer/jobs ────────────────────────────────────
 
-    $response = $this->withToken($token)->postJson('/api/employer/jobs', [
-        'title'       => 'Auth Check',
-        'description' => 'Desc.',
-        'job_type'    => 'full_time',
-        'vacancies'   => 1,
-        'city'        => 'Beirut',
-        'communication_method' => 'by_forsa',
-    ]);
+test('creating a job assigns a human-readable job_id', function () {
+    [, $token] = employerWithCompany();
 
-    $response->assertStatus(201);
-    expect($response->json('employer_id'))->toBe((string) $employer->_id);
+    $jobId = $this->withToken($token)
+        ->postJson('/api/employer/jobs', jobPayload(['job_type' => 'contract']))
+        ->assertCreated()
+        ->json('job_id');
 
-    JobPost::where('employer_id', (string) $employer->_id)->delete();
-    \App\Models\CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
-    $employer->delete();
+    expect($jobId)->toStartWith('JOB-');
 });
 
-test('employer job creation validates job_type enum', function () {
-    [$employer, $token] = jpEmployerWithCompany();
+test('creating a job sets employer_id from the authenticated user', function () {
+    [$employer, $token] = employerWithCompany();
 
-    $this->withToken($token)->postJson('/api/employer/jobs', [
-        'title'       => 'Bad Type',
-        'description' => 'Desc.',
-        'vacancies'   => 1,
-        'city'        => 'Beirut',
-        'job_type'    => 'gig_economy',
-        'communication_method' => 'by_forsa',
-    ])->assertStatus(422)->assertJsonStructure(['errors' => ['job_type']]);
-
-    \App\Models\CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
-    $employer->delete();
+    $this->withToken($token)
+        ->postJson('/api/employer/jobs', jobPayload())
+        ->assertCreated()
+        ->assertJsonPath('employer_id', (string) $employer->_id);
 });
 
-test('employer job creation validates work_mode enum', function () {
-    [$employer, $token] = jpEmployerWithCompany();
+test('creating a job validates the job_type enum', function () {
+    [, $token] = employerWithCompany();
 
-    $this->withToken($token)->postJson('/api/employer/jobs', [
-        'title'       => 'Bad Mode',
-        'description' => 'Desc.',
-        'vacancies'   => 1,
-        'city'        => 'Beirut',
-        'job_type'    => 'full_time',
-        'work_mode'   => 'moon',
-        'communication_method' => 'by_forsa',
-    ])->assertStatus(422)->assertJsonStructure(['errors' => ['work_mode']]);
-
-    \App\Models\CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
-    $employer->delete();
+    $this->withToken($token)
+        ->postJson('/api/employer/jobs', jobPayload(['job_type' => 'gig_economy']))
+        ->assertStatus(422)
+        ->assertJsonValidationErrors('job_type');
 });
 
-test('employer job creation validates experience_level enum', function () {
-    [$employer, $token] = jpEmployerWithCompany();
+test('creating a job validates the work_mode enum', function () {
+    [, $token] = employerWithCompany();
 
-    $this->withToken($token)->postJson('/api/employer/jobs', [
-        'title'       => 'Bad Level',
-        'description' => 'Desc.',
-        'vacancies'   => 1,
-        'city'        => 'Beirut',
-        'job_type'    => 'full_time',
-        'job_level'   => 'god',
-        'communication_method' => 'by_forsa',
-    ])->assertStatus(422)->assertJsonStructure(['errors' => ['job_level']]);
-
-    \App\Models\CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
-    $employer->delete();
+    $this->withToken($token)
+        ->postJson('/api/employer/jobs', jobPayload(['work_mode' => 'moon']))
+        ->assertStatus(422)
+        ->assertJsonValidationErrors('work_mode');
 });
 
-test('employer job creation accepts optional salary_range and tags', function () {
-    [$employer, $token] = jpEmployerWithCompany();
+test('creating a job validates the job_level enum', function () {
+    [, $token] = employerWithCompany();
 
-    $response = $this->withToken($token)->postJson('/api/employer/jobs', [
-        'title'       => 'Full Job',
-        'description' => 'Desc.',
-        'vacancies'   => 1,
-        'city'        => 'Beirut',
-        'job_type'    => 'full_time',
+    $this->withToken($token)
+        ->postJson('/api/employer/jobs', jobPayload(['job_level' => 'god']))
+        ->assertStatus(422)
+        ->assertJsonValidationErrors('job_level');
+});
+
+test('creating a job accepts optional salary and tags', function () {
+    [, $token] = employerWithCompany();
+
+    $response = $this->withToken($token)->postJson('/api/employer/jobs', jobPayload([
         'salary_from' => 3000,
         'salary_to'   => 6000,
         'currency'    => 'USD',
         'tags'        => ['Laravel', 'PHP'],
-        'communication_method' => 'by_forsa',
-    ]);
+    ]))->assertCreated();
 
-    $response->assertStatus(201);
-    expect($response->json('salary_from'))->toBe(3000);
-    expect($response->json('tags'))->toContain('Laravel');
-
-    JobPost::where('employer_id', (string) $employer->_id)->delete();
-    \App\Models\CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
-    $employer->delete();
+    expect($response->json('salary_from'))->toBe(3000)
+        ->and($response->json('tags'))->toContain('Laravel');
 });
 
-// ── Employer: PUT /api/employer/jobs/{id} ─────────────────────
+test('creating a job accepts a roles array', function () {
+    [, $token] = employerWithCompany();
 
-test('employer can partially update a job post', function () {
-    [$employer, $token] = jpEmployer();
-    $job = jpJob((string) $employer->_id);
+    $roles = $this->withToken($token)
+        ->postJson('/api/employer/jobs', jobPayload(['roles' => ['Frontend', 'React']]))
+        ->assertCreated()
+        ->json('roles');
 
-    $this->withToken($token)->putJson("/api/employer/jobs/{$job->_id}", [
-        'title' => 'Updated Title',
-        'city'  => 'Dubai',
-    ])->assertStatus(200)
-      ->assertJsonPath('title', 'Updated Title')
-      ->assertJsonPath('city', 'Dubai');
-
-    $job->delete(); $employer->delete();
+    expect($roles)->toContain('Frontend')->toContain('React');
 });
 
-test('update returns 404 for non-existent job post', function () {
-    [$employer, $token] = jpEmployer();
+// ── Employer: PUT /api/employer/jobs/{id} ────────────────────────────────
 
-    $this->withToken($token)->putJson('/api/employer/jobs/000000000000000000000000', [
-        'title' => 'Ghost',
-    ])->assertStatus(404);
+test('an employer can partially update their job post', function () {
+    [$employer, $token] = userWithToken('employer');
+    $job = createJob($employer);
 
-    $employer->delete();
+    $this->withToken($token)
+        ->putJson("/api/employer/jobs/{$job->_id}", ['title' => 'Updated Title', 'city' => 'Dubai'])
+        ->assertOk()
+        ->assertJsonPath('title', 'Updated Title')
+        ->assertJsonPath('city', 'Dubai');
 });
 
-test('employer cannot update another employers job post', function () {
-    [$employer]         = jpEmployer();
-    [$other, $token]    = jpEmployer();
-    $job = jpJob((string) $employer->_id);
+test('an employer can update the roles on their job post', function () {
+    [$employer, $token] = userWithToken('employer');
+    $job = createJob($employer, ['roles' => ['Backend']]);
 
-    $this->withToken($token)->putJson("/api/employer/jobs/{$job->_id}", [
-        'title' => 'Hijacked',
-    ])->assertStatus(403);
-
-    $job->delete(); $employer->delete(); $other->delete();
+    $this->withToken($token)
+        ->putJson("/api/employer/jobs/{$job->_id}", ['roles' => ['Backend', 'Node.js']])
+        ->assertOk()
+        ->assertJsonPath('roles.0', 'Backend')
+        ->assertJsonPath('roles.1', 'Node.js');
 });
 
-// ── Employer: DELETE /api/employer/jobs/{id} ──────────────────
+test('updating a non-existent job post returns 404', function () {
+    [, $token] = userWithToken('employer');
 
-test('delete returns 404 for non-existent job post', function () {
-    [$employer, $token] = jpEmployer();
-
-    $this->withToken($token)->deleteJson('/api/employer/jobs/000000000000000000000000')
-         ->assertStatus(404);
-
-    $employer->delete();
+    $this->withToken($token)
+        ->putJson('/api/employer/jobs/000000000000000000000000', ['title' => 'Ghost'])
+        ->assertNotFound();
 });
 
-test('employer cannot delete another employers job post', function () {
-    [$employer]      = jpEmployer();
-    [$other, $token] = jpEmployer();
-    $job = jpJob((string) $employer->_id);
+test('an employer cannot update another employers job post', function () {
+    $job = createJob(createUser('employer'));
+    $otherToken = tokenFor('employer');
 
-    $this->withToken($token)->deleteJson("/api/employer/jobs/{$job->_id}")
-         ->assertStatus(403);
-
-    $job->delete(); $employer->delete(); $other->delete();
+    $this->withToken($otherToken)
+        ->putJson("/api/employer/jobs/{$job->_id}", ['title' => 'Hijacked'])
+        ->assertForbidden();
 });
 
-// ── Employer: POST /api/employer/jobs/{id}/deactivate ─────────
+// ── Employer: DELETE /api/employer/jobs/{id} ─────────────────────────────
 
-test('deactivate returns 404 for non-existent job post', function () {
-    [$employer, $token] = jpEmployer();
+test('deleting a non-existent job post returns 404', function () {
+    [, $token] = userWithToken('employer');
 
-    $this->withToken($token)->postJson('/api/employer/jobs/000000000000000000000000/deactivate')
-         ->assertStatus(404);
-
-    $employer->delete();
+    $this->withToken($token)
+        ->deleteJson('/api/employer/jobs/000000000000000000000000')
+        ->assertNotFound();
 });
 
-test('employer cannot deactivate another employers job post', function () {
-    [$employer]      = jpEmployer();
-    [$other, $token] = jpEmployer();
-    $job = jpJob((string) $employer->_id);
+test('an employer cannot delete another employers job post', function () {
+    $job = createJob(createUser('employer'));
+    $otherToken = tokenFor('employer');
 
-    $this->withToken($token)->postJson("/api/employer/jobs/{$job->_id}/deactivate")
-         ->assertStatus(403);
-
-    $job->delete(); $employer->delete(); $other->delete();
+    $this->withToken($otherToken)
+        ->deleteJson("/api/employer/jobs/{$job->_id}")
+        ->assertForbidden();
 });
 
-// ── Employer: GET /api/employer/jobs ──────────────────────────
+// ── Employer: POST /api/employer/jobs/{id}/deactivate ────────────────────
+
+test('deactivating a non-existent job post returns 404', function () {
+    [, $token] = userWithToken('employer');
+
+    $this->withToken($token)
+        ->postJson('/api/employer/jobs/000000000000000000000000/deactivate')
+        ->assertNotFound();
+});
+
+test('an employer cannot deactivate another employers job post', function () {
+    $job = createJob(createUser('employer'));
+    $otherToken = tokenFor('employer');
+
+    $this->withToken($otherToken)
+        ->postJson("/api/employer/jobs/{$job->_id}/deactivate")
+        ->assertForbidden();
+});
+
+// ── Employer: GET /api/employer/jobs ─────────────────────────────────────
 
 test('my posts returns only the authenticated employers posts', function () {
-    [$employer, $token] = jpEmployer();
-    [$other]            = jpEmployer();
-    $mine   = jpJob((string) $employer->_id, ['title' => 'My Job']);
-    $theirs = jpJob((string) $other->_id, ['title' => 'Their Job']);
+    [$employer, $token] = userWithToken('employer');
+    createJob($employer, ['title' => 'My Job']);
+    createJob(createUser('employer'), ['title' => 'Their Job']);
 
-    $response = $this->withToken($token)->getJson('/api/employer/jobs')->assertStatus(200);
-    $titles = collect($response->json())->pluck('title')->toArray();
+    $titles = collect(
+        $this->withToken($token)->getJson('/api/employer/jobs')->assertOk()->json()
+    )->pluck('title');
 
-    expect($titles)->toContain('My Job');
-    expect($titles)->not->toContain('Their Job');
-
-    $mine->delete(); $theirs->delete(); $employer->delete(); $other->delete();
+    expect($titles)->toContain('My Job')->not->toContain('Their Job');
 });
 
-test('my posts includes application_count for each post', function () {
-    [$employer, $token] = jpEmployer();
-    $job = jpJob((string) $employer->_id, ['title' => 'Count Job']);
-    $seeker = User::factory()->employee()->create();
-    Application::create(['user_id' => $seeker->_id, 'job_post_id' => $job->_id, 'status' => 'pending', 'applied_at' => now()]);
-
-    $response = $this->withToken($token)->getJson('/api/employer/jobs')->assertStatus(200);
-    $post = collect($response->json())->firstWhere('title', 'Count Job');
-    expect($post)->not->toBeNull();
-    expect($post['application_count'])->toBe(1);
-
-    Application::where('user_id', $seeker->_id)->delete();
-    $job->delete(); $seeker->delete(); $employer->delete();
-});
-
-// ── Auth guard ────────────────────────────────────────────────
-
-test('unauthenticated user cannot create a job post', function () {
-    $this->postJson('/api/employer/jobs', ['title' => 'Sneaky'])->assertStatus(401);
-});
-
-test('job seeker cannot create a job post', function () {
-    $seeker = User::factory()->employee()->create();
-    $token  = auth('api')->login($seeker);
-
-    $this->withToken($token)->postJson('/api/employer/jobs', [
-        'title'        => 'Sneaky',
-        'description'  => 'Desc.',
-        'requirements' => 'Req.',
-        'company_name' => 'Co',
-        'job_type'     => 'full_time',
-    ])->assertStatus(403);
-
-    $seeker->delete();
-});
-
-// ── Roles field ───────────────────────────────────────────────
-
-test('employer job creation accepts roles array', function () {
-    [$employer, $token] = jpEmployerWithCompany();
-
-    $response = $this->withToken($token)->postJson('/api/employer/jobs', [
-        'title'       => 'Frontend Role',
-        'description' => 'Desc.',
-        'vacancies'   => 1,
-        'city'        => 'Beirut',
-        'job_type'    => 'full_time',
-        'roles'       => ['Frontend', 'React'],
-        'communication_method' => 'by_forsa',
+test('my posts includes an application_count for each post', function () {
+    [$employer, $token] = userWithToken('employer');
+    $job = createJob($employer, ['title' => 'Count Job']);
+    $seeker = createUser('employee');
+    Application::create([
+        'user_id'     => (string) $seeker->_id,
+        'job_post_id' => (string) $job->_id,
+        'status'      => 'pending',
+        'applied_at'  => now(),
     ]);
 
-    $response->assertStatus(201);
-    expect($response->json('roles'))->toContain('Frontend');
-    expect($response->json('roles'))->toContain('React');
+    $post = collect(
+        $this->withToken($token)->getJson('/api/employer/jobs')->assertOk()->json()
+    )->firstWhere('title', 'Count Job');
 
-    JobPost::where('employer_id', (string) $employer->_id)->delete();
-    \App\Models\CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
-    $employer->delete();
+    expect($post)->not->toBeNull()
+        ->and($post['application_count'])->toBe(1);
 });
 
-test('employer can update roles on a job post', function () {
-    [$employer, $token] = jpEmployer();
-    $job = jpJob((string) $employer->_id, ['roles' => ['Backend']]);
+// ── Auth guards ──────────────────────────────────────────────────────────
 
-    $response = $this->withToken($token)->putJson("/api/employer/jobs/{$job->_id}", [
-        'roles' => ['Backend', 'Node.js'],
-    ]);
-
-    $response->assertStatus(200)
-      ->assertJsonPath('roles.0', 'Backend')
-      ->assertJsonPath('roles.1', 'Node.js');
-
-    $job->delete(); $employer->delete();
+test('an unauthenticated user cannot create a job post', function () {
+    $this->postJson('/api/employer/jobs', ['title' => 'Sneaky'])->assertUnauthorized();
 });
 
-test('public job show returns roles field', function () {
-    [$employer] = jpEmployer();
-    $job = jpJob((string) $employer->_id, ['roles' => ['DevOps', 'AWS']]);
-
-    $response = $this->getJson("/api/jobs/{$job->_id}")->assertStatus(200);
-
-    expect($response->json('roles'))->toContain('DevOps');
-
-    $job->delete(); $employer->delete();
+test('a job seeker cannot create a job post', function () {
+    $this->withToken(tokenFor('employee'))
+        ->postJson('/api/employer/jobs', jobPayload(['title' => 'Sneaky']))
+        ->assertForbidden();
 });
