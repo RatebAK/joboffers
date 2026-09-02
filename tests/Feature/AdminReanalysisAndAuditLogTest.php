@@ -1,206 +1,138 @@
 <?php
 
+// Admin audit-log viewer (GET /api/admin/audit-log) and manual CV
+// re-analysis (POST /api/admin/users/{userId}/reanalyze).
+
 use App\Models\AuditLog;
 use App\Models\JobSeekerProfile;
-use App\Models\User;
+use App\Services\AuditLogService;
 use App\Services\CvAnalysisService;
-use Illuminate\Support\Facades\Http;
 
-// ── Helpers ──────────────────────────────────────────────────────────
-
-function reanalysisAdmin(): array
+/** A CvAnalysisService stub that returns fixed analysis data without any network call. */
+function fakeReanalysisService(array $analysis = ['ats_score' => 75, 'skills' => ['PHP'], 'full_name' => null, 'summary' => null]): void
 {
-    $admin = User::factory()->admin()->create();
-    $token = auth('api')->login($admin);
-    return [$admin, $token];
+    test()->instance(CvAnalysisService::class, new class($analysis) extends CvAnalysisService
+    {
+        public function __construct(private array $analysis) {}
+
+        public function analyze(string $fileUrl, string $resumeId, ?string $mimeType = null): array
+        {
+            return $this->analysis;
+        }
+    });
 }
 
-// ── GET /api/admin/audit-log ──────────────────────────────────────────
-
-test('audit log returns 401 without token', function () {
-    $this->getJson('/api/admin/audit-log')->assertStatus(401);
+beforeEach(function () {
+    [$this->admin, $this->adminToken] = userWithToken('admin');
 });
 
-test('audit log returns 403 for non-admin', function () {
-    $user  = User::factory()->employee()->create();
-    $token = auth('api')->login($user);
-    $this->withToken($token)->getJson('/api/admin/audit-log')->assertStatus(403);
-    $user->delete();
+// ── GET /api/admin/audit-log ─────────────────────────────────────────
+
+test('unauthenticated user cannot view the audit log', function () {
+    $this->getJson('/api/admin/audit-log')->assertUnauthorized();
+});
+
+test('non-admin cannot view the audit log', function () {
+    $this->withToken(tokenFor('employee'))
+        ->getJson('/api/admin/audit-log')
+        ->assertForbidden();
 });
 
 test('audit log returns paginated entries', function () {
-    [$admin, $token] = reanalysisAdmin();
-    AuditLog::truncate();
+    AuditLogService::log('broadcast_sent', (string) $this->admin->_id, $this->admin->name);
+    AuditLogService::log('employer_approved', (string) $this->admin->_id, $this->admin->name);
 
-    \App\Services\AuditLogService::log('broadcast_sent', (string) $admin->_id, $admin->name);
-    \App\Services\AuditLogService::log('employer_approved', (string) $admin->_id, $admin->name);
-
-    $resp = $this->withToken($token)->getJson('/api/admin/audit-log')
-        ->assertStatus(200)
+    $resp = $this->withToken($this->adminToken)->getJson('/api/admin/audit-log')
+        ->assertOk()
         ->assertJsonStructure(['data', 'current_page', 'per_page', 'total']);
 
     expect(count($resp->json('data')))->toBeGreaterThanOrEqual(2);
-
-    AuditLog::truncate();
-    $admin->delete();
 });
 
 test('audit log action_type filter returns only matching entries', function () {
-    [$admin, $token] = reanalysisAdmin();
-    AuditLog::truncate();
+    AuditLogService::log('broadcast_sent', (string) $this->admin->_id, $this->admin->name);
+    AuditLogService::log('employer_approved', (string) $this->admin->_id, $this->admin->name);
+    AuditLogService::log('employer_approved', (string) $this->admin->_id, $this->admin->name);
 
-    \App\Services\AuditLogService::log('broadcast_sent', (string) $admin->_id, $admin->name);
-    \App\Services\AuditLogService::log('employer_approved', (string) $admin->_id, $admin->name);
-    \App\Services\AuditLogService::log('employer_approved', (string) $admin->_id, $admin->name);
-
-    $resp = $this->withToken($token)
+    $resp = $this->withToken($this->adminToken)
         ->getJson('/api/admin/audit-log?action_type=employer_approved')
-        ->assertStatus(200);
+        ->assertOk();
 
     $actions = collect($resp->json('data'))->pluck('action')->unique()->toArray();
-    expect($actions)->toBe(['employer_approved']);
-    expect(count($resp->json('data')))->toBe(2);
-
-    AuditLog::truncate();
-    $admin->delete();
+    expect($actions)->toBe(['employer_approved'])
+        ->and(count($resp->json('data')))->toBe(2);
 });
 
-test('audit log date_from filter returns only entries after that date', function () {
-    [$admin, $token] = reanalysisAdmin();
-    AuditLog::truncate();
-
-    \App\Services\AuditLogService::log('broadcast_sent', (string) $admin->_id, $admin->name);
+test('audit log date_from filter excludes earlier entries', function () {
+    AuditLogService::log('broadcast_sent', (string) $this->admin->_id, $this->admin->name);
 
     $tomorrow = now()->addDay()->format('Y-m-d');
-    $resp = $this->withToken($token)
-        ->getJson('/api/admin/audit-log?date_from=' . $tomorrow)
-        ->assertStatus(200);
 
-    expect($resp->json('total'))->toBe(0);
-
-    AuditLog::truncate();
-    $admin->delete();
+    $this->withToken($this->adminToken)
+        ->getJson('/api/admin/audit-log?date_from='.$tomorrow)
+        ->assertOk()
+        ->assertJsonPath('total', 0);
 });
 
-test('audit log has no delete or put routes', function () {
-    [$admin, $token] = reanalysisAdmin();
+test('audit log is read-only with no delete or put routes', function () {
+    $deleteStatus = $this->withToken($this->adminToken)->deleteJson('/api/admin/audit-log/some-id')->status();
+    $putStatus    = $this->withToken($this->adminToken)->putJson('/api/admin/audit-log/some-id')->status();
 
-    // 404 or 405 both confirm the route doesn't support mutation
-    $deleteStatus = $this->withToken($token)->deleteJson('/api/admin/audit-log/some-id')->status();
-    $putStatus    = $this->withToken($token)->putJson('/api/admin/audit-log/some-id')->status();
-
-    expect($deleteStatus)->toBeIn([404, 405]);
-    expect($putStatus)->toBeIn([404, 405]);
-
-    $admin->delete();
+    expect($deleteStatus)->toBeIn([404, 405])
+        ->and($putStatus)->toBeIn([404, 405]);
 });
 
-// ── POST /api/admin/users/{userId}/reanalyze ──────────────────────────
+// ── POST /api/admin/users/{userId}/reanalyze ─────────────────────────
 
-test('reanalyze returns 401 without token', function () {
-    $this->postJson('/api/admin/users/fakeid/reanalyze')->assertStatus(401);
+test('unauthenticated user cannot trigger reanalysis', function () {
+    $this->postJson('/api/admin/users/fakeid/reanalyze')->assertUnauthorized();
 });
 
-test('reanalyze returns 404 for non-employee user', function () {
-    [$admin, $token] = reanalysisAdmin();
-    $employer = User::factory()->employer()->create();
+test('reanalyze returns 404 for a non-employee user', function () {
+    $employer = createUser('employer');
 
-    $this->withToken($token)
+    $this->withToken($this->adminToken)
         ->postJson("/api/admin/users/{$employer->_id}/reanalyze")
-        ->assertStatus(404)
+        ->assertNotFound()
         ->assertJson(['message' => 'User not found']);
-
-    $employer->delete();
-    $admin->delete();
 });
 
-test('reanalyze returns 404 for non-existent user', function () {
-    [$admin, $token] = reanalysisAdmin();
-
-    $this->withToken($token)
+test('reanalyze returns 404 for a non-existent user', function () {
+    $this->withToken($this->adminToken)
         ->postJson('/api/admin/users/000000000000000000000000/reanalyze')
-        ->assertStatus(404);
-
-    $admin->delete();
+        ->assertNotFound();
 });
 
-test('reanalyze returns 422 when user has no cv', function () {
-    [$admin, $token] = reanalysisAdmin();
-    $seeker = User::factory()->employee()->create();
-    JobSeekerProfile::create(['user_id' => (string) $seeker->_id]);
+test('reanalyze returns 422 when the user has no cv', function () {
+    [$seeker] = createSeekerWithProfile();
 
-    $this->withToken($token)
+    $this->withToken($this->adminToken)
         ->postJson("/api/admin/users/{$seeker->_id}/reanalyze")
         ->assertStatus(422)
         ->assertJson(['message' => 'No CV file found for this user']);
-
-    JobSeekerProfile::where('user_id', (string) $seeker->_id)->delete();
-    $seeker->delete();
-    $admin->delete();
 });
 
-test('reanalyze sets analysis_status to processing on success', function () {
-    [$admin, $token] = reanalysisAdmin();
-    AuditLog::truncate();
-    $seeker = User::factory()->employee()->create();
-    $profile = JobSeekerProfile::create([
-        'user_id'      => (string) $seeker->_id,
-        'cv_file_path' => 'https://example.com/cv.pdf',
-    ]);
+test('reanalyze sets analysis_status after a successful run', function () {
+    [$seeker, $profile] = createSeekerWithProfile([], ['cv_file_path' => 'https://example.com/cv.pdf']);
+    fakeReanalysisService();
 
-    // Mock the CV analysis service to return fake data
-    $this->instance(CvAnalysisService::class, new class extends CvAnalysisService {
-        public function analyze(string $fileUrl, string $resumeId, ?string $mimeType = null): array
-        {
-            return ['ats_score' => 75, 'skills' => ['PHP'], 'full_name' => null, 'summary' => null];
-        }
-    });
-
-    $this->withToken($token)
+    $this->withToken($this->adminToken)
         ->postJson("/api/admin/users/{$seeker->_id}/reanalyze")
-        ->assertStatus(200);
+        ->assertOk();
 
-    // analysis_status should be either processing or completed after the call
-    $fresh = $profile->fresh();
-    expect($fresh->analysis_status)->toBeIn(['processing', 'completed', 'error']);
-
-    $auditEntry = AuditLog::where('action', 'cv_reanalysis_triggered')->first();
-    expect($auditEntry)->not->toBeNull();
-    expect($auditEntry->target_id)->toBe((string) $seeker->_id);
-
-    JobSeekerProfile::where('user_id', (string) $seeker->_id)->delete();
-    $seeker->delete();
-    AuditLog::truncate();
-    $admin->delete();
+    expect($profile->fresh()->analysis_status)->toBeIn(['processing', 'completed', 'error']);
 });
 
-test('reanalyze writes audit log entry', function () {
-    [$admin, $token] = reanalysisAdmin();
-    AuditLog::truncate();
-    $seeker = User::factory()->employee()->create();
-    JobSeekerProfile::create([
-        'user_id'      => (string) $seeker->_id,
-        'cv_file_path' => 'https://example.com/cv.pdf',
-    ]);
+test('reanalyze writes an audit log entry', function () {
+    [$seeker] = createSeekerWithProfile([], ['cv_file_path' => 'https://example.com/cv.pdf']);
+    fakeReanalysisService(['ats_score' => 80, 'skills' => []]);
 
-    $this->instance(CvAnalysisService::class, new class extends CvAnalysisService {
-        public function analyze(string $fileUrl, string $resumeId, ?string $mimeType = null): array
-        {
-            return ['ats_score' => 80, 'skills' => []];
-        }
-    });
-
-    $this->withToken($token)
+    $this->withToken($this->adminToken)
         ->postJson("/api/admin/users/{$seeker->_id}/reanalyze")
-        ->assertStatus(200);
+        ->assertOk();
 
     $log = AuditLog::where('action', 'cv_reanalysis_triggered')
         ->where('target_id', (string) $seeker->_id)
         ->first();
     expect($log)->not->toBeNull();
-
-    JobSeekerProfile::where('user_id', (string) $seeker->_id)->delete();
-    $seeker->delete();
-    AuditLog::truncate();
-    $admin->delete();
 });

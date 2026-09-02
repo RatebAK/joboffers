@@ -1,13 +1,12 @@
 <?php
 
-// Feature: admin-business-intelligence, Property 10: Audit log document count is monotonically non-decreasing
+// AuditLogService: immutable, append-only audit log writes.
+// Property 10: audit log document count is monotonically non-decreasing.
 
 use App\Models\AuditLog;
 use App\Services\AuditLogService;
 
-beforeEach(function () {
-    AuditLog::truncate();
-});
+// ── Writing entries ──────────────────────────────────────────────────
 
 it('writes an audit log entry with all required fields', function () {
     AuditLogService::log(
@@ -20,32 +19,32 @@ it('writes an audit log entry with all required fields', function () {
     );
 
     $log = AuditLog::first();
-    expect($log)->not->toBeNull();
-    expect($log->action)->toBe('employer_approved');
-    expect($log->actor_id)->toBe('actor-123');
-    expect($log->actor_name)->toBe('Admin User');
-    expect($log->target_id)->toBe('target-456');
-    expect($log->target_type)->toBe('Employer');
-    expect($log->metadata)->toBe(['note' => 'test']);
-    expect($log->created_at)->not->toBeNull();
+    expect($log)->not->toBeNull()
+        ->and($log->action)->toBe('employer_approved')
+        ->and($log->actor_id)->toBe('actor-123')
+        ->and($log->actor_name)->toBe('Admin User')
+        ->and($log->target_id)->toBe('target-456')
+        ->and($log->target_type)->toBe('Employer')
+        ->and($log->metadata)->toBe(['note' => 'test'])
+        ->and($log->created_at)->not->toBeNull();
 });
 
 it('never sets updated_at on audit log entries', function () {
     AuditLogService::log('broadcast_sent', 'actor-1', 'Admin', null, null);
 
-    $log = AuditLog::first();
-    expect($log->updated_at)->toBeNull();
+    expect(AuditLog::first()->updated_at)->toBeNull();
 });
 
 it('accepts nullable target fields', function () {
     AuditLogService::log('broadcast_sent', 'actor-1', 'Admin');
 
     $log = AuditLog::first();
-    expect($log->target_id)->toBeNull();
-    expect($log->target_type)->toBeNull();
+    expect($log->target_id)->toBeNull()
+        ->and($log->target_type)->toBeNull();
 });
 
-// Property 10: Audit log document count is monotonically non-decreasing
+// ── Property 10: count is monotonically non-decreasing ───────────────
+
 it('document count increases by exactly 1 per action and never decreases', function () {
     $counts = [];
 
@@ -58,7 +57,6 @@ it('document count increases by exactly 1 per action and never decreases', funct
         $counts[] = $after;
     }
 
-    // Monotonically non-decreasing
     for ($i = 1; $i < count($counts); $i++) {
         expect($counts[$i])->toBeGreaterThanOrEqual($counts[$i - 1]);
     }
@@ -75,6 +73,6 @@ it('existing audit log entries are not modified after creation', function () {
     AuditLogService::log('broadcast_sent', 'actor-3', 'Admin3');
 
     $reloaded = AuditLog::find($id);
-    expect($reloaded->action)->toBe('employer_approved');
-    expect($reloaded->created_at->toISOString())->toBe($created);
+    expect($reloaded->action)->toBe('employer_approved')
+        ->and($reloaded->created_at->toISOString())->toBe($created);
 });
