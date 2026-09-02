@@ -1,51 +1,33 @@
 <?php
 
-// ============================================================
-// DO NOT DELETE — Tests for job listing filters, company listing
-// filters, and pagination shape for both endpoints.
-// ============================================================
+// Covers the public job listing (GET /api/jobs) and company listing
+// (GET /api/companies): pagination shape and every supported filter.
 
 use App\Models\CompanyProfile;
-use App\Models\JobPost;
-use App\Models\User;
 
-// ── Helpers ───────────────────────────────────────────────────
-
-function makeFilterEmployer(): User
+// Default extra fields the filter tests rely on, layered on top of createJob().
+function filterJob(\App\Models\User $employer, array $overrides = []): \App\Models\JobPost
 {
-    return User::factory()->employer()->create();
-}
-
-function makeJob(string $employerId, array $overrides = []): JobPost
-{
-    return JobPost::create(array_merge([
-        'title'            => 'Software Engineer',
-        'description'      => 'Build great software.',
-        'requirements'     => 'PHP experience.',
+    return createJob($employer, array_merge([
         'company_name'     => 'Acme Corp',
-        'job_type'         => 'full_time',
-        'work_mode'        => 'remote',
         'job_level'        => 'mid',
         'experience_years' => 3,
-        'city'             => 'Beirut',
         'category'         => 'Engineering',
         'tags'             => ['PHP', 'Laravel'],
         'salary_from'      => 2000,
         'salary_to'        => 4000,
         'currency'         => 'USD',
-        'vacancies'        => 1,
-        'communication_method' => 'by_forsa',
-        'employer_id'      => $employerId,
-        'is_active'        => true,
+        'title'            => 'Software Engineer',
     ], $overrides));
 }
 
-function makeCompany(string $employerId, array $overrides = []): CompanyProfile
+function filterCompany(\App\Models\User $employer, array $overrides = []): CompanyProfile
 {
     return CompanyProfile::updateOrCreate(
-        ['employer_id' => $employerId],
+        ['employer_id' => (string) $employer->_id],
         array_merge([
             'name'         => 'Acme Corp',
+            'slug'         => 'acme-'.uniqid(),
             'logo'         => 'https://example.com/logo.png',
             'description'  => 'A great tech company.',
             'city'         => 'Beirut',
@@ -58,356 +40,234 @@ function makeCompany(string $employerId, array $overrides = []): CompanyProfile
     );
 }
 
-// ── Pagination Shape — Jobs ───────────────────────────────────
+beforeEach(function () {
+    $this->employer = createUser('employer');
+});
+
+// ── Pagination shape — jobs ────────────────────────────────────────
 
 test('job list returns correct pagination keys', function () {
-    $employer = makeFilterEmployer();
-    $job = makeJob((string) $employer->_id);
+    filterJob($this->employer);
 
-    $response = $this->getJson('/api/jobs');
-
-    $response->assertStatus(200)
-             ->assertJsonStructure([
-                 'data',
-                 'current_page',
-                 'per_page',
-                 'total',
-                 'total_pages',
-                 'next_page',
-                 'prev_page',
-             ]);
+    $response = $this->getJson('/api/jobs')->assertOk()
+        ->assertJsonStructure([
+            'data', 'current_page', 'per_page', 'total', 'total_pages', 'next_page', 'prev_page',
+        ]);
 
     expect($response->json('current_page'))->toBe(1);
     expect($response->json('prev_page'))->toBeNull();
-
-    $job->delete();
-    $employer->delete();
 });
 
 test('job list respects per_page parameter', function () {
-    $employer = makeFilterEmployer();
-    $jobs = collect(range(1, 5))->map(fn($i) => makeJob((string) $employer->_id, ['title' => "Job $i"]));
+    collect(range(1, 5))->each(fn ($i) => filterJob($this->employer, ['title' => "Job $i"]));
 
-    $response = $this->getJson('/api/jobs?per_page=2');
+    $response = $this->getJson('/api/jobs?per_page=2')->assertOk();
 
-    $response->assertStatus(200);
     expect(count($response->json('data')))->toBeLessThanOrEqual(2);
     expect($response->json('per_page'))->toBe(2);
     expect($response->json('total_pages'))->toBeGreaterThanOrEqual(1);
-
-    $jobs->each->delete();
-    $employer->delete();
 });
 
 test('job list page 2 has correct prev_page and next_page', function () {
-    $employer = makeFilterEmployer();
-    $jobs = collect(range(1, 4))->map(fn($i) => makeJob((string) $employer->_id, ['title' => "Paged Job $i"]));
+    collect(range(1, 4))->each(fn ($i) => filterJob($this->employer, ['title' => "Paged Job $i"]));
 
-    $response = $this->getJson('/api/jobs?per_page=2&page=2');
+    $response = $this->getJson('/api/jobs?per_page=2&page=2')->assertOk();
 
-    $response->assertStatus(200);
     expect($response->json('current_page'))->toBe(2);
     expect($response->json('prev_page'))->toBe(1);
-
-    $jobs->each->delete();
-    $employer->delete();
 });
 
-// ── Job Filters ───────────────────────────────────────────────
+// ── Job filters ────────────────────────────────────────────────────
 
 test('filter jobs by keyword matches title', function () {
-    $employer = makeFilterEmployer();
-    $job = makeJob((string) $employer->_id, ['title' => 'UniqueReactDeveloper']);
+    filterJob($this->employer, ['title' => 'UniqueReactDeveloper']);
 
-    $response = $this->getJson('/api/jobs?keyword=UniqueReactDeveloper');
+    $response = $this->getJson('/api/jobs?keyword=UniqueReactDeveloper')->assertOk();
 
-    $response->assertStatus(200);
     $titles = collect($response->json('data'))->pluck('title')->toArray();
     expect($titles)->toContain('UniqueReactDeveloper');
-
-    $job->delete();
-    $employer->delete();
 });
 
 test('filter jobs by keyword matches description', function () {
-    $employer = makeFilterEmployer();
-    $job = makeJob((string) $employer->_id, ['description' => 'XYZ_UNIQUE_KEYWORD_DESC']);
+    filterJob($this->employer, ['description' => 'XYZ_UNIQUE_KEYWORD_DESC']);
 
-    $response = $this->getJson('/api/jobs?keyword=XYZ_UNIQUE_KEYWORD_DESC');
+    $response = $this->getJson('/api/jobs?keyword=XYZ_UNIQUE_KEYWORD_DESC')->assertOk();
 
-    $response->assertStatus(200);
     $descriptions = collect($response->json('data'))->pluck('description')->toArray();
     expect(implode(' ', $descriptions))->toContain('XYZ_UNIQUE_KEYWORD_DESC');
-
-    $job->delete();
-    $employer->delete();
 });
 
 test('filter jobs by location', function () {
-    $employer = makeFilterEmployer();
-    $job = makeJob((string) $employer->_id, ['city' => 'Dubai']);
+    filterJob($this->employer, ['city' => 'Dubai']);
 
-    $response = $this->getJson('/api/jobs?city=Dubai');
+    $response = $this->getJson('/api/jobs?city=Dubai')->assertOk();
 
-    $response->assertStatus(200);
     foreach ($response->json('data') as $j) {
         expect(strtolower($j['city']))->toContain('dubai');
     }
-
-    $job->delete();
-    $employer->delete();
 });
 
 test('filter jobs by job_type', function () {
-    $employer = makeFilterEmployer();
-    $job = makeJob((string) $employer->_id, ['job_type' => 'part_time']);
+    filterJob($this->employer, ['job_type' => 'part_time']);
 
-    $response = $this->getJson('/api/jobs?job_type=part_time');
+    $response = $this->getJson('/api/jobs?job_type=part_time')->assertOk();
 
-    $response->assertStatus(200);
     foreach ($response->json('data') as $j) {
         expect($j['job_type'])->toBe('part_time');
     }
-
-    $job->delete();
-    $employer->delete();
 });
 
 test('filter jobs by work_mode', function () {
-    $employer = makeFilterEmployer();
-    $job = makeJob((string) $employer->_id, ['work_mode' => 'hybrid']);
+    filterJob($this->employer, ['work_mode' => 'hybrid']);
 
-    $response = $this->getJson('/api/jobs?work_mode=hybrid');
+    $response = $this->getJson('/api/jobs?work_mode=hybrid')->assertOk();
 
-    $response->assertStatus(200);
     foreach ($response->json('data') as $j) {
         expect($j['work_mode'])->toBe('hybrid');
     }
-
-    $job->delete();
-    $employer->delete();
 });
 
 test('filter jobs by experience_level', function () {
-    $employer = makeFilterEmployer();
-    $job = makeJob((string) $employer->_id, ['job_level' => 'senior']);
+    filterJob($this->employer, ['job_level' => 'senior']);
 
-    $response = $this->getJson('/api/jobs?job_level=senior');
+    $response = $this->getJson('/api/jobs?job_level=senior')->assertOk();
 
-    $response->assertStatus(200);
     foreach ($response->json('data') as $j) {
         expect($j['job_level'])->toBe('senior');
     }
-
-    $job->delete();
-    $employer->delete();
 });
 
 test('filter jobs by category', function () {
-    $employer = makeFilterEmployer();
-    $job = makeJob((string) $employer->_id, ['category' => 'Design']);
+    filterJob($this->employer, ['category' => 'Design']);
 
-    $response = $this->getJson('/api/jobs?category=Design');
+    $response = $this->getJson('/api/jobs?category=Design')->assertOk();
 
-    $response->assertStatus(200);
     foreach ($response->json('data') as $j) {
         expect($j['category'])->toBe('Design');
     }
-
-    $job->delete();
-    $employer->delete();
 });
 
 test('filter jobs by tag', function () {
-    $employer = makeFilterEmployer();
-    $job = makeJob((string) $employer->_id, ['tags' => ['Vue.js', 'TypeScript']]);
+    filterJob($this->employer, ['tags' => ['Vue.js', 'TypeScript']]);
 
-    $response = $this->getJson('/api/jobs?tag=Vue.js');
+    $response = $this->getJson('/api/jobs?tag=Vue.js')->assertOk();
 
-    $response->assertStatus(200);
     foreach ($response->json('data') as $j) {
         expect($j['tags'])->toContain('Vue.js');
     }
-
-    $job->delete();
-    $employer->delete();
 });
 
 test('filter jobs by min_salary', function () {
-    $employer = makeFilterEmployer();
-    $job = makeJob((string) $employer->_id, ['salary_range' => ['min' => 5000, 'max' => 8000, 'currency' => 'USD']]);
+    filterJob($this->employer, ['salary_range' => ['min' => 5000, 'max' => 8000, 'currency' => 'USD']]);
 
-    $response = $this->getJson('/api/jobs?min_salary=5000');
+    $response = $this->getJson('/api/jobs?min_salary=5000')->assertOk();
 
-    $response->assertStatus(200);
     foreach ($response->json('data') as $j) {
         expect($j['salary_range']['min'])->toBeGreaterThanOrEqual(5000);
     }
-
-    $job->delete();
-    $employer->delete();
 });
 
 test('filter jobs by max_salary', function () {
-    $employer = makeFilterEmployer();
-    $job = makeJob((string) $employer->_id, ['salary_range' => ['min' => 1000, 'max' => 2500, 'currency' => 'USD']]);
+    filterJob($this->employer, ['salary_range' => ['min' => 1000, 'max' => 2500, 'currency' => 'USD']]);
 
-    $response = $this->getJson('/api/jobs?max_salary=3000');
+    $response = $this->getJson('/api/jobs?max_salary=3000')->assertOk();
 
-    $response->assertStatus(200);
     foreach ($response->json('data') as $j) {
         expect($j['salary_range']['max'])->toBeLessThanOrEqual(3000);
     }
-
-    $job->delete();
-    $employer->delete();
 });
 
 test('inactive jobs are excluded from public listing', function () {
-    $employer = makeFilterEmployer();
-    $job = makeJob((string) $employer->_id, ['is_active' => false]);
+    $job = filterJob($this->employer, ['is_active' => false]);
 
-    $response = $this->getJson('/api/jobs');
+    $response = $this->getJson('/api/jobs')->assertOk();
 
     $ids = collect($response->json('data'))->pluck('_id')->toArray();
     expect($ids)->not->toContain((string) $job->_id);
-
-    $job->delete();
-    $employer->delete();
 });
 
-// ── Pagination Shape — Companies ──────────────────────────────
+// ── Pagination shape — companies ───────────────────────────────────
 
 test('company list returns correct pagination keys', function () {
-    $employer = makeFilterEmployer();
-    $company = makeCompany((string) $employer->_id);
+    filterCompany($this->employer);
 
-    $response = $this->getJson('/api/companies');
-
-    $response->assertStatus(200)
-             ->assertJsonStructure([
-                 'data',
-                 'current_page',
-                 'per_page',
-                 'total',
-                 'total_pages',
-                 'next_page',
-                 'prev_page',
-             ]);
+    $response = $this->getJson('/api/companies')->assertOk()
+        ->assertJsonStructure([
+            'data', 'current_page', 'per_page', 'total', 'total_pages', 'next_page', 'prev_page',
+        ]);
 
     expect($response->json('current_page'))->toBe(1);
     expect($response->json('prev_page'))->toBeNull();
-
-    $company->delete();
-    $employer->delete();
 });
 
 test('company list items include open_positions count', function () {
-    $employer = makeFilterEmployer();
-    $company = makeCompany((string) $employer->_id);
-    $job = makeJob((string) $employer->_id);
+    filterCompany($this->employer);
+    filterJob($this->employer);
 
-    $response = $this->getJson('/api/companies');
+    $response = $this->getJson('/api/companies')->assertOk();
 
-    $response->assertStatus(200);
     foreach ($response->json('data') as $c) {
         expect($c)->toHaveKey('open_positions');
     }
-
-    $job->delete();
-    $company->delete();
-    $employer->delete();
 });
 
-// ── Company Filters ───────────────────────────────────────────
+// ── Company filters ────────────────────────────────────────────────
 
 test('filter companies by search name', function () {
-    $employer = makeFilterEmployer();
-    $company = makeCompany((string) $employer->_id, ['name' => 'UniqueCompanyXYZ']);
+    filterCompany($this->employer, ['name' => 'UniqueCompanyXYZ']);
 
-    $response = $this->getJson('/api/companies?search=UniqueCompanyXYZ');
+    $response = $this->getJson('/api/companies?search=UniqueCompanyXYZ')->assertOk();
 
-    $response->assertStatus(200);
     $names = collect($response->json('data'))->pluck('name')->toArray();
     expect($names)->toContain('UniqueCompanyXYZ');
-
-    $company->delete();
-    $employer->delete();
 });
 
 test('filter companies by search location', function () {
-    $employer = makeFilterEmployer();
-    $company = makeCompany((string) $employer->_id, ['city' => 'Tripoli']);
+    filterCompany($this->employer, ['city' => 'Tripoli']);
 
-    $response = $this->getJson('/api/companies?search=Tripoli');
+    $response = $this->getJson('/api/companies?search=Tripoli')->assertOk();
 
-    $response->assertStatus(200);
-    $found = collect($response->json('data'))->first(fn($c) => str_contains($c['city'] ?? '', 'Tripoli'));
+    $found = collect($response->json('data'))->first(fn ($c) => str_contains($c['city'] ?? '', 'Tripoli'));
     expect($found)->not->toBeNull();
-
-    $company->delete();
-    $employer->delete();
 });
 
 test('filter companies by industry', function () {
-    $employer = makeFilterEmployer();
-    $company = makeCompany((string) $employer->_id, ['industry' => 'Healthcare']);
+    filterCompany($this->employer, ['industry' => 'Healthcare']);
 
-    $response = $this->getJson('/api/companies?industry=Healthcare');
+    $response = $this->getJson('/api/companies?industry=Healthcare')->assertOk();
 
-    $response->assertStatus(200);
     foreach ($response->json('data') as $c) {
         expect(strtolower($c['industry']))->toContain('healthcare');
     }
-
-    $company->delete();
-    $employer->delete();
 });
 
 test('filter companies by min_rating', function () {
-    $employer = makeFilterEmployer();
-    $company = makeCompany((string) $employer->_id, ['rating' => 4.8]);
+    filterCompany($this->employer, ['rating' => 4.8]);
 
-    $response = $this->getJson('/api/companies?min_rating=4.5');
+    $response = $this->getJson('/api/companies?min_rating=4.5')->assertOk();
 
-    $response->assertStatus(200);
     foreach ($response->json('data') as $c) {
         expect($c['rating'])->toBeGreaterThanOrEqual(4.5);
     }
-
-    $company->delete();
-    $employer->delete();
 });
 
 test('filter companies by company_size', function () {
-    $employer = makeFilterEmployer();
-    $company = makeCompany((string) $employer->_id, ['company_size' => '501_to_1000']);
+    filterCompany($this->employer, ['company_size' => '501_to_1000']);
 
-    $response = $this->getJson('/api/companies?company_size=501_to_1000');
+    $response = $this->getJson('/api/companies?company_size=501_to_1000')->assertOk();
 
-    $response->assertStatus(200);
-    $found = collect($response->json('data'))->first(fn($c) => ($c['company_size'] ?? '') === '501_to_1000');
+    $found = collect($response->json('data'))->first(fn ($c) => ($c['company_size'] ?? '') === '501_to_1000');
     expect($found)->not->toBeNull();
-
-    $company->delete();
-    $employer->delete();
 });
 
 test('company list respects per_page parameter', function () {
-    $employers = collect(range(1, 4))->map(function ($i) {
-        $emp = makeFilterEmployer();
-        makeCompany((string) $emp->_id, ['name' => "Company $i"]);
-        return $emp;
+    collect(range(1, 4))->each(function ($i) {
+        $emp = createUser('employer');
+        filterCompany($emp, ['name' => "Company $i"]);
     });
 
-    $response = $this->getJson('/api/companies?per_page=2');
+    $response = $this->getJson('/api/companies?per_page=2')->assertOk();
 
-    $response->assertStatus(200);
     expect(count($response->json('data')))->toBeLessThanOrEqual(2);
     expect($response->json('per_page'))->toBe(2);
-
-    $employers->each(function ($emp) {
-        CompanyProfile::where('employer_id', (string) $emp->_id)->delete();
-        $emp->delete();
-    });
 });
