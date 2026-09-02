@@ -1,136 +1,78 @@
 <?php
 
-// ============================================================
-// DO NOT DELETE — Tests for employer application status endpoint.
-// Covers: status when no application exists, pending status,
-// approved status, rejected status, and auth guard.
-// ============================================================
+// =============================================================================
+// EmployerStatusTest — GET /api/employer/status across application states.
+// =============================================================================
 
 use App\Models\Employer;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
-// ── Helpers ───────────────────────────────────────────────────
+beforeEach(function () {
+    Storage::fake('public');
+    [$this->user, $this->token] = userWithToken('employee');
+});
 
-function statusUser(): array
+/** Submit an employer application for the current user and return its id. */
+function applyAsEmployer(string $token, string $filename = 'doc.pdf'): string
 {
-    $user  = User::factory()->employee()->create();
-    $token = auth('api')->login($user);
-    return [$user, $token];
+    return test()->withToken($token)
+        ->postJson('/api/employer/apply', ['document' => UploadedFile::fake()->create($filename, 100, 'application/pdf')])
+        ->assertCreated()
+        ->json('employer._id');
 }
 
-function statusAdmin(): array
-{
-    $admin = User::factory()->admin()->create();
-    $token = auth('api')->login($admin);
-    return [$admin, $token];
-}
-
-// ── GET /api/employer/status ──────────────────────────────────
-
-test('status returns is_employer false and null latest when no application exists', function () {
-    [$user, $token] = statusUser();
-
-    $response = $this->withToken($token)->getJson('/api/employer/status');
-
-    $response->assertStatus(200)
-             ->assertJsonPath('is_employer', false)
-             ->assertJsonPath('latest', null);
-
-    $user->delete();
+test('status is false with no application', function () {
+    $this->withToken($this->token)->getJson('/api/employer/status')
+        ->assertOk()
+        ->assertJsonPath('is_employer', false)
+        ->assertJsonPath('latest', null);
 });
 
-test('status returns pending latest after submitting application', function () {
-    Storage::fake('public');
-    [$user, $token] = statusUser();
+test('status reflects a pending application after applying', function () {
+    applyAsEmployer($this->token);
 
-    $file = UploadedFile::fake()->create('doc.pdf', 100, 'application/pdf');
-    $this->withToken($token)->postJson('/api/employer/apply', ['document' => $file])
-         ->assertStatus(201);
-
-    $response = $this->withToken($token)->getJson('/api/employer/status');
-
-    $response->assertStatus(200)
-             ->assertJsonPath('is_employer', false)
-             ->assertJsonPath('latest.status', 'pending');
-
-    Employer::where('user_id', $user->_id)->delete();
-    $user->delete();
+    $this->withToken($this->token)->getJson('/api/employer/status')
+        ->assertOk()
+        ->assertJsonPath('is_employer', false)
+        ->assertJsonPath('latest.status', 'pending');
 });
 
-test('status returns approved and is_employer true after admin approves', function () {
-    Storage::fake('public');
-    [$user, $token]   = statusUser();
-    [$admin, $adminToken] = statusAdmin();
+test('status reflects the submitted document name', function () {
+    applyAsEmployer($this->token, 'my_license.pdf');
 
-    $file = UploadedFile::fake()->create('doc.pdf', 100, 'application/pdf');
-    $applyResponse = $this->withToken($token)->postJson('/api/employer/apply', ['document' => $file])
-         ->assertStatus(201);
-
-    $applicationId = $applyResponse->json('employer._id');
-
-    $this->withToken($adminToken)->postJson("/api/admin/employers/{$applicationId}/approve")
-         ->assertStatus(200);
-
-    // Re-login to get fresh token with updated user state
-    $updatedUser = User::find($user->_id);
-    $freshToken  = auth('api')->login($updatedUser);
-
-    $response = $this->withToken($freshToken)->getJson('/api/employer/status');
-
-    $response->assertStatus(200)
-             ->assertJsonPath('is_employer', true)
-             ->assertJsonPath('latest.status', 'approved');
-
-    Employer::where('user_id', $user->_id)->delete();
-    $user->delete();
-    $admin->delete();
+    expect($this->withToken($this->token)->getJson('/api/employer/status')->assertOk()->json('latest.document_name'))
+        ->toBe('my_license.pdf');
 });
 
-test('status returns rejected after admin rejects', function () {
-    Storage::fake('public');
-    [$user, $token]       = statusUser();
-    [$admin, $adminToken] = statusAdmin();
+test('status becomes approved after an admin approves', function () {
+    $applicationId = applyAsEmployer($this->token);
 
-    $file = UploadedFile::fake()->create('doc.pdf', 100, 'application/pdf');
-    $applyResponse = $this->withToken($token)->postJson('/api/employer/apply', ['document' => $file])
-         ->assertStatus(201);
+    $this->withToken(tokenFor('admin'))->postJson("/api/admin/employers/{$applicationId}/approve")->assertOk();
 
-    $applicationId = $applyResponse->json('employer._id');
+    // Re-authenticate to pick up the updated is_employer flag.
+    $freshToken = auth('api')->login(User::find($this->user->_id));
 
-    $this->withToken($adminToken)->postJson("/api/admin/employers/{$applicationId}/reject", [
-        'review_notes' => 'Docs incomplete.',
-    ])->assertStatus(200);
-
-    $response = $this->withToken($token)->getJson('/api/employer/status');
-
-    $response->assertStatus(200)
-             ->assertJsonPath('is_employer', false)
-             ->assertJsonPath('latest.status', 'rejected');
-
-    Employer::where('user_id', $user->_id)->delete();
-    $user->delete();
-    $admin->delete();
+    $this->withToken($freshToken)->getJson('/api/employer/status')
+        ->assertOk()
+        ->assertJsonPath('is_employer', true)
+        ->assertJsonPath('latest.status', 'approved');
 });
 
-test('status returns latest application document_name', function () {
-    Storage::fake('public');
-    [$user, $token] = statusUser();
+test('status becomes rejected after an admin rejects', function () {
+    $applicationId = applyAsEmployer($this->token);
 
-    $file = UploadedFile::fake()->create('my_license.pdf', 100, 'application/pdf');
-    $this->withToken($token)->postJson('/api/employer/apply', ['document' => $file])
-         ->assertStatus(201);
+    $this->withToken(tokenFor('admin'))
+        ->postJson("/api/admin/employers/{$applicationId}/reject", ['review_notes' => 'Docs incomplete.'])
+        ->assertOk();
 
-    $response = $this->withToken($token)->getJson('/api/employer/status');
-
-    $response->assertStatus(200);
-    expect($response->json('latest.document_name'))->toBe('my_license.pdf');
-
-    Employer::where('user_id', $user->_id)->delete();
-    $user->delete();
+    $this->withToken($this->token)->getJson('/api/employer/status')
+        ->assertOk()
+        ->assertJsonPath('is_employer', false)
+        ->assertJsonPath('latest.status', 'rejected');
 });
 
-test('unauthenticated user cannot check employer status', function () {
-    $this->getJson('/api/employer/status')->assertStatus(401);
+test('an unauthenticated user cannot check employer status', function () {
+    $this->getJson('/api/employer/status')->assertUnauthorized();
 });
