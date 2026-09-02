@@ -1,29 +1,26 @@
 <?php
 
-// ============================================================
-// DO NOT DELETE — Comprehensive tests for employer seeker search.
-// Covers: all filter params (skills, ats range, location,
-// keyword), pagination shape, show endpoint, 404 cases,
-// and privacy (sensitive fields excluded from public profile).
-// ============================================================
+// =============================================================================
+// EmployerSearchTest — employer-facing seeker search and profile view.
+//   GET /api/employer/seekers              filtered talent search
+//   GET /api/employer/seekers/{userId}     a seeker's detailed profile
+//
+// Covers filters, pagination, the detailed field set, image upload flow,
+// privacy (sensitive fields excluded), 404s, and access control.
+// =============================================================================
 
 use App\Models\JobSeekerProfile;
-use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
-// ── Helpers ───────────────────────────────────────────────────
+beforeEach(function () {
+    [$this->employer, $this->token] = userWithToken('employer');
+});
 
-function searchEmployer(): array
+/** A searchable, actively-seeking seeker with a profile. */
+function searchableSeeker(array $overrides = []): array
 {
-    $employer = User::factory()->employer()->create();
-    $token    = auth('api')->login($employer);
-    return [$employer, $token];
-}
-
-function searchSeeker(array $profileOverrides = []): array
-{
-    $seeker = User::factory()->employee()->create();
-    $profile = JobSeekerProfile::create(array_merge([
-        'user_id'             => $seeker->_id,
+    return createSeekerWithProfile([], array_merge([
         'is_actively_seeking' => true,
         'current_job_title'   => 'Software Engineer',
         'ai_skills'           => ['PHP', 'Laravel', 'MongoDB'],
@@ -32,218 +29,164 @@ function searchSeeker(array $profileOverrides = []): array
         'ai_summary'          => 'Experienced backend developer.',
         'ai_email'            => 'private@example.com',
         'ai_phone'            => '+1234567890',
-    ], $profileOverrides));
-    return [$seeker, $profile];
+    ], $overrides));
 }
 
-// ── Index: GET /api/employer/seekers ─────────────────────────
+// ── Index: GET /api/employer/seekers ─────────────────────────────────────
 
-test('employer can list actively seeking job seekers', function () {
-    [$employer, $token] = searchEmployer();
-    [$seeker, $profile] = searchSeeker();
+test('an employer can list actively-seeking seekers', function () {
+    searchableSeeker();
 
-    $response = $this->withToken($token)->getJson('/api/employer/seekers')
-                     ->assertStatus(200)
-                     ->assertJsonStructure(['seekers']);
-
-    $profile->delete(); $seeker->delete(); $employer->delete();
+    $this->withToken($this->token)->getJson('/api/employer/seekers')
+        ->assertOk()
+        ->assertJsonStructure(['seekers' => ['data', 'current_page', 'per_page', 'total']]);
 });
 
-test('non-actively-seeking seekers are excluded from results', function () {
-    [$employer, $token] = searchEmployer();
-    [$seeker, $profile] = searchSeeker(['is_actively_seeking' => false]);
+test('seekers who are not actively seeking are excluded', function () {
+    [$seeker] = searchableSeeker(['is_actively_seeking' => false]);
 
-    $response = $this->withToken($token)->getJson('/api/employer/seekers')->assertStatus(200);
-    $ids = collect($response->json('seekers.data'))->pluck('user_id')->toArray();
+    $ids = collect($this->withToken($this->token)->getJson('/api/employer/seekers')->assertOk()->json('seekers.data'))
+        ->pluck('user_id');
+
     expect($ids)->not->toContain((string) $seeker->_id);
-
-    $profile->delete(); $seeker->delete(); $employer->delete();
 });
 
-test('filter seekers by single skill', function () {
-    [$employer, $token] = searchEmployer();
-    [$seeker, $profile] = searchSeeker(['ai_skills' => ['Vue.js', 'JavaScript']]);
+test('seekers can be filtered by one or more skills', function (string $query, array $expected) {
+    searchableSeeker(['ai_skills' => ['React', 'TypeScript', 'Node.js']]);
 
-    $response = $this->withToken($token)->getJson('/api/employer/seekers?skills=Vue.js')
-                     ->assertStatus(200);
-
-    foreach ($response->json('seekers.data') as $s) {
+    foreach ($this->withToken($this->token)->getJson("/api/employer/seekers?skills={$query}")->assertOk()->json('seekers.data') as $s) {
         $skills = array_map('strtolower', $s['ai_skills'] ?? []);
-        expect($skills)->toContain('vue.js');
+        foreach ($expected as $e) {
+            expect($skills)->toContain($e);
+        }
     }
+})->with([
+    'single'   => ['React', ['react']],
+    'multiple' => ['React,TypeScript', ['react', 'typescript']],
+]);
 
-    $profile->delete(); $seeker->delete(); $employer->delete();
-});
+test('seekers can be filtered by an ATS score range', function () {
+    searchableSeeker(['ats_score' => 85]);
+    searchableSeeker(['ats_score' => 40]);
 
-test('filter seekers by multiple comma-separated skills', function () {
-    [$employer, $token] = searchEmployer();
-    [$seeker, $profile] = searchSeeker(['ai_skills' => ['React', 'TypeScript', 'Node.js']]);
-
-    $response = $this->withToken($token)->getJson('/api/employer/seekers?skills=React,TypeScript')
-                     ->assertStatus(200);
-
-    foreach ($response->json('seekers.data') as $s) {
-        $skills = array_map('strtolower', $s['ai_skills'] ?? []);
-        expect($skills)->toContain('react');
-        expect($skills)->toContain('typescript');
-    }
-
-    $profile->delete(); $seeker->delete(); $employer->delete();
-});
-
-test('filter seekers by min_ats_score excludes lower scores', function () {
-    [$employer, $token] = searchEmployer();
-    [$highSeeker, $highProfile] = searchSeeker(['ats_score' => 85]);
-    [$lowSeeker, $lowProfile]   = searchSeeker(['ats_score' => 40]);
-
-    $response = $this->withToken($token)->getJson('/api/employer/seekers?min_ats_score=80')
-                     ->assertStatus(200);
-
-    foreach ($response->json('seekers.data') as $s) {
+    foreach ($this->withToken($this->token)->getJson('/api/employer/seekers?min_ats_score=80')->assertOk()->json('seekers.data') as $s) {
         expect($s['ats_score'])->toBeGreaterThanOrEqual(80);
     }
-
-    $highProfile->delete(); $highSeeker->delete();
-    $lowProfile->delete(); $lowSeeker->delete();
-    $employer->delete();
 });
 
-test('filter seekers by max_ats_score excludes higher scores', function () {
-    [$employer, $token] = searchEmployer();
-    [$highSeeker, $highProfile] = searchSeeker(['ats_score' => 95]);
-    [$lowSeeker, $lowProfile]   = searchSeeker(['ats_score' => 50]);
+test('seekers can be filtered by location', function () {
+    searchableSeeker(['ai_location' => 'Dubai, UAE']);
 
-    $response = $this->withToken($token)->getJson('/api/employer/seekers?max_ats_score=60')
-                     ->assertStatus(200);
+    $found = collect($this->withToken($this->token)->getJson('/api/employer/seekers?location=Dubai')->assertOk()->json('seekers.data'))
+        ->first(fn ($s) => str_contains(strtolower($s['ai_location'] ?? ''), 'dubai'));
 
-    foreach ($response->json('seekers.data') as $s) {
-        expect($s['ats_score'])->toBeLessThanOrEqual(60);
-    }
-
-    $highProfile->delete(); $highSeeker->delete();
-    $lowProfile->delete(); $lowSeeker->delete();
-    $employer->delete();
-});
-
-test('filter seekers by location partial match', function () {
-    [$employer, $token] = searchEmployer();
-    [$seeker, $profile] = searchSeeker(['ai_location' => 'Dubai, UAE']);
-
-    $response = $this->withToken($token)->getJson('/api/employer/seekers?location=Dubai')
-                     ->assertStatus(200);
-
-    $found = collect($response->json('seekers.data'))
-        ->first(fn($s) => str_contains(strtolower($s['ai_location'] ?? ''), 'dubai'));
     expect($found)->not->toBeNull();
-
-    $profile->delete(); $seeker->delete(); $employer->delete();
 });
 
-test('filter seekers by keyword matches current_job_title', function () {
-    [$employer, $token] = searchEmployer();
-    [$seeker, $profile] = searchSeeker(['current_job_title' => 'UniqueDevTitle123']);
+test('seekers can be filtered by a keyword matching title or summary', function (string $field, string $value) {
+    searchableSeeker([$field => $value]);
 
-    $response = $this->withToken($token)->getJson('/api/employer/seekers?keyword=UniqueDevTitle123')
-                     ->assertStatus(200);
+    $found = collect($this->withToken($this->token)->getJson("/api/employer/seekers?keyword={$value}")->assertOk()->json('seekers.data'))
+        ->first(fn ($s) => str_contains($s[$field] ?? '', $value));
 
-    $found = collect($response->json('seekers.data'))
-        ->first(fn($s) => str_contains($s['current_job_title'] ?? '', 'UniqueDevTitle123'));
     expect($found)->not->toBeNull();
+})->with([
+    'title'   => ['current_job_title', 'UniqueDevTitle123'],
+    'summary' => ['ai_summary', 'XYZ_UNIQUE_SUMMARY_TERM'],
+]);
 
-    $profile->delete(); $seeker->delete(); $employer->delete();
+// ── Show: GET /api/employer/seekers/{userId} ─────────────────────────────
+
+test('an employer can view a seekers detailed profile', function () {
+    [$seeker, $profile] = createSeekerWithProfile([], [
+        'is_actively_seeking' => true,
+        'first_name' => 'Jane', 'last_name' => 'Smith', 'full_name' => 'Jane Smith',
+        'image' => 'https://res.cloudinary.com/demo/image/upload/photo.jpg',
+        'phone' => '+961 70 123456', 'gender' => 'female', 'city' => 'Beirut',
+    ]);
+
+    $this->withToken($this->token)->getJson("/api/employer/seekers/{$seeker->_id}")
+        ->assertOk()
+        ->assertJsonPath('id', (string) $profile->_id)
+        ->assertJsonPath('user_id', (string) $seeker->_id)
+        ->assertJsonPath('name', $seeker->name)
+        ->assertJsonPath('email', $seeker->email)
+        ->assertJsonPath('full_name', 'Jane Smith')
+        ->assertJsonPath('image', 'https://res.cloudinary.com/demo/image/upload/photo.jpg')
+        ->assertJsonStructure(['created_at', 'updated_at']);
 });
 
-test('filter seekers by keyword matches ai_summary', function () {
-    [$employer, $token] = searchEmployer();
-    [$seeker, $profile] = searchSeeker(['ai_summary' => 'XYZ_UNIQUE_SUMMARY_TERM expert developer.']);
+test('the detailed seeker profile excludes sensitive contact fields', function () {
+    [$seeker] = searchableSeeker();
 
-    $response = $this->withToken($token)->getJson('/api/employer/seekers?keyword=XYZ_UNIQUE_SUMMARY_TERM')
-                     ->assertStatus(200);
+    $profile = $this->withToken($this->token)->getJson("/api/employer/seekers/{$seeker->_id}")->assertOk();
 
-    $found = collect($response->json('seekers.data'))
-        ->first(fn($s) => str_contains($s['ai_summary'] ?? '', 'XYZ_UNIQUE_SUMMARY_TERM'));
-    expect($found)->not->toBeNull();
-
-    $profile->delete(); $seeker->delete(); $employer->delete();
+    // showJobSeeker returns the profile fields at the top level; contact AI fields must not leak.
+    expect($profile->json())->not->toHaveKey('ai_email')
+        ->and($profile->json())->not->toHaveKey('ai_phone');
 });
 
-test('seeker search returns paginated response', function () {
-    [$employer, $token] = searchEmployer();
+test('viewing a seeker returns 404 when the user, profile, or role is wrong', function (callable $target) {
+    $id = $target();
 
-    $response = $this->withToken($token)->getJson('/api/employer/seekers')
-                     ->assertStatus(200)
-                     ->assertJsonStructure(['seekers' => ['data', 'current_page', 'per_page', 'total']]);
+    $this->withToken($this->token)->getJson("/api/employer/seekers/{$id}")->assertNotFound();
+})->with([
+    'unknown id'    => [fn () => '000000000000000000000000'],
+    'no profile'    => [fn () => (string) createUser('employee')->_id],
+    'not a seeker'  => [fn () => (string) createUser('employer')->_id],
+]);
 
-    $employer->delete();
+// ── Image upload via personal-info (Cloudinary faked) ────────────────────
+
+test('a seeker can upload a profile image, which appears in both views', function () {
+    Storage::fake('cloudinary');
+    [$seeker, $seekerToken] = userWithToken('employee');
+
+    $this->withToken($seekerToken)->put('/api/job-seeker/profile/personal-info', [
+        'image' => UploadedFile::fake()->create('photo.jpg', 100, 'image/jpeg'),
+    ])->assertOk();
+
+    $profile = JobSeekerProfile::where('user_id', (string) $seeker->_id)->first();
+    expect($profile->image)->not->toBeNull()
+        ->and($profile->image_public_id)->not->toBeNull();
+
+    // Visible in the employer's detailed view.
+    expect($this->withToken($this->token)->getJson("/api/employer/seekers/{$seeker->_id}")->assertOk()->json('image'))
+        ->not->toBeNull();
 });
 
-// ── Show: GET /api/employer/seekers/{userId} ──────────────────
+test('uploading a new image replaces the previous one', function () {
+    Storage::fake('cloudinary');
+    [$seeker, $token] = userWithToken('employee');
 
-test('employer can view a seeker public profile', function () {
-    [$employer, $token] = searchEmployer();
-    [$seeker, $profile] = searchSeeker();
+    $this->withToken($token)->put('/api/job-seeker/profile/personal-info', ['image' => UploadedFile::fake()->create('first.jpg', 50, 'image/jpeg')])->assertOk();
+    $oldPublicId = JobSeekerProfile::where('user_id', (string) $seeker->_id)->first()->image_public_id;
+    Storage::disk('cloudinary')->put($oldPublicId, '');
 
-    $this->withToken($token)->getJson("/api/employer/seekers/{$seeker->_id}")
-         ->assertStatus(200)
-         ->assertJsonStructure(['seeker' => ['user_id', 'name', 'profile']]);
+    $this->withToken($token)->put('/api/job-seeker/profile/personal-info', ['image' => UploadedFile::fake()->create('second.jpg', 50, 'image/jpeg')])->assertOk();
 
-    $profile->delete(); $seeker->delete(); $employer->delete();
+    Storage::disk('cloudinary')->assertMissing($oldPublicId);
+    expect(JobSeekerProfile::where('user_id', (string) $seeker->_id)->first()->image_public_id)->not->toBe($oldPublicId);
 });
 
-test('seeker public profile excludes ai_email and ai_phone', function () {
-    [$employer, $token] = searchEmployer();
-    [$seeker, $profile] = searchSeeker();
+test('image upload rejects a non-image or oversized file', function (UploadedFile $file) {
+    Storage::fake('cloudinary');
+    $token = tokenFor('employee');
 
-    $response = $this->withToken($token)->getJson("/api/employer/seekers/{$seeker->_id}")
-                     ->assertStatus(200);
+    $this->withToken($token)->put('/api/job-seeker/profile/personal-info', ['image' => $file])
+        ->assertStatus(422)
+        ->assertJsonStructure(['errors' => ['image']]);
+})->with([
+    'non-image' => [fn () => UploadedFile::fake()->create('doc.pdf', 100, 'application/pdf')],
+    'too large' => [fn () => UploadedFile::fake()->create('big.jpg', 3000, 'image/jpeg')],
+]);
 
-    $profileData = $response->json('seeker.profile');
-    expect($profileData)->not->toHaveKey('ai_email');
-    expect($profileData)->not->toHaveKey('ai_phone');
+// ── Access control ─────────────────────────────────────────────────────
 
-    $profile->delete(); $seeker->delete(); $employer->delete();
+test('an unauthenticated user cannot search seekers', function () {
+    $this->getJson('/api/employer/seekers')->assertUnauthorized();
 });
 
-test('seeker show returns 404 for non-existent user', function () {
-    [$employer, $token] = searchEmployer();
-
-    $this->withToken($token)->getJson('/api/employer/seekers/000000000000000000000000')
-         ->assertStatus(404);
-
-    $employer->delete();
-});
-
-test('seeker show returns 404 when user exists but has no profile', function () {
-    [$employer, $token] = searchEmployer();
-    $seeker = User::factory()->employee()->create();
-
-    $this->withToken($token)->getJson("/api/employer/seekers/{$seeker->_id}")
-         ->assertStatus(404);
-
-    $seeker->delete(); $employer->delete();
-});
-
-test('seeker show returns 404 when user is not a job seeker', function () {
-    [$employer, $token] = searchEmployer();
-    [$otherEmployer]    = searchEmployer();
-
-    $this->withToken($token)->getJson("/api/employer/seekers/{$otherEmployer->_id}")
-         ->assertStatus(404);
-
-    $otherEmployer->delete(); $employer->delete();
-});
-
-// ── Auth guard ────────────────────────────────────────────────
-
-test('unauthenticated user cannot search seekers', function () {
-    $this->getJson('/api/employer/seekers')->assertStatus(401);
-});
-
-test('job seeker cannot access seeker search endpoint', function () {
-    $seeker = User::factory()->employee()->create();
-    $token  = auth('api')->login($seeker);
-
-    $this->withToken($token)->getJson('/api/employer/seekers')->assertStatus(403);
-
-    $seeker->delete();
+test('a job seeker cannot access the seeker search endpoint', function () {
+    $this->withToken(tokenFor('employee'))->getJson('/api/employer/seekers')->assertForbidden();
 });

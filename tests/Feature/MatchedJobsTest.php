@@ -1,199 +1,108 @@
 <?php
 
-// ============================================================
-// Tests for GET /api/job-seeker/matched-jobs
-// All users created via factory + auth()->login() to avoid bcrypt.
-// ============================================================
+// =============================================================================
+// MatchedJobsTest — GET /api/job-seeker/matched-jobs
+//
+// Returns active jobs scored against the seeker's profile (skills + location),
+// excluding jobs already applied to.
+// =============================================================================
 
 use App\Models\Application;
-use App\Models\JobPost;
 use App\Models\JobSeekerProfile;
 use App\Models\User;
 
-// ── Helpers ───────────────────────────────────────────────────
-
-function mjSeeker(array $profileAttrs = []): array
-{
-    $user  = User::factory()->employee()->create();
-    $token = auth('api')->login($user);
-
-    if (!empty($profileAttrs)) {
-        JobSeekerProfile::updateOrCreate(
-            ['user_id' => (string) $user->_id],
-            $profileAttrs
-        );
-    }
-
-    return [$user, $token];
-}
-
-function mjJob(string $employerId, array $overrides = []): JobPost
-{
-    return JobPost::create(array_merge([
-        'title'        => 'Test Job',
-        'description'  => 'D',
-        'company_name' => 'TestCo',
-        'job_type'     => 'full_time',
-        'city'         => 'Beirut',
-        'vacancies'    => 1,
-        'communication_method' => 'by_forsa',
-        'employer_id'  => $employerId,
-        'is_active'    => true,
-    ], $overrides));
-}
-
-afterEach(function () {
-    JobPost::truncate();
-    Application::truncate();
-});
-
 beforeEach(function () {
-    JobPost::truncate();
-    Application::truncate();
+    [$this->seeker, $this->token] = userWithToken('employee');
+    $this->employer = createUser('employer');
 });
 
-// ── GET /api/job-seeker/matched-jobs ─────────────────────────
+/** Give the current seeker a profile with the given attributes. */
+function matchProfile(array $attributes): void
+{
+    JobSeekerProfile::updateOrCreate(['user_id' => (string) test()->seeker->_id], $attributes);
+}
 
-test('returns active jobs with match_score field', function () {
-    [$seeker, $token] = mjSeeker();
-    $employer = User::factory()->employer()->create();
-    mjJob((string) $employer->_id);
+test('matched jobs include a match_score', function () {
+    createJob($this->employer);
 
-    $res = $this->withToken($token)->getJson('/api/job-seeker/matched-jobs')->assertOk();
-
-    expect($res->json('data'))->toHaveCount(1);
-    expect($res->json('data.0'))->toHaveKey('match_score');
-
-    $employer->delete(); $seeker->delete();
+    $this->withToken($this->token)->getJson('/api/job-seeker/matched-jobs')
+        ->assertOk()
+        ->assertJsonCount(1, 'data')
+        ->assertJsonStructure(['data' => [['match_score']]]);
 });
 
-test('jobs with matching skills score higher', function () {
-    [$seeker, $token] = mjSeeker(['ai_skills' => ['PHP', 'Laravel', 'JavaScript']]);
-    $employer = User::factory()->employer()->create();
+test('jobs matching the seekers skills score higher', function () {
+    matchProfile(['ai_skills' => ['PHP', 'Laravel', 'JavaScript']]);
+    createJob($this->employer, ['title' => 'PHP Developer', 'roles' => ['Backend', 'PHP'], 'tags' => ['Laravel']]);
+    createJob($this->employer, ['title' => 'iOS Developer', 'roles' => ['Mobile', 'iOS'], 'tags' => ['Swift']]);
 
-    mjJob((string) $employer->_id, ['title' => 'PHP Developer', 'roles' => ['Backend', 'PHP'], 'tags' => ['Laravel']]);
-    mjJob((string) $employer->_id, ['title' => 'iOS Developer', 'roles' => ['Mobile', 'iOS'], 'tags' => ['Swift']]);
+    $jobs = $this->withToken($this->token)->getJson('/api/job-seeker/matched-jobs')->assertOk()->json('data');
 
-    $res = $this->withToken($token)->getJson('/api/job-seeker/matched-jobs')->assertOk();
-
-    $jobs = $res->json('data');
-    expect($jobs)->toHaveCount(2);
-    expect($jobs[0]['title'])->toBe('PHP Developer');
-    expect($jobs[0]['match_score'])->toBe(4); // PHP +2, Laravel +2
-    expect($jobs[1]['title'])->toBe('iOS Developer');
-    expect($jobs[1]['match_score'])->toBe(0);
-
-    $employer->delete(); $seeker->delete();
+    expect($jobs[0]['title'])->toBe('PHP Developer')
+        ->and($jobs[0]['match_score'])->toBe(4) // PHP +2, Laravel +2
+        ->and($jobs[1]['match_score'])->toBe(0);
 });
 
-test('location match adds 3 to score', function () {
-    [$seeker, $token] = mjSeeker(['ai_location' => 'Beirut, Lebanon', 'ai_skills' => []]);
-    $employer = User::factory()->employer()->create();
+test('a location match adds to the score', function () {
+    matchProfile(['ai_location' => 'Beirut, Lebanon', 'ai_skills' => []]);
+    createJob($this->employer, ['title' => 'Beirut Job', 'city' => 'Beirut']);
+    createJob($this->employer, ['title' => 'Dubai Job', 'city' => 'Dubai']);
 
-    mjJob((string) $employer->_id, ['title' => 'Beirut Job', 'city' => 'Beirut']);
-    mjJob((string) $employer->_id, ['title' => 'Dubai Job',  'city' => 'Dubai']);
+    $jobs = collect($this->withToken($this->token)->getJson('/api/job-seeker/matched-jobs')->assertOk()->json('data'));
 
-    $res = $this->withToken($token)->getJson('/api/job-seeker/matched-jobs')->assertOk();
-
-    $jobs = $res->json('data');
-    $beirut = collect($jobs)->firstWhere('title', 'Beirut Job');
-    $dubai  = collect($jobs)->firstWhere('title', 'Dubai Job');
-
-    expect($beirut['match_score'])->toBe(3);
-    expect($dubai['match_score'])->toBe(0);
-
-    $employer->delete(); $seeker->delete();
+    expect($jobs->firstWhere('title', 'Beirut Job')['match_score'])->toBe(3)
+        ->and($jobs->firstWhere('title', 'Dubai Job')['match_score'])->toBe(0);
 });
 
-test('already-applied jobs are excluded', function () {
-    [$seeker, $token] = mjSeeker();
-    $employer = User::factory()->employer()->create();
+test('jobs already applied to are excluded', function () {
+    $applied = createJob($this->employer, ['title' => 'Job 1']);
+    createJob($this->employer, ['title' => 'Job 2']);
+    Application::create(['user_id' => (string) $this->seeker->_id, 'job_post_id' => (string) $applied->_id, 'status' => 'pending', 'applied_at' => now()]);
 
-    $job1 = mjJob((string) $employer->_id, ['title' => 'Job 1']);
-    $job2 = mjJob((string) $employer->_id, ['title' => 'Job 2']);
+    $titles = collect($this->withToken($this->token)->getJson('/api/job-seeker/matched-jobs')->assertOk()->json('data'))->pluck('title');
 
-    Application::create([
-        'user_id'     => (string) $seeker->_id,
-        'job_post_id' => (string) $job1->_id,
-        'status'      => 'pending',
-        'applied_at'  => now(),
-    ]);
-
-    $res = $this->withToken($token)->getJson('/api/job-seeker/matched-jobs')->assertOk();
-
-    $titles = collect($res->json('data'))->pluck('title')->toArray();
-    expect($titles)->not->toContain('Job 1');
-    expect($titles)->toContain('Job 2');
-
-    $employer->delete(); $seeker->delete();
+    expect($titles)->not->toContain('Job 1')->toContain('Job 2');
 });
 
-test('seeker with no profile gets all active jobs with match_score 0', function () {
-    [$seeker, $token] = mjSeeker();
-    JobSeekerProfile::where('user_id', (string) $seeker->_id)->delete();
+test('a seeker with no profile gets all active jobs with match_score 0', function () {
+    JobSeekerProfile::where('user_id', (string) $this->seeker->_id)->delete();
+    createJob($this->employer, ['title' => 'Active Job']);
 
-    $employer = User::factory()->employer()->create();
-    mjJob((string) $employer->_id, ['title' => 'Active Job']);
-
-    $res = $this->withToken($token)->getJson('/api/job-seeker/matched-jobs')->assertOk();
-
-    expect($res->json('data'))->toHaveCount(1);
-    expect($res->json('data.0.match_score'))->toBe(0);
-
-    $employer->delete(); $seeker->delete();
+    $this->withToken($this->token)->getJson('/api/job-seeker/matched-jobs')
+        ->assertOk()
+        ->assertJsonCount(1, 'data')
+        ->assertJsonPath('data.0.match_score', 0);
 });
 
 test('inactive jobs are not returned', function () {
-    [$seeker, $token] = mjSeeker();
-    $employer = User::factory()->employer()->create();
+    createJob($this->employer, ['title' => 'Active', 'is_active' => true]);
+    createJob($this->employer, ['title' => 'Inactive', 'is_active' => false]);
 
-    mjJob((string) $employer->_id, ['title' => 'Active',   'is_active' => true]);
-    mjJob((string) $employer->_id, ['title' => 'Inactive', 'is_active' => false]);
+    $titles = collect($this->withToken($this->token)->getJson('/api/job-seeker/matched-jobs')->assertOk()->json('data'))->pluck('title');
 
-    $res = $this->withToken($token)->getJson('/api/job-seeker/matched-jobs')->assertOk();
-
-    $titles = collect($res->json('data'))->pluck('title')->toArray();
-    expect($titles)->toContain('Active');
-    expect($titles)->not->toContain('Inactive');
-
-    $employer->delete(); $seeker->delete();
+    expect($titles)->toContain('Active')->not->toContain('Inactive');
 });
 
-test('returns correct pagination shape', function () {
-    [$seeker, $token] = mjSeeker();
+test('the min_score filter excludes low-scoring jobs', function () {
+    matchProfile(['ai_skills' => ['PHP', 'Laravel']]);
+    createJob($this->employer, ['title' => 'High Match', 'roles' => ['PHP'], 'tags' => ['Laravel']]);
+    createJob($this->employer, ['title' => 'No Match']);
 
-    $res = $this->withToken($token)->getJson('/api/job-seeker/matched-jobs')->assertOk();
+    $titles = collect($this->withToken($this->token)->getJson('/api/job-seeker/matched-jobs?min_score=3')->assertOk()->json('data'))->pluck('title');
 
-    expect($res->json())->toHaveKeys(['data', 'current_page', 'per_page', 'total', 'total_pages', 'next_page', 'prev_page']);
-
-    $seeker->delete();
+    expect($titles)->toContain('High Match')->not->toContain('No Match');
 });
 
-test('unauthenticated user cannot access matched jobs', function () {
+test('the response has the standard pagination shape', function () {
+    $this->withToken($this->token)->getJson('/api/job-seeker/matched-jobs')
+        ->assertOk()
+        ->assertJsonStructure(['data', 'current_page', 'per_page', 'total', 'total_pages', 'next_page', 'prev_page']);
+});
+
+test('an unauthenticated user cannot access matched jobs', function () {
     $this->getJson('/api/job-seeker/matched-jobs')->assertUnauthorized();
 });
 
-test('employer cannot access job seeker matched jobs', function () {
-    $employer = User::factory()->employer()->create();
-    $token    = auth('api')->login($employer);
-
-    $this->withToken($token)->getJson('/api/job-seeker/matched-jobs')->assertForbidden();
-
-    $employer->delete();
-});
-
-test('min_score filter works', function () {
-    [$seeker, $token] = mjSeeker(['ai_skills' => ['PHP', 'Laravel']]);
-    $employer = User::factory()->employer()->create();
-
-    mjJob((string) $employer->_id, ['title' => 'High Match', 'roles' => ['PHP'], 'tags' => ['Laravel']]);
-    mjJob((string) $employer->_id, ['title' => 'No Match']);
-
-    $res = $this->withToken($token)->getJson('/api/job-seeker/matched-jobs?min_score=3')->assertOk();
-
-    $titles = collect($res->json('data'))->pluck('title')->toArray();
-    expect($titles)->toContain('High Match');
-    expect($titles)->not->toContain('No Match');
-
-    $employer->delete(); $seeker->delete();
+test('an employer cannot access seeker matched jobs', function () {
+    $this->withToken(tokenFor('employer'))->getJson('/api/job-seeker/matched-jobs')->assertForbidden();
 });
