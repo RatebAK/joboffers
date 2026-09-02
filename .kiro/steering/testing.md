@@ -98,10 +98,17 @@ clearer failures.
 | `assertNotFound()` | `assertStatus(404)` |
 | `assertJsonPath('a.b', $v)` | manual `json()` digging |
 
-**Validation errors:** this API returns validation errors at the **top level**
-(`{"email": ["..."]}`), not under an `errors` key. Assert them with
-`assertStatus(422)` + `assertJsonStructure(['email'])`, NOT
-`assertJsonValidationErrors()` (which expects the `errors.*` shape).
+**Validation errors have two shapes in this app — check the controller:**
+- Endpoints using `$request->validate(...)` (e.g. AuthController, ResumeCoachController)
+  return errors at the **top level**: `{"email": ["..."]}`. Assert with
+  `assertStatus(422)` + `assertJsonStructure(['email'])`.
+- Endpoints using a manual `Validator::make(...)` that returns
+  `['errors' => $validator->errors()]` (e.g. ApplicationController, JobPostController,
+  CompanyProfileController) return `{"errors": {"field": [...]}}`. Assert with
+  `assertJsonStructure(['errors' => ['field']])`.
+
+`assertJsonValidationErrors()` expects Laravel's default `errors.*` shape and does
+NOT match the top-level shape — avoid it and assert the concrete structure instead.
 
 Status codes without a dedicated helper (409, 422) use `assertStatus()`. Chain
 expectations with `->and()`:

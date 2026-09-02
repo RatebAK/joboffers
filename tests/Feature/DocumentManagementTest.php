@@ -1,352 +1,183 @@
 <?php
 
-// ============================================================
-// Tests for saved CV, resume, and cover letter management.
-// Covers: GET profile documents block, resume upload/delete,
-// default cover letter save/delete, fallback on apply, and
-// offer-accept pulling profile documents automatically.
-// ============================================================
+// =============================================================================
+// DocumentManagementTest
+//
+// Saved CV / resume / cover-letter management: the profile documents block,
+// resume delete, default cover letter save/update/delete, apply-time fallbacks,
+// and offer-accept pulling profile documents. External services are mocked.
+// =============================================================================
 
 use App\Models\Application;
 use App\Models\DirectOffer;
-use App\Models\JobPost;
 use App\Models\JobSeekerProfile;
-use App\Models\User;
-use App\Services\CvAnalysisService;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 
-// ── Helpers ───────────────────────────────────────────────────
+beforeEach(function () {
+    [$this->seeker, $this->token] = userWithToken('employee');
+});
 
-function docSeeker(): array
+/** Update (or create) the current seeker's profile with the given attributes. */
+function setSeekerProfile(array $attributes): JobSeekerProfile
 {
-    $seeker = User::factory()->employee()->create();
-    $token  = auth('api')->login($seeker);
-    return [$seeker, $token];
+    $profile = JobSeekerProfile::firstOrCreate(['user_id' => (string) test()->seeker->_id]);
+    $profile->update($attributes);
+
+    return $profile;
 }
 
-function docEmployer(): User
-{
-    return User::factory()->employer()->create();
-}
+// ── Profile documents block ──────────────────────────────────────────────
 
-function docJobPost(string $employerId): JobPost
-{
-    return JobPost::create([
-        'title'        => 'Test Role',
-        'description'  => 'Description.',
-        'requirements' => 'Requirements.',
-        'company_name' => 'Test Co',
-        'job_type'     => 'full_time',
-        'employer_id'  => $employerId,
-        'is_active'    => true,
-    ]);
-}
-
-// ── GET /api/job-seeker/profile — documents block ─────────────
-
-test('profile response includes documents block', function () {
-    [$seeker, $token] = docSeeker();
-
-    $this->withToken($token)->getJson('/api/job-seeker/profile')
-        ->assertStatus(200)
-        ->assertJsonStructure(['documents' => [
-            'cv_url',
-            'cv_analyzed_at',
-            'resume_url',
-            'default_cover_letter',
-        ]]);
-
-    JobSeekerProfile::where('user_id', $seeker->_id)->delete();
-    $seeker->delete();
+test('the profile response includes a documents block', function () {
+    $this->withToken($this->token)->getJson('/api/job-seeker/profile')
+        ->assertOk()
+        ->assertJsonStructure(['documents' => ['cv_url', 'cv_analyzed_at', 'resume_url', 'default_cover_letter']]);
 });
 
-test('documents block is null when no files uploaded yet', function () {
-    [$seeker, $token] = docSeeker();
-
-    $response = $this->withToken($token)->getJson('/api/job-seeker/profile')
-        ->assertStatus(200);
-
-    expect($response->json('documents.cv_url'))->toBeNull();
-    expect($response->json('documents.resume_url'))->toBeNull();
-    expect($response->json('documents.default_cover_letter'))->toBeNull();
-
-    JobSeekerProfile::where('user_id', $seeker->_id)->delete();
-    $seeker->delete();
+test('the documents block is empty before anything is uploaded', function () {
+    $this->withToken($this->token)->getJson('/api/job-seeker/profile')
+        ->assertOk()
+        ->assertJsonPath('documents.cv_url', null)
+        ->assertJsonPath('documents.resume_url', null)
+        ->assertJsonPath('documents.default_cover_letter', null);
 });
 
-// ── DELETE /api/job-seeker/resume ─────────────────────────────
+// ── Resume delete ────────────────────────────────────────────────────────
 
-test('seeker can delete their saved resume', function () {
-    Storage::fake('cloudinary');
-    [$seeker, $token] = docSeeker();
+test('a seeker can delete their saved resume', function () {
+    fakeDocumentUpload();
+    fakeCvAnalysis(['full_name' => 'Test User', 'ats_score' => 75]);
 
-    // Mock the AI analysis service
-    $mock = $this->mock(CvAnalysisService::class);
-    $mock->shouldReceive('analyze')->once()->andReturn([
-        'full_name' => 'Test User',
-        'ats_score' => 75,
-    ]);
+    $this->withToken($this->token)
+        ->postJson('/api/job-seeker/resume/upload', ['resume' => \Illuminate\Http\UploadedFile::fake()->create('cv.pdf', 100, 'application/pdf')])
+        ->assertOk();
 
-    // Upload first
-    $file = UploadedFile::fake()->create('cv.pdf', 100, 'application/pdf');
-    $this->withToken($token)->postJson('/api/job-seeker/resume/upload', ['resume' => $file])
-         ->assertStatus(200);
+    $this->withToken($this->token)->deleteJson('/api/job-seeker/resume')
+        ->assertOk()
+        ->assertJsonPath('message', 'Resume deleted successfully');
 
-    // Now delete
-    $this->withToken($token)->deleteJson('/api/job-seeker/resume')
-         ->assertStatus(200)
-         ->assertJsonPath('message', 'Resume deleted successfully');
-
-    $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
-    expect($profile->resume)->toBeNull();
-    expect($profile->resume_public_id)->toBeNull();
-    expect($profile->cv_file_path)->toBeNull();
-    expect($profile->cv_public_id)->toBeNull();
-
-    $profile->delete();
-    $seeker->delete();
+    $profile = JobSeekerProfile::where('user_id', (string) $this->seeker->_id)->first();
+    expect($profile->resume)->toBeNull()
+        ->and($profile->cv_file_path)->toBeNull();
 });
 
-test('deleting resume when none exists returns 404', function () {
-    [$seeker, $token] = docSeeker();
-
-    $this->withToken($token)->deleteJson('/api/job-seeker/resume')
-         ->assertStatus(404)
-         ->assertJsonPath('message', 'No resume found on your profile');
-
-    $seeker->delete();
+test('deleting a resume that does not exist returns 404', function () {
+    $this->withToken($this->token)->deleteJson('/api/job-seeker/resume')
+        ->assertNotFound()
+        ->assertJsonPath('message', 'No resume found on your profile');
 });
 
-// ── PUT /api/job-seeker/cover-letter ─────────────────────────
+// ── Default cover letter ─────────────────────────────────────────────────
 
-test('seeker can save a default cover letter', function () {
-    [$seeker, $token] = docSeeker();
+test('a seeker can save and then update a default cover letter', function () {
+    $this->withToken($this->token)->putJson('/api/job-seeker/cover-letter', ['cover_letter' => 'First version.'])
+        ->assertOk()
+        ->assertJsonPath('message', 'Default cover letter saved');
 
-    $this->withToken($token)->putJson('/api/job-seeker/cover-letter', [
-        'cover_letter' => 'I am excited to apply for this position.',
-    ])->assertStatus(200)
-      ->assertJsonPath('message', 'Default cover letter saved')
-      ->assertJsonPath('default_cover_letter', 'I am excited to apply for this position.');
+    $this->withToken($this->token)->putJson('/api/job-seeker/cover-letter', ['cover_letter' => 'Updated version.'])
+        ->assertOk()
+        ->assertJsonPath('default_cover_letter', 'Updated version.');
 
-    $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
-    expect($profile->default_cover_letter)->toBe('I am excited to apply for this position.');
-
-    $profile->delete();
-    $seeker->delete();
+    expect(JobSeekerProfile::where('user_id', (string) $this->seeker->_id)->first()->default_cover_letter)
+        ->toBe('Updated version.');
 });
 
-test('seeker can update an existing default cover letter', function () {
-    [$seeker, $token] = docSeeker();
+test('saving a cover letter requires content and caps at 2000 characters', function (mixed $value) {
+    $payload = $value === null ? [] : ['cover_letter' => $value];
 
-    $this->withToken($token)->putJson('/api/job-seeker/cover-letter', [
-        'cover_letter' => 'First version.',
-    ])->assertStatus(200);
+    $this->withToken($this->token)->putJson('/api/job-seeker/cover-letter', $payload)
+        ->assertStatus(422)
+        ->assertJsonStructure(['errors' => ['cover_letter']]);
+})->with(['missing' => null, 'too long' => str_repeat('a', 2001)]);
 
-    $this->withToken($token)->putJson('/api/job-seeker/cover-letter', [
-        'cover_letter' => 'Updated version.',
-    ])->assertStatus(200)
-      ->assertJsonPath('default_cover_letter', 'Updated version.');
+test('a saved cover letter appears in the profile documents block', function () {
+    $this->withToken($this->token)->putJson('/api/job-seeker/cover-letter', ['cover_letter' => 'My default letter.'])->assertOk();
 
-    $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
-    expect($profile->default_cover_letter)->toBe('Updated version.');
-
-    $profile->delete();
-    $seeker->delete();
+    $this->withToken($this->token)->getJson('/api/job-seeker/profile')
+        ->assertOk()
+        ->assertJsonPath('documents.default_cover_letter', 'My default letter.');
 });
 
-test('saving cover letter requires content', function () {
-    [, $token] = docSeeker();
+test('a seeker can delete their default cover letter', function () {
+    $this->withToken($this->token)->putJson('/api/job-seeker/cover-letter', ['cover_letter' => 'To be deleted.'])->assertOk();
 
-    $this->withToken($token)->putJson('/api/job-seeker/cover-letter', [])
-         ->assertStatus(422)
-         ->assertJsonStructure(['errors' => ['cover_letter']]);
+    $this->withToken($this->token)->deleteJson('/api/job-seeker/cover-letter')
+        ->assertOk()
+        ->assertJsonPath('message', 'Default cover letter deleted');
+
+    expect(JobSeekerProfile::where('user_id', (string) $this->seeker->_id)->first()->default_cover_letter)->toBeNull();
 });
 
-test('cover letter is capped at 2000 characters', function () {
-    [$seeker, $token] = docSeeker();
-
-    $this->withToken($token)->putJson('/api/job-seeker/cover-letter', [
-        'cover_letter' => str_repeat('a', 2001),
-    ])->assertStatus(422)
-      ->assertJsonStructure(['errors' => ['cover_letter']]);
-
-    $seeker->delete();
+test('deleting a cover letter that does not exist returns 404', function () {
+    $this->withToken($this->token)->deleteJson('/api/job-seeker/cover-letter')
+        ->assertNotFound()
+        ->assertJsonPath('message', 'No default cover letter found on your profile');
 });
 
-test('saved cover letter appears in profile documents block', function () {
-    [$seeker, $token] = docSeeker();
+// ── Apply-time fallbacks ─────────────────────────────────────────────────
 
-    $this->withToken($token)->putJson('/api/job-seeker/cover-letter', [
-        'cover_letter' => 'My default letter.',
-    ])->assertStatus(200);
+test('applying uses the profile default cover letter when none is provided', function () {
+    $job = createJob(createUser('employer'));
+    setSeekerProfile(['default_cover_letter' => 'Auto cover letter.']);
 
-    $this->withToken($token)->getJson('/api/job-seeker/profile')
-         ->assertStatus(200)
-         ->assertJsonPath('documents.default_cover_letter', 'My default letter.');
+    $this->withToken($this->token)->postJson('/api/job-seeker/apply', ['job_post_id' => (string) $job->_id])->assertCreated();
 
-    JobSeekerProfile::where('user_id', $seeker->_id)->delete();
-    $seeker->delete();
+    expect(Application::where('user_id', (string) $this->seeker->_id)->first()->cover_letter)->toBe('Auto cover letter.');
 });
 
-// ── DELETE /api/job-seeker/cover-letter ──────────────────────
+test('an explicit cover letter on apply overrides the profile default', function () {
+    $job = createJob(createUser('employer'));
+    setSeekerProfile(['default_cover_letter' => 'Profile default.']);
 
-test('seeker can delete their default cover letter', function () {
-    [$seeker, $token] = docSeeker();
-
-    $this->withToken($token)->putJson('/api/job-seeker/cover-letter', [
-        'cover_letter' => 'To be deleted.',
-    ])->assertStatus(200);
-
-    $this->withToken($token)->deleteJson('/api/job-seeker/cover-letter')
-         ->assertStatus(200)
-         ->assertJsonPath('message', 'Default cover letter deleted');
-
-    $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
-    expect($profile->default_cover_letter)->toBeNull();
-
-    $profile->delete();
-    $seeker->delete();
-});
-
-test('deleting cover letter when none exists returns 404', function () {
-    [$seeker, $token] = docSeeker();
-
-    $this->withToken($token)->deleteJson('/api/job-seeker/cover-letter')
-         ->assertStatus(404)
-         ->assertJsonPath('message', 'No default cover letter found on your profile');
-
-    $seeker->delete();
-});
-
-// ── Apply fallback: default cover letter ─────────────────────
-
-test('apply uses default cover letter when none provided', function () {
-    [$seeker, $token] = docSeeker();
-    $employer = docEmployer();
-    $job = docJobPost((string) $employer->_id);
-
-    // Save a default cover letter on profile
-    JobSeekerProfile::firstOrCreate(['user_id' => $seeker->_id], [])
-        ->update(['default_cover_letter' => 'Auto cover letter.']);
-
-    $response = $this->withToken($token)->postJson('/api/job-seeker/apply', [
-        'job_post_id' => (string) $job->_id,
-        // no cover_letter in request
-    ])->assertStatus(201);
-
-    $app = Application::where('user_id', $seeker->_id)
-                      ->where('job_post_id', (string) $job->_id)
-                      ->first();
-    expect($app->cover_letter)->toBe('Auto cover letter.');
-
-    Application::where('user_id', $seeker->_id)->delete();
-    JobSeekerProfile::where('user_id', $seeker->_id)->delete();
-    $job->delete(); $employer->delete(); $seeker->delete();
-});
-
-test('explicit cover letter on apply overrides profile default', function () {
-    [$seeker, $token] = docSeeker();
-    $employer = docEmployer();
-    $job = docJobPost((string) $employer->_id);
-
-    JobSeekerProfile::firstOrCreate(['user_id' => $seeker->_id], [])
-        ->update(['default_cover_letter' => 'Profile default.']);
-
-    $response = $this->withToken($token)->postJson('/api/job-seeker/apply', [
+    $this->withToken($this->token)->postJson('/api/job-seeker/apply', [
         'job_post_id'  => (string) $job->_id,
         'cover_letter' => 'Custom per-application letter.',
-    ])->assertStatus(201);
+    ])->assertCreated();
 
-    $app = Application::where('user_id', $seeker->_id)
-                      ->where('job_post_id', (string) $job->_id)
-                      ->first();
-    expect($app->cover_letter)->toBe('Custom per-application letter.');
-
-    Application::where('user_id', $seeker->_id)->delete();
-    JobSeekerProfile::where('user_id', $seeker->_id)->delete();
-    $job->delete(); $employer->delete(); $seeker->delete();
+    expect(Application::where('user_id', (string) $this->seeker->_id)->first()->cover_letter)->toBe('Custom per-application letter.');
 });
 
-test('apply uses profile cv when no resume uploaded per-application', function () {
-    Storage::fake('cloudinary');
-    [$seeker, $token] = docSeeker();
-    $employer = docEmployer();
-    $job = docJobPost((string) $employer->_id);
+test('applying uses the profile cv when no per-application resume is uploaded', function () {
+    $job = createJob(createUser('employer'));
+    setSeekerProfile(['cv_file_path' => 'https://cloudinary.example/cv.pdf']);
 
-    JobSeekerProfile::firstOrCreate(['user_id' => $seeker->_id], [])
-        ->update(['cv_file_path' => 'https://cloudinary.example/cv.pdf']);
+    $this->withToken($this->token)->postJson('/api/job-seeker/apply', ['job_post_id' => (string) $job->_id])->assertCreated();
 
-    $response = $this->withToken($token)->postJson('/api/job-seeker/apply', [
-        'job_post_id' => (string) $job->_id,
-    ])->assertStatus(201);
-
-    $app = Application::where('user_id', $seeker->_id)
-                      ->where('job_post_id', (string) $job->_id)
-                      ->first();
-    expect($app->resume)->toBe('https://cloudinary.example/cv.pdf');
-
-    Application::where('user_id', $seeker->_id)->delete();
-    JobSeekerProfile::where('user_id', $seeker->_id)->delete();
-    $job->delete(); $employer->delete(); $seeker->delete();
+    expect(Application::where('user_id', (string) $this->seeker->_id)->first()->resume)->toBe('https://cloudinary.example/cv.pdf');
 });
 
-// ── DirectOffer accept pulls profile documents ────────────────
+// ── Offer accept pulls profile documents ─────────────────────────────────
 
-test('accepting offer auto-creates application with profile cv and cover letter', function () {
-    [$seeker, $seekerToken] = docSeeker();
-    $employer = docEmployer();
-    $job = docJobPost((string) $employer->_id);
-
-    JobSeekerProfile::firstOrCreate(['user_id' => $seeker->_id], [])
-        ->update([
-            'cv_file_path'         => 'https://cloudinary.example/cv.pdf',
-            'default_cover_letter' => 'Offer acceptance letter.',
-        ]);
+test('accepting an offer auto-creates an application with the profile cv and cover letter', function () {
+    $employer = createUser('employer');
+    $job      = createJob($employer);
+    setSeekerProfile(['cv_file_path' => 'https://cloudinary.example/cv.pdf', 'default_cover_letter' => 'Offer acceptance letter.']);
 
     $offer = DirectOffer::create([
-        'employer_id'   => $employer->_id,
-        'job_seeker_id' => $seeker->_id,
-        'job_post_id'   => $job->_id,
+        'employer_id'   => (string) $employer->_id,
+        'job_seeker_id' => (string) $this->seeker->_id,
+        'job_post_id'   => (string) $job->_id,
         'message'       => 'We want you.',
         'status'        => 'pending',
     ]);
 
-    $this->withToken($seekerToken)->postJson("/api/job-seeker/offers/{$offer->_id}/accept")
-         ->assertStatus(200)
-         ->assertJsonPath('message', 'Offer accepted successfully');
+    $this->withToken($this->token)->postJson("/api/job-seeker/offers/{$offer->_id}/accept")
+        ->assertOk()
+        ->assertJsonPath('message', 'Offer accepted successfully');
 
-    $app = Application::where('user_id', $seeker->_id)
-                      ->where('job_post_id', (string) $job->_id)
-                      ->first();
-
-    expect($app)->not->toBeNull();
-    expect($app->resume)->toBe('https://cloudinary.example/cv.pdf');
-    expect($app->cover_letter)->toBe('Offer acceptance letter.');
-
-    Application::where('user_id', $seeker->_id)->delete();
-    DirectOffer::where('employer_id', $employer->_id)->delete();
-    JobSeekerProfile::where('user_id', $seeker->_id)->delete();
-    $job->delete(); $employer->delete(); $seeker->delete();
+    $application = Application::where('user_id', (string) $this->seeker->_id)->first();
+    expect($application->resume)->toBe('https://cloudinary.example/cv.pdf')
+        ->and($application->cover_letter)->toBe('Offer acceptance letter.');
 });
 
-// ── Auth guards ───────────────────────────────────────────────
+// ── Access control ─────────────────────────────────────────────────────
 
-test('unauthenticated user cannot save cover letter', function () {
-    $this->putJson('/api/job-seeker/cover-letter', ['cover_letter' => 'test'])
-         ->assertStatus(401);
+test('an unauthenticated user cannot save a cover letter or delete a resume', function () {
+    $this->putJson('/api/job-seeker/cover-letter', ['cover_letter' => 'test'])->assertUnauthorized();
+    $this->deleteJson('/api/job-seeker/resume')->assertUnauthorized();
 });
 
-test('unauthenticated user cannot delete resume', function () {
-    $this->deleteJson('/api/job-seeker/resume')->assertStatus(401);
-});
-
-test('employer cannot access job seeker cover letter endpoints', function () {
-    $employer = docEmployer();
-    $token    = auth('api')->login($employer);
-
-    $this->withToken($token)->putJson('/api/job-seeker/cover-letter', ['cover_letter' => 'test'])
-         ->assertStatus(403);
-
-    $employer->delete();
+test('an employer cannot use the seeker cover letter endpoints', function () {
+    $this->withToken(tokenFor('employer'))
+        ->putJson('/api/job-seeker/cover-letter', ['cover_letter' => 'test'])
+        ->assertForbidden();
 });

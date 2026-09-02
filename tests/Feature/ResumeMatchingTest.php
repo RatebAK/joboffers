@@ -1,281 +1,102 @@
 <?php
 
-// ============================================================
-// Tests for AI resume-to-jobs matching endpoint.
-// Job seekers upload CV and get matched job recommendations.
-// ============================================================
+// =============================================================================
+// ResumeMatchingTest — GET /api/job-seeker/match-resume-to-jobs
+//
+// Uses the CV already stored on the seeker's profile to fetch AI-matched jobs.
+// The ResumeMatchingService (external AI) is mocked; no file is uploaded here.
+// =============================================================================
 
-use App\Models\User;
-use App\Services\ResumeMatchingService;
 use App\Exceptions\CvAnalysisException;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
+use App\Services\ResumeMatchingService;
 
-function resumeMatchSeeker(): array
+beforeEach(function () {
+    [$this->seeker, $this->token] = userWithToken('employee');
+});
+
+/** Give the current seeker a profile with an analysed CV. */
+function seekerWithCv(): void
 {
-    $seeker = User::factory()->employee()->create();
-    $token = auth('api')->login($seeker);
-
-    return [$seeker, $token];
+    \App\Models\JobSeekerProfile::create([
+        'user_id'      => (string) test()->seeker->_id,
+        'cv_file_path' => 'https://cloudinary.example/cv.pdf',
+    ]);
 }
 
-// ── POST /api/job-seeker/match-resume-to-jobs ─────────────────
+/** Mock the matching service to return the given payload. */
+function fakeMatching(array $result): void
+{
+    test()->mock(ResumeMatchingService::class)
+        ->shouldReceive('matchResumeToJobs')->once()->andReturn($result);
+}
 
-test('job seeker can match resume to jobs', function () {
-    Storage::fake('public');
-    [$seeker, $token] = resumeMatchSeeker();
-
-    $mock = $this->mock(ResumeMatchingService::class);
-    $mock->shouldReceive('matchResumeToJobs')
-        ->once()
-        ->andReturn([
-            'matches_found' => 25,
-            'recommended_jobs' => [
-                [
-                    'job_id' => 'job_001',
-                    'title' => 'Backend Python Developer',
-                    'company' => 'TechStream Solutions',
-                    'location' => 'Remote',
-                    'matched_skills_count' => 4,
-                    'match_percentage' => '66%',
-                    'ats_compatibility_score' => '69%',
-                ],
-                [
-                    'job_id' => 'job_002',
-                    'title' => 'Data Scientist',
-                    'company' => 'InsightData AI',
-                    'location' => 'Damascus, Syria',
-                    'matched_skills_count' => 3,
-                    'match_percentage' => '50%',
-                    'ats_compatibility_score' => '60%',
-                ],
-            ],
-        ]);
-
-    $file = UploadedFile::fake()->create('resume.pdf', 500, 'application/pdf');
-
-    $response = $this->withToken($token)->postJson('/api/job-seeker/match-resume-to-jobs', [
-        'resume' => $file,
+test('a seeker with a CV gets matched jobs', function () {
+    seekerWithCv();
+    fakeMatching([
+        'matches_found' => 2,
+        'jobs' => [
+            ['_id' => 'a', 'title' => 'Senior Laravel Developer', 'matched_skills' => ['php', 'laravel'], 'matched_skills_score' => 3],
+            ['_id' => 'b', 'title' => 'Backend Engineer', 'matched_skills' => ['php'], 'matched_skills_score' => 1],
+        ],
     ]);
 
-    $response->assertStatus(200)
-        ->assertJsonStructure([
-            'matches_found',
-            'recommended_jobs' => [
-                '*' => [
-                    'job_id',
-                    'title',
-                    'company',
-                    'location',
-                    'matched_skills_count',
-                    'match_percentage',
-                    'ats_compatibility_score',
-                    'job_url',
-                    'exists_in_db',
-                ],
-            ],
-        ])
-        ->assertJsonPath('matches_found', 25)
-        ->assertJsonPath('recommended_jobs.0.title', 'Backend Python Developer')
-        ->assertJsonPath('recommended_jobs.0.match_percentage', '66%');
-
-    $seeker->delete();
+    $this->withToken($this->token)
+        ->getJson('/api/job-seeker/match-resume-to-jobs')
+        ->assertOk()
+        ->assertJsonStructure(['matches_found', 'jobs'])
+        ->assertJsonPath('matches_found', 2)
+        ->assertJsonPath('jobs.0.title', 'Senior Laravel Developer');
 });
 
-test('resume matching returns correct structure', function () {
-    Storage::fake('public');
-    [$seeker, $token] = resumeMatchSeeker();
+test('matching returns an empty result set when nothing matches', function () {
+    seekerWithCv();
+    fakeMatching(['matches_found' => 0, 'jobs' => []]);
 
-    $mock = $this->mock(ResumeMatchingService::class);
-    $mock->shouldReceive('matchResumeToJobs')
-        ->once()
-        ->andReturn([
-            'matches_found' => 5,
-            'recommended_jobs' => [
-                [
-                    'job_id' => 'job_python_fastapi_001',
-                    'title' => 'Backend Web Engineer',
-                    'company' => 'Alpha Tech Solutions',
-                    'location' => 'Remote',
-                    'matched_skills_count' => 4,
-                    'match_percentage' => '66%',
-                    'ats_compatibility_score' => '69%',
-                ],
-            ],
-        ]);
-
-    $file = UploadedFile::fake()->create('cv.pdf', 100, 'application/pdf');
-
-    $response = $this->withToken($token)->postJson('/api/job-seeker/match-resume-to-jobs', [
-        'resume' => $file,
-    ]);
-
-    $response->assertStatus(200);
-    expect($response->json())->toHaveKeys(['matches_found', 'recommended_jobs']);
-    expect($response->json('recommended_jobs.0'))->toHaveKeys([
-        'job_id',
-        'title',
-        'company',
-        'location',
-        'matched_skills_count',
-        'match_percentage',
-        'ats_compatibility_score',
-        'job_url',
-        'exists_in_db',
-    ]);
-
-    $seeker->delete();
+    $this->withToken($this->token)
+        ->getJson('/api/job-seeker/match-resume-to-jobs')
+        ->assertOk()
+        ->assertJsonPath('matches_found', 0)
+        ->assertJsonPath('jobs', []);
 });
 
-test('resume matching requires resume file', function () {
-    [, $token] = resumeMatchSeeker();
-
-    $this->withToken($token)->postJson('/api/job-seeker/match-resume-to-jobs', [])
+test('matching requires a CV on the profile', function () {
+    // No profile CV set.
+    $this->withToken($this->token)
+        ->getJson('/api/job-seeker/match-resume-to-jobs')
         ->assertStatus(422)
-        ->assertJsonStructure(['errors' => ['resume']]);
+        ->assertJsonPath('message', 'No CV found on your profile. Please upload and analyze your CV first.');
 });
 
-test('resume matching accepts pdf files', function () {
-    Storage::fake('public');
-    [$seeker, $token] = resumeMatchSeeker();
-
-    $mock = $this->mock(ResumeMatchingService::class);
-    $mock->shouldReceive('matchResumeToJobs')
-        ->once()
-        ->andReturn(['matches_found' => 0, 'recommended_jobs' => []]);
-
-    $file = UploadedFile::fake()->create('resume.pdf', 100, 'application/pdf');
-
-    $this->withToken($token)->postJson('/api/job-seeker/match-resume-to-jobs', [
-        'resume' => $file,
-    ])->assertStatus(200);
-
-    $seeker->delete();
-});
-
-test('resume matching accepts docx files', function () {
-    Storage::fake('public');
-    [$seeker, $token] = resumeMatchSeeker();
-
-    $mock = $this->mock(ResumeMatchingService::class);
-    $mock->shouldReceive('matchResumeToJobs')
-        ->once()
-        ->andReturn(['matches_found' => 0, 'recommended_jobs' => []]);
-
-    $file = UploadedFile::fake()->create('resume.docx', 100, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-
-    $this->withToken($token)->postJson('/api/job-seeker/match-resume-to-jobs', [
-        'resume' => $file,
-    ])->assertStatus(200);
-
-    $seeker->delete();
-});
-
-test('resume matching rejects invalid file types', function () {
-    Storage::fake('public');
-    [, $token] = resumeMatchSeeker();
-
-    $file = UploadedFile::fake()->create('resume.txt', 100, 'text/plain');
-
-    $this->withToken($token)->postJson('/api/job-seeker/match-resume-to-jobs', [
-        'resume' => $file,
-    ])->assertStatus(422)
-      ->assertJsonStructure(['errors' => ['resume']]);
-});
-
-test('resume matching rejects files over 10MB', function () {
-    Storage::fake('public');
-    [, $token] = resumeMatchSeeker();
-
-    $file = UploadedFile::fake()->create('large.pdf', 11000, 'application/pdf');
-
-    $this->withToken($token)->postJson('/api/job-seeker/match-resume-to-jobs', [
-        'resume' => $file,
-    ])->assertStatus(422)
-      ->assertJsonStructure(['errors' => ['resume']]);
-});
-
-test('resume matching returns 422 when service fails', function () {
-    Storage::fake('public');
-    [$seeker, $token] = resumeMatchSeeker();
-
-    $mock = $this->mock(ResumeMatchingService::class);
-    $mock->shouldReceive('matchResumeToJobs')
-        ->once()
+test('matching returns 422 when the service reports a parse failure', function () {
+    seekerWithCv();
+    test()->mock(ResumeMatchingService::class)
+        ->shouldReceive('matchResumeToJobs')->once()
         ->andThrow(new CvAnalysisException('Invalid resume format', 422));
 
-    $file = UploadedFile::fake()->create('resume.pdf', 100, 'application/pdf');
-
-    $this->withToken($token)->postJson('/api/job-seeker/match-resume-to-jobs', [
-        'resume' => $file,
-    ])->assertStatus(422)
-      ->assertJsonPath('message', 'Resume matching failed');
-
-    $seeker->delete();
+    $this->withToken($this->token)
+        ->getJson('/api/job-seeker/match-resume-to-jobs')
+        ->assertStatus(422)
+        ->assertJsonPath('message', 'Resume matching failed');
 });
 
-test('resume matching returns 502 when service unavailable', function () {
-    Storage::fake('public');
-    [$seeker, $token] = resumeMatchSeeker();
-
-    $mock = $this->mock(ResumeMatchingService::class);
-    $mock->shouldReceive('matchResumeToJobs')
-        ->once()
+test('matching returns 502 when the service is unavailable', function () {
+    seekerWithCv();
+    test()->mock(ResumeMatchingService::class)
+        ->shouldReceive('matchResumeToJobs')->once()
         ->andThrow(new CvAnalysisException('Service unavailable', 502));
 
-    $file = UploadedFile::fake()->create('resume.pdf', 100, 'application/pdf');
-
-    $this->withToken($token)->postJson('/api/job-seeker/match-resume-to-jobs', [
-        'resume' => $file,
-    ])->assertStatus(502)
-      ->assertJsonPath('message', 'Resume matching service unavailable');
-
-    $seeker->delete();
+    $this->withToken($this->token)
+        ->getJson('/api/job-seeker/match-resume-to-jobs')
+        ->assertStatus(502)
+        ->assertJsonPath('message', 'Resume matching service unavailable');
 });
 
-test('unauthenticated user cannot match resume', function () {
-    Storage::fake('public');
-    $file = UploadedFile::fake()->create('resume.pdf', 100, 'application/pdf');
-
-    $this->postJson('/api/job-seeker/match-resume-to-jobs', [
-        'resume' => $file,
-    ])->assertStatus(401);
+test('an unauthenticated user cannot match a resume', function () {
+    $this->getJson('/api/job-seeker/match-resume-to-jobs')->assertUnauthorized();
 });
 
-test('employer cannot match resume on job seeker endpoint', function () {
-    Storage::fake('public');
-    $employer = User::factory()->employer()->create();
-    $token = auth('api')->login($employer);
-    $file = UploadedFile::fake()->create('resume.pdf', 100, 'application/pdf');
-
-    $this->withToken($token)->postJson('/api/job-seeker/match-resume-to-jobs', [
-        'resume' => $file,
-    ])->assertStatus(403);
-
-    $employer->delete();
-});
-
-test('resume matching handles empty results', function () {
-    Storage::fake('public');
-    [$seeker, $token] = resumeMatchSeeker();
-
-    $mock = $this->mock(ResumeMatchingService::class);
-    $mock->shouldReceive('matchResumeToJobs')
-        ->once()
-        ->andReturn([
-            'matches_found' => 0,
-            'recommended_jobs' => [],
-        ]);
-
-    $file = UploadedFile::fake()->create('resume.pdf', 100, 'application/pdf');
-
-    $response = $this->withToken($token)->postJson('/api/job-seeker/match-resume-to-jobs', [
-        'resume' => $file,
-    ]);
-
-    $response->assertStatus(200)
-        ->assertJsonPath('matches_found', 0)
-        ->assertJsonPath('recommended_jobs', []);
-
-    $seeker->delete();
+test('an employer cannot use the seeker matching endpoint', function () {
+    $this->withToken(tokenFor('employer'))
+        ->getJson('/api/job-seeker/match-resume-to-jobs')
+        ->assertForbidden();
 });

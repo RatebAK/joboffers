@@ -64,6 +64,45 @@ function userWithToken(string $role, array $attributes = []): array
 }
 
 /**
+ * Replace the CvAnalysisService with a mock that returns the given analysis.
+ *
+ * Keeps resume/CV tests fully offline. Pass an array to succeed, or a
+ * CvAnalysisException to simulate a parse (422) / service (5xx) failure.
+ */
+function fakeCvAnalysis(array|\App\Exceptions\CvAnalysisException $result = []): void
+{
+    $mock = test()->mock(\App\Services\CvAnalysisService::class);
+    $expectation = $mock->shouldReceive('analyze');
+
+    $result instanceof \App\Exceptions\CvAnalysisException
+        ? $expectation->andThrow($result)
+        : $expectation->andReturn($result);
+}
+
+/**
+ * Replace the DocumentUploadService with a mock that "stores" a document
+ * without touching Cloudinary. Returns the fake StoredDocument so tests can
+ * assert on its public id / resource type.
+ */
+function fakeDocumentUpload(): \App\Services\StoredDocument
+{
+    $document = new \App\Services\StoredDocument(
+        url: 'https://res.cloudinary.com/demo/raw/upload/v1/job-seeker-cvs/cv_abc.txt',
+        publicId: 'job-seeker-cvs/cv_abc.txt',
+        resourceType: 'raw',
+        mimeType: 'application/pdf',
+        originalName: 'my_cv.pdf',
+    );
+
+    $mock = test()->mock(\App\Services\DocumentUploadService::class);
+    $mock->shouldReceive('upload')->andReturn($document);
+    $mock->shouldReceive('assertDeliverable')->andReturnNull();
+    $mock->shouldReceive('delete')->andReturnNull();
+
+    return $document;
+}
+
+/**
  * Hash a password the way the app does in the test environment.
  *
  * Bcrypt is unavailable here, so the app falls back to a salted sha256 hash
