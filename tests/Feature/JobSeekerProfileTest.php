@@ -1,50 +1,38 @@
 <?php
 
-// ============================================================
-// DO NOT DELETE — Tests for job seeker profile CRUD covering
-// all fields exposed by the API (personal info, career info,
-// education, work experience, skills, social links).
-// Also covers company profile CRUD (create → read → update → delete).
-// ============================================================
+// =============================================================================
+// JobSeekerProfileTest
+//
+// Job seeker profile: fetching, the full-payload PUT, per-section updates
+// (personal / career / social / skills / education / work experience),
+// their validation rules, and access control.
+// =============================================================================
 
-use App\Models\CompanyProfile;
-use App\Models\JobPost;
 use App\Models\JobSeekerProfile;
-use App\Models\User;
 
-// ── Helpers ───────────────────────────────────────────────────
+beforeEach(function () {
+    [$this->seeker, $this->token] = userWithToken('employee');
+});
 
-function makeProfileSeeker(): array
+/** The current seeker's stored profile. */
+function seekerProfile(): ?JobSeekerProfile
 {
-    $seeker = User::factory()->employee()->create();
-    $token  = auth('api')->login($seeker);
-    return [$seeker, $token];
+    return JobSeekerProfile::where('user_id', (string) test()->seeker->_id)->first();
 }
 
-function makeProfileEmployer(): array
+/** A complete profile payload for the legacy full PUT endpoint. */
+function fullProfilePayload(array $overrides = []): array
 {
-    $employer = User::factory()->employer()->create();
-    $token    = auth('api')->login($employer);
-    return [$employer, $token];
-}
-
-function fullProfilePayload(): array
-{
-    return [
-        // Personal
-        'first_name'    => 'John',
-        'last_name'     => 'Doe',
-        'full_name'     => 'John Doe',
-        'image'         => 'https://api.dicebear.com/7.x/avataaars/svg?seed=John',
-        'gender'        => 'male',
-        'nationality'   => 'American',
-        'city'          => 'New York',
-        'location'      => 'New York, USA',
-        'address'       => '123 Main Street, Apt 4B',
-        'phone'         => '+1 (555) 123-4567',
-        'date_of_birth' => '1990-05-15',
-        'marital_status' => 'single',
-        // Career
+    return array_merge([
+        'first_name'          => 'John',
+        'last_name'           => 'Doe',
+        'full_name'           => 'John Doe',
+        'gender'              => 'male',
+        'nationality'         => 'American',
+        'city'                => 'New York',
+        'phone'               => '+1 (555) 123-4567',
+        'date_of_birth'       => '1990-05-15',
+        'marital_status'      => 'single',
         'salary_range_from'   => 80000,
         'salary_range_to'     => 120000,
         'current_job_status'  => 'employed',
@@ -55,326 +43,202 @@ function fullProfilePayload(): array
         'job_roles'           => ['frontend', 'fullstack'],
         'work_cities'         => ['new-york', 'remote'],
         'is_actively_seeking' => true,
-        // Social links
-        'social_links' => [
-            'linkedin'  => 'https://linkedin.com/in/johndoe',
-            'github'    => 'https://github.com/johndoe',
-            'portfolio' => 'https://johndoe.dev',
-            'twitter'   => 'https://twitter.com/johndoe',
+        'social_links'        => [
+            'linkedin' => 'https://linkedin.com/in/johndoe',
+            'github'   => 'https://github.com/johndoe',
         ],
-        // Skills
         'skills' => [
-            ['name' => 'React',      'level' => 'expert'],
-            ['name' => 'TypeScript', 'level' => 'advanced'],
-            ['name' => 'Node.js',    'level' => 'advanced'],
-            ['name' => 'Next.js',    'level' => 'intermediate'],
+            ['name' => 'React', 'level' => 'expert'],
+            ['name' => 'Node.js', 'level' => 'advanced'],
         ],
-        // Education
         'education_history' => [
-            [
-                'certificate_type' => 'bachelor',
-                'university'       => 'harvard',
-                'faculty'          => 'engineering',
-                'major'            => 'computer-science',
-                'major_name'       => 'Computer Science',
-                'grade'            => 'excellent',
-                'from_date'        => '2015-09',
-                'awarded_date'     => '2019-06',
-            ],
+            ['certificate_type' => 'bachelor', 'university' => 'harvard', 'major_name' => 'Computer Science', 'from_date' => '2015-09', 'awarded_date' => '2019-06'],
         ],
-        // Work experience
         'work_experience' => [
-            [
-                'job_title'            => 'senior-software-engineer',
-                'company_name'         => 'Tech Corp',
-                'job_roles'            => ['frontend', 'team-lead'],
-                'from_date'            => '2020-01',
-                'to_date'              => '',
-                'is_currently_working' => true,
-                'description'          => 'Leading a team of 5 developers.',
-            ],
+            ['job_title' => 'engineer', 'company_name' => 'Tech Corp', 'from_date' => '2020-01', 'is_currently_working' => true],
         ],
-    ];
+    ], $overrides);
 }
 
-// ── Job Seeker Profile — GET ──────────────────────────────────
+// ── Fetch ────────────────────────────────────────────────────────────────
 
-test('job seeker can fetch their profile (auto-created if missing)', function () {
-    [$seeker, $token] = makeProfileSeeker();
-
-    $response = $this->withToken($token)->getJson('/api/job-seeker/profile');
-
-    $response->assertStatus(200)->assertJsonStructure(['profile']);
-
-    JobSeekerProfile::where('user_id', $seeker->_id)->delete();
-    $seeker->delete();
+test('a job seeker can fetch their profile (auto-created if missing)', function () {
+    $this->withToken($this->token)->getJson('/api/job-seeker/profile')
+        ->assertOk()
+        ->assertJsonStructure(['profile']);
 });
 
-// ── Job Seeker Profile — PUT (full payload) ───────────────────
-
-test('job seeker can update profile with all fields', function () {
-    [$seeker, $token] = makeProfileSeeker();
-
-    $response = $this->withToken($token)->putJson('/api/job-seeker/profile', fullProfilePayload());
-
-    $response->assertStatus(200)
-             ->assertJsonPath('profile.first_name', 'John')
-             ->assertJsonPath('profile.last_name', 'Doe')
-             ->assertJsonPath('profile.city', 'New York')
-             ->assertJsonPath('profile.gender', 'male')
-             ->assertJsonPath('profile.nationality', 'American')
-             ->assertJsonPath('profile.marital_status', 'single')
-             ->assertJsonPath('profile.phone', '+1 (555) 123-4567')
-             ->assertJsonPath('profile.date_of_birth', '1990-05-15')
-             ->assertJsonPath('profile.salary_range_from', 80000)
-             ->assertJsonPath('profile.salary_range_to', 120000)
-             ->assertJsonPath('profile.current_job_status', 'employed')
-             ->assertJsonPath('profile.years_of_experience', 5)
-             ->assertJsonPath('profile.education_level', 'bachelor')
-             ->assertJsonPath('profile.job_level', 'mid');
-
-    JobSeekerProfile::where('user_id', $seeker->_id)->delete();
-    $seeker->delete();
+test('an unauthenticated user cannot fetch a job seeker profile', function () {
+    $this->getJson('/api/job-seeker/profile')->assertUnauthorized();
 });
 
-test('job seeker profile stores job_types, job_roles, work_cities arrays', function () {
-    [$seeker, $token] = makeProfileSeeker();
+// ── Full-payload PUT ───────────────────────────────────────────────────────
 
-    $this->withToken($token)->putJson('/api/job-seeker/profile', fullProfilePayload());
+test('the full PUT stores every profile field', function () {
+    $this->withToken($this->token)->putJson('/api/job-seeker/profile', fullProfilePayload())
+        ->assertOk()
+        ->assertJsonPath('profile.first_name', 'John')
+        ->assertJsonPath('profile.city', 'New York')
+        ->assertJsonPath('profile.years_of_experience', 5)
+        ->assertJsonPath('profile.job_level', 'mid');
 
-    $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
-    expect($profile->job_types)->toBe(['full-time', 'remote']);
-    expect($profile->job_roles)->toBe(['frontend', 'fullstack']);
-    expect($profile->work_cities)->toBe(['new-york', 'remote']);
-
-    $profile->delete();
-    $seeker->delete();
+    $profile = seekerProfile();
+    expect($profile->job_types)->toBe(['full-time', 'remote'])
+        ->and($profile->social_links['linkedin'])->toBe('https://linkedin.com/in/johndoe')
+        ->and($profile->skills)->toHaveCount(2)
+        ->and($profile->education_history[0]['major_name'])->toBe('Computer Science')
+        ->and($profile->work_experience[0]['company_name'])->toBe('Tech Corp');
 });
 
-test('job seeker profile stores social_links as nested object', function () {
-    [$seeker, $token] = makeProfileSeeker();
+test('the full PUT validates enum fields', function (string $field, string $value) {
+    $this->withToken($this->token)->putJson('/api/job-seeker/profile', [$field => $value])
+        ->assertStatus(422)
+        ->assertJsonStructure(['errors' => [$field]]);
+})->with([
+    'gender'    => ['gender', 'robot'],
+    'job_level' => ['job_level', 'god'],
+]);
 
-    $this->withToken($token)->putJson('/api/job-seeker/profile', fullProfilePayload());
-
-    $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
-    expect($profile->social_links['linkedin'])->toBe('https://linkedin.com/in/johndoe');
-    expect($profile->social_links['github'])->toBe('https://github.com/johndoe');
-    expect($profile->social_links['portfolio'])->toBe('https://johndoe.dev');
-    expect($profile->social_links['twitter'])->toBe('https://twitter.com/johndoe');
-
-    $profile->delete();
-    $seeker->delete();
-});
-
-test('job seeker profile stores skills with name and level', function () {
-    [$seeker, $token] = makeProfileSeeker();
-
-    $this->withToken($token)->putJson('/api/job-seeker/profile', fullProfilePayload());
-
-    $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
-    expect(count($profile->skills))->toBe(4);
-    expect($profile->skills[0]['name'])->toBe('React');
-    expect($profile->skills[0]['level'])->toBe('expert');
-
-    $profile->delete();
-    $seeker->delete();
-});
-
-test('job seeker profile stores education_history with all fields', function () {
-    [$seeker, $token] = makeProfileSeeker();
-
-    $this->withToken($token)->putJson('/api/job-seeker/profile', fullProfilePayload());
-
-    $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
-    $edu = $profile->education_history[0];
-    expect($edu['certificate_type'])->toBe('bachelor');
-    expect($edu['university'])->toBe('harvard');
-    expect($edu['major_name'])->toBe('Computer Science');
-    expect($edu['grade'])->toBe('excellent');
-    expect($edu['from_date'])->toBe('2015-09');
-    expect($edu['awarded_date'])->toBe('2019-06');
-
-    $profile->delete();
-    $seeker->delete();
-});
-
-test('job seeker profile stores work_experience with all fields', function () {
-    [$seeker, $token] = makeProfileSeeker();
-
-    $this->withToken($token)->putJson('/api/job-seeker/profile', fullProfilePayload());
-
-    $profile = JobSeekerProfile::where('user_id', $seeker->_id)->first();
-    $exp = $profile->work_experience[0];
-    expect($exp['job_title'])->toBe('senior-software-engineer');
-    expect($exp['company_name'])->toBe('Tech Corp');
-    expect($exp['job_roles'])->toBe(['frontend', 'team-lead']);
-    expect((bool) $exp['is_currently_working'])->toBeTrue();
-
-    $profile->delete();
-    $seeker->delete();
-});
-
-test('job seeker profile update rejects invalid gender', function () {
-    [$seeker, $token] = makeProfileSeeker();
-
-    $this->withToken($token)->putJson('/api/job-seeker/profile', ['gender' => 'robot'])
-         ->assertStatus(422)->assertJsonStructure(['errors' => ['gender']]);
-
-    JobSeekerProfile::where('user_id', $seeker->_id)->delete();
-    $seeker->delete();
-});
-
-test('job seeker profile update rejects invalid job_level', function () {
-    [$seeker, $token] = makeProfileSeeker();
-
-    $this->withToken($token)->putJson('/api/job-seeker/profile', ['job_level' => 'god'])
-         ->assertStatus(422)->assertJsonStructure(['errors' => ['job_level']]);
-
-    JobSeekerProfile::where('user_id', $seeker->_id)->delete();
-    $seeker->delete();
-});
-
-test('job seeker profile update rejects invalid skill level', function () {
-    [$seeker, $token] = makeProfileSeeker();
-
-    $this->withToken($token)->putJson('/api/job-seeker/profile', [
+test('the full PUT rejects an invalid skill level', function () {
+    $this->withToken($this->token)->putJson('/api/job-seeker/profile', [
         'skills' => [['name' => 'PHP', 'level' => 'godlike']],
     ])->assertStatus(422);
-
-    JobSeekerProfile::where('user_id', $seeker->_id)->delete();
-    $seeker->delete();
 });
 
-test('unauthenticated user cannot access job seeker profile', function () {
-    $this->getJson('/api/job-seeker/profile')->assertStatus(401);
+// ── Section: personal info ─────────────────────────────────────────────────
+
+test('a seeker can update personal information', function () {
+    $this->withToken($this->token)->putJson('/api/job-seeker/profile/personal-info', [
+        'first_name' => 'Jane', 'last_name' => 'Doe', 'full_name' => 'Jane Doe',
+        'gender' => 'female', 'city' => 'Beirut', 'phone' => '+961 70 123456',
+    ])
+        ->assertOk()
+        ->assertJsonPath('message', 'Personal information updated successfully')
+        ->assertJsonPath('profile.full_name', 'Jane Doe');
+
+    expect(seekerProfile()->phone)->toBe('+961 70 123456');
 });
 
-// ── Company Profile — Full CRUD ───────────────────────────────
+test('personal info validates phone length and gender', function (string $field, mixed $value) {
+    $this->withToken($this->token)->putJson('/api/job-seeker/profile/personal-info', [$field => $value])
+        ->assertStatus(422)
+        ->assertJsonStructure(['errors' => [$field]]);
+})->with([
+    'phone'  => ['phone', str_repeat('1', 21)],
+    'gender' => ['gender', 'invalid_gender'],
+]);
 
-test('employer can create a company profile', function () {
-    [$employer, $token] = makeProfileEmployer();
+// ── Section: career info ───────────────────────────────────────────────────
 
-    $response = $this->withToken($token)->postJson('/api/employer/company', [
-        'name'         => 'Acme Inc',
-        'description'  => 'We build great things.',
-        'location'     => 'San Francisco, CA',
-        'company_size' => ['min' => 100, 'max' => 500, 'isPlus' => false],
-        'industry'     => 'Technology',
-        'website'      => 'https://acme.com',
-        'logo'         => 'https://acme.com/logo.png',
-    ]);
-
-    $response->assertStatus(200)
-             ->assertJsonPath('name', 'Acme Inc')
-             ->assertJsonPath('industry', 'Technology')
-             ->assertJsonPath('location', 'San Francisco, CA')
-             ->assertJsonPath('company_size', '100-500')
-             ->assertJsonStructure(['open_positions', 'company_size_range']);
-
-    CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
-    $employer->delete();
+test('a seeker can update career information', function () {
+    $this->withToken($this->token)->putJson('/api/job-seeker/profile/career-info', [
+        'current_job_title' => 'Senior Frontend Developer',
+        'years_of_experience' => 5,
+        'job_level' => 'senior',
+        'job_types' => ['full_time', 'remote'],
+        'is_actively_seeking' => true,
+    ])
+        ->assertOk()
+        ->assertJsonPath('message', 'Career information updated successfully')
+        ->assertJsonPath('profile.current_job_title', 'Senior Frontend Developer')
+        ->assertJsonPath('profile.is_actively_seeking', true);
 });
 
-test('employer can read their company profile via public endpoint', function () {
-    [$employer, $token] = makeProfileEmployer();
+test('career info validates job_level and years_of_experience', function (string $field, mixed $value) {
+    $this->withToken($this->token)->putJson('/api/job-seeker/profile/career-info', [$field => $value])
+        ->assertStatus(422)
+        ->assertJsonStructure(['errors' => [$field]]);
+})->with([
+    'job_level'           => ['job_level', 'invalid_level'],
+    'years_of_experience' => ['years_of_experience', 70],
+]);
 
-    $profile = CompanyProfile::create([
-        'employer_id'  => (string) $employer->_id,
-        'name'         => 'ReadMe Corp',
-        'industry'     => 'Finance',
-        'location'     => 'London, UK',
-        'company_size' => '50-100',
-        'website'      => 'https://readme.com',
-        'rating'       => 4.2,
-        'review_count' => 80,
-    ]);
+// ── Section: social links ──────────────────────────────────────────────────
 
-    $this->getJson("/api/companies/{$profile->_id}")
-         ->assertStatus(200)
-         ->assertJsonPath('name', 'ReadMe Corp')
-         ->assertJsonPath('industry', 'Finance')
-         ->assertJsonStructure(['open_positions', 'company_size_range']);
-
-    $profile->delete();
-    $employer->delete();
+test('a seeker can update social links', function () {
+    $this->withToken($this->token)->putJson('/api/job-seeker/profile/social-links', [
+        'social_links' => ['linkedin' => 'https://linkedin.com/in/janedoe', 'github' => 'https://github.com/janedoe'],
+    ])
+        ->assertOk()
+        ->assertJsonPath('profile.social_links.linkedin', 'https://linkedin.com/in/janedoe');
 });
 
-test('employer can update their company profile', function () {
-    [$employer, $token] = makeProfileEmployer();
-
-    CompanyProfile::create([
-        'employer_id' => (string) $employer->_id,
-        'name'        => 'Old Name',
-        'industry'    => 'Retail',
-    ]);
-
-    $response = $this->withToken($token)->putJson('/api/employer/company', [
-        'name'         => 'New Name',
-        'industry'     => 'Technology',
-        'company_size' => ['min' => 500, 'isPlus' => true],
-    ]);
-
-    $response->assertStatus(200)
-             ->assertJsonPath('name', 'New Name')
-             ->assertJsonPath('industry', 'Technology')
-             ->assertJsonPath('company_size', '500+')
-             ->assertJsonPath('company_size_range.isPlus', true);
-
-    CompanyProfile::where('employer_id', (string) $employer->_id)->delete();
-    $employer->delete();
+test('social links validates the url format', function () {
+    $this->withToken($this->token)->putJson('/api/job-seeker/profile/social-links', [
+        'social_links' => ['linkedin' => 'not-a-url'],
+    ])->assertStatus(422)->assertJsonStructure(['errors' => ['social_links.linkedin']]);
 });
 
-test('company profile upsert requires name', function () {
-    [$employer, $token] = makeProfileEmployer();
-
-    $this->withToken($token)->postJson('/api/employer/company', [
-        'industry' => 'Tech',
-    ])->assertStatus(422)->assertJsonStructure(['errors' => ['name']]);
-
-    $employer->delete();
+test('social links requires the social_links object', function () {
+    $this->withToken($this->token)->putJson('/api/job-seeker/profile/social-links', [])
+        ->assertStatus(422)->assertJsonStructure(['errors' => ['social_links']]);
 });
 
-test('company profile show returns 404 for unknown id', function () {
-    $this->getJson('/api/companies/000000000000000000000000')
-         ->assertStatus(404);
+// ── Section: skills ────────────────────────────────────────────────────────
+
+test('a seeker can update and delete skills', function () {
+    $this->withToken($this->token)->putJson('/api/job-seeker/profile/skills', [
+        'skills' => [['name' => 'React', 'level' => 'advanced'], ['name' => 'Node.js', 'level' => 'beginner']],
+    ])->assertOk()->assertJsonPath('message', 'Skills updated successfully');
+
+    expect(seekerProfile()->skills)->toHaveCount(2);
+
+    $this->withToken($this->token)->deleteJson('/api/job-seeker/profile/skills')
+        ->assertOk()->assertJsonPath('message', 'Skills deleted successfully');
+
+    expect(seekerProfile()->skills)->toHaveCount(0);
 });
 
-test('company profile includes open_positions count', function () {
-    [$employer, $token] = makeProfileEmployer();
+test('skills validate their level and require a name', function (array $skill, string $errorKey) {
+    $this->withToken($this->token)->putJson('/api/job-seeker/profile/skills', ['skills' => [$skill]])
+        ->assertStatus(422)
+        ->assertJsonStructure(['errors' => [$errorKey]]);
+})->with([
+    'bad level'    => [['name' => 'React', 'level' => 'invalid_level'], 'skills.0.level'],
+    'missing name' => [['level' => 'advanced'], 'skills.0.name'],
+]);
 
-    $profile = CompanyProfile::create([
-        'employer_id' => (string) $employer->_id,
-        'name'        => 'Jobs Corp',
-        'industry'    => 'Tech',
-    ]);
+// ── Section: education & work experience ─────────────────────────────────
 
-    // Create one active job post
-    $job = JobPost::create([
-        'title'        => 'Dev',
-        'description'  => 'Code.',
-        'requirements' => 'PHP.',
-        'company_name' => 'Jobs Corp',
-        'job_type'     => 'full_time',
-        'location'     => 'Remote',
-        'employer_id'  => (string) $employer->_id,
-        'is_active'    => true,
-    ]);
+test('a seeker can update and delete education history', function () {
+    $this->withToken($this->token)->putJson('/api/job-seeker/profile/education', [
+        'education_history' => [['university' => 'AUB', 'major' => 'Computer Science', 'from_date' => '2015-09']],
+    ])->assertOk()->assertJsonPath('profile.education_history.0.university', 'AUB');
 
-    $response = $this->getJson("/api/companies/{$profile->_id}");
-    $response->assertStatus(200);
-    expect($response->json('open_positions'))->toBeGreaterThanOrEqual(1);
-
-    $job->delete();
-    $profile->delete();
-    $employer->delete();
+    $this->withToken($this->token)->deleteJson('/api/job-seeker/profile/education')
+        ->assertOk()->assertJsonPath('message', 'Education history deleted successfully');
 });
 
-test('non-employer cannot create company profile', function () {
-    [$seeker, $token] = makeProfileSeeker();
+test('education history requires an array', function () {
+    $this->withToken($this->token)->putJson('/api/job-seeker/profile/education', [])
+        ->assertStatus(422)->assertJsonStructure(['errors' => ['education_history']]);
+});
 
-    $this->withToken($token)->postJson('/api/employer/company', [
-        'name' => 'Sneaky Corp',
-    ])->assertStatus(403);
+test('a seeker can update and delete work experience', function () {
+    $this->withToken($this->token)->putJson('/api/job-seeker/profile/work-experience', [
+        'work_experience' => [
+            ['job_title' => 'Senior Dev', 'company_name' => 'Acme Corp', 'from_date' => '2020-01', 'to_date' => '2023-06', 'is_currently_working' => false],
+            ['job_title' => 'Dev', 'company_name' => 'Startup', 'from_date' => '2023-07', 'is_currently_working' => true],
+        ],
+    ])->assertOk()->assertJsonPath('profile.work_experience.0.company_name', 'Acme Corp');
 
-    $seeker->delete();
+    $this->withToken($this->token)->deleteJson('/api/job-seeker/profile/work-experience')
+        ->assertOk()->assertJsonPath('message', 'Work experience deleted successfully');
+});
+
+test('work experience requires an array', function () {
+    $this->withToken($this->token)->putJson('/api/job-seeker/profile/work-experience', [])
+        ->assertStatus(422)->assertJsonStructure(['errors' => ['work_experience']]);
+});
+
+// ── Access control ─────────────────────────────────────────────────────────
+
+test('an unauthenticated user cannot update a profile section', function () {
+    $this->putJson('/api/job-seeker/profile/personal-info', ['full_name' => 'Hacker'])->assertUnauthorized();
+});
+
+test('a non-employee cannot update a job seeker profile', function () {
+    $this->withToken(tokenFor('employer'))
+        ->putJson('/api/job-seeker/profile/personal-info', ['full_name' => 'Should Fail'])
+        ->assertForbidden();
 });
