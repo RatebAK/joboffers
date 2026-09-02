@@ -108,7 +108,7 @@ give clearer failure messages.
 ->assertCreated()                       // over ->assertStatus(201)
 ->assertForbidden()                     // over ->assertStatus(403)
 ->assertNotFound()                      // over ->assertStatus(404)
-->assertJsonValidationErrors(['email']) // over ->assertJsonStructure(['errors' => ['email']])
+->assertJsonStructure(['email'])        // validation errors are top-level keys here
 
 expect($items)->not->toBeEmpty()
     ->and($items[0])->toHaveKeys(['job_seeker_name', 'job_post_title']);

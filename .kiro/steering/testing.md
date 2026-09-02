@@ -96,8 +96,12 @@ clearer failures.
 | `assertUnauthorized()` | `assertStatus(401)` |
 | `assertForbidden()` | `assertStatus(403)` |
 | `assertNotFound()` | `assertStatus(404)` |
-| `assertJsonValidationErrors([...])` | `assertJsonStructure(['errors' => [...]])` |
 | `assertJsonPath('a.b', $v)` | manual `json()` digging |
+
+**Validation errors:** this API returns validation errors at the **top level**
+(`{"email": ["..."]}`), not under an `errors` key. Assert them with
+`assertStatus(422)` + `assertJsonStructure(['email'])`, NOT
+`assertJsonValidationErrors()` (which expects the `errors.*` shape).
 
 Status codes without a dedicated helper (409, 422) use `assertStatus()`. Chain
 expectations with `->and()`:

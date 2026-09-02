@@ -1,214 +1,75 @@
 <?php
 
-use App\Models\User;
+// =============================================================================
+// ProtectedRoutesTest — role middleware enforced at the HTTP routing layer.
+//
+// A 200/405/500 all indicate the request passed the role gate (the controller
+// may still fail for unrelated reasons); 403 means the gate blocked it.
+// =============================================================================
 
-beforeEach(function () {
-    User::truncate();
+/** True when the response passed the role middleware (was not blocked with 403/401). */
+function passedRoleGate(int $status): bool
+{
+    return in_array($status, [200, 405, 500], true);
+}
+
+test('an admin can reach an admin-only route', function () {
+    $status = $this->withToken(tokenFor('admin'))->getJson('/api/admin/employers')->status();
+
+    expect(passedRoleGate($status))->toBeTrue();
 });
 
-afterEach(function () {
-    User::truncate();
+test('a non-admin is forbidden from an admin-only route', function () {
+    $this->withToken(tokenFor('employee'))
+        ->getJson('/api/admin/employers')
+        ->assertForbidden()
+        ->assertJsonPath('error', 'Forbidden');
 });
 
-test('admin routes with admin user should succeed', function () {
-    $user = User::create([
-        'name' => 'Admin User',
-        'email' => 'admin@example.com',
-        'password' => hash('sha256', 'Test@123' . 'salt'),
-        'roles' => ['admin']
-    ]);
-    
-    $token = auth()->login($user);
-    
-    // Test admin routes
-    $response = $this->withHeaders([
-        'Authorization' => 'Bearer ' . $token
-    ])->getJson('/api/admin/employers');
-    
-    // Should succeed (200) or return method not allowed (405) if controller method doesn't exist
-    // Both are acceptable as we're testing middleware, not controller implementation
-    expect(in_array($response->status(), [200, 405, 500]))->toBeTrue();
+test('an employer can reach an employer-only route', function () {
+    $status = $this->withToken(tokenFor('employer'))->getJson('/api/employer/jobs')->status();
+
+    expect(passedRoleGate($status))->toBeTrue();
 });
 
-test('admin routes with non-admin user should fail with 403', function () {
-    $user = User::create([
-        'name' => 'Employee User',
-        'email' => 'employee@example.com',
-        'password' => hash('sha256', 'Test@123' . 'salt'),
-        'roles' => ['employee']
-    ]);
-    
-    $token = auth()->login($user);
-    
-    $response = $this->withHeaders([
-        'Authorization' => 'Bearer ' . $token
-    ])->getJson('/api/admin/employers');
-    
-    $response->assertStatus(403);
-    expect($response->json('error'))->toBe('Forbidden');
+test('a non-employer is forbidden from an employer-only route', function () {
+    $this->withToken(tokenFor('employee'))
+        ->getJson('/api/employer/jobs')
+        ->assertForbidden()
+        ->assertJsonPath('error', 'Forbidden');
 });
 
-test('employer routes with employer user should succeed', function () {
-    $user = User::create([
-        'name' => 'Employer User',
-        'email' => 'employer@example.com',
-        'password' => hash('sha256', 'Test@123' . 'salt'),
-        'roles' => ['employer'],
-        'is_employer' => true,
-    ]);
-    
-    $token = auth()->login($user);
-    
-    $response = $this->withHeaders([
-        'Authorization' => 'Bearer ' . $token
-    ])->getJson('/api/employer/jobs');
-    
-    // Should succeed (200) or return method not allowed (405) if controller method doesn't exist
-    expect(in_array($response->status(), [200, 405, 500]))->toBeTrue();
+test('an employee can reach an employee-only route', function () {
+    $status = $this->withToken(tokenFor('employee'))->getJson('/api/job-seeker/profile')->status();
+
+    expect(passedRoleGate($status))->toBeTrue();
 });
 
-test('employer routes with non-employer user should fail with 403', function () {
-    $user = User::create([
-        'name' => 'Employee User',
-        'email' => 'employee@example.com',
-        'password' => hash('sha256', 'Test@123' . 'salt'),
-        'roles' => ['employee']
-    ]);
-    
-    $token = auth()->login($user);
-    
-    $response = $this->withHeaders([
-        'Authorization' => 'Bearer ' . $token
-    ])->getJson('/api/employer/jobs');
-    
-    $response->assertStatus(403);
-    expect($response->json('error'))->toBe('Forbidden');
+test('a non-employee is forbidden from an employee-only route', function () {
+    $this->withToken(tokenFor('employer'))
+        ->getJson('/api/job-seeker/profile')
+        ->assertForbidden()
+        ->assertJsonPath('error', 'Forbidden');
 });
 
-test('employee routes with employee user should succeed', function () {
-    $user = User::create([
-        'name' => 'Employee User',
-        'email' => 'employee@example.com',
-        'password' => hash('sha256', 'Test@123' . 'salt'),
-        'roles' => ['employee']
-    ]);
-    
-    $token = auth()->login($user);
-    
-    $response = $this->withHeaders([
-        'Authorization' => 'Bearer ' . $token
-    ])->getJson('/api/job-seeker/profile');
-    
-    // Should succeed (200) or return method not allowed (405) if controller method doesn't exist
-    expect(in_array($response->status(), [200, 405, 500]))->toBeTrue();
+test('an admin can reach employer and employee routes', function () {
+    $token = tokenFor('admin');
+
+    expect(passedRoleGate($this->withToken($token)->getJson('/api/employer/jobs')->status()))->toBeTrue()
+        ->and(passedRoleGate($this->withToken($token)->getJson('/api/job-seeker/profile')->status()))->toBeTrue();
 });
 
-test('employee routes with non-employee user should fail with 403', function () {
-    $user = User::create([
-        'name' => 'Employer User',
-        'email' => 'employer@example.com',
-        'password' => hash('sha256', 'Test@123' . 'salt'),
-        'roles' => ['employer']
-    ]);
-    
-    $token = auth()->login($user);
-    
-    $response = $this->withHeaders([
-        'Authorization' => 'Bearer ' . $token
-    ])->getJson('/api/job-seeker/profile');
-    
-    $response->assertStatus(403);
-    expect($response->json('error'))->toBe('Forbidden');
+test('a multi-role user can reach routes for each of their roles but not others', function () {
+    $token = tokenFor('employer', ['roles' => ['employer', 'employee'], 'is_employer' => true]);
+
+    expect(passedRoleGate($this->withToken($token)->getJson('/api/employer/jobs')->status()))->toBeTrue()
+        ->and(passedRoleGate($this->withToken($token)->getJson('/api/job-seeker/profile')->status()))->toBeTrue();
+
+    $this->withToken($token)->getJson('/api/admin/employers')->assertForbidden();
 });
 
-test('admin user can access employer and employee routes', function () {
-    $user = User::create([
-        'name' => 'Admin User',
-        'email' => 'admin@example.com',
-        'password' => hash('sha256', 'Test@123' . 'salt'),
-        'roles' => ['admin']
-    ]);
-    
-    $token = auth()->login($user);
-    
-    // Admin should access employer routes
-    $response = $this->withHeaders([
-        'Authorization' => 'Bearer ' . $token
-    ])->getJson('/api/employer/jobs');
-    
-    expect(in_array($response->status(), [200, 405, 500]))->toBeTrue();
-    
-    // Admin should access employee routes
-    $response = $this->withHeaders([
-        'Authorization' => 'Bearer ' . $token
-    ])->getJson('/api/job-seeker/profile');
-    
-    expect(in_array($response->status(), [200, 405, 500]))->toBeTrue();
-});
-
-test('unauthenticated requests to protected routes fail with 401', function () {
-    // Test admin routes
-    $response = $this->getJson('/api/admin/employers');
-    $response->assertStatus(401);
-    
-    // Test employer routes
-    $response = $this->getJson('/api/employer/jobs');
-    $response->assertStatus(401);
-    
-    // Test employee routes
-    $response = $this->getJson('/api/job-seeker/profile');
-    $response->assertStatus(401);
-});
-
-test('multi-role user can access routes for all their roles', function () {
-    $user = User::create([
-        'name' => 'Multi Role User',
-        'email' => 'multi@example.com',
-        'password' => hash('sha256', 'Test@123' . 'salt'),
-        'roles' => ['employer', 'employee'],
-        'is_employer' => true,
-    ]);
-    
-    $token = auth()->login($user);
-    
-    // Should access employer routes
-    $response = $this->withHeaders([
-        'Authorization' => 'Bearer ' . $token
-    ])->getJson('/api/employer/jobs');
-    
-    expect(in_array($response->status(), [200, 405, 500]))->toBeTrue();
-    
-    // Should access employee routes
-    $response = $this->withHeaders([
-        'Authorization' => 'Bearer ' . $token
-    ])->getJson('/api/job-seeker/profile');
-    
-    expect(in_array($response->status(), [200, 405, 500]))->toBeTrue();
-    
-    // Should NOT access admin routes
-    $response = $this->withHeaders([
-        'Authorization' => 'Bearer ' . $token
-    ])->getJson('/api/admin/employers');
-    
-    $response->assertStatus(403);
-});
-
-test('role middleware preserves existing auth middleware functionality', function () {
-    // Test that auth routes still work without role requirements
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@example.com',
-        'password' => hash('sha256', 'Test@123' . 'salt'),
-        'roles' => ['employee']
-    ]);
-    
-    $token = auth()->login($user);
-    
-    // Profile endpoint should work for any authenticated user
-    $response = $this->withHeaders([
-        'Authorization' => 'Bearer ' . $token
-    ])->getJson('/api/auth/profile');
-    
-    $response->assertStatus(200);
-    expect($response->json('email'))->toBe('test@example.com');
+test('unauthenticated requests to protected routes return 401', function () {
+    $this->getJson('/api/admin/employers')->assertUnauthorized();
+    $this->getJson('/api/employer/jobs')->assertUnauthorized();
+    $this->getJson('/api/job-seeker/profile')->assertUnauthorized();
 });

@@ -63,6 +63,18 @@ function userWithToken(string $role, array $attributes = []): array
     return [$user, auth('api')->login($user)];
 }
 
+/**
+ * Hash a password the way the app does in the test environment.
+ *
+ * Bcrypt is unavailable here, so the app falls back to a salted sha256 hash
+ * (see AuthController). Users created for login/token tests must be stored with
+ * this hash so that POST /api/auth/login can verify the plaintext password.
+ */
+function testPasswordHash(string $plain): string
+{
+    return hash('sha256', $plain.'salt');
+}
+
 /*
 |--------------------------------------------------------------------------
 | Domain Builders
