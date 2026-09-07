@@ -20,6 +20,10 @@ class DatabaseSeeder extends Seeder
         $this->call(CitySeeder::class);
         $this->call(RoleSeeder::class);
 
+        // Demo dataset (companies, seekers, jobs, activity). Safe & idempotent.
+        // Run standalone with: php artisan db:seed --class=DemoSeeder
+        $this->call(DemoSeeder::class);
+
         // Optionally create additional random users using factory
         // User::factory(10)->create();
     }

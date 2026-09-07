@@ -1,0 +1,9 @@
+Drop your sample CV PDF files in this folder.
+
+Then run:
+  php artisan demo:upload-cvs
+
+This uploads them to Cloudinary (resource_type=raw, no AI analysis) and writes
+database/seeders/data/cv-manifest.json, which the JobSeekerProfileSeeder reads.
+
+Filenames are used as keys, so keep them stable (e.g. jane-smith.pdf).
