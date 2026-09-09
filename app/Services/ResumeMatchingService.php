@@ -37,7 +37,11 @@ class ResumeMatchingService
                 'exception'    => get_class($e),
                 'elapsed_secs' => $elapsed,
             ]);
-            throw new CvAnalysisException('Resume matching service unavailable', 502);
+            throw new CvAnalysisException('Resume matching service unavailable', 502, [
+                'type'      => 'transport',
+                'exception' => get_class($e),
+                'message'  => $e->getMessage(),
+            ]);
         }
 
         $elapsed = round(microtime(true) - $startTime, 2);
@@ -57,7 +61,11 @@ class ResumeMatchingService
                 'body'    => mb_substr($response->body(), 0, 2000),
                 'payload' => $payload,
             ]);
-            throw new CvAnalysisException('Resume matching service unavailable', 502);
+            throw new CvAnalysisException('Resume matching service unavailable', 502, [
+                'type'   => 'http',
+                'status' => $response->status(),
+                'body'   => mb_substr($response->body(), 0, 2000),
+            ]);
         }
 
         $data = $response->json();

@@ -30,22 +30,61 @@ function fakeMatching(array $result): void
         ->shouldReceive('matchResumeToJobs')->once()->andReturn($result);
 }
 
-test('a seeker with a CV gets matched jobs', function () {
+test('a seeker receives a local job when the AI sends its Mongo identifier', function () {
     seekerWithCv();
+    $employer = createUser('employer');
+    $company = createCompanyFor($employer);
+    $job = createJob($employer, [
+        'job_id' => 'JOB-MONGO-001',
+        'title' => 'Senior Laravel Developer',
+        'company_profile_id' => (string) $company->_id,
+    ]);
+
     fakeMatching([
-        'matches_found' => 2,
-        'jobs' => [
-            ['_id' => 'a', 'title' => 'Senior Laravel Developer', 'matched_skills' => ['php', 'laravel'], 'matched_skills_score' => 3],
-            ['_id' => 'b', 'title' => 'Backend Engineer', 'matched_skills' => ['php'], 'matched_skills_score' => 1],
-        ],
+        'matches_found' => 1,
+        'jobs' => [[
+            'job_id' => (string) $job->_id,
+            'matched_skills' => ['php', 'laravel'],
+            'matched_skills_score' => 3,
+        ]],
     ]);
 
     $this->withToken($this->token)
         ->getJson('/api/job-seeker/match-resume-to-jobs')
         ->assertOk()
         ->assertJsonStructure(['matches_found', 'jobs'])
-        ->assertJsonPath('matches_found', 2)
-        ->assertJsonPath('jobs.0.title', 'Senior Laravel Developer');
+        ->assertJsonPath('matches_found', 1)
+        ->assertJsonPath('jobs.0.job_id', 'JOB-MONGO-001')
+        ->assertJsonPath('jobs.0.title', 'Senior Laravel Developer')
+        ->assertJsonPath('jobs.0.matched_skills', ['php', 'laravel'])
+        ->assertJsonPath('jobs.0.matched_skills_score', 3)
+        ->assertJsonPath('jobs.0.has_applied', false)
+        ->assertJsonPath('jobs.0.company.name', 'Test Company');
+});
+
+test('a seeker receives a local job when the AI sends its human job identifier', function () {
+    seekerWithCv();
+    $employer = createUser('employer');
+    $job = createJob($employer, [
+        'job_id' => 'JOB-HUMAN-001',
+        'title' => 'Backend Engineer',
+    ]);
+
+    fakeMatching([
+        'matches_found' => 1,
+        'jobs' => [[
+            'job_id' => $job->job_id,
+            'matched_skills' => ['php'],
+            'matched_skills_score' => 1,
+        ]],
+    ]);
+
+    $this->withToken($this->token)
+        ->getJson('/api/job-seeker/match-resume-to-jobs')
+        ->assertOk()
+        ->assertJsonPath('matches_found', 1)
+        ->assertJsonPath('jobs.0.job_id', 'JOB-HUMAN-001')
+        ->assertJsonPath('jobs.0.title', 'Backend Engineer');
 });
 
 test('matching returns an empty result set when nothing matches', function () {
@@ -89,6 +128,25 @@ test('matching returns 502 when the service is unavailable', function () {
         ->getJson('/api/job-seeker/match-resume-to-jobs')
         ->assertStatus(502)
         ->assertJsonPath('message', 'Resume matching service unavailable');
+});
+
+test('matching exposes the upstream AI error in the debug object', function () {
+    seekerWithCv();
+    test()->mock(ResumeMatchingService::class)
+        ->shouldReceive('matchResumeToJobs')->once()
+        ->andThrow(new CvAnalysisException('Service unavailable', 502, [
+            'type'   => 'http',
+            'status' => 404,
+            'body'   => '{"detail":"Resume profile not found in database."}',
+        ]));
+
+    $this->withToken($this->token)
+        ->getJson('/api/job-seeker/match-resume-to-jobs')
+        ->assertStatus(502)
+        ->assertJsonPath('message', 'Resume matching service unavailable')
+        ->assertJsonPath('debug.ai_error.type', 'http')
+        ->assertJsonPath('debug.ai_error.status', 404)
+        ->assertJsonPath('debug.ai_error.body', '{"detail":"Resume profile not found in database."}');
 });
 
 test('an unauthenticated user cannot match a resume', function () {
