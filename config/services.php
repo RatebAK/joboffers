@@ -60,6 +60,10 @@ return [
         'pdf_fallback_extension' => env('CLOUDINARY_PDF_FALLBACK_EXTENSION', 'txt'),
     ],
 
+    'ai' => [
+        'base_url' => rtrim(env('AI_API_BASE_URL', ''), '/'),
+    ],
+
     'cv_analysis' => [
         'url' => env('CV_ANALYSIS_API_URL'),
     ],
