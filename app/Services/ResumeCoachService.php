@@ -59,7 +59,7 @@ class ResumeCoachService
     {
         $data = $this->getJson(sprintf(
             '%s/users/%s/sessions',
-            rtrim((string) config('services.ai.base_url'), '/'),
+            $this->baseUrl(),
             rawurlencode($userId)
         ));
 
@@ -75,11 +75,40 @@ class ResumeCoachService
     {
         $data = $this->getJson(sprintf(
             '%s/sessions/%s/messages',
-            rtrim((string) config('services.ai.base_url'), '/'),
+            $this->baseUrl(),
             rawurlencode($sessionId)
         ));
 
         return is_array($data['messages'] ?? null) ? $data['messages'] : [];
+    }
+
+    /**
+     * Resolve the AI host without depending on a dedicated env var.
+     *
+     * Order of precedence:
+     *   1. services.ai.base_url (AI_API_BASE_URL) when explicitly set.
+     *   2. The host of the already-configured resume-coach chat URL
+     *      (RESUME_COACH_API_URL) with its path stripped.
+     *
+     * This keeps the session/message reads working on any environment that
+     * only has the existing *_API_URL variables and no new AI_API_BASE_URL.
+     */
+    private function baseUrl(): string
+    {
+        $configured = rtrim((string) config('services.ai.base_url'), '/');
+
+        if ($configured !== '') {
+            return $configured;
+        }
+
+        $chatUrl = (string) config('services.resume_coach.url');
+
+        // Strip everything after the host (e.g. ".../resume-coach-chat").
+        if (preg_match('#^(https?://[^/]+)#i', $chatUrl, $matches)) {
+            return $matches[1];
+        }
+
+        return rtrim($chatUrl, '/');
     }
 
     /**
