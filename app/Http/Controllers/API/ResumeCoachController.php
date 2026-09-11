@@ -42,23 +42,49 @@ class ResumeCoachController extends Controller
     /**
      * List coach sessions
      *
-     * Returns all chat sessions for the authenticated job seeker, newest first.
+     * Returns the authenticated job seeker's sessions from the AI service,
+     * normalized to the existing Laravel response shape.
      *
      * @authenticated
      *
      * @group Resume Coach
      *
      * @response 200 {
-     *   "data": [{ "id": "...", "title": "Resume tips", "created_at": "...", "updated_at": "..." }]
+     *   "data": [{ "id": "...", "title": "Resume tips", "created_at": null, "updated_at": "..." }]
      * }
      */
-    public function listSessions(Request $request)
+    public function listSessions(Request $request, ResumeCoachService $coachService)
     {
-        $sessions = CoachSession::where('user_id', $request->user()->id)
-            ->orderBy('created_at', 'desc')
-            ->get(['_id', 'title', 'created_at', 'updated_at']);
+        try {
+            $sessions = $coachService->listSessions((string) $request->user()->_id);
+        } catch (CvAnalysisException $e) {
+            if ($e->getHttpStatusCode() === 404) {
+                return response()->json(['message' => 'Session not found'], 404);
+            }
 
-        return response()->json(['data' => $sessions]);
+            return response()->json(['message' => 'Resume coach service unavailable'], 502);
+        }
+
+        $data = collect($sessions)
+            ->map(function ($session) {
+                $sessionId = $session['session_id'] ?? $session['id'] ?? $session['_id'] ?? null;
+
+                if (blank($sessionId)) {
+                    return null;
+                }
+
+                return [
+                    'id'         => (string) $sessionId,
+                    'title'      => $session['title'] ?? 'Resume coaching',
+                    'created_at' => $session['created_at'] ?? null,
+                    'updated_at' => $session['updated_at'] ?? null,
+                ];
+            })
+            ->filter()
+            ->values()
+            ->all();
+
+        return response()->json(['data' => $data]);
     }
 
     /**
@@ -110,7 +136,8 @@ class ResumeCoachController extends Controller
     /**
      * Get session messages
      *
-     * Returns all messages in a specific coach chat session.
+     * Returns messages from the AI service, normalized to the existing Laravel
+     * `role`, `content`, and `created_at` response fields.
      *
      * @authenticated
      * @group Resume Coach
@@ -120,27 +147,37 @@ class ResumeCoachController extends Controller
      * @response 200 { "data": [{ "role": "user", "content": "Hello", "created_at": "..." }] }
      * @response 404 { "message": "Session not found" }
      */
-    public function getSession(string $sessionId, Request $request)
+    public function getSession(string $sessionId, Request $request, ResumeCoachService $coachService)
     {
-        $session = CoachSession::where('_id', $sessionId)
-            ->where('user_id', $request->user()->id)
-            ->first();
+        try {
+            $messages = $coachService->getSessionMessages($sessionId);
+        } catch (CvAnalysisException $e) {
+            if ($e->getHttpStatusCode() === 404) {
+                return response()->json(['message' => 'Session not found'], 404);
+            }
 
-        if (! $session) {
-            return response()->json(['message' => 'Session not found'], 404);
+            return response()->json(['message' => 'Resume coach service unavailable'], 502);
         }
 
-        $messages = CoachMessage::where('session_id', $sessionId)
-            ->orderBy('created_at', 'asc')
-            ->get(['role', 'content', 'created_at']);
+        $data = collect($messages)
+            ->map(function ($message) {
+                return [
+                    'role'       => $message['role'] ?? null,
+                    'content'    => $message['content'] ?? $message['message'] ?? '',
+                    'created_at' => $message['created_at'] ?? $message['timestamp'] ?? null,
+                ];
+            })
+            ->values()
+            ->all();
 
-        return response()->json(['data' => $messages]);
+        return response()->json(['data' => $data]);
     }
 
     /**
      * Delete a coach session
      *
-     * Deletes a chat session and all its messages.
+     * Deletes a local coach session and all its messages.
+     * The external AI contract currently exposes no delete-session endpoint.
      *
      * @authenticated
      * @group Resume Coach

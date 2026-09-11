@@ -3,10 +3,10 @@
 // =============================================================================
 // ResumeCoachTest — AI resume coach.
 //   POST   /api/job-seeker/coach/sessions        create a session
-//   GET    /api/job-seeker/coach/sessions        list sessions
-//   GET    /api/job-seeker/coach/sessions/{id}   session messages
-//   DELETE /api/job-seeker/coach/sessions/{id}   delete a session
-//   POST   /api/job-seeker/coach/chat            chat (service creates/continues session)
+//   GET    /api/job-seeker/coach/sessions        list AI sessions
+//   GET    /api/job-seeker/coach/sessions/{id}   AI session messages
+//   DELETE /api/job-seeker/coach/sessions/{id}   delete a local session
+//   POST   /api/job-seeker/coach/chat            chat (AI service creates/continues session)
 //
 // The ResumeCoachService (external AI) is mocked, so tests are deterministic.
 // =============================================================================
@@ -21,7 +21,7 @@ beforeEach(function () {
     [$this->seeker, $this->token] = userWithToken('employee');
 });
 
-/** A coach session owned by the given user (defaults to the current seeker). */
+/** A local coach session owned by the given user (used by create/delete tests). */
 function coachSession(?User $user = null, string $title = 'Test Session'): CoachSession
 {
     return CoachSession::create(['user_id' => (string) ($user ?? test()->seeker)->_id, 'title' => $title]);
@@ -52,30 +52,46 @@ test('a session title cannot exceed 100 characters', function () {
 
 // ── List sessions ────────────────────────────────────────────────────────
 
-test('a seeker can list their sessions, newest first', function () {
-    coachSession(title: 'First')->update(['created_at' => now()->subMinutes(5)]);
-    coachSession(title: 'Second');
+test('a seeker can list the sessions returned by the AI service', function () {
+    $this->mock(ResumeCoachService::class)
+        ->shouldReceive('listSessions')->once()
+        ->with((string) $this->seeker->_id)
+        ->andReturn([
+            ['session_id' => 'remote-session-2', 'title' => 'Second', 'updated_at' => '2026-09-07T12:00:00Z'],
+            ['session_id' => 'remote-session-1', 'title' => 'First', 'updated_at' => '2026-09-07T11:00:00Z'],
+        ]);
 
     $this->withToken($this->token)
         ->getJson('/api/job-seeker/coach/sessions')
         ->assertOk()
         ->assertJsonCount(2, 'data')
+        ->assertJsonPath('data.0.id', 'remote-session-2')
         ->assertJsonPath('data.0.title', 'Second')
-        ->assertJsonPath('data.1.title', 'First');
+        ->assertJsonPath('data.0.created_at', null)
+        ->assertJsonPath('data.1.id', 'remote-session-1');
 });
 
-test('a seeker only sees their own sessions', function () {
-    coachSession(title: 'Mine');
-    coachSession(createUser('employee'), 'Not mine');
+test('a seeker receives only the AI sessions requested for their user id', function () {
+    $this->mock(ResumeCoachService::class)
+        ->shouldReceive('listSessions')->once()
+        ->with((string) $this->seeker->_id)
+        ->andReturn([
+            ['session_id' => 'mine', 'title' => 'Mine', 'updated_at' => '2026-09-07T12:00:00Z'],
+        ]);
 
     $this->withToken($this->token)
         ->getJson('/api/job-seeker/coach/sessions')
         ->assertOk()
         ->assertJsonCount(1, 'data')
-        ->assertJsonPath('data.0.title', 'Mine');
+        ->assertJsonPath('data.0.id', 'mine');
 });
 
-test('the sessions list is empty when there are none', function () {
+test('the sessions list is empty when the AI service returns no sessions', function () {
+    $this->mock(ResumeCoachService::class)
+        ->shouldReceive('listSessions')->once()
+        ->with((string) $this->seeker->_id)
+        ->andReturn([]);
+
     $this->withToken($this->token)
         ->getJson('/api/job-seeker/coach/sessions')
         ->assertOk()
@@ -84,27 +100,37 @@ test('the sessions list is empty when there are none', function () {
 
 // ── Session messages ─────────────────────────────────────────────────────
 
-test('a seeker can read a sessions messages in chronological order', function () {
-    $session = coachSession();
-    CoachMessage::create(['session_id' => $session->id, 'role' => 'user', 'content' => 'First', 'created_at' => now()->subSeconds(2)]);
-    CoachMessage::create(['session_id' => $session->id, 'role' => 'assistant', 'content' => 'Reply', 'created_at' => now()->subSeconds(1)]);
-    CoachMessage::create(['session_id' => $session->id, 'role' => 'user', 'content' => 'Second', 'created_at' => now()]);
+test('a seeker can read AI session messages in chronological order', function () {
+    $this->mock(ResumeCoachService::class)
+        ->shouldReceive('getSessionMessages')->once()
+        ->with('remote-session-1')
+        ->andReturn([
+            ['role' => 'user', 'message' => 'First', 'timestamp' => '2026-09-07T11:00:00Z'],
+            ['role' => 'assistant', 'message' => 'Reply', 'timestamp' => '2026-09-07T11:00:01Z'],
+            ['role' => 'user', 'message' => 'Second', 'timestamp' => '2026-09-07T11:00:02Z'],
+        ]);
 
     $this->withToken($this->token)
-        ->getJson("/api/job-seeker/coach/sessions/{$session->id}")
+        ->getJson('/api/job-seeker/coach/sessions/remote-session-1')
         ->assertOk()
         ->assertJsonStructure(['data' => [['role', 'content', 'created_at']]])
         ->assertJsonPath('data.0.content', 'First')
-        ->assertJsonPath('data.2.content', 'Second');
+        ->assertJsonPath('data.2.content', 'Second')
+        ->assertJsonPath('data.2.created_at', '2026-09-07T11:00:02Z');
 });
 
-test('reading a session owned by someone else returns 404', function () {
-    $session = coachSession(createUser('employee'));
+test('reading a missing AI session returns 404', function () {
+    $this->mock(ResumeCoachService::class)
+        ->shouldReceive('getSessionMessages')->once()
+        ->with('missing-session')
+        ->andThrow(new CvAnalysisException('Session not found', 404));
 
-    $this->withToken($this->token)->getJson("/api/job-seeker/coach/sessions/{$session->id}")->assertNotFound();
+    $this->withToken($this->token)
+        ->getJson('/api/job-seeker/coach/sessions/missing-session')
+        ->assertNotFound();
 });
 
-// ── Delete a session ─────────────────────────────────────────────────────
+// ── Delete a local session ───────────────────────────────────────────────
 
 test('a seeker can delete a session and its messages', function () {
     $session = coachSession();
