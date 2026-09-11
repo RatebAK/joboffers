@@ -12,9 +12,11 @@ class ResumeMatchingService
     {
         $apiUrl = config('services.resume_matching.url');
 
+        // The current AI contract accepts only resume_id. Keep $limit as a
+        // local cap so the Laravel response remains bounded without sending
+        // an undocumented form field upstream.
         $payload = [
             'resume_id' => $resumeId,
-            'limit'     => $limit,
         ];
 
         Log::info('Resume matching: starting request', [
@@ -81,14 +83,17 @@ class ResumeMatchingService
             throw new CvAnalysisException($reason, 422);
         }
 
+        $jobs = is_array($data['jobs'] ?? null) ? $data['jobs'] : [];
+        $jobs = array_slice($jobs, 0, $limit);
+
         Log::info('Resume matching: success', [
-            'matches_found' => $data['matches_found'] ?? 0,
-            'job_count'     => count($data['jobs'] ?? []),
+            'matches_found' => $data['matches_found'] ?? count($jobs),
+            'job_count'     => count($jobs),
         ]);
 
         return [
-            'matches_found' => $data['matches_found'] ?? 0,
-            'jobs'          => $data['jobs'] ?? [],
+            'matches_found' => $data['matches_found'] ?? count($jobs),
+            'jobs'          => $jobs,
         ];
     }
 }
